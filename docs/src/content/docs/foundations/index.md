@@ -14,6 +14,7 @@ Every token starts with `--gw-`, for Groundwork, and every element with `gw-`. S
 - [Colour](/foundations/colour): surfaces, text, fills, accent and status roles, and the contrast targets.
 - [Type](/foundations/type): fonts and the type scale.
 - [Spacing](/foundations/spacing): the spacing scale, control sizes and focus, drawn to size.
+- [Iconography](/foundations/iconography): picking an icon set, using icons with text, and their sizes.
 - [Shape and motion](/foundations/layout): radius, elevation and motion.
 
 ## References

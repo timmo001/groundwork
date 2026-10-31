@@ -22,6 +22,7 @@ export default defineConfig(
             "/foundations/colour",
             "/foundations/type",
             "/foundations/spacing",
+            "/foundations/iconography",
             "/foundations/layout",
           ],
         },

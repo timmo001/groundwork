@@ -1,0 +1,69 @@
+---
+title: Iconography
+description: Icons are first class. Pick the set that fits the app, show them with text, and go icon-only only to save space.
+---
+
+Icons are first class. Most buttons, menu items, options, badges and empty states have one, and it sits beside the text rather than replacing it. An icon on its own is for saving space, such as in a toolbar or a narrow screen, and it always keeps its text as the accessible name and tooltip.
+
+<Demo id="iconography">
+  <gw-button icon="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z">Restart</gw-button>
+  <gw-button variant="neutral" appearance="filled">
+    <svg slot="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+    Add device
+  </gw-button>
+  <gw-button variant="neutral" appearance="plain" labels="hide" icon="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z">Settings</gw-button>
+  <gw-badge label="CPU" icon="M15 13V5A3 3 0 0 0 9 5V13A5 5 0 1 0 15 13M12 4A1 1 0 0 1 13 5V8H11V5A1 1 0 0 1 12 4Z" tone="warning">71 °C</gw-badge>
+</Demo>
+
+The first button takes path data, the second a slotted stroke icon, and the third shows only its icon, with "Settings" as its name.
+
+## Pick the set that fits
+
+Groundwork doesn't ship an icon set. Each app uses whichever fits its look and its host, and sticks to one:
+
+- An app that sits beside Home Assistant uses MDI, so its icons match the host's.
+- A sharper, lighter theme suits a stroke set such as Lucide or Tabler.
+- A softer theme suits Phosphor, which has several weights.
+- An app for a product with its own set, such as GitHub's Octicons, uses that.
+
+Mixing sets in one app makes icons sit at different weights and sizes, so don't.
+
+## Using an icon
+
+Components take an icon in one of two ways:
+
+| Way | For |
+| --- | --- |
+| `icon` attribute, as SVG path data | Filled icons on a 24px grid, such as MDI's from `@mdi/js` |
+| `<svg slot="icon">` | Anything else: stroke icons, other grids, several paths |
+
+`icon(path, label?)` draws path data inside a component. Without a label it's hidden from assistive technology, since the text beside it already says what it does. Icons take `currentColor`, so they follow the text and the tone.
+
+## Sizes
+
+`--gw-icon-size` sets an icon's size, and each component sets its own:
+
+| Where | Size |
+| --- | --- |
+| Chip, small badge | 16px |
+| Button (medium), badge, menu item, toggle option | 18px |
+| Anywhere else, by default | 20px |
+| Page header | 26px |
+| Empty state | 40px |
+
+A button's icon scales with the button, so a `large` button gets a larger one.
+
+## Terminals
+
+Terminal UIs and CLI output use text and colour first. Nerd Font glyphs are fine where the app knows the terminal's font has them, with a plain text fallback otherwise.
+
+## References
+
+- MDI: [Library](https://pictogrammers.com/library/mdi/) · [Code](https://github.com/Templarian/MaterialDesign)
+- Lucide: [Icons](https://lucide.dev/) · [Code](https://github.com/lucide-icons/lucide)
+- Tabler Icons: [Icons](https://tabler.io/icons) · [Code](https://github.com/tabler/tabler-icons)
+- Phosphor: [Icons](https://phosphoricons.com/) · [Code](https://github.com/phosphor-icons/core)
+- Octicons: [Icons](https://primer.style/octicons/) · [Code](https://github.com/primer/octicons)
+- Nerd Fonts: [Site](https://www.nerdfonts.com/) · [Code](https://github.com/ryanoasis/nerd-fonts)
+- Home Assistant: [State icon](https://contributors.home-assistant.io/design/components/state-icon/) · [Code](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-svg-icon.ts)
+- Web Awesome: [Icon](https://webawesome.com/docs/components/icon) · [Code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/icon)
