@@ -3,7 +3,7 @@ title: Roadmap
 description: What's built, what's next, and where the plan is tracked.
 ---
 
-The plan lives on the [tracking issue](https://github.com/timmo001/groundwork/issues/32), with each piece of work as a sub-issue and the working document attached as an artifact.
+The plan lives on the [tracking issue](https://github.com/timmo001/groundwork/issues/32), with each piece of work as a sub-issue and the working document attached to it.
 
 | Track | Issues |
 | --- | --- |
