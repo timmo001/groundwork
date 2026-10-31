@@ -23,7 +23,7 @@ Themes live in `packages/tokens/themes/`, one JSON file each, checked against th
     "weights": { "regular": 400, "strong": 600 },
     "density": "roomy",
     "capitals": false,
-    "link": { "colour": "accent", "underline": "thin" },
+    "link": { "color": "accent", "underline": "thin" },
     "surfaceAccent": "sheen",
     "rows": "cards"
   }
@@ -33,7 +33,7 @@ Themes live in `packages/tokens/themes/`, one JSON file each, checked against th
 | Field | What it sets |
 | --- | --- |
 | `background` | The dark mode background. Its hue and chroma tint every surface in both modes. |
-| `accent` | The hue and chroma of the one colour the theme is known by. Its lightness is solved per mode. An accent with no real colour, as Base's, uses the black and white primary. |
+| `accent` | The hue and chroma of the one color the theme is known by. Its lightness is solved per mode. An accent with no real color, as Base's, uses the black and white primary. |
 | `style.font`, `figures`, `mono` | The text font, an optional font for figures, and the code font. |
 | `style.radius` | Panels, controls and chips, in pixels. 999 is a pill. |
 | `style.border` | Width and strength: `none`, `hairline`, `soft` or `strong`. |

@@ -1,6 +1,6 @@
 ---
 name: groundwork-conventions
-description: Apply the Groundwork repository conventions to timmo001 repositories, from a repository's kind and Discussions to the label scheme. Use when creating or inducting a repository, choosing or changing its kind, adding area labels, labelling issues or pull requests, or editing the manifest in timmo001/groundwork's conventions/.
+description: Apply the Groundwork repository conventions to timmo001 repositories, from a repository's kind and Discussions to the label scheme. Use when creating or inducting a repository, choosing or changing its kind, adding area labels, labeling issues or pull requests, or editing the manifest in timmo001/groundwork's conventions/.
 license: Apache-2.0
 compatibility: Reads the manifest from a timmo001/groundwork checkout, or from https://groundwork.timmo.dev/conventions when there isn't one. Checking it needs Bun and mise.
 ---
@@ -24,7 +24,7 @@ Move a repository up a kind only when it's used more widely, and ask before movi
 
 1. Add or edit its file in `conventions/repos/<name>.yml`: `repo`, `kind`, the Renovate ecosystems it uses, any opt-in sets (`priority`, `os`, `tests`), `areas` and labels to `keep`. Private repositories go in `$XDG_CONFIG_HOME/groundwork/conventions/repos` instead, never in the public repository.
 2. Areas are the repository's own parts. Name them in Title Case and describe them as "Related to ...".
-3. Run `mise run check`. It fails on a description in the wrong voice or two colours in the repository closer than the OKLab threshold. Pick a new colour in the family's hue band rather than loosening the check.
+3. Run `mise run check`. It fails on a description in the wrong voice or two colors in the repository closer than the OKLab threshold. Pick a new color in the family's hue band rather than loosening the check.
 4. Print the result with `bun run src/cli.ts labels <owner/repo>` in `packages/conventions`.
 
 ## Label issues and pull requests

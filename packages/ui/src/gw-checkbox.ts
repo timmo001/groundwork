@@ -2,7 +2,7 @@ import { html, nothing } from "lit";
 import { live } from "lit/directives/live.js";
 import { LightElement, fieldId } from "./fields.js";
 
-/** A labelled native checkbox. `gw-switch` draws the same control as a switch. */
+/** A labeled native checkbox. `gw-switch` draws the same control as a switch. */
 export class GwCheckbox extends LightElement {
   static override properties = {
     label: {},

@@ -180,10 +180,10 @@ export class GwDemoFrame extends LitElement {
       if (target.dataset.opens) {
         const dialog = this.querySelector(`#${target.dataset.opens}`);
 
-        // A popover opens next to the button that started it. data-centred
+        // A popover opens next to the button that started it. data-centered
         // stands in for something nothing on screen started
         if (dialog !== null && "show" in dialog && typeof dialog.show === "function") {
-          dialog.show(target.dataset.centred === undefined ? target : undefined);
+          dialog.show(target.dataset.centered === undefined ? target : undefined);
         }
       }
 

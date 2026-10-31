@@ -98,7 +98,7 @@ Glazing, Survey, Slate, Bridge or Snag:
 @import "@timmo001/docs-kit/blume/themes/bridge.css";
 ```
 
-It sets Blume's colours, radius and fonts from the theme in light, dark and
+It sets Blume's colors, radius and fonts from the theme in light, dark and
 Darker, so leave `theme.accent` out of `blume.config.ts`. The fonts are stacks,
 so load the theme's font files in `theme.css` too, for example with
 `@import "@fontsource-variable/inter";`. Use Base until the app has a theme of

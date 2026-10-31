@@ -8,7 +8,7 @@ import {
   wcagContrast,
 } from "culori";
 
-/** A colour in OKLCH: lightness 0 to 1, chroma, hue in degrees, and alpha. */
+/** A color in OKLCH: lightness 0 to 1, chroma, hue in degrees, and alpha. */
 export interface Oklch {
   readonly l: number;
   readonly c: number;
@@ -27,7 +27,7 @@ export const fromHex = (hex: string): Oklch => {
   return { l: color.l, c: color.c, h: color.h ?? 0 };
 };
 
-/** Bring a colour into sRGB by reducing chroma, keeping lightness and hue. */
+/** Bring a color into sRGB by reducing chroma, keeping lightness and hue. */
 export const inGamut = (color: Oklch): Oklch => {
   const mapped = toOklch(
     toSrgbGamut({ mode: "oklch", l: color.l, c: color.c, h: color.h }),
@@ -36,7 +36,7 @@ export const inGamut = (color: Oklch): Oklch => {
   return { ...color, c: mapped.c };
 };
 
-/** Six-digit sRGB hex, or eight digits when the colour has alpha. */
+/** Six-digit sRGB hex, or eight digits when the color has alpha. */
 export const toHex = (color: Oklch) => {
   const mapped = toSrgbGamut({
     mode: "oklch",
@@ -65,10 +65,10 @@ export const toCss = (color: Oklch) => {
 
 const oklabDistance = differenceEuclidean("oklab");
 
-/** How far apart two hex colours look, as the Euclidean distance in OKLab. */
+/** How far apart two hex colors look, as the Euclidean distance in OKLab. */
 export const distance = (a: string, b: string) => oklabDistance(a, b);
 
-/** The WCAG 2 contrast ratio between two colours, ignoring alpha. */
+/** The WCAG 2 contrast ratio between two colors, ignoring alpha. */
 export const contrast = (a: Oklch, b: Oklch) =>
   wcagContrast(toHex({ ...a, alpha: 1 }), toHex({ ...b, alpha: 1 }));
 
@@ -86,8 +86,8 @@ export const withAlpha = (color: Oklch, alpha: number): Oklch => ({
 });
 
 /**
- * The lightness, moving away from `against` towards white or black, at which
- * the colour first reaches `target` contrast. Falls back to the extreme when
+ * The lightness, moving away from `against` toward white or black, at which
+ * the color first reaches `target` contrast. Falls back to the extreme when
  * the target can't be reached.
  */
 export const solveLightness = (

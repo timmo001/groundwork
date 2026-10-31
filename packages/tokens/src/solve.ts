@@ -21,7 +21,7 @@ export const statuses = [
 export type Status = (typeof statuses)[number];
 
 /**
- * GitHub's Markdown alert colours in dark (note, tip, important, warning and
+ * GitHub's Markdown alert colors in dark (note, tip, important, warning and
  * caution), which give each status its hue and chroma.
  */
 const statusSeeds: Record<Status, string> = {
@@ -64,7 +64,7 @@ export interface ResolvedTheme {
   readonly modes: Partial<Record<Mode, Roles>>;
 }
 
-/** The text or surface colour that reads best on a fill. */
+/** The text or surface color that reads best on a fill. */
 const onFill = (fill: Oklch, candidates: readonly Oklch[]) =>
   candidates.reduce((best, candidate) =>
     contrast(candidate, fill) > contrast(best, fill) ? candidate : best,
@@ -174,7 +174,7 @@ const solvedMode = (theme: SolvedTheme, mode: "light" | "dark") => {
   // Black and white primaries: near-white fill in dark, near-black in light.
   const primary = inGamut({ ...text, l: dark ? 0.93 : 0.24 });
   const accent = fromHex(theme.accent);
-  // An accent with no real colour, as Base's, is the primary itself.
+  // An accent with no real color, as Base's, is the primary itself.
   const neutralAccent = accent.c < 0.02;
 
   const seeds: Record<Status, Oklch> = {

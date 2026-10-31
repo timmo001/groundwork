@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-/** A colour written as a six-digit sRGB hex, such as `#1b1e23`. */
+/** A color written as a six-digit sRGB hex, such as `#1b1e23`. */
 export const Hex = Schema.String.check(Schema.isPattern(/^#[0-9a-f]{6}$/));
 
 export const Font = Schema.Literals([
@@ -32,7 +32,7 @@ export const MonoFont = Schema.Literals([
 
 export type MonoFont = typeof MonoFont.Type;
 
-/** How a theme looks beyond colour: shape, density, type and surface accents. */
+/** How a theme looks beyond color: shape, density, type and surface accents. */
 export const Style = Schema.Struct({
   font: Font,
   /** The font for figures and tabular numbers, when it differs from `font`. */
@@ -66,7 +66,7 @@ export interface Style extends Schema.Schema.Type<typeof Style> {}
 /**
  * A core theme: two inputs solved into every role for light, dark and Darker.
  * The background sets the dark surface and the tint carried into light; the
- * accent sets the hue and chroma of the one colour the theme is known by.
+ * accent sets the hue and chroma of the one color the theme is known by.
  */
 export const SolvedTheme = Schema.Struct({
   kind: Schema.tag("solved"),
@@ -102,7 +102,7 @@ export interface Palette extends Schema.Schema.Type<typeof Palette> {}
 
 /**
  * An optional theme mapped from an existing palette, such as Catppuccin, so it
- * stays faithful. Each flavour is one mode, and it takes Base's style.
+ * stays faithful. Each flavor is one mode, and it takes Base's style.
  */
 export const MappedTheme = Schema.Struct({
   kind: Schema.tag("mapped"),

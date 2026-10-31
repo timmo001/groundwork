@@ -57,13 +57,13 @@
     {
       "name": "opentui",
       "kind": "tokens",
-      "description": "Resolved theme colours for OpenTUI",
+      "description": "Resolved theme colors for OpenTUI",
       "files": ["packages/tokens/generated/opentui.ts"]
     },
     {
       "name": "ansi",
       "kind": "tokens",
-      "description": "Status colours mapped to the terminal's ANSI palette",
+      "description": "Status colors mapped to the terminal's ANSI palette",
       "files": ["packages/tokens/generated/ansi.json"]
     },
     {
@@ -100,7 +100,7 @@
     {
       "name": "gw-button",
       "kind": "lit",
-      "description": "A native button or link, with a colour variant and an accent, filled, outlined or plain appearance",
+      "description": "A native button or link, with a color variant and an accent, filled, outlined or plain appearance",
       "files": ["packages/ui/src/gw-button.ts"],
       "needs": ["ui-base"]
     },
@@ -114,7 +114,7 @@
     {
       "name": "gw-checkbox",
       "kind": "lit",
-      "description": "A labelled native checkbox, and gw-switch, the same drawn as a switch",
+      "description": "A labeled native checkbox, and gw-switch, the same drawn as a switch",
       "files": ["packages/ui/src/gw-checkbox.ts"],
       "needs": ["ui-base"]
     },
@@ -170,14 +170,14 @@
     {
       "name": "gw-gauge",
       "kind": "lit",
-      "description": "A reading on a dial, coloured by warning and danger levels",
+      "description": "A reading on a dial, colored by warning and danger levels",
       "files": ["packages/ui/src/gw-gauge.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-input",
       "kind": "lit",
-      "description": "A labelled native input in light DOM",
+      "description": "A labeled native input in light DOM",
       "files": ["packages/ui/src/gw-input.ts"],
       "needs": ["ui-base"]
     },
@@ -191,7 +191,7 @@
     {
       "name": "gw-meter",
       "kind": "lit",
-      "description": "A labelled bar for a value in a range",
+      "description": "A labeled bar for a value in a range",
       "files": ["packages/ui/src/gw-meter.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
@@ -226,7 +226,7 @@
     {
       "name": "gw-select",
       "kind": "lit",
-      "description": "A labelled native select in light DOM",
+      "description": "A labeled native select in light DOM",
       "files": ["packages/ui/src/gw-select.ts"],
       "needs": ["ui-base"]
     },

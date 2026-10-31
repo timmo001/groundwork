@@ -13,13 +13,13 @@ export default defineConfig(
         "/",
         "/principles",
         "/targets",
-        "/behaviour",
+        "/behavior",
         "/sync",
         {
           label: "Foundations",
           root: "/foundations",
           items: [
-            "/foundations/colour",
+            "/foundations/color",
             "/foundations/type",
             "/foundations/spacing",
             "/foundations/iconography",

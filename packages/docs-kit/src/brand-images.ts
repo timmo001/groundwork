@@ -24,9 +24,9 @@ export interface BrandImagesOptions {
   tagline: readonly string[];
   /** Site address shown under the tagline. */
   site: string;
-  /** Card and icon background colour. */
+  /** Card and icon background color. */
   background: string;
-  /** Colour of the top strip and the site address. */
+  /** Color of the top strip and the site address. */
   accent: string;
   outputs: BrandImageOutputs;
 }

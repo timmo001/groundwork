@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { base } from "./styles.js";
 
 /**
- * Layout: `gw-page` centres a page's content at
+ * Layout: `gw-page` centers a page's content at
  * the theme's width, `gw-stack` stacks its children, `gw-row` lines them up
  * and `gw-grid` fills columns at least `--gw-grid-min` wide.
  */

@@ -3,7 +3,7 @@ import "./gw-skeleton.js";
 import { base, type Tone } from "./styles.js";
 
 /**
- * A labelled bar for a value in a range, such as disk use. Past `high` it
+ * A labeled bar for a value in a range, such as disk use. Past `high` it
  * turns warning, and past `critical` danger, unless a `tone` is set. While
  * `loading`, the track pulses and a skeleton stands in for the value.
  */

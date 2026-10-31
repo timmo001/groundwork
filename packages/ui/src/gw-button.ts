@@ -6,7 +6,7 @@ import { base, icon } from "./styles.js";
  * theme and mode around it. With `href` it renders a link that looks the
  * same. Put an icon in the `icon` slot.
  *
- * As in Home Assistant's Design Kit, `variant` picks the colour and
+ * As in Home Assistant's Design Kit, `variant` picks the color and
  * `appearance` how it's applied, from most to least important: `accent` (a
  * solid fill), `filled` (a soft tint), `outlined` (a stroke) or `plain` (text
  * only). Every button is a pill. Sizes run `xs` to `xl`, and
@@ -124,7 +124,7 @@ export class GwButton extends LitElement {
       }
 
       /* A solid fill, with text that flips between black and white by the
-         fill's lightness so it reads on every theme's colours */
+         fill's lightness so it reads on every theme's colors */
       :host([appearance="accent"]) .button {
         color: oklch(
           from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0

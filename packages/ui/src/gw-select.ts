@@ -8,7 +8,7 @@ export interface SelectOption {
 }
 
 /**
- * A labelled native `<select>`. Pass `options`, or write `<option>` children,
+ * A labeled native `<select>`. Pass `options`, or write `<option>` children,
  * which it reads once when it first connects.
  */
 export class GwSelect extends LightElement {

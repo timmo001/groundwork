@@ -4,7 +4,7 @@ import { base, icon, type Tone } from "./styles.js";
 
 /**
  * A pill with an icon, a value and an optional small label above it, after
- * Home Assistant's badges. The icon takes the `tone`'s colour. While
+ * Home Assistant's badges. The icon takes the `tone`'s color. While
  * `loading`, a skeleton stands in for the value, and for the icon if it has
  * none yet.
  */

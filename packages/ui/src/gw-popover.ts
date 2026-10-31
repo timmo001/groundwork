@@ -80,13 +80,13 @@ export class GwPopover extends LitElement {
         transform-origin: bottom left;
       }
 
-      [data-placement="centre"] {
+      [data-placement="center"] {
         inset: 0;
         margin: auto;
         height: fit-content;
       }
 
-      [data-placement="centre"]::backdrop {
+      [data-placement="center"]::backdrop {
         background: rgb(0 0 0 / 40%);
       }
 
@@ -145,7 +145,7 @@ export class GwPopover extends LitElement {
 
   declare heading: string;
   declare confirm: boolean;
-  declare placement: "below" | "above" | "centre" | "sheet";
+  declare placement: "below" | "above" | "center" | "sheet";
 
   /** The value of the action that closed it, or "" for Esc or a click outside. */
   returnValue = "";
@@ -158,7 +158,7 @@ export class GwPopover extends LitElement {
     super();
     this.heading = "";
     this.confirm = false;
-    this.placement = "centre";
+    this.placement = "center";
   }
 
   /** Opens next to `anchor`, or in the middle without one. */
@@ -177,7 +177,7 @@ export class GwPopover extends LitElement {
   #placementFor(anchor: Element | undefined) {
     if (window.innerWidth < sheetBelow) return "sheet";
 
-    return anchor === undefined ? "centre" : "below";
+    return anchor === undefined ? "center" : "below";
   }
 
   /** Under the button, lined up with its right edge, or above it when there's more room there. */
@@ -202,7 +202,7 @@ export class GwPopover extends LitElement {
     const fitsBelow = below >= popover.offsetHeight || below >= rect.top;
 
     // Lined up with the button's edge on its side of the screen, so the
-    // popover opens towards the space rather than across the content
+    // popover opens toward the space rather than across the content
     const fromStart = rect.left + rect.width / 2 < window.innerWidth / 2;
     const preferred = fromStart ? rect.left : rect.right - popover.offsetWidth;
 

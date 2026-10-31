@@ -34,7 +34,7 @@ export const fieldStyles = css`
     transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
-  /* A drawn chevron with room around it, in the text colour, instead of the
+  /* A drawn chevron with room around it, in the text color, instead of the
      browser's arrow pressed against the edge. A select can't take
      pseudo-elements, so its wrapper draws it */
   gw-select select {

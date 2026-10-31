@@ -15,6 +15,8 @@ document usage and development.
 - Use `mise run format` and `mise run check` for validation.
 - Put each package under `packages/<name>/`.
 - Use lowercase filenames, with kebab-case for multiword names.
+- Docs, comments and user-facing text use US English (color, behavior,
+  center), matching CSS and the token names.
 - Docs pages describe Groundwork on its own terms, never as taken from
   another system ("after Home Assistant's", "HA's scale"). A References
   section at the end lists other design systems' matching pages, as links to
@@ -69,7 +71,7 @@ go-ahead needed. Before the session ends, once `mise run check` passes:
   repository has a file in `conventions/repos/` with its kind; private ones
   live outside this repo in `$XDG_CONFIG_HOME/groundwork/conventions/repos`.
 - `mise run check` fails when a label is defined two ways, a description
-  breaks the voice, or two colours in a repository are too close in OKLab.
+  breaks the voice, or two colors in a repository are too close in OKLab.
 
 ## Sync
 

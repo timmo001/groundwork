@@ -1,9 +1,9 @@
 ---
 # Label sets in Title Case, each label with a one-line description in the same
 # voice: types say what the change does, areas say "Related to ...", statuses
-# say what they wait on. Colours are six-digit hex without `#`, as GitHub takes
-# them, and every colour in a repository must be distinct. Brand labels
-# (operating systems, languages, services) use the brand's colour, and other
+# say what they wait on. Colors are six-digit hex without `#`, as GitHub takes
+# them, and every color in a repository must be distinct. Brand labels
+# (operating systems, languages, services) use the brand's color, and other
 # labels move to keep clear of them. `aliases` are older names the label job
 # renames rather than deletes; names match without case.
 sets:
@@ -28,13 +28,13 @@ sets:
         description: Improves an existing feature
         color: "84b6eb"
       - name: Refactor
-        description: Restructures code without changing behaviour
+        description: Restructures code without changing behavior
         color: "5319e7"
       - name: Performance
         description: Improves performance without adding features
         color: "09abc4"
       - name: Breaking Change
-        description: Changes behaviour existing users rely on
+        description: Changes behavior existing users rely on
         color: "b60205"
         aliases:
           - breaking-change

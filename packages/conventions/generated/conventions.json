@@ -67,7 +67,7 @@
         },
         {
           "name": "Refactor",
-          "description": "Restructures code without changing behaviour",
+          "description": "Restructures code without changing behavior",
           "color": "5319e7"
         },
         {
@@ -77,7 +77,7 @@
         },
         {
           "name": "Breaking Change",
-          "description": "Changes behaviour existing users rely on",
+          "description": "Changes behavior existing users rely on",
           "color": "b60205",
           "aliases": [
             "breaking-change"

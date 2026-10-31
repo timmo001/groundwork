@@ -1,6 +1,6 @@
 ---
-title: Colour
-description: The colour roles every theme fills, how they're solved in OKLCH, and the contrast targets they meet.
+title: Color
+description: The color roles every theme fills, how they're solved in OKLCH, and the contrast targets they meet.
 ---
 
 Every theme fills the same roles. Components only ever read roles, so they never branch on a theme.
@@ -19,12 +19,12 @@ Each is a CSS variable named `--gw-color-<role>`.
 
 ## Solved, not hand-set
 
-A core theme has two inputs: a dark background and an accent. Everything else is solved in OKLCH, with derived colours mixed in OKLab:
+A core theme has two inputs: a dark background and an accent. Everything else is solved in OKLCH, with derived colors mixed in OKLab:
 
 - Surfaces keep the background's hue and chroma, stepping lightness. Light mode carries the same tint at lower chroma.
 - Text is solved along the surface hue until it reaches its contrast target.
 - The accent keeps its hue and chroma and moves in lightness until it reaches 5:1.
-- Status colours start from GitHub's Markdown alert colours and are solved the same way.
+- Status colors start from GitHub's Markdown alert colors and are solved the same way.
 
 ## Contrast targets
 
@@ -36,14 +36,14 @@ All measured on the raised surface, the lowest-contrast surface text sits on:
 | Body text | 9:1 |
 | Muted text | 4.6:1 |
 | Accent | 5:1 |
-| Status colours | 4.8:1 |
+| Status colors | 4.8:1 |
 | Text on the accent fill | 4.5:1 |
 
 `mise run check` fails when a core theme misses one. The [contrast report](/themes/contrast) lists every ratio.
 
-## Status colours
+## Status colors
 
-GitHub's Markdown alert set, so each has its own colour, mapped onto the feedback roles and onto ANSI colours in terminals:
+GitHub's Markdown alert set, so each has its own color, mapped onto the feedback roles and onto ANSI colors in terminals:
 
 | Alert | Role | ANSI |
 | --- | --- | --- |

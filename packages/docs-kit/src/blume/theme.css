@@ -12,7 +12,7 @@
 }
 
 /* Keep the "On this page" rail beside the content instead of at the far right
-   edge: centre the content and rail, with equal space either side. The content
+   edge: center the content and rail, with equal space either side. The content
    column is the content width plus main's 2.5rem padding either side.
    home-banner.astro works out its full-width bleed from these columns. */
 @media (min-width: 80rem) {

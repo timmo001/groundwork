@@ -2,7 +2,7 @@ import { html, nothing } from "lit";
 import { live } from "lit/directives/live.js";
 import { LightElement, fieldId } from "./fields.js";
 
-/** A labelled native `<input>`, with an optional hint and error. */
+/** A labeled native `<input>`, with an optional hint and error. */
 export class GwInput extends LightElement {
   static override properties = {
     label: {},

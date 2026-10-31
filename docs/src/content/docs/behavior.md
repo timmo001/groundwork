@@ -1,5 +1,5 @@
 ---
-title: Behaviour
+title: Behavior
 description: How CLIs, agent tools, progress, status and notifications behave, so every tool works alike.
 ---
 
@@ -14,7 +14,7 @@ The parts that aren't pixels. A new system follows these, and the [`cli-tool` te
 - Long runs print numbered sections with one line each (`[3/7] mise tools`) and stream as they go.
 - `--check` lists what would change without changing anything; `--force` skips the check.
 - Help, completions and a generated reference come from the tree.
-- Plain output uses the terminal's 16 ANSI colours and respects `NO_COLOR`.
+- Plain output uses the terminal's 16 ANSI colors and respects `NO_COLOR`.
 
 ## Agents
 

@@ -4,7 +4,7 @@ export const themes = [
   {
     "id": "base",
     "name": "Base",
-    "description": "Neutral surfaces with a slight blue-grey tint, black and white primaries, and links as strong text. What every theme builds on.",
+    "description": "Neutral surfaces with a slight blue-gray tint, black and white primaries, and links as strong text. What every theme builds on.",
     "optional": false,
     "family": null,
     "examples": [],
@@ -661,7 +661,7 @@ export const themes = [
   {
     "id": "slate",
     "name": "Slate",
-    "description": "Welsh slate's purple-grey with a mauve accent. Round, with pill buttons and soft borders.",
+    "description": "Welsh slate's purple-gray with a mauve accent. Round, with pill buttons and soft borders.",
     "optional": false,
     "family": null,
     "examples": [],

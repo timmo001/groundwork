@@ -12,8 +12,8 @@ const circumference = 2 * Math.PI * radius;
 const track = (circumference * sweep) / 360;
 
 /**
- * The colour a reading shows in: the accent until it reaches `warning`, then
- * the warning and danger colours. Lower is worse when `inverted`, such as for
+ * The color a reading shows in: the accent until it reaches `warning`, then
+ * the warning and danger colors. Lower is worse when `inverted`, such as for
  * a battery.
  */
 export const severityColor = (
@@ -35,7 +35,7 @@ export const severityColor = (
 
 /**
  * A reading on a dial, after Home Assistant's gauge card. The arc fills to
- * `value` between `min` and `max`, coloured by `warning` and `danger`, and
+ * `value` between `min` and `max`, colored by `warning` and `danger`, and
  * glides when the value changes. While `loading`, the track pulses and a
  * skeleton stands in for the reading.
  */

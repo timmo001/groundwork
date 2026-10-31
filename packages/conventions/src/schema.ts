@@ -1,6 +1,6 @@
 import { Schema } from "effect";
 
-/** A six-digit hex colour without `#`, as GitHub takes label colours. */
+/** A six-digit hex color without `#`, as GitHub takes label colors. */
 export const Color = Schema.String.check(Schema.isPattern(/^[0-9a-f]{6}$/));
 
 export const Label = Schema.Struct({

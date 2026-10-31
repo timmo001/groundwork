@@ -7,7 +7,7 @@ export interface Manifest {
   readonly repos: readonly Repo[];
 }
 
-/** The closest two label colours in a repository may be, in OKLab. */
+/** The closest two label colors in a repository may be, in OKLab. */
 export const minimumDistance = 0.04;
 
 const key = (name: string) => name.toLowerCase();

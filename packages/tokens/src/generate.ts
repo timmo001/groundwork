@@ -186,7 +186,7 @@ export const css = (themes: readonly ResolvedTheme[]) =>
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";
 
-/** Each Blume colour token and the role it takes. */
+/** Each Blume color token and the role it takes. */
 const blumeRoles = {
   background: "surface-default",
   foreground: "text-primary",
@@ -212,7 +212,7 @@ const blumeRoles = {
   "code-word-border": "border-info",
 };
 
-/** Blume's colour tokens from a theme's roles in one mode. */
+/** Blume's color tokens from a theme's roles in one mode. */
 const blumeColors = (roles: Roles) =>
   Object.fromEntries(
     Object.entries(blumeRoles).flatMap(([token, role]) => {
@@ -341,7 +341,7 @@ export const qml = (themes: readonly ResolvedTheme[]) =>
     "",
   ].join("\n");
 
-/** Resolved colours for OpenTUI, which takes hex strings. */
+/** Resolved colors for OpenTUI, which takes hex strings. */
 export const opentui = (themes: readonly ResolvedTheme[]) =>
   [
     `// ${header}`,
@@ -355,7 +355,7 @@ export const opentui = (themes: readonly ResolvedTheme[]) =>
   ].join("\n");
 
 /**
- * Plain CLI output follows the terminal: roles map onto the 16 ANSI colours,
+ * Plain CLI output follows the terminal: roles map onto the 16 ANSI colors,
  * so the terminal's own theme decides how they look.
  */
 export const ansi = () =>
@@ -497,7 +497,7 @@ export const optionalPage = (themes: readonly ResolvedTheme[]) => {
     "",
     `{/* ${header} */}`,
     "",
-    "Each flavour is one mode of its palette, mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
+    "Each flavor is one mode of its palette, mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
     "",
     ...families.flatMap((family) => [
       `## ${family}`,
