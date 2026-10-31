@@ -15,6 +15,9 @@ document usage and development.
 - Use `mise run format` and `mise run check` for validation.
 - Put each package under `packages/<name>/`.
 - Use lowercase filenames, with kebab-case for multiword names.
+- Docs pages describe Groundwork on its own terms. Design sources that
+  inspired a page, such as Home Assistant's, go in a References section at
+  the end, never in the body ("after Home Assistant's", "HA's scale").
 - Use the shared `@timmo001/oxlint-rules/configs/recommended` preset and its
   supported Oxlint peers.
 - Track public work in issues with sub-issues and blocked-by relationships set;

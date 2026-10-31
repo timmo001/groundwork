@@ -3,7 +3,7 @@ title: Components
 description: Lit components on native elements, styled only through --gw-* variables, and kept current in each app by the sync.
 ---
 
-The web components are Lit elements built on native elements: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser, and Home Assistant's frontend is the reference for the rest. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
+The web components are Lit elements built on native elements: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
 
 Every demo on these pages has a theme and mode picker. Pick one and the components follow it.
 
@@ -45,4 +45,8 @@ Password managers and `<label for>` can't reach into a shadow root, and a form o
 
 ## Icons
 
-`icon(path, label?)` draws any SVG path data, so each app picks its set: MDI (as Home Assistant uses), Lucide, Tabler or Phosphor. Components that show an icon take it as path data in an `icon` attribute, or an `<svg slot="icon">`.
+`icon(path, label?)` draws any SVG path data, so each app picks its set: MDI, Lucide, Tabler or Phosphor. Components that show an icon take it as path data in an `icon` attribute, or an `<svg slot="icon">`.
+
+## References
+
+- [Home Assistant's frontend](https://github.com/home-assistant/frontend), for component behaviour beyond what the browser gives

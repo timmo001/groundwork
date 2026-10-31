@@ -19,8 +19,12 @@ A fixed scale, `--gw-radius-xs` (2px) to `--gw-radius-xl` (16px) and `--gw-radiu
 
 ## Motion
 
-Home Assistant's durations: `--gw-motion-instant` (75ms), `--gw-motion-fast` (150ms), `--gw-motion-normal` (250ms) and `--gw-motion-slow` (350ms), with `--gw-motion-easing`, `cubic-bezier(0.2, 0, 0, 1)`. All drop to 1ms under `prefers-reduced-motion`.
+Four durations: `--gw-motion-instant` (75ms), `--gw-motion-fast` (150ms), `--gw-motion-normal` (250ms) and `--gw-motion-slow` (350ms), with `--gw-motion-easing`, `cubic-bezier(0.2, 0, 0, 1)`. All drop to 1ms under `prefers-reduced-motion`.
 
 Things that move, move fluidly. Inside a component that's a CSS transition: a toggle's picked pill slides to the new option, a switch's knob glides, menus, dialogs and toasts ease in from `@starting-style`. Colour changes use the fast duration, and anything that travels uses the normal one.
 
 Changes to the whole view use the View Transitions API through `withViewTransition()`, which falls back to changing straight away where it isn't supported. Switching theme or mode crossfades the page. Keep them simple, give each `view-transition-name` once, and remember only one runs at a time and that they work at document level, not inside a shadow root.
+
+## References
+
+- Home Assistant's motion durations and easing, and its `withViewTransition()` helper

@@ -3,7 +3,7 @@ title: Spacing
 description: The spacing scale and control sizes, drawn to size.
 ---
 
-Home Assistant's scale: 4px steps from `--gw-space-1` to `--gw-space-20`, plus a 2px half step, multiplied by the theme's density (0.85 compact, 1 normal, 1.2 roomy). `--gw-space-N` is N × 4px at normal density, the same as `--ha-space-N`. Terminal UIs use cells instead.
+4px steps from `--gw-space-1` to `--gw-space-20`, plus a 2px half step, multiplied by the theme's density (0.85 compact, 1 normal, 1.2 roomy). `--gw-space-N` is N × 4px at normal density. Terminal UIs use cells instead.
 
 Each bar below is the token itself, drawn in the theme, so it changes with density.
 
@@ -11,7 +11,7 @@ Each bar below is the token itself, drawn in the theme, so it changes with densi
 
 ## Sizes
 
-Controls follow Home Assistant's heights, so they line up in a row. `--gw-button-scale` sets any other button size.
+Controls share a set of heights, so they line up in a row. `--gw-button-scale` sets any other button size.
 
 <TokenScale kind="size" />
 
@@ -28,3 +28,7 @@ Each component page measures its own parts the same way, in its anatomy.
 ## Focus
 
 Focus rings sit outside a control, so neighbours keep at least `--gw-space-2` between them; inside a track, such as a toggle's, the ring is inset instead. The ring is a 2px outline in `--gw-color-focus`, offset by 2px: `--gw-focus-width` and `--gw-focus-offset`. Terminals use reverse video or a marker.
+
+## References
+
+- Home Assistant's spacing scale and control heights: `--gw-space-N` matches `--ha-space-N`
