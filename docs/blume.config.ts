@@ -5,7 +5,7 @@ export default defineConfig(
   docsConfig({
     title: "Groundwork",
     description:
-      "One design and architecture system for every app, site, CLI, terminal UI, Omarchy panel and agent.",
+      "The groundwork for designing and building apps, sites, CLIs, terminal UIs, Omarchy panels and agents.",
     site: "groundwork.timmo.dev",
     github: { owner: "timmo001", repo: "groundwork" },
     navigation: {

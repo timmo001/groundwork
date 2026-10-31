@@ -1,8 +1,8 @@
 # Groundwork
 
-One design and architecture system for every app, site, CLI, terminal UI,
-Omarchy panel and agent. Today it holds `@timmo001/docs-kit`, the shared docs
-site package. The plan is tracked in #32, with the working document attached as
+The groundwork for designing and building apps, sites, CLIs, terminal UIs,
+Omarchy panels and agents: tokens and themes, repository conventions, the docs
+site and `@timmo001/docs-kit`. The plan is tracked in #32, with the working document attached as
 an issue artifact; check it before adding a new part. The READMEs document
 usage and development.
 
@@ -17,8 +17,10 @@ usage and development.
 - Use lowercase filenames, with kebab-case for multiword names.
 - Use the shared `@timmo001/oxlint-rules/configs/recommended` preset and its
   supported Oxlint peers.
-- Track work in issues with sub-issues and blocked-by relationships set. Plans,
-  research and decisions go on the issue as artifacts.
+- Track public work in issues with sub-issues and blocked-by relationships set;
+  plans, research and decisions go on the issue as artifacts. Private work can
+  stay on the Plannotator board, Inbox threads, notes and handoffs until it
+  lands on a public repo.
 
 ## Background Dev Servers
 

@@ -1,9 +1,9 @@
 # Groundwork
 
-One design and architecture system for my apps, sites, CLIs, terminal UIs,
-Omarchy panels and agents: how they look, how they behave and how they're put
-together. Every app starts from the same base and adds its own theme, so they
-stay related without all looking the same.
+The groundwork for designing and building my apps, sites, CLIs, terminal UIs,
+Omarchy panels and agents: a shared starting point for how they look, how they
+behave and how they're put together. Each app builds on the same base and adds
+its own theme, so they stay related without all looking the same.
 
 It's early: the themes and tokens and the docs site are in, with components and
 the rest to follow. The plan and its progress live in

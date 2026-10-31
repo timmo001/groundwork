@@ -5,7 +5,7 @@ const written = await writeBrandImages({
   logo: "src/assets/logo.svg",
   title: "Groundwork",
   tagline: [
-    "One design and architecture system",
+    "The groundwork for designing and building",
     "for every app, CLI and agent.",
   ],
   site: "groundwork.timmo.dev",
