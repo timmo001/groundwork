@@ -143,7 +143,7 @@
         {
           "name": "In Progress",
           "description": "Someone is working on this",
-          "colour": "fbca04",
+          "colour": "e4a11b",
           "aliases": [
             "in-progress"
           ]
@@ -252,7 +252,7 @@
         {
           "name": "GitHub Actions",
           "description": "Updates GitHub Actions",
-          "colour": "000000",
+          "colour": "2088ff",
           "aliases": [
             "github_actions"
           ]
@@ -388,27 +388,27 @@
         {
           "name": "OS: Linux",
           "description": "Specific to Linux",
-          "colour": "7c6f64"
+          "colour": "fcc624"
         },
         {
           "name": "OS: Windows",
           "description": "Specific to Windows",
-          "colour": "475569"
+          "colour": "0067b8"
         },
         {
           "name": "OS: macOS",
           "description": "Specific to macOS",
-          "colour": "334155"
+          "colour": "000000"
         },
         {
           "name": "OS: Android",
           "description": "Specific to Android",
-          "colour": "0f172a"
+          "colour": "3ddc84"
         },
         {
           "name": "OS: iOS",
           "description": "Specific to iOS and iPadOS",
-          "colour": "5b7fa6"
+          "colour": "555555"
         }
       ]
     },
@@ -833,7 +833,7 @@
         {
           "name": "Legacy",
           "description": "Related to the old application, which is no longer developed",
-          "colour": "57534e"
+          "colour": "44403c"
         }
       ],
       "labels": 60

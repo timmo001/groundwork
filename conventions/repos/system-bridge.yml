@@ -40,7 +40,7 @@ areas:
     colour: "03a9f4"
   - name: Legacy
     description: Related to the old application, which is no longer developed
-    colour: "57534e"
+    colour: "44403c"
 keep:
   - hacktoberfest
   - hacktoberfest-accepted

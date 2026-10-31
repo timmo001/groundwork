@@ -2,8 +2,10 @@
 # Label sets in Title Case, each label with a one-line description in the same
 # voice: types say what the change does, areas say "Related to ...", statuses
 # say what they wait on. Colours are six-digit hex without `#`, as GitHub takes
-# them, and every colour in a repository must be distinct. `aliases` are older
-# names the label job renames rather than deletes; names match without case.
+# them, and every colour in a repository must be distinct. Brand labels
+# (operating systems, languages, services) use the brand's colour, and other
+# labels move to keep clear of them. `aliases` are older names the label job
+# renames rather than deletes; names match without case.
 sets:
   - id: type
     name: Type
@@ -73,7 +75,7 @@ sets:
         colour: "7ee787"
       - name: In Progress
         description: Someone is working on this
-        colour: "fbca04"
+        colour: "e4a11b"
         aliases:
           - in-progress
       - name: Needs Decision
@@ -143,7 +145,7 @@ sets:
     labels:
       - name: GitHub Actions
         description: Updates GitHub Actions
-        colour: "000000"
+        colour: "2088ff"
         aliases:
           - github_actions
       - name: Go
@@ -229,19 +231,19 @@ sets:
     labels:
       - name: "OS: Linux"
         description: Specific to Linux
-        colour: "7c6f64"
+        colour: "fcc624"
       - name: "OS: Windows"
         description: Specific to Windows
-        colour: "475569"
+        colour: "0067b8"
       - name: "OS: macOS"
         description: Specific to macOS
-        colour: "334155"
+        colour: "000000"
       - name: "OS: Android"
         description: Specific to Android
-        colour: "0f172a"
+        colour: "3ddc84"
       - name: "OS: iOS"
         description: Specific to iOS and iPadOS
-        colour: "5b7fa6"
+        colour: "555555"
 
   - id: tests
     name: Test kinds
