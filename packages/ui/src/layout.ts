@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
@@ -6,10 +6,10 @@ import { base } from "./styles.js";
  * the theme's width, `gw-stack` stacks its children, `gw-row` lines them up
  * and `gw-grid` fills columns at least `--gw-grid-min` wide.
  */
-export class GwPage extends LitElement {
+export class GwPage extends GwElement {
   static override properties = {
-    narrow: { type: Boolean, reflect: true },
-  };
+    narrow: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -40,8 +40,8 @@ export class GwPage extends LitElement {
     this.narrow = false;
   }
 
-  override render() {
-    return html`<div class="page" part="page"><slot></slot></div>`;
+  protected override create(root: ShadowRoot) {
+    root.append(h("div", { class: "page", part: "page" }, h("slot")));
   }
 }
 
@@ -55,7 +55,14 @@ const gaps = css`
   }
 `;
 
-export class GwStack extends LitElement {
+/** A layout element whose shadow root is a single slot. */
+class GwSlotted extends GwElement {
+  protected override create(root: ShadowRoot) {
+    root.append(h("slot"));
+  }
+}
+
+export class GwStack extends GwSlotted {
   static override styles = [
     base,
     gaps,
@@ -67,13 +74,9 @@ export class GwStack extends LitElement {
       }
     `,
   ];
-
-  override render() {
-    return html`<slot></slot>`;
-  }
 }
 
-export class GwRow extends LitElement {
+export class GwRow extends GwSlotted {
   static override styles = [
     base,
     gaps,
@@ -90,13 +93,9 @@ export class GwRow extends LitElement {
       }
     `,
   ];
-
-  override render() {
-    return html`<slot></slot>`;
-  }
 }
 
-export class GwGrid extends LitElement {
+export class GwGrid extends GwSlotted {
   static override styles = [
     base,
     gaps,
@@ -111,19 +110,15 @@ export class GwGrid extends LitElement {
       }
     `,
   ];
-
-  override render() {
-    return html`<slot></slot>`;
-  }
 }
 
-customElements.define("gw-page", GwPage);
+GwPage.define("gw-page");
 
-customElements.define("gw-stack", GwStack);
+GwStack.define("gw-stack");
 
-customElements.define("gw-row", GwRow);
+GwRow.define("gw-row");
 
-customElements.define("gw-grid", GwGrid);
+GwGrid.define("gw-grid");
 
 declare global {
   interface HTMLElementTagNameMap {

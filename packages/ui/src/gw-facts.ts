@@ -1,6 +1,6 @@
-import { LitElement, css, html, type PropertyValues } from "lit";
+import { GwElement, css, h } from "./element.js";
 import "./gw-skeleton.js";
-import { animateHeight } from "./motion.js";
+import { animateHeight, fadeIn } from "./motion.js";
 import { base } from "./styles.js";
 
 export interface Fact {
@@ -13,14 +13,15 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
 
 /**
  * Label and value pairs, as a description list. While `loading`, `rows`
- * skeleton pairs stand in for them, keeping any labels already known.
+ * skeleton pairs stand in for them, keeping any labels already known. The
+ * list glides to its new height and the values fade in once they've loaded.
  */
-export class GwFacts extends LitElement {
+export class GwFacts extends GwElement {
   static override properties = {
-    items: { type: Array },
-    loading: { type: Boolean, reflect: true },
-    rows: { type: Number },
-  };
+    items: { type: "json" },
+    loading: { type: "boolean", reflect: true },
+    rows: { type: "number" },
+  } as const;
 
   static override styles = [
     base,
@@ -55,6 +56,10 @@ export class GwFacts extends LitElement {
   declare loading: boolean;
   declare rows: number;
 
+  readonly #list = h("dl");
+
+  #rendered = false;
+
   constructor() {
     super();
     this.items = [];
@@ -62,57 +67,59 @@ export class GwFacts extends LitElement {
     this.rows = 4;
   }
 
-  #before = 0;
-
-  override willUpdate(changed: PropertyValues<this>) {
-    if (this.hasUpdated && (changed.has("loading") || changed.has("items"))) {
-      this.#before = this.offsetHeight;
-    }
+  protected override create(root: ShadowRoot) {
+    root.append(this.#list);
   }
 
-  override updated() {
-    if (this.#before > 0) {
-      animateHeight(this, this.#before);
-      this.#before = 0;
-    }
-  }
+  protected override update(changed: ReadonlySet<string>) {
+    const items = Array.isArray(this.items) ? this.items : [];
+    const before = this.#rendered ? this.offsetHeight : 0;
+    const loaded = this.#rendered && changed.has("loading") && !this.loading;
 
-  override render() {
     if (this.loading) {
-      const count = Math.max(this.rows, this.items.length);
+      const count = Math.max(this.rows, items.length);
 
-      return html`<dl aria-busy="true">
-        ${Array.from(
-          { length: count },
-          (_, index) =>
-            html`<dt>
-                ${
-                  this.items[index]?.label ??
-                  html`<gw-skeleton-text
-                    style="--gw-skeleton-width: 5rem"
-                  ></gw-skeleton-text>`
-                }
-              </dt>
-              <dd>
-                <gw-skeleton-text
-                  style="--gw-skeleton-width: ${skeletonWidths[index % skeletonWidths.length]}"
-                ></gw-skeleton-text>
-              </dd>`,
-        )}
-      </dl>`;
+      this.#list.setAttribute("aria-busy", "true");
+      this.#list.replaceChildren(
+        ...Array.from({ length: count }, (_, index) => [
+          h(
+            "dt",
+            {},
+            items[index]?.label ??
+              h("gw-skeleton-text", { style: "--gw-skeleton-width: 5rem" }),
+          ),
+          h(
+            "dd",
+            {},
+            h("gw-skeleton-text", {
+              style: `--gw-skeleton-width: ${skeletonWidths[index % skeletonWidths.length]}`,
+            }),
+          ),
+        ]).flat(),
+      );
+    } else {
+      this.#list.removeAttribute("aria-busy");
+      this.#list.replaceChildren(
+        ...items.flatMap((item) => [
+          h("dt", {}, item.label),
+          h("dd", {}, loaded ? h("span", {}, item.value) : item.value),
+        ]),
+      );
     }
 
-    return html`<dl>
-      ${this.items.map(
-        (item) =>
-          html`<dt>${item.label}</dt>
-            <dd>${item.value}</dd>`,
-      )}
-    </dl>`;
+    if (before > 0) animateHeight(this, before);
+
+    if (loaded) {
+      for (const value of this.#list.querySelectorAll("dd > span")) {
+        if (value instanceof HTMLElement) fadeIn(value);
+      }
+    }
+
+    this.#rendered = true;
   }
 }
 
-customElements.define("gw-facts", GwFacts);
+GwFacts.define("gw-facts");
 
 declare global {
   interface HTMLElementTagNameMap {

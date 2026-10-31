@@ -1,5 +1,6 @@
-import { LitElement, css, html, nothing, svg } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
+import { fadeIn } from "./motion.js";
 import { base } from "./styles.js";
 
 /** How much of the circle the gauge's track covers. */
@@ -33,26 +34,41 @@ export const severityColor = (
   return "var(--gw-gauge-color, var(--gw-color-fill-accent-resting))";
 };
 
+const circle = (className: string) => {
+  const element = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle",
+  );
+
+  element.setAttribute("class", className);
+  element.setAttribute("cx", "50");
+  element.setAttribute("cy", "50");
+  element.setAttribute("r", String(radius));
+  element.setAttribute("stroke-dasharray", `${track} ${circumference}`);
+
+  return element;
+};
+
 /**
- * A reading on a dial, after Home Assistant's gauge card. The arc fills to
- * `value` between `min` and `max`, colored by `warning` and `danger`, and
- * glides when the value changes. While `loading`, the track pulses and a
- * skeleton stands in for the reading.
+ * A reading on a dial. The arc fills to `value` between `min` and `max`,
+ * colored by `warning` and `danger`, and glides when the value changes.
+ * While `loading`, the track pulses and a skeleton stands in for the
+ * reading.
  */
-export class GwGauge extends LitElement {
+export class GwGauge extends GwElement {
   static override properties = {
-    value: { type: Number },
-    min: { type: Number },
-    max: { type: Number },
+    value: { type: "number" },
+    min: { type: "number" },
+    max: { type: "number" },
     display: {},
     unit: {},
     label: {},
     caption: {},
-    warning: { type: Number },
-    danger: { type: Number },
-    inverted: { type: Boolean },
-    loading: { type: Boolean, reflect: true },
-  };
+    warning: { type: "number" },
+    danger: { type: "number" },
+    inverted: { type: "boolean" },
+    loading: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -121,6 +137,10 @@ export class GwGauge extends LitElement {
         padding-block-start: 6%;
       }
 
+      .shown:not([hidden]) {
+        display: contents;
+      }
+
       .value {
         font-size: calc(var(--gw-gauge-size, 8.5rem) * 0.2);
         font-weight: var(--gw-font-weight-strong);
@@ -162,6 +182,30 @@ export class GwGauge extends LitElement {
   declare inverted: boolean;
   declare loading: boolean;
 
+  readonly #fill = circle("fill");
+
+  readonly #dial = h("div", { class: "dial", role: "meter" });
+
+  readonly #value = h("span", { class: "value" });
+
+  readonly #unit = h("span", { class: "unit" });
+
+  readonly #shown = h("span", { class: "shown" }, this.#value, this.#unit);
+
+  readonly #readingSkeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 2em",
+  });
+
+  readonly #label = h("span", { class: "label" });
+
+  readonly #caption = h("span", { class: "caption" });
+
+  readonly #captionSkeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 5rem",
+  });
+
+  #rendered = false;
+
   constructor() {
     super();
     this.value = undefined;
@@ -177,7 +221,20 @@ export class GwGauge extends LitElement {
     this.loading = false;
   }
 
-  override render() {
+  protected override create(root: ShadowRoot) {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("aria-hidden", "true");
+    svg.append(circle("track"), this.#fill);
+    this.#dial.append(
+      svg,
+      h("div", { class: "reading" }, this.#readingSkeleton, this.#shown),
+    );
+    root.append(this.#dial, this.#label, this.#captionSkeleton, this.#caption);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
     const value =
       this.value !== undefined && Number.isFinite(this.value) && !this.loading
         ? this.value
@@ -201,54 +258,43 @@ export class GwGauge extends LitElement {
             .filter((part) => part !== "")
             .join(", ");
 
-    return html` <div
-        class="dial"
-        role="meter"
-        aria-busy=${this.loading ? "true" : nothing}
-        aria-label=${this.label || nothing}
-        aria-valuemin=${this.min}
-        aria-valuemax=${this.max}
-        aria-valuenow=${value ?? nothing}
-        aria-valuetext=${text}
-      >
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          ${svg`
-            <circle class="track" cx="50" cy="50" r=${radius}
-              stroke-dasharray="${track} ${circumference}"></circle>
-            <circle class="fill" cx="50" cy="50" r=${radius}
-              stroke=${severityColor(value, this.warning, this.danger, this.inverted)}
-              stroke-dasharray="${track} ${circumference}"
-              stroke-dashoffset=${track * (1 - fraction)}
-              opacity=${fraction === 0 ? 0 : 1}></circle>
-          `}
-        </svg>
-        <div class="reading">
-          ${
-            this.loading
-              ? html`<gw-skeleton-text
-                  style="--gw-skeleton-width: 2em"
-                ></gw-skeleton-text>`
-              : html`<span class="value">${shown}</span>
-                  ${this.unit === "" ? nothing : html`<span class="unit">${this.unit}</span>`}`
-          }
-        </div>
-      </div>
-      ${this.label === "" ? nothing : html`<span class="label">${this.label}</span>`}
-      ${
-        this.loading && this.caption === ""
-          ? nothing
-          : this.loading
-            ? html`<gw-skeleton-text
-                style="--gw-skeleton-width: 5rem"
-              ></gw-skeleton-text>`
-            : this.caption === ""
-              ? nothing
-              : html`<span class="caption">${this.caption}</span>`
-      }`;
+    setAttribute(this.#dial, "aria-busy", this.loading ? "true" : null);
+    setAttribute(this.#dial, "aria-label", this.label || null);
+    setAttribute(this.#dial, "aria-valuemin", this.min);
+    setAttribute(this.#dial, "aria-valuemax", this.max);
+    setAttribute(this.#dial, "aria-valuenow", value);
+    setAttribute(this.#dial, "aria-valuetext", text);
+    this.#fill.setAttribute(
+      "stroke",
+      severityColor(value, this.warning, this.danger, this.inverted),
+    );
+    this.#fill.setAttribute(
+      "stroke-dashoffset",
+      String(track * (1 - fraction)),
+    );
+    this.#fill.setAttribute("opacity", fraction === 0 ? "0" : "1");
+    this.#readingSkeleton.hidden = !this.loading;
+    this.#shown.hidden = this.loading;
+    this.#value.textContent = shown;
+    this.#unit.textContent = this.unit;
+    this.#unit.hidden = this.unit === "";
+    this.#label.textContent = this.label;
+    this.#label.hidden = this.label === "";
+    this.#captionSkeleton.hidden = !this.loading || this.caption === "";
+    this.#caption.textContent = this.caption;
+    this.#caption.hidden = this.loading || this.caption === "";
+
+    if (this.#rendered && changed.has("loading") && !this.loading) {
+      fadeIn(this.#value);
+      fadeIn(this.#unit);
+      fadeIn(this.#caption);
+    }
+
+    this.#rendered = true;
   }
 }
 
-customElements.define("gw-gauge", GwGauge);
+GwGauge.define("gw-gauge");
 
 declare global {
   interface HTMLElementTagNameMap {

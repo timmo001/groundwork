@@ -1,21 +1,22 @@
-import { LitElement, css, html, nothing, type PropertyValues } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
-import { animateHeight } from "./motion.js";
+import { animateHeight, fadeIn } from "./motion.js";
 import { base } from "./styles.js";
 
 /**
  * A surface for one group of content, with an optional heading and actions.
  * With `href` the whole card is a link. While `loading`, lines of skeleton
- * stand in for the content, and for the heading until it's known.
+ * stand in for the content, and for the heading until it's known. The card
+ * glides to its new height and the content fades in once it's loaded.
  */
-export class GwCard extends LitElement {
+export class GwCard extends GwElement {
   static override properties = {
     heading: {},
     href: {},
-    flush: { type: Boolean, reflect: true },
-    loading: { type: Boolean, reflect: true },
-    lines: { type: Number },
-  };
+    flush: { type: "boolean", reflect: true },
+    loading: { type: "boolean", reflect: true },
+    lines: { type: "number" },
+  } as const;
 
   static override styles = [
     base,
@@ -64,6 +65,12 @@ export class GwCard extends LitElement {
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-strong);
       }
+
+      .body:not([hidden]) {
+        display: flex;
+        flex-direction: column;
+        gap: inherit;
+      }
     `,
   ];
 
@@ -74,6 +81,27 @@ export class GwCard extends LitElement {
   /** How many lines of skeleton stand in for the content while loading. */
   declare lines: number;
 
+  readonly #title = h("span");
+
+  readonly #titleSkeleton = h("gw-skeleton-text");
+
+  readonly #header = h(
+    "header",
+    {},
+    h("h2", {}, this.#title, this.#titleSkeleton),
+    h("slot", { name: "actions" }),
+  );
+
+  readonly #skeleton = h("gw-skeleton-lines");
+
+  readonly #body = h("div", { class: "body" }, h("slot"));
+
+  #card: HTMLElement = h("section", { class: "card", part: "card" });
+
+  #wasLoading = false;
+
+  #rendered = false;
+
   constructor() {
     super();
     this.heading = "";
@@ -83,57 +111,54 @@ export class GwCard extends LitElement {
     this.lines = 3;
   }
 
-  #before = 0;
-
-  override willUpdate(changed: PropertyValues<this>) {
-    if (this.hasUpdated && changed.has("loading")) {
-      this.#before = this.offsetHeight;
-    }
+  protected override create(root: ShadowRoot) {
+    this.#card.append(this.#header, this.#skeleton, this.#body);
+    root.append(this.#card);
   }
 
-  override updated(changed: PropertyValues<this>) {
-    if (changed.has("loading") && this.#before > 0) {
-      animateHeight(this, this.#before);
-      this.#before = 0;
+  protected override update(changed: ReadonlySet<string>) {
+    const animate =
+      changed.has("loading") &&
+      this.#rendered &&
+      this.#wasLoading !== this.loading;
+
+    const before = animate ? this.offsetHeight : 0;
+
+    if (
+      changed.has("href") &&
+      (this.#card.tagName === "A") !== Boolean(this.href)
+    ) {
+      const next = this.href
+        ? h("a", { class: "card", part: "card" })
+        : h("section", { class: "card", part: "card" });
+
+      next.append(...this.#card.childNodes);
+      this.#card.replaceWith(next);
+      this.#card = next;
     }
-  }
 
-  override render() {
-    const heading = this.heading
-      ? html`<h2>${this.heading}</h2>`
-      : this.loading
-        ? html`<h2><gw-skeleton-text></gw-skeleton-text></h2>`
-        : nothing;
+    if (this.#card instanceof HTMLAnchorElement) this.#card.href = this.href;
 
-    const content = html`
-      ${
-        heading === nothing
-          ? nothing
-          : html`<header>
-              ${heading}
-              <slot name="actions"></slot>
-            </header>`
-      }
-      ${
-        this.loading
-          ? html`<gw-skeleton-lines lines=${this.lines}></gw-skeleton-lines>`
-          : html`<slot></slot>`
-      }
-    `;
+    setAttribute(this.#card, "aria-busy", this.loading ? "true" : null);
+    this.#title.textContent = this.heading;
+    this.#titleSkeleton.hidden = this.heading !== "" || !this.loading;
+    this.#header.hidden = !this.heading && !this.loading;
+    this.#skeleton.lines = this.lines;
+    this.#skeleton.hidden = !this.loading;
+    this.#body.hidden = this.loading;
 
-    const busy = this.loading ? "true" : nothing;
+    if (animate) {
+      animateHeight(this, before);
 
-    return this.href
-      ? html`<a class="card" part="card" href=${this.href} aria-busy=${busy}
-          >${content}</a
-        >`
-      : html`<section class="card" part="card" aria-busy=${busy}>
-          ${content}
-        </section>`;
+      if (!this.loading) fadeIn(this.#body);
+    }
+
+    this.#wasLoading = this.loading;
+    this.#rendered = true;
   }
 }
 
-customElements.define("gw-card", GwCard);
+GwCard.define("gw-card");
 
 declare global {
   interface HTMLElementTagNameMap {

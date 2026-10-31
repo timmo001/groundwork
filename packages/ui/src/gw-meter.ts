@@ -1,5 +1,6 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
+import { fadeIn } from "./motion.js";
 import { base, type Tone } from "./styles.js";
 
 /**
@@ -7,18 +8,18 @@ import { base, type Tone } from "./styles.js";
  * turns warning, and past `critical` danger, unless a `tone` is set. While
  * `loading`, the track pulses and a skeleton stands in for the value.
  */
-export class GwMeter extends LitElement {
+export class GwMeter extends GwElement {
   static override properties = {
     label: {},
-    value: { type: Number },
-    min: { type: Number },
-    max: { type: Number },
-    high: { type: Number },
-    critical: { type: Number },
+    value: { type: "number" },
+    min: { type: "number" },
+    max: { type: "number" },
+    high: { type: "number" },
+    critical: { type: "number" },
     display: {},
     tone: { reflect: true },
-    loading: { type: Boolean, reflect: true },
-  };
+    loading: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -54,6 +55,12 @@ export class GwMeter extends LitElement {
         border-radius: inherit;
         transition: width var(--gw-motion-slow) var(--gw-motion-easing);
       }
+
+      .bar {
+        min-height: 0;
+        height: 0.5rem;
+        --gw-skeleton-radius: var(--gw-radius-pill);
+      }
     `,
   ];
 
@@ -66,6 +73,28 @@ export class GwMeter extends LitElement {
   declare display: string;
   declare tone: Tone | undefined;
   declare loading: boolean;
+
+  readonly #top = h("div", { class: "top" });
+
+  readonly #label = h("span");
+
+  readonly #labelSkeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 6rem",
+  });
+
+  readonly #value = h("span", { class: "value", "aria-hidden": "true" });
+
+  readonly #valueSkeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 2.5rem",
+  });
+
+  readonly #fill = h("div", { class: "fill" });
+
+  readonly #track = h("div", { class: "track", role: "meter" }, this.#fill);
+
+  readonly #bar = h("gw-skeleton", { class: "bar" });
+
+  #rendered = false;
 
   constructor() {
     super();
@@ -94,7 +123,16 @@ export class GwMeter extends LitElement {
     return "var(--gw-color-fill-accent-resting)";
   }
 
-  override render() {
+  protected override create(root: ShadowRoot) {
+    this.#top.append(
+      h("span", {}, this.#label, this.#labelSkeleton),
+      this.#value,
+      this.#valueSkeleton,
+    );
+    root.append(this.#top, this.#track, this.#bar);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
     const span = this.max - this.min || 1;
 
     const percent = Math.min(
@@ -104,51 +142,31 @@ export class GwMeter extends LitElement {
 
     const text = this.display || `${Math.round(percent)}%`;
 
-    if (this.loading) {
-      return html`
-        <div class="top" aria-busy="true">
-          <span
-            >${
-              this.label ||
-              html`<gw-skeleton-text
-                style="--gw-skeleton-width: 6rem"
-              ></gw-skeleton-text>`
-            }</span
-          >
-          <gw-skeleton-text
-            style="--gw-skeleton-width: 2.5rem"
-          ></gw-skeleton-text>
-        </div>
-        <gw-skeleton
-          style="min-height: 0; height: 0.5rem; --gw-skeleton-radius: var(--gw-radius-pill)"
-        ></gw-skeleton>
-      `;
+    setAttribute(this.#top, "aria-busy", this.loading ? "true" : null);
+    this.#label.textContent = this.label;
+    this.#labelSkeleton.hidden = !this.loading || this.label !== "";
+    this.#value.textContent = text;
+    this.#value.hidden = this.loading;
+    this.#valueSkeleton.hidden = !this.loading;
+    this.#track.hidden = this.loading;
+    this.#bar.hidden = !this.loading;
+    setAttribute(this.#track, "aria-label", this.label || null);
+    setAttribute(this.#track, "aria-valuemin", this.min);
+    setAttribute(this.#track, "aria-valuemax", this.max);
+    setAttribute(this.#track, "aria-valuenow", this.value);
+    setAttribute(this.#track, "aria-valuetext", text);
+    this.#fill.style.width = `${percent}%`;
+    this.#fill.style.setProperty("--gw-meter-color", this.#color);
+
+    if (this.#rendered && changed.has("loading") && !this.loading) {
+      fadeIn(this.#value);
     }
 
-    return html`
-      <div class="top">
-        <span>${this.label}</span>
-        <span class="value" aria-hidden="true">${text}</span>
-      </div>
-      <div
-        class="track"
-        role="meter"
-        aria-label=${this.label || nothing}
-        aria-valuemin=${this.min}
-        aria-valuemax=${this.max}
-        aria-valuenow=${this.value}
-        aria-valuetext=${text}
-      >
-        <div
-          class="fill"
-          style="width: ${percent}%; --gw-meter-color: ${this.#color}"
-        ></div>
-      </div>
-    `;
+    this.#rendered = true;
   }
 }
 
-customElements.define("gw-meter", GwMeter);
+GwMeter.define("gw-meter");
 
 declare global {
   interface HTMLElementTagNameMap {
