@@ -15,7 +15,7 @@ export class GwSegmented extends LitElement {
     label: {},
     name: {},
     value: { reflect: true },
-    options: { attribute: false },
+    options: { type: Array },
   };
 
   static override styles = [

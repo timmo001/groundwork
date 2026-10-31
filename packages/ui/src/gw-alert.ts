@@ -33,6 +33,14 @@ export class GwAlert extends LitElement {
         border-radius: var(--gw-radius-control);
       }
 
+      ::slotted(p) {
+        margin: 0;
+      }
+
+      ::slotted([slot="actions"]) {
+        align-self: center;
+      }
+
       ::slotted([slot="icon"]) {
         color: var(--gw-tone, var(--gw-color-info));
       }

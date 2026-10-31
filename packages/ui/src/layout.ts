@@ -2,7 +2,7 @@ import { LitElement, css, html } from "lit";
 import { base } from "./styles.js";
 
 /**
- * Layout without wrappers of its own: `gw-page` centres a page's content at
+ * Layout: `gw-page` centres a page's content at
  * the theme's width, `gw-stack` stacks its children, `gw-row` lines them up
  * and `gw-grid` fills columns at least `--gw-grid-min` wide.
  */
@@ -15,6 +15,10 @@ export class GwPage extends LitElement {
     base,
     css`
       :host {
+        display: block;
+      }
+
+      .page {
         display: flex;
         flex-direction: column;
         gap: var(--gw-space-6);
@@ -23,7 +27,7 @@ export class GwPage extends LitElement {
         margin-inline: auto;
       }
 
-      :host([narrow]) {
+      :host([narrow]) .page {
         max-width: var(--gw-content-width-narrow);
       }
     `,
@@ -37,7 +41,7 @@ export class GwPage extends LitElement {
   }
 
   override render() {
-    return html`<slot></slot>`;
+    return html`<div class="page" part="page"><slot></slot></div>`;
   }
 }
 

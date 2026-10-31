@@ -9,7 +9,7 @@ export interface Fact {
 /** Label and value pairs, as a description list. */
 export class GwFacts extends LitElement {
   static override properties = {
-    items: { attribute: false },
+    items: { type: Array },
   };
 
   static override styles = [

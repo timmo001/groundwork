@@ -41,6 +41,7 @@ const styleProperties = (style: Style) => ({
   "font-weight-regular": String(style.weights.regular),
   "font-weight-strong": String(style.weights.strong),
   density: String(density[style.density]),
+  ...spacing,
   "radius-panel": `${style.radius.panel}px`,
   "radius-control": `${style.radius.control}px`,
   "radius-chip": `${style.radius.chip}px`,
@@ -78,7 +79,12 @@ const shadows = (dark: boolean) => {
   };
 };
 
-const foundations = {
+/**
+ * Spacing scales with the theme's density. A custom property's `var()`
+ * resolves where it's declared, so the scale is declared again in every
+ * theme beside its density, not only on `:root`.
+ */
+const spacing = {
   "space-1": "calc(0.125rem * var(--gw-density))",
   "space-2": "calc(0.25rem * var(--gw-density))",
   "space-3": "calc(0.5rem * var(--gw-density))",
@@ -87,6 +93,11 @@ const foundations = {
   "space-6": "calc(1.5rem * var(--gw-density))",
   "space-7": "calc(2rem * var(--gw-density))",
   "space-8": "calc(3rem * var(--gw-density))",
+};
+
+const foundations = {
+  density: "1",
+  ...spacing,
   "font-size-multiplier": "1",
   "font-size-2xs": "calc(0.6875rem * var(--gw-font-size-multiplier))",
   "font-size-xs": "calc(0.75rem * var(--gw-font-size-multiplier))",

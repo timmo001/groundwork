@@ -5,6 +5,10 @@ import { base } from "./styles.js";
  * A native button styled through `--gw-*` variables, so it follows the
  * theme and mode around it. With `href` it renders a link that looks the
  * same. Put an icon in the `icon` slot.
+ *
+ * Variants: `primary`, `secondary` (the default), `accent` and `plain`, plus
+ * `info`, `success`, `warning` and `danger` from the theme's status roles.
+ * Sizes run `xs` to `xl`, and `--gw-button-scale` sets any size in between.
  */
 export class GwButton extends LitElement {
   static override properties = {
@@ -23,15 +27,36 @@ export class GwButton extends LitElement {
         display: inline-block;
       }
 
+      /* Everything scales from --gw-button-scale: the size presets set it, and
+         an app can set any value for a size between or beyond them */
+      :host([size="xs"]) {
+        --gw-button-scale: 0.75;
+      }
+
+      :host([size="small"]) {
+        --gw-button-scale: 0.85;
+      }
+
+      :host([size="large"]) {
+        --gw-button-scale: 1.3;
+      }
+
+      :host([size="xl"]) {
+        --gw-button-scale: 1.6;
+      }
+
       .button {
+        --gw-scale: var(--gw-button-scale, 1);
+        --gw-icon-size: calc(1.125rem * var(--gw-scale));
+
         display: inline-flex;
-        gap: var(--gw-space-2);
+        gap: calc(var(--gw-space-2) * var(--gw-scale));
         align-items: center;
         justify-content: center;
-        min-height: 2.25rem;
-        padding: 0 var(--gw-space-4);
+        min-height: calc(2.25rem * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-4) * var(--gw-scale));
         font: inherit;
-        font-size: var(--gw-font-size-s);
+        font-size: calc(var(--gw-font-size-s) * var(--gw-scale));
         font-weight: var(--gw-font-weight-strong);
         line-height: 1;
         color: var(--gw-color-text-strong);
@@ -45,7 +70,6 @@ export class GwButton extends LitElement {
         border-radius: var(--gw-radius-control);
         transition: background-color var(--gw-motion-fast)
           var(--gw-motion-easing);
-        --gw-icon-size: 1.125rem;
       }
 
       .button:hover {
@@ -54,20 +78,6 @@ export class GwButton extends LitElement {
 
       .button:active {
         background: var(--gw-color-fill-neutral-pressed);
-      }
-
-      :host([size="small"]) .button {
-        min-height: 1.875rem;
-        padding: 0 var(--gw-space-3);
-        font-size: var(--gw-font-size-xs);
-        --gw-icon-size: 1rem;
-      }
-
-      :host([size="large"]) .button {
-        min-height: 3rem;
-        padding: 0 var(--gw-space-6);
-        font-size: var(--gw-font-size-m);
-        --gw-icon-size: 1.5rem;
       }
 
       :host([variant="primary"]) .button {
@@ -107,10 +117,72 @@ export class GwButton extends LitElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      :host([variant="danger"]) .button {
-        color: var(--gw-color-danger);
-        background: var(--gw-color-fill-danger-quiet);
-        border-color: var(--gw-color-border-danger);
+      /* Status buttons take their colour from the theme's status roles, as a
+         tinted fill and border, with strong text so they read in every theme */
+      :host([variant="info"]) {
+        --gw-button-tone: var(--gw-color-info);
+      }
+
+      :host([variant="success"]) {
+        --gw-button-tone: var(--gw-color-success);
+      }
+
+      :host([variant="warning"]) {
+        --gw-button-tone: var(--gw-color-warning);
+      }
+
+      :host([variant="danger"]) {
+        --gw-button-tone: var(--gw-color-danger);
+      }
+
+      :host(
+          :is(
+            [variant="info"],
+            [variant="success"],
+            [variant="warning"],
+            [variant="danger"]
+          )
+        )
+        .button {
+        color: var(--gw-color-text-strong);
+        background: color-mix(
+          in oklch,
+          var(--gw-button-tone) 18%,
+          var(--gw-color-surface-raised)
+        );
+        border-color: var(--gw-button-tone);
+      }
+
+      :host(
+          :is(
+            [variant="info"],
+            [variant="success"],
+            [variant="warning"],
+            [variant="danger"]
+          )
+        )
+        .button:hover {
+        background: color-mix(
+          in oklch,
+          var(--gw-button-tone) 28%,
+          var(--gw-color-surface-raised)
+        );
+      }
+
+      :host(
+          :is(
+            [variant="info"],
+            [variant="success"],
+            [variant="warning"],
+            [variant="danger"]
+          )
+        )
+        .button:active {
+        background: color-mix(
+          in oklch,
+          var(--gw-button-tone) 36%,
+          var(--gw-color-surface-raised)
+        );
       }
 
       .button:disabled,
@@ -129,8 +201,16 @@ export class GwButton extends LitElement {
     `,
   ];
 
-  declare variant: "neutral" | "primary" | "accent" | "plain" | "danger";
-  declare size: "small" | "medium" | "large";
+  declare variant:
+    | "primary"
+    | "secondary"
+    | "accent"
+    | "plain"
+    | "info"
+    | "success"
+    | "warning"
+    | "danger";
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
   declare type: "button" | "submit" | "reset";
   declare href: string;
   declare label: string;
@@ -138,7 +218,7 @@ export class GwButton extends LitElement {
 
   constructor() {
     super();
-    this.variant = "neutral";
+    this.variant = "secondary";
     this.size = "medium";
     this.type = "button";
     this.href = "";

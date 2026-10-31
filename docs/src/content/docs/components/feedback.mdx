@@ -1,0 +1,40 @@
+---
+title: Feedback
+description: Spinners, skeletons, empty states and toasts.
+---
+
+## Spinner and skeleton
+
+<Demo id="loading" layout="stack">
+  <gw-row><gw-spinner label="Loading sensors"></gw-spinner> Loading sensors</gw-row>
+  <div aria-busy="true">
+    <gw-stack gap="s">
+      <gw-skeleton style="width: 40%; height: 1.5rem"></gw-skeleton>
+      <gw-skeleton style="width: 100%"></gw-skeleton>
+      <gw-skeleton style="width: 80%"></gw-skeleton>
+    </gw-stack>
+  </div>
+</Demo>
+
+The spinner is announced by its `label`. A skeleton stands in for what's loading at its size, set in CSS; it's hidden from assistive technology, so mark the region it's in `aria-busy`.
+
+## Empty state
+
+<Demo id="empty-state" layout="stack">
+  <gw-empty-state heading="Nothing to apply" icon="M19 3H5A2 2 0 0 0 3 5V19A2 2 0 0 0 5 21H19A2 2 0 0 0 21 19V5A2 2 0 0 0 19 3M5 19V17H8.13A4.13 4.13 0 0 0 9.4 19M19 19H14.6A4.13 4.13 0 0 0 15.87 17H19M19 15H14V16A2 2 0 0 1 10 16V15H5V5H19Z">
+    Every item is up to date.
+    <gw-button slot="actions" size="small">Check again</gw-button>
+  </gw-empty-state>
+</Demo>
+
+What a list or page shows when it's empty or there's nothing to do. Say so in one line, the same as a CLI does.
+
+## Toast
+
+<Demo id="toast">
+  <gw-button data-toast="Backup finished" data-tone="success">Finish a backup</gw-button>
+  <gw-button data-toast="Disk nearly full" data-tone="warning">Fill a disk</gw-button>
+  <gw-toaster duration="4000"></gw-toaster>
+</Demo>
+
+Put one `gw-toaster` on the page and call `show(message, tone)`. Each toast is announced politely and leaves after `duration` milliseconds. Toasts are for something new that needs the person, not for routine success.

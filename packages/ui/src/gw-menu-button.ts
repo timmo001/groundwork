@@ -49,6 +49,7 @@ export class GwMenuButton extends LitElement {
         height: 0.5rem;
         border-inline-end: 2px solid currentColor;
         border-block-end: 2px solid currentColor;
+        margin-inline-start: var(--gw-space-1);
         rotate: 45deg;
         translate: 0 -0.125rem;
       }

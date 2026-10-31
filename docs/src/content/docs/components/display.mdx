@@ -1,0 +1,74 @@
+---
+title: Display
+description: Cards, chips, badges, dots, alerts, facts and meters.
+---
+
+Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`, `danger` or `important`, each from the theme's status roles.
+
+## Card
+
+<Demo id="card" layout="stack">
+  <gw-card heading="Desktop">
+    <gw-button slot="actions" size="small" variant="plain">Details</gw-button>
+    <gw-facts items='[{"label":"Uptime","value":"3 days, 4 hours"},{"label":"Version","value":"5.2.0"}]'></gw-facts>
+  </gw-card>
+  <gw-card heading="Open as a link" href="#card">The whole card is the link.</gw-card>
+</Demo>
+
+`heading` adds a header, with an `actions` slot beside it. `href` makes the whole card a link, and `flush` drops the padding for a table or image that fills it.
+
+## Chip and dot
+
+<Demo id="chip">
+  <gw-chip>Idle</gw-chip>
+  <gw-chip tone="success"><gw-dot tone="success" slot="icon"></gw-dot>Online</gw-chip>
+  <gw-chip tone="warning">Updating</gw-chip>
+  <gw-chip tone="danger">Failed</gw-chip>
+  <gw-chip tone="info">Planned</gw-chip>
+  <gw-chip tone="important">Breaking</gw-chip>
+  <gw-dot tone="success" label="Online" pulse></gw-dot>
+</Demo>
+
+A dot on its own needs a `label`, such as "Online"; beside text that says the same, leave it out. `pulse` makes it breathe while something is live.
+
+## Badge
+
+<Demo id="badge">
+  <gw-badge label="CPU" icon="M15 13V5A3 3 0 0 0 9 5V13A5 5 0 1 0 15 13M12 4A1 1 0 0 1 13 5V8H11V5A1 1 0 0 1 12 4Z" tone="warning">71 °C</gw-badge>
+  <gw-badge icon="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M16.59 7.58L10 14.17L7.41 11.59L6 13L10 17L18 9L16.59 7.58Z" tone="success" size="small">Resolved</gw-badge>
+  <gw-badge label="Server" icon="M4,1H20A1,1 0 0,1 21,2V6A1,1 0 0,1 20,7H4A1,1 0 0,1 3,6V2A1,1 0 0,1 4,1M4,9H20A1,1 0 0,1 21,10V14A1,1 0 0,1 20,15H4A1,1 0 0,1 3,14V10A1,1 0 0,1 4,9M4,17H20A1,1 0 0,1 21,18V22A1,1 0 0,1 20,23H4A1,1 0 0,1 3,22V18A1,1 0 0,1 4,17M9,5H10V3H9V5M9,13H10V11H9V13M9,21H10V19H9V21M5,3V5H7V3H5M5,11V13H7V11H5M5,19V21H7V19H5Z">homelab</gw-badge>
+</Demo>
+
+A pill with an icon, a value and an optional small label, after Home Assistant's badges. The icon takes the tone's colour. `size="small"` fits it in a table row.
+
+## Alert
+
+<Demo id="alert" layout="stack">
+  <gw-alert heading="Update available">System Bridge 5.3.0 is ready to install.</gw-alert>
+  <gw-alert tone="success">Backup finished in 4 minutes.</gw-alert>
+  <gw-alert tone="warning" heading="Disk nearly full">Only 8 GB left on the system disk.</gw-alert>
+  <gw-alert tone="danger" heading="Connection lost" urgent>
+    Can't reach the server.
+    <gw-button slot="actions" size="small">Retry</gw-button>
+  </gw-alert>
+</Demo>
+
+It's announced politely as a status, or at once with `urgent` for an error that needs attention. Slot an icon in `icon` and buttons in `actions`.
+
+## Facts
+
+<Demo id="facts" layout="stack">
+  <gw-facts items='[{"label":"Hostname","value":"desktop"},{"label":"Kernel","value":"7.2.8"},{"label":"Memory","value":"64 GB"},{"label":"Uptime","value":"3 days, 4 hours"}]'></gw-facts>
+</Demo>
+
+Label and value pairs as a description list. Set `items` to `[{ "label", "value" }]`.
+
+## Meter
+
+<Demo id="meter" layout="stack">
+  <gw-meter label="Memory" value="42"></gw-meter>
+  <gw-meter label="System disk" value="88" high="80" critical="95" display="880 of 1,000 GB"></gw-meter>
+  <gw-meter label="Battery" value="12" tone="danger"></gw-meter>
+</Demo>
+
+A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it turns warning and past `critical` danger, unless a `tone` is set. `display` replaces the percentage shown beside the label.

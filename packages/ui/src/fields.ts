@@ -73,6 +73,15 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
+  :where(gw-switch, gw-checkbox) .gw-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
   gw-checkbox input {
     width: 1.125rem;
     height: 1.125rem;

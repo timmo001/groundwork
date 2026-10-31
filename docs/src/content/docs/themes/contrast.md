@@ -11,91 +11,91 @@ Each role is measured with the WCAG 2 ratio against the raised surface, the lowe
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.00 | 11.07 | 12.45 |
-| text-primary | 9 | 9.02 | 9.00 | 10.12 |
-| text-secondary | 4.6 | 4.61 | 4.61 | 5.19 |
-| accent | 5 | 16.21 | 12.52 | 14.08 |
-| Status: info | 4.8 | 4.81 | 5.43 | 6.10 |
-| Status: success | 4.8 | 4.81 | 5.41 | 6.08 |
-| Status: important | 4.8 | 4.80 | 5.41 | 6.08 |
-| Status: warning | 4.8 | 4.80 | 5.39 | 6.06 |
-| Status: danger | 4.8 | 4.82 | 5.44 | 6.12 |
+| text-strong | 11 | 11.11 | 11.01 | 11.48 |
+| text-primary | 9 | 9.03 | 9.05 | 9.43 |
+| text-secondary | 4.6 | 4.62 | 4.60 | 4.80 |
+| accent | 5 | 14.30 | 11.40 | 11.89 |
+| Status: info | 4.8 | 4.83 | 4.94 | 5.15 |
+| Status: success | 4.8 | 4.81 | 4.92 | 5.13 |
+| Status: important | 4.8 | 4.83 | 4.92 | 5.13 |
+| Status: warning | 4.8 | 4.80 | 4.91 | 5.12 |
+| Status: danger | 4.8 | 4.83 | 4.95 | 5.17 |
 | on-accent | 4.5 | 16.49 | 16.03 | 16.03 |
 
 ## Glazing
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.03 | 11.01 | 12.38 |
-| text-primary | 9 | 9.01 | 9.01 | 10.13 |
-| text-secondary | 4.6 | 4.65 | 4.64 | 5.22 |
-| accent | 5 | 5.01 | 5.62 | 6.32 |
-| Status: info | 4.8 | 4.82 | 5.43 | 6.11 |
-| Status: success | 4.8 | 4.82 | 5.41 | 6.09 |
-| Status: important | 4.8 | 4.81 | 5.41 | 6.09 |
-| Status: warning | 4.8 | 4.81 | 5.40 | 6.07 |
-| Status: danger | 4.8 | 4.80 | 5.45 | 6.13 |
-| on-accent | 4.5 | 5.09 | 7.18 | 7.18 |
+| text-strong | 11 | 11.04 | 11.04 | 11.51 |
+| text-primary | 9 | 9.07 | 9.01 | 9.39 |
+| text-secondary | 4.6 | 4.60 | 4.63 | 4.82 |
+| accent | 5 | 5.00 | 5.12 | 5.34 |
+| Status: info | 4.8 | 4.82 | 4.95 | 5.16 |
+| Status: success | 4.8 | 4.80 | 4.94 | 5.15 |
+| Status: important | 4.8 | 4.81 | 4.93 | 5.14 |
+| Status: warning | 4.8 | 4.84 | 4.92 | 5.13 |
+| Status: danger | 4.8 | 4.82 | 4.97 | 5.18 |
+| on-accent | 4.5 | 5.79 | 7.18 | 7.18 |
 
 ## Survey
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.00 | 11.06 | 12.43 |
-| text-primary | 9 | 9.01 | 9.05 | 10.18 |
-| text-secondary | 4.6 | 4.60 | 4.61 | 5.18 |
-| accent | 5 | 5.02 | 5.58 | 6.27 |
-| Status: info | 4.8 | 4.82 | 5.42 | 6.09 |
-| Status: success | 4.8 | 4.82 | 5.40 | 6.07 |
-| Status: important | 4.8 | 4.81 | 5.40 | 6.07 |
-| Status: warning | 4.8 | 4.81 | 5.38 | 6.05 |
-| Status: danger | 4.8 | 4.80 | 5.43 | 6.11 |
-| on-accent | 4.5 | 5.10 | 7.15 | 7.15 |
+| text-strong | 11 | 11.03 | 11.06 | 11.54 |
+| text-primary | 9 | 9.06 | 9.03 | 9.42 |
+| text-secondary | 4.6 | 4.60 | 4.60 | 4.80 |
+| accent | 5 | 5.01 | 5.08 | 5.29 |
+| Status: info | 4.8 | 4.80 | 4.93 | 5.14 |
+| Status: success | 4.8 | 4.86 | 4.92 | 5.13 |
+| Status: important | 4.8 | 4.80 | 4.91 | 5.12 |
+| Status: warning | 4.8 | 4.83 | 4.90 | 5.11 |
+| Status: danger | 4.8 | 4.81 | 4.95 | 5.16 |
+| on-accent | 4.5 | 5.81 | 7.15 | 7.15 |
 
 ## Slate
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.01 | 11.05 | 12.44 |
-| text-primary | 9 | 9.09 | 9.04 | 10.18 |
-| text-secondary | 4.6 | 4.64 | 4.61 | 5.19 |
-| accent | 5 | 5.02 | 5.62 | 6.33 |
-| Status: info | 4.8 | 4.81 | 5.45 | 6.14 |
-| Status: success | 4.8 | 4.81 | 5.43 | 6.12 |
-| Status: important | 4.8 | 4.82 | 5.43 | 6.11 |
-| Status: warning | 4.8 | 4.84 | 5.42 | 6.10 |
-| Status: danger | 4.8 | 4.82 | 5.47 | 6.15 |
-| on-accent | 4.5 | 5.11 | 7.16 | 7.16 |
+| text-strong | 11 | 11.03 | 11.03 | 11.54 |
+| text-primary | 9 | 9.03 | 9.00 | 9.42 |
+| text-secondary | 4.6 | 4.64 | 4.62 | 4.84 |
+| accent | 5 | 5.01 | 5.10 | 5.34 |
+| Status: info | 4.8 | 4.81 | 4.95 | 5.18 |
+| Status: success | 4.8 | 4.85 | 4.93 | 5.16 |
+| Status: important | 4.8 | 4.81 | 4.93 | 5.16 |
+| Status: warning | 4.8 | 4.82 | 4.92 | 5.15 |
+| Status: danger | 4.8 | 4.80 | 4.96 | 5.19 |
+| on-accent | 4.5 | 5.82 | 7.16 | 7.16 |
 
 ## Bridge
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.00 | 11.02 | 12.40 |
-| text-primary | 9 | 9.02 | 9.03 | 10.16 |
-| text-secondary | 4.6 | 4.61 | 4.61 | 5.19 |
-| accent | 5 | 5.01 | 5.58 | 6.28 |
-| Status: info | 4.8 | 4.82 | 5.39 | 6.06 |
-| Status: success | 4.8 | 4.82 | 5.37 | 6.05 |
-| Status: important | 4.8 | 4.81 | 5.37 | 6.04 |
-| Status: warning | 4.8 | 4.81 | 5.36 | 6.03 |
-| Status: danger | 4.8 | 4.80 | 5.41 | 6.08 |
-| on-accent | 4.5 | 5.08 | 7.20 | 7.20 |
+| text-strong | 11 | 11.05 | 11.02 | 11.50 |
+| text-primary | 9 | 9.07 | 9.00 | 9.39 |
+| text-secondary | 4.6 | 4.61 | 4.63 | 4.83 |
+| accent | 5 | 5.05 | 5.08 | 5.30 |
+| Status: info | 4.8 | 4.81 | 4.90 | 5.11 |
+| Status: success | 4.8 | 4.80 | 4.89 | 5.10 |
+| Status: important | 4.8 | 4.81 | 4.89 | 5.10 |
+| Status: warning | 4.8 | 4.83 | 4.87 | 5.08 |
+| Status: danger | 4.8 | 4.81 | 4.92 | 5.13 |
+| on-accent | 4.5 | 5.85 | 7.20 | 7.20 |
 
 ## Snag
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 11.01 | 11.04 | 12.41 |
-| text-primary | 9 | 9.03 | 9.04 | 10.17 |
-| text-secondary | 4.6 | 4.61 | 4.60 | 5.18 |
-| accent | 5 | 5.01 | 5.53 | 6.22 |
-| Status: info | 4.8 | 4.82 | 5.40 | 6.07 |
-| Status: success | 4.8 | 4.82 | 5.38 | 6.05 |
-| Status: important | 4.8 | 4.81 | 5.38 | 6.05 |
-| Status: warning | 4.8 | 4.81 | 5.37 | 6.04 |
-| Status: danger | 4.8 | 4.80 | 5.42 | 6.09 |
-| on-accent | 4.5 | 5.10 | 7.11 | 7.11 |
+| text-strong | 11 | 11.05 | 11.04 | 11.51 |
+| text-primary | 9 | 9.08 | 9.01 | 9.40 |
+| text-secondary | 4.6 | 4.61 | 4.64 | 4.84 |
+| accent | 5 | 5.02 | 5.03 | 5.25 |
+| Status: info | 4.8 | 4.81 | 4.91 | 5.12 |
+| Status: success | 4.8 | 4.80 | 4.90 | 5.11 |
+| Status: important | 4.8 | 4.80 | 4.90 | 5.11 |
+| Status: warning | 4.8 | 4.83 | 4.88 | 5.09 |
+| Status: danger | 4.8 | 4.81 | 4.93 | 5.14 |
+| on-accent | 4.5 | 5.81 | 7.11 | 7.11 |
 
 ## Catppuccin Frappé
 
@@ -103,15 +103,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 6.19 ✗ | 7.45 ✗ |
-| text-primary | 9 | n/a | 6.19 ✗ | 7.45 ✗ |
-| text-secondary | 4.6 | n/a | 4.26 ✗ | 5.14 |
-| accent | 5 | n/a | 4.30 ✗ | 5.18 |
-| Status: info | 4.8 | n/a | 4.10 ✗ | 4.94 |
-| Status: success | 4.8 | n/a | 5.45 | 6.56 |
-| Status: important | 4.8 | n/a | 4.30 ✗ | 5.18 |
-| Status: warning | 4.8 | n/a | 5.85 | 7.05 |
-| Status: danger | 4.8 | n/a | 3.57 ✗ | 4.30 ✗ |
+| text-strong | 11 | n/a | 5.55 ✗ | 6.70 ✗ |
+| text-primary | 9 | n/a | 5.55 ✗ | 6.70 ✗ |
+| text-secondary | 4.6 | n/a | 3.82 ✗ | 4.62 |
+| accent | 5 | n/a | 3.85 ✗ | 4.66 ✗ |
+| Status: info | 4.8 | n/a | 3.67 ✗ | 4.44 ✗ |
+| Status: success | 4.8 | n/a | 4.88 | 5.90 |
+| Status: important | 4.8 | n/a | 3.85 ✗ | 4.66 ✗ |
+| Status: warning | 4.8 | n/a | 5.24 | 6.34 |
+| Status: danger | 4.8 | n/a | 3.20 ✗ | 3.86 ✗ |
 | on-accent | 4.5 | n/a | 8.95 | 8.95 |
 
 ## Catppuccin Latte
@@ -120,15 +120,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 6.57 ✗ | n/a | n/a |
-| text-primary | 9 | 6.57 ✗ | n/a | n/a |
-| text-secondary | 4.6 | 4.06 ✗ | n/a | n/a |
-| accent | 5 | 4.45 ✗ | n/a | n/a |
-| Status: info | 4.8 | 4.04 ✗ | n/a | n/a |
-| Status: success | 4.8 | 2.75 ✗ | n/a | n/a |
-| Status: important | 4.8 | 4.45 ✗ | n/a | n/a |
-| Status: warning | 4.8 | 2.15 ✗ | n/a | n/a |
-| Status: danger | 4.8 | 4.46 ✗ | n/a | n/a |
+| text-strong | 11 | 6.04 ✗ | n/a | n/a |
+| text-primary | 9 | 6.04 ✗ | n/a | n/a |
+| text-secondary | 4.6 | 3.73 ✗ | n/a | n/a |
+| accent | 5 | 4.09 ✗ | n/a | n/a |
+| Status: info | 4.8 | 3.71 ✗ | n/a | n/a |
+| Status: success | 4.8 | 2.53 ✗ | n/a | n/a |
+| Status: important | 4.8 | 4.09 ✗ | n/a | n/a |
+| Status: warning | 4.8 | 1.98 ✗ | n/a | n/a |
+| Status: danger | 4.8 | 4.10 ✗ | n/a | n/a |
 | on-accent | 4.5 | 5.41 | n/a | n/a |
 
 ## Catppuccin Macchiato
@@ -137,15 +137,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 7.55 ✗ | 8.99 ✗ |
-| text-primary | 9 | n/a | 7.55 ✗ | 8.99 ✗ |
-| text-secondary | 4.6 | n/a | 5.03 | 6.00 |
-| accent | 5 | n/a | 5.21 | 6.20 |
-| Status: info | 4.8 | n/a | 4.99 | 5.95 |
-| Status: success | 4.8 | n/a | 6.98 | 8.31 |
-| Status: important | 4.8 | n/a | 5.21 | 6.20 |
-| Status: warning | 4.8 | n/a | 7.76 | 9.24 |
-| Status: danger | 4.8 | n/a | 4.54 ✗ | 5.40 |
+| text-strong | 11 | n/a | 6.79 ✗ | 8.14 ✗ |
+| text-primary | 9 | n/a | 6.79 ✗ | 8.14 ✗ |
+| text-secondary | 4.6 | n/a | 4.53 ✗ | 5.43 |
+| accent | 5 | n/a | 4.69 ✗ | 5.61 |
+| Status: info | 4.8 | n/a | 4.50 ✗ | 5.39 |
+| Status: success | 4.8 | n/a | 6.28 | 7.53 |
+| Status: important | 4.8 | n/a | 4.69 ✗ | 5.61 |
+| Status: warning | 4.8 | n/a | 6.99 | 8.37 |
+| Status: danger | 4.8 | n/a | 4.08 ✗ | 4.89 |
 | on-accent | 4.5 | n/a | 9.15 | 9.15 |
 
 ## Catppuccin Mocha
@@ -154,15 +154,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 8.69 ✗ | 10.16 ✗ |
-| text-primary | 9 | n/a | 8.69 ✗ | 10.16 |
-| text-secondary | 4.6 | n/a | 5.65 | 6.60 |
-| accent | 5 | n/a | 6.19 | 7.23 |
-| Status: info | 4.8 | n/a | 5.97 | 6.98 |
-| Status: success | 4.8 | n/a | 8.46 | 9.88 |
-| Status: important | 4.8 | n/a | 6.19 | 7.23 |
-| Status: warning | 4.8 | n/a | 9.89 | 11.56 |
-| Status: danger | 4.8 | n/a | 5.43 | 6.34 |
+| text-strong | 11 | n/a | 7.94 ✗ | 9.34 ✗ |
+| text-primary | 9 | n/a | 7.94 ✗ | 9.34 |
+| text-secondary | 4.6 | n/a | 5.16 | 6.07 |
+| accent | 5 | n/a | 5.65 | 6.65 |
+| Status: info | 4.8 | n/a | 5.45 | 6.42 |
+| Status: success | 4.8 | n/a | 7.72 | 9.09 |
+| Status: important | 4.8 | n/a | 5.65 | 6.65 |
+| Status: warning | 4.8 | n/a | 9.03 | 10.63 |
+| Status: danger | 4.8 | n/a | 4.96 | 5.84 |
 | on-accent | 4.5 | n/a | 9.69 | 9.69 |
 
 ## Tokyo Night
@@ -171,15 +171,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 8.32 ✗ | 9.64 ✗ |
-| text-primary | 9 | n/a | 8.32 ✗ | 9.64 |
-| text-secondary | 4.6 | n/a | 6.36 | 7.37 |
-| accent | 5 | n/a | 5.33 | 6.18 |
-| Status: info | 4.8 | n/a | 5.33 | 6.18 |
-| Status: success | 4.8 | n/a | 7.35 | 8.52 |
-| Status: important | 4.8 | n/a | 5.81 | 6.73 |
-| Status: warning | 4.8 | n/a | 6.72 | 7.79 |
-| Status: danger | 4.8 | n/a | 5.08 | 5.88 |
+| text-strong | 11 | n/a | 7.61 ✗ | 8.91 ✗ |
+| text-primary | 9 | n/a | 7.61 ✗ | 8.91 ✗ |
+| text-secondary | 4.6 | n/a | 5.82 | 6.81 |
+| accent | 5 | n/a | 4.88 ✗ | 5.71 |
+| Status: info | 4.8 | n/a | 4.88 | 5.71 |
+| Status: success | 4.8 | n/a | 6.73 | 7.87 |
+| Status: important | 4.8 | n/a | 5.31 | 6.22 |
+| Status: warning | 4.8 | n/a | 6.15 | 7.19 |
+| Status: danger | 4.8 | n/a | 4.65 ✗ | 5.44 |
 | on-accent | 4.5 | n/a | 7.82 | 7.82 |
 
 ## Tokyo Night Day
@@ -188,15 +188,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | 4.83 ✗ | n/a | n/a |
-| text-primary | 9 | 4.83 ✗ | n/a | n/a |
-| text-secondary | 4.6 | 3.82 ✗ | n/a | n/a |
-| accent | 5 | 3.32 ✗ | n/a | n/a |
-| Status: info | 4.8 | 3.32 ✗ | n/a | n/a |
-| Status: success | 4.8 | 4.32 ✗ | n/a | n/a |
-| Status: important | 4.8 | 3.56 ✗ | n/a | n/a |
-| Status: warning | 4.8 | 4.01 ✗ | n/a | n/a |
-| Status: danger | 4.8 | 3.21 ✗ | n/a | n/a |
+| text-strong | 11 | 3.99 ✗ | n/a | n/a |
+| text-primary | 9 | 3.99 ✗ | n/a | n/a |
+| text-secondary | 4.6 | 3.15 ✗ | n/a | n/a |
+| accent | 5 | 2.74 ✗ | n/a | n/a |
+| Status: info | 4.8 | 2.74 ✗ | n/a | n/a |
+| Status: success | 4.8 | 3.56 ✗ | n/a | n/a |
+| Status: important | 4.8 | 2.94 ✗ | n/a | n/a |
+| Status: warning | 4.8 | 3.30 ✗ | n/a | n/a |
+| Status: danger | 4.8 | 2.65 ✗ | n/a | n/a |
 | on-accent | 4.5 | 4.02 ✗ | n/a | n/a |
 
 ## Tokyo Night Moon
@@ -205,15 +205,15 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 8.28 ✗ | 9.69 ✗ |
-| text-primary | 9 | n/a | 8.28 ✗ | 9.69 |
-| text-secondary | 4.6 | n/a | 3.72 ✗ | 4.35 ✗ |
-| accent | 5 | n/a | 5.37 | 6.28 |
-| Status: info | 4.8 | n/a | 5.37 | 6.28 |
-| Status: success | 4.8 | n/a | 8.96 | 10.48 |
-| Status: important | 4.8 | n/a | 5.43 | 6.35 |
-| Status: warning | 4.8 | n/a | 8.04 | 9.41 |
-| Status: danger | 4.8 | n/a | 4.76 ✗ | 5.57 |
+| text-strong | 11 | n/a | 7.56 ✗ | 8.90 ✗ |
+| text-primary | 9 | n/a | 7.56 ✗ | 8.90 ✗ |
+| text-secondary | 4.6 | n/a | 3.40 ✗ | 4.00 ✗ |
+| accent | 5 | n/a | 4.90 ✗ | 5.78 |
+| Status: info | 4.8 | n/a | 4.90 | 5.78 |
+| Status: success | 4.8 | n/a | 8.18 | 9.63 |
+| Status: important | 4.8 | n/a | 4.96 | 5.84 |
+| Status: warning | 4.8 | n/a | 7.34 | 8.65 |
+| Status: danger | 4.8 | n/a | 4.35 ✗ | 5.12 |
 | on-accent | 4.5 | n/a | 8.57 | 8.57 |
 
 ## Tokyo Night Storm
@@ -222,13 +222,13 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 8.32 ✗ | 9.64 ✗ |
-| text-primary | 9 | n/a | 8.32 ✗ | 9.64 |
-| text-secondary | 4.6 | n/a | 6.36 | 7.37 |
-| accent | 5 | n/a | 5.33 | 6.18 |
-| Status: info | 4.8 | n/a | 5.33 | 6.18 |
-| Status: success | 4.8 | n/a | 7.35 | 8.52 |
-| Status: important | 4.8 | n/a | 5.81 | 6.73 |
-| Status: warning | 4.8 | n/a | 6.72 | 7.79 |
-| Status: danger | 4.8 | n/a | 5.08 | 5.88 |
+| text-strong | 11 | n/a | 7.61 ✗ | 8.91 ✗ |
+| text-primary | 9 | n/a | 7.61 ✗ | 8.91 ✗ |
+| text-secondary | 4.6 | n/a | 5.82 | 6.81 |
+| accent | 5 | n/a | 4.88 ✗ | 5.71 |
+| Status: info | 4.8 | n/a | 4.88 | 5.71 |
+| Status: success | 4.8 | n/a | 6.73 | 7.87 |
+| Status: important | 4.8 | n/a | 5.31 | 6.22 |
+| Status: warning | 4.8 | n/a | 6.15 | 7.19 |
+| Status: danger | 4.8 | n/a | 4.65 ✗ | 5.44 |
 | on-accent | 4.5 | n/a | 7.82 | 7.82 |

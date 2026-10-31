@@ -32,7 +32,11 @@ const statusSeeds: Record<Status, string> = {
   danger: "#e47c74",
 };
 
-/** Contrast targets, all measured on the raised surface. */
+/**
+ * Contrast targets, each measured on the surface where the role reads worst:
+ * the lowest surface in light modes, where fields sit, and the overlay in
+ * dark ones, where menus and dialogs sit.
+ */
 export const targets = {
   "text-strong": 11,
   "text-primary": 9,
@@ -68,7 +72,7 @@ const onFill = (fill: Oklch, candidates: readonly Oklch[]) =>
 
 const accentRoles = (
   accent: Oklch,
-  surfaces: { readonly default: Oklch; readonly raised: Oklch },
+  surfaces: { readonly default: Oklch; readonly ground: Oklch },
   dark: boolean,
   textStrong: Oklch,
   link: Style["link"]["colour"],
@@ -76,9 +80,9 @@ const accentRoles = (
   const direction = dark ? "lighter" : "darker";
 
   const text =
-    contrast(accent, surfaces.raised) >= targets.accent
+    contrast(accent, surfaces.ground) >= targets.accent
       ? accent
-      : solveLightness(accent, surfaces.raised, targets.accent, direction);
+      : solveLightness(accent, surfaces.ground, targets.accent, direction);
 
   const step = dark ? 0.05 : -0.05;
 
@@ -101,7 +105,7 @@ const accentRoles = (
 
 const statusRoles = (
   seeds: Record<Status, Oklch>,
-  raised: Oklch,
+  ground: Oklch,
   dark: boolean,
   solve: boolean,
 ): Roles =>
@@ -110,11 +114,11 @@ const statusRoles = (
       const seed = seeds[status];
 
       const text =
-        !solve || contrast(seed, raised) >= targets.status
+        !solve || contrast(seed, ground) >= targets.status
           ? seed
           : solveLightness(
               seed,
-              raised,
+              ground,
               targets.status,
               dark ? "lighter" : "darker",
             );
@@ -135,25 +139,34 @@ const solvedMode = (theme: SolvedTheme, mode: "light" | "dark") => {
   const surface = (l: number, chromaScale = 1) =>
     inGamut({ l, c: tint.c * chromaScale, h: tint.h });
 
-  const base = dark ? background.l : 0.975;
+  // A theme's dark background is where cards sit; the page goes one step
+  // below it, so layers read as raised above the page.
+  const base = dark ? background.l - 0.03 : 0.975;
   const chroma = dark ? 1 : 0.6;
   const away = dark ? 1 : -1;
 
-  // Lower surfaces are recessed, so darker in both modes.
+  // Lower surfaces are recessed, so darker in both modes. Dark steps are
+  // wider, since lightness differences read smaller near black.
   const surfaces = {
-    lower: surface(base - 0.025, chroma),
-    low: surface(base - 0.012, chroma),
+    lower: surface(base - (dark ? 0.03 : 0.025), chroma),
+    low: surface(base - (dark ? 0.015 : 0.012), chroma),
     default: surface(base, chroma),
-    raised: surface(dark ? base + 0.03 : 0.995, dark ? 1 : 0.3),
-    overlay: surface(dark ? base + 0.055 : 1, dark ? 1 : 0),
+    raised: surface(dark ? base + 0.05 : 0.995, dark ? 1 : 0.3),
+    overlay: surface(dark ? base + 0.09 : 1, dark ? 1 : 0),
   };
+
+  /** A step away from the default surface, wider in dark mode. */
+  const step = (light: number, darkStep: number) =>
+    base + away * (dark ? darkStep : light);
 
   const text = { l: 0.5, c: Math.min(tint.c * 0.4, 0.02), h: tint.h };
   const direction = dark ? "lighter" : "darker";
+  // Where text reads worst: the lowest surface in light, the overlay in dark.
+  const ground = dark ? surfaces.overlay : surfaces.lower;
 
   const textStrong = solveLightness(
     text,
-    surfaces.raised,
+    ground,
     targets["text-strong"],
     direction,
   );
@@ -178,45 +191,48 @@ const solvedMode = (theme: SolvedTheme, mode: "light" | "dark") => {
     "surface-default": surfaces.default,
     "surface-raised": surfaces.raised,
     "surface-overlay": surfaces.overlay,
-    "border-quiet": surface(base + away * 0.07, chroma),
-    "border-normal": surface(base + away * (dark ? 0.1 : 0.08), chroma),
-    "border-loud": surface(base + away * (dark ? 0.17 : 0.2), chroma),
+    "border-quiet": surface(step(0.07, 0.1), chroma),
+    "border-normal": surface(step(0.08, 0.14), chroma),
+    "border-loud": surface(step(0.2, 0.22), chroma),
     "text-strong": textStrong,
     "text-primary": solveLightness(
       text,
-      surfaces.raised,
+      ground,
       targets["text-primary"],
       direction,
     ),
     "text-secondary": solveLightness(
       text,
-      surfaces.raised,
+      ground,
       targets["text-secondary"],
       direction,
     ),
-    "text-disabled": solveLightness(text, surfaces.raised, 2.4, direction),
-    "fill-neutral-resting": surface(base + away * 0.06, chroma),
-    "fill-neutral-hovered": surface(base + away * 0.09, chroma),
-    "fill-neutral-pressed": surface(base + away * 0.12, chroma),
-    "fill-neutral-selected": surface(base + away * 0.11, chroma * 1.5),
-    "fill-neutral-disabled": surface(base + away * 0.035, chroma),
+    "text-disabled": solveLightness(text, ground, 2.4, direction),
+    "fill-neutral-resting": surface(step(0.06, 0.09), chroma),
+    "fill-neutral-hovered": surface(step(0.09, 0.12), chroma),
+    "fill-neutral-pressed": surface(step(0.12, 0.15), chroma),
+    "fill-neutral-selected": surface(step(0.11, 0.14), chroma * 1.5),
+    "fill-neutral-disabled": surface(step(0.035, 0.06), chroma),
     "fill-primary-resting": primary,
     "fill-primary-hovered": inGamut(shift(primary, -away * 0.06)),
     "fill-primary-pressed": inGamut(shift(primary, -away * 0.1)),
     "on-primary": dark ? surfaces.default : surfaces.raised,
     ...accentRoles(
       neutralAccent ? primary : accent,
-      surfaces,
+      { default: surfaces.default, ground },
       dark,
       textStrong,
       theme.style.link.colour,
     ),
-    ...statusRoles(seeds, surfaces.raised, dark, true),
+    ...statusRoles(seeds, ground, dark, true),
   };
 };
 
-/** Darker: every surface 0.045 darker, hues kept, field outlines strengthened. */
-const darker = (dark: Roles) => {
+/**
+ * Darker: every surface `by` darker, hues kept, field outlines strengthened.
+ * Solved themes' dark page is already a step down, so they go less far.
+ */
+const darker = (dark: Roles, by = 0.045) => {
   const surfaces = Object.fromEntries(
     Object.entries(dark)
       .filter(
@@ -227,7 +243,7 @@ const darker = (dark: Roles) => {
       )
       .map(([role, colour]) => [
         role,
-        inGamut(withLightness(colour, colour.l - 0.045)),
+        inGamut(withLightness(colour, colour.l - by)),
       ]),
   );
 
@@ -255,7 +271,7 @@ const mappedRoles = (theme: MappedTheme) => {
 
   const surfaces = {
     default: palette.background,
-    raised: palette.raised,
+    ground: dark ? palette.raised : palette.lower,
   };
 
   const seeds: Record<Status, Oklch> = {
@@ -343,7 +359,11 @@ export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
     family: undefined,
     examples: theme.examples ?? [],
     style: theme.style,
-    modes: { light: solvedMode(theme, "light"), dark, darker: darker(dark) },
+    modes: {
+      light: solvedMode(theme, "light"),
+      dark,
+      darker: darker(dark, 0.015),
+    },
   };
 };
 
@@ -364,17 +384,32 @@ const checkedRoles = [
   ...statuses.map((status) => [status, targets.status] as const),
 ] as const;
 
-/** Every role with a contrast target, measured on the raised surface. */
+const textSurfaces = [
+  "surface-lower",
+  "surface-low",
+  "surface-default",
+  "surface-raised",
+  "surface-overlay",
+];
+
+/** Every role with a contrast target, measured on the surface where it reads worst. */
 export const check = (theme: ResolvedTheme): readonly Check[] =>
   modes.flatMap((mode) => {
     const roles = theme.modes[mode];
 
     if (roles === undefined) return [];
 
-    const raised = roles["surface-raised"] ?? { l: 0, c: 0, h: 0 };
+    const black = { l: 0, c: 0, h: 0 };
+    const raised = roles["surface-raised"] ?? black;
 
-    const measure = (role: string, against: Oklch, target: number): Check => {
-      const ratio = contrast(roles[role] ?? { l: 0, c: 0, h: 0 }, against);
+    const measure = (
+      role: string,
+      against: readonly Oklch[],
+      target: number,
+    ): Check => {
+      const ratio = Math.min(
+        ...against.map((surface) => contrast(roles[role] ?? black, surface)),
+      );
 
       return {
         theme: theme.id,
@@ -386,11 +421,13 @@ export const check = (theme: ResolvedTheme): readonly Check[] =>
       };
     };
 
+    const surfaces = textSurfaces.map((surface) => roles[surface] ?? raised);
+
     return [
-      ...checkedRoles.map(([role, target]) => measure(role, raised, target)),
+      ...checkedRoles.map(([role, target]) => measure(role, surfaces, target)),
       measure(
         "on-accent",
-        roles["fill-accent-resting"] ?? raised,
+        [roles["fill-accent-resting"] ?? raised],
         targets["on-accent"],
       ),
     ];

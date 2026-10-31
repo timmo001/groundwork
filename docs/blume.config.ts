@@ -46,7 +46,16 @@ export default defineConfig(
         },
         {
           label: "Components",
-          items: ["/components/demo"],
+          root: "/components",
+          items: [
+            "/components/actions",
+            "/components/inputs",
+            "/components/display",
+            "/components/feedback",
+            "/components/overlays",
+            "/components/layout",
+            "/components/lit-effect",
+          ],
         },
         "/roadmap",
       ],

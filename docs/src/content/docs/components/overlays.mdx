@@ -1,0 +1,21 @@
+---
+title: Overlays
+description: Dialogs on the native dialog element, and menus on the Popover API.
+---
+
+## Dialog
+
+<Demo id="dialog">
+  <gw-button variant="danger" data-opens="remove-backup">Remove backup</gw-button>
+  <gw-dialog id="remove-backup" heading="Remove this backup?">
+    The backup from 28 October will be deleted. This can't be undone.
+    <gw-button slot="actions" value="cancel">Cancel</gw-button>
+    <gw-button slot="actions" variant="danger" value="remove">Remove</gw-button>
+  </gw-dialog>
+</Demo>
+
+It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, Esc closes it, and the page behind can't be reached. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
+
+## Menus
+
+The [menu button](/components/actions#menu-button) shows its menu on the Popover API, in the top layer, so it's never clipped by a scrolling parent.

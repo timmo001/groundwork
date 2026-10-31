@@ -1,0 +1,75 @@
+---
+title: Actions
+description: Buttons, menu buttons and segmented controls, on native buttons and radio inputs.
+---
+
+## Button
+
+<Demo id="button">
+  <gw-button variant="primary">Reboot</gw-button>
+  <gw-button>Cancel</gw-button>
+  <gw-button variant="accent">Plan boot</gw-button>
+  <gw-button variant="plain">Details</gw-button>
+  <gw-button disabled>Unavailable</gw-button>
+</Demo>
+
+The status variants take their colour from the theme's status roles:
+
+<Demo id="button-status">
+  <gw-button variant="info">Check for updates</gw-button>
+  <gw-button variant="success">Mark resolved</gw-button>
+  <gw-button variant="warning">Restart later</gw-button>
+  <gw-button variant="danger">Remove backup</gw-button>
+</Demo>
+
+Sizes scale everything together, from `xs` to `xl`, and `--gw-button-scale` sets any size in between or beyond:
+
+<Demo id="button-sizes">
+  <gw-button size="xs">Extra small</gw-button>
+  <gw-button size="small">
+    <svg slot="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
+    Export
+  </gw-button>
+  <gw-button>Medium</gw-button>
+  <gw-button size="large" variant="primary" href="#button">Open as a link</gw-button>
+  <gw-button size="xl" variant="accent">Extra large</gw-button>
+  <gw-button style="--gw-button-scale: 2">Scale 2</gw-button>
+</Demo>
+
+| Attribute | Values |
+| --- | --- |
+| `variant` | `primary`, `secondary` (default), `accent`, `plain`, `info`, `success`, `warning` or `danger` |
+| `size` | `xs`, `small`, `medium` (default), `large` or `xl`; or set `--gw-button-scale` |
+| `type` | `button` (default), `submit` or `reset` |
+| `href` | Renders a link that looks the same |
+| `label` | An accessible name, for a button with only an icon |
+| `disabled` | Disables it |
+
+It renders a native `<button>`, or an `<a>` with `href`. Put an icon in the `icon` slot. Style the inner element with `::part(button)`.
+
+## Menu button
+
+<Demo id="menu-button">
+  <gw-menu-button label="Power">
+    <button value="sleep">Sleep</button>
+    <button value="restart">Restart</button>
+    <button value="shutdown">Shut down</button>
+  </gw-menu-button>
+</Demo>
+
+The menu opens on the Popover API, in the top layer, and closes on Esc or a click outside. Arrow keys, Home and End move between items. Choosing one fires `select` with its `value`, closes the menu and puts focus back on the button.
+
+## Segmented control
+
+<Demo id="segmented">
+  <gw-segmented label="View" value="dashboard" options='[{"value":"dashboard","label":"Dashboard"},{"value":"json","label":"JSON"},{"value":"history","label":"History"}]'></gw-segmented>
+</Demo>
+
+| Attribute | Values |
+| --- | --- |
+| `label` | Names the group for assistive technology |
+| `value` | The picked option |
+| `options` | JSON: `[{ "value", "label" }]`, or set the property |
+| `name` | The form field name; one is made up if left out |
+
+It's a `<fieldset>` of native radio buttons, so arrow keys move the choice and a form submits it. It fires `change`.

@@ -18,7 +18,7 @@ export class GwSelect extends LightElement {
     value: {},
     hint: {},
     disabled: { type: Boolean },
-    options: { attribute: false },
+    options: { type: Array },
   };
 
   declare label: string;

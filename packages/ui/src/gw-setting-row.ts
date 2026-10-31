@@ -16,6 +16,10 @@ export class GwSettingRow extends LitElement {
     base,
     css`
       :host {
+        display: block;
+      }
+
+      .row {
         display: flex;
         flex-wrap: wrap;
         gap: var(--gw-space-2) var(--gw-space-4);
@@ -24,8 +28,9 @@ export class GwSettingRow extends LitElement {
         padding: var(--gw-row-padding, var(--gw-space-3)) 0;
       }
 
-      :host(:not(:first-of-type)) {
-        border-block-start: var(--gw-border-width) solid
+      /* A full line even in themes without borders, since it separates rows */
+      :host(:not(:first-of-type)) .row {
+        border-block-start: max(var(--gw-border-width), 1px) solid
           var(--gw-color-border-quiet);
       }
 
@@ -61,13 +66,13 @@ export class GwSettingRow extends LitElement {
   }
 
   override render() {
-    return html`
+    return html`<div class="row" part="row">
       <div class="text">
         <div class="heading">${this.heading}</div>
         ${this.description ? html`<div class="description">${this.description}</div>` : nothing}
       </div>
       <div class="control"><slot></slot></div>
-    `;
+    </div>`;
   }
 }
 

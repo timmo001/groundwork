@@ -15,6 +15,10 @@ export class GwEmptyState extends LitElement {
     base,
     css`
       :host {
+        display: block;
+      }
+
+      .empty {
         display: flex;
         flex-direction: column;
         gap: var(--gw-space-2);
@@ -33,6 +37,10 @@ export class GwEmptyState extends LitElement {
         color: var(--gw-color-text-strong);
       }
 
+      ::slotted(p) {
+        margin: 0;
+      }
+
       ::slotted([slot="actions"]) {
         margin-block-start: var(--gw-space-3);
       }
@@ -49,12 +57,12 @@ export class GwEmptyState extends LitElement {
   }
 
   override render() {
-    return html`
+    return html`<div class="empty" part="empty">
       ${this.icon ? icon(this.icon) : nothing}
       ${this.heading ? html`<h2>${this.heading}</h2>` : nothing}
       <slot></slot>
       <slot name="actions"></slot>
-    `;
+    </div>`;
   }
 }
 

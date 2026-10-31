@@ -1,0 +1,48 @@
+---
+title: Components
+description: Lit components on native elements, styled only through --gw-* variables, copied into each app through the sync.
+---
+
+The web components are Lit elements built on native elements: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser, and Home Assistant's frontend is the reference for the rest. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
+
+Every demo on these pages has a theme and mode picker. Pick one and the components follow it.
+
+<Demo id="overview">
+  <gw-button variant="primary">Reboot</gw-button>
+  <gw-button variant="accent">Plan boot</gw-button>
+  <gw-chip tone="success">Online</gw-chip>
+  <gw-badge label="CPU" icon="M15 13V5A3 3 0 0 0 9 5V13A5 5 0 1 0 15 13M12 4A1 1 0 0 1 13 5V8H11V5A1 1 0 0 1 12 4Z" tone="warning">71 °C</gw-badge>
+  <gw-switch label="Wake on LAN" checked></gw-switch>
+</Demo>
+
+## Groups
+
+| Group | Components |
+| --- | --- |
+| [Actions](/components/actions) | Button, menu button, segmented control |
+| [Inputs](/components/inputs) | Input, select, checkbox, switch, setting row |
+| [Display](/components/display) | Card, chip, badge, dot, alert, facts, meter |
+| [Feedback](/components/feedback) | Spinner, skeleton, empty state, toast |
+| [Overlays](/components/overlays) | Dialog |
+| [Layout](/components/layout) | Page, page header, section title, stack, row, grid |
+| [lit-effect](/components/lit-effect) | AtomController, the registry context and a typed router |
+
+The data group (table, virtual list, gauge, time series chart and JSON view) comes next.
+
+## Taking them into an app
+
+Components aren't published as a package. An app takes them as copies through the [sync](/sync), owns them, and gets changes when groundwork changes:
+
+```sh
+bun packages/sync/src/cli.ts add --app ../my-app --to src/ui gw-button gw-dialog themes-css
+```
+
+Each component needs `ui-base` (its shared styles and the `icon()` helper), which the sync brings along. Load `themes.css` and set `data-gw-theme` and `data-gw-mode` on a container, and everything inside follows. Extend a component by wrapping it or setting variables and `::part()`, not by editing the copy.
+
+## Fields stay in light DOM
+
+Password managers and `<label for>` can't reach into a shadow root, and a form only submits the controls it can see. So `gw-input`, `gw-select`, `gw-checkbox` and `gw-switch` render their native control in light DOM, and adopt their styles into whichever document or shadow root they're in. Pages with credentials keep the whole form out of shadow roots.
+
+## Icons
+
+`icon(path, label?)` draws any SVG path data, so each app picks its set: MDI (as Home Assistant uses), Lucide, Tabler or Phosphor. Components that show an icon take it as path data in an `icon` attribute, or an `<svg slot="icon">`.

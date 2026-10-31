@@ -2,12 +2,21 @@
 interface Props {
   /** The theme the demo renders in. */
   theme?: string;
+  /** `row` lines the examples up; `stack` stacks them full width. */
+  layout?: "row" | "stack";
+  /** Names the demo for tests and links. */
+  id?: string;
 }
 
-const { theme = "base" } = Astro.props;
+const { theme = "base", layout = "row", id } = Astro.props;
 ---
 
-<gw-demo-frame class="demo" data-gw-theme={theme}>
+<gw-demo-frame
+  class="demo"
+  data-gw-theme={theme}
+  layout={layout}
+  id={id === undefined ? undefined : `demo-${id}`}
+>
   <slot />
 </gw-demo-frame>
 

@@ -12,13 +12,17 @@ export class GwChip extends LitElement {
     css`
       :host {
         display: inline-flex;
+      }
+
+      .chip {
+        display: inline-flex;
         gap: var(--gw-space-2);
         align-items: center;
         min-height: 1.75rem;
         padding: 0 var(--gw-space-3);
         font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-strong);
-        color: var(--gw-tone, var(--gw-color-text-primary));
+        color: var(--gw-color-text-strong);
         background: var(--gw-tone-fill, var(--gw-color-fill-neutral-resting));
         border: var(--gw-border-width) solid
           var(--gw-tone-border, var(--gw-color-border-quiet));
@@ -36,7 +40,9 @@ export class GwChip extends LitElement {
   }
 
   override render() {
-    return html`<slot name="icon"></slot><slot></slot>`;
+    return html`<span class="chip" part="chip"
+      ><slot name="icon"></slot><slot></slot
+    ></span>`;
   }
 }
 

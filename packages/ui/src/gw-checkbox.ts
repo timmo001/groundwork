@@ -11,9 +11,12 @@ export class GwCheckbox extends LightElement {
     hint: {},
     checked: { type: Boolean },
     disabled: { type: Boolean },
+    labelHidden: { type: Boolean, attribute: "label-hidden" },
   };
 
   declare label: string;
+  /** Keeps the label for assistive technology but hides it, such as in a setting row. */
+  declare labelHidden: boolean;
   declare name: string;
   declare value: string;
   declare hint: string;
@@ -35,6 +38,7 @@ export class GwCheckbox extends LightElement {
     this.hint = "";
     this.checked = false;
     this.disabled = false;
+    this.labelHidden = false;
   }
 
   readonly #onChange = (event: Event) => {
@@ -58,7 +62,9 @@ export class GwCheckbox extends LightElement {
           .checked=${live(this.checked)}
           @change=${this.#onChange}
         />
-        ${this.label}
+        <span class=${this.labelHidden ? "gw-visually-hidden" : ""}
+          >${this.label}</span
+        >
       </label>
       ${this.hint ? html`<p class="gw-hint" id=${hintId}>${this.hint}</p>` : nothing}
     `;

@@ -18,6 +18,12 @@ export class GwBadge extends LitElement {
     css`
       :host {
         display: inline-flex;
+        max-width: 100%;
+        vertical-align: middle;
+      }
+
+      .badge {
+        display: inline-flex;
         gap: var(--gw-space-2);
         align-items: center;
         max-width: 100%;
@@ -31,7 +37,7 @@ export class GwBadge extends LitElement {
         border-radius: var(--gw-radius-pill);
       }
 
-      :host([size="small"]) {
+      :host([size="small"]) .badge {
         gap: var(--gw-space-1);
         min-height: 1.75rem;
         padding: 0 var(--gw-space-2) 0 var(--gw-space-2);
@@ -80,13 +86,13 @@ export class GwBadge extends LitElement {
   }
 
   override render() {
-    return html`
+    return html`<span class="badge" part="badge">
       ${this.icon ? icon(this.icon) : nothing}
       <span class="info">
         ${this.label ? html`<span class="label">${this.label}</span>` : nothing}
         <span class="content"><slot></slot></span>
       </span>
-    `;
+    </span>`;
   }
 }
 
