@@ -20,7 +20,7 @@ const modes = ["light", "dark", "darker"] as const;
 const themes = tokens.themes.filter((theme) => !theme.optional);
 
 /** Reads a CSS colour as sRGB channels by painting it on a canvas. */
-const channels = (page: Page, colour: string) =>
+const channels = (page: Page, color: string) =>
   page.evaluate((value) => {
     const canvas = document.createElement("canvas");
 
@@ -35,7 +35,7 @@ const channels = (page: Page, colour: string) =>
     context.fillRect(0, 0, 1, 1);
 
     return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
-  }, colour);
+  }, color);
 
 /** The colour Blume's page background resolves to. */
 const pageBackground = (page: Page) =>
@@ -45,11 +45,11 @@ const pageBackground = (page: Page) =>
     probe.style.background = "var(--blume-background)";
     document.body.append(probe);
 
-    const colour = getComputedStyle(probe).backgroundColor;
+    const color = getComputedStyle(probe).backgroundColor;
 
     probe.remove();
 
-    return colour;
+    return color;
   });
 
 /**

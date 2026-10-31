@@ -20,45 +20,45 @@ const toOklch = converter("oklch");
 const toSrgbGamut = toGamut("rgb", "oklch");
 
 export const fromHex = (hex: string): Oklch => {
-  const colour = toOklch(parse(hex));
+  const color = toOklch(parse(hex));
 
-  if (colour === undefined) return { l: 0, c: 0, h: 0 };
+  if (color === undefined) return { l: 0, c: 0, h: 0 };
 
-  return { l: colour.l, c: colour.c, h: colour.h ?? 0 };
+  return { l: color.l, c: color.c, h: color.h ?? 0 };
 };
 
 /** Bring a colour into sRGB by reducing chroma, keeping lightness and hue. */
-export const inGamut = (colour: Oklch): Oklch => {
+export const inGamut = (color: Oklch): Oklch => {
   const mapped = toOklch(
-    toSrgbGamut({ mode: "oklch", l: colour.l, c: colour.c, h: colour.h }),
+    toSrgbGamut({ mode: "oklch", l: color.l, c: color.c, h: color.h }),
   );
 
-  return { ...colour, c: mapped.c };
+  return { ...color, c: mapped.c };
 };
 
 /** Six-digit sRGB hex, or eight digits when the colour has alpha. */
-export const toHex = (colour: Oklch) => {
+export const toHex = (color: Oklch) => {
   const mapped = toSrgbGamut({
     mode: "oklch",
-    l: colour.l,
-    c: colour.c,
-    h: colour.h,
+    l: color.l,
+    c: color.c,
+    h: color.h,
   });
 
-  return colour.alpha === undefined || colour.alpha === 1
+  return color.alpha === undefined || color.alpha === 1
     ? formatHex(mapped)
-    : formatHex8({ ...mapped, alpha: colour.alpha });
+    : formatHex8({ ...mapped, alpha: color.alpha });
 };
 
 const round = (value: number, places: number) => Number(value.toFixed(places));
 
-export const toCss = (colour: Oklch) => {
-  const { l, c, h } = inGamut(colour);
+export const toCss = (color: Oklch) => {
+  const { l, c, h } = inGamut(color);
 
   const alpha =
-    colour.alpha === undefined || colour.alpha === 1
+    color.alpha === undefined || color.alpha === 1
       ? ""
-      : ` / ${round(colour.alpha, 2)}`;
+      : ` / ${round(color.alpha, 2)}`;
 
   return `oklch(${round(l * 100, 2)}% ${round(c, 4)} ${round(h, 2)}${alpha})`;
 };
@@ -72,16 +72,16 @@ export const distance = (a: string, b: string) => oklabDistance(a, b);
 export const contrast = (a: Oklch, b: Oklch) =>
   wcagContrast(toHex({ ...a, alpha: 1 }), toHex({ ...b, alpha: 1 }));
 
-export const withLightness = (colour: Oklch, l: number): Oklch => ({
-  ...colour,
+export const withLightness = (color: Oklch, l: number): Oklch => ({
+  ...color,
   l: Math.min(1, Math.max(0, l)),
 });
 
-export const shift = (colour: Oklch, by: number): Oklch =>
-  withLightness(colour, colour.l + by);
+export const shift = (color: Oklch, by: number): Oklch =>
+  withLightness(color, color.l + by);
 
-export const withAlpha = (colour: Oklch, alpha: number): Oklch => ({
-  ...colour,
+export const withAlpha = (color: Oklch, alpha: number): Oklch => ({
+  ...color,
   alpha,
 });
 
@@ -91,7 +91,7 @@ export const withAlpha = (colour: Oklch, alpha: number): Oklch => ({
  * the target can't be reached.
  */
 export const solveLightness = (
-  colour: Oklch,
+  color: Oklch,
   against: Oklch,
   target: number,
   direction: "lighter" | "darker",
@@ -103,7 +103,7 @@ export const solveLightness = (
     const middle = (low + high) / 2;
 
     const passes =
-      contrast(inGamut(withLightness(colour, middle)), against) >= target;
+      contrast(inGamut(withLightness(color, middle)), against) >= target;
 
     if (direction === "lighter") {
       if (passes) high = middle;
@@ -112,5 +112,5 @@ export const solveLightness = (
     else high = middle;
   }
 
-  return inGamut(withLightness(colour, direction === "lighter" ? high : low));
+  return inGamut(withLightness(color, direction === "lighter" ? high : low));
 };

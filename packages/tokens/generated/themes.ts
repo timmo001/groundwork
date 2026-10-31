@@ -27,7 +27,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "text",
+        "color": "text",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -65,15 +65,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -246,7 +246,7 @@ export const themes = [
       "density": "roomy",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "sheen",
@@ -284,15 +284,15 @@ export const themes = [
       "radius-control": "12px",
       "radius-chip": "10px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "linear-gradient(160deg, color-mix(in oklch, var(--gw-color-accent) 14%, transparent), transparent 55%)",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -465,7 +465,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thick"
       },
       "surfaceAccent": "marker",
@@ -503,15 +503,15 @@ export const themes = [
       "radius-control": "2px",
       "radius-chip": "2px",
       "border-width": "2px",
-      "border-colour": "var(--gw-color-border-loud)",
+      "border-color": "var(--gw-color-border-loud)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "2px",
       "panel-sheen": "none",
       "panel-marker": "4px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -684,7 +684,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -722,15 +722,15 @@ export const themes = [
       "radius-control": "999px",
       "radius-chip": "999px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-normal)",
+      "border-color": "var(--gw-color-border-normal)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -905,7 +905,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -943,15 +943,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "999px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-normal)",
+      "border-color": "var(--gw-color-border-normal)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -1126,7 +1126,7 @@ export const themes = [
       "density": "compact",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -1164,15 +1164,15 @@ export const themes = [
       "radius-control": "4px",
       "radius-chip": "2px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-normal)",
+      "border-color": "var(--gw-color-border-normal)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "calc(var(--gw-space-1) * 1.5)"
     },
     "modes": {
@@ -1345,7 +1345,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -1383,15 +1383,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -1517,7 +1517,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -1555,15 +1555,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -1642,7 +1642,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -1680,15 +1680,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -1814,7 +1814,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -1852,15 +1852,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -1986,7 +1986,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -2024,15 +2024,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -2158,7 +2158,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -2196,15 +2196,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -2283,7 +2283,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -2321,15 +2321,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {
@@ -2455,7 +2455,7 @@ export const themes = [
       "density": "normal",
       "capitals": false,
       "link": {
-        "colour": "accent",
+        "color": "accent",
         "underline": "thin"
       },
       "surfaceAccent": "none",
@@ -2493,15 +2493,15 @@ export const themes = [
       "radius-control": "8px",
       "radius-chip": "6px",
       "border-width": "1px",
-      "border-colour": "var(--gw-color-border-quiet)",
+      "border-color": "var(--gw-color-border-quiet)",
       "label-transform": "none",
       "label-tracking": "normal",
-      "link-colour": "var(--gw-color-link)",
+      "link-color": "var(--gw-color-link)",
       "link-underline": "1px",
       "panel-sheen": "none",
       "panel-marker": "0px",
       "panel-flange": "0px",
-      "panel-flange-colour": "var(--gw-border-colour)",
+      "panel-flange-color": "var(--gw-border-color)",
       "row-padding": "var(--gw-space-3)"
     },
     "modes": {

@@ -91,15 +91,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -345,15 +345,15 @@
   --gw-radius-control: 12px;
   --gw-radius-chip: 10px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: linear-gradient(160deg, color-mix(in oklch, var(--gw-color-accent) 14%, transparent), transparent 55%);
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -599,15 +599,15 @@
   --gw-radius-control: 2px;
   --gw-radius-chip: 2px;
   --gw-border-width: 2px;
-  --gw-border-colour: var(--gw-color-border-loud);
+  --gw-border-color: var(--gw-color-border-loud);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 2px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 4px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -853,15 +853,15 @@
   --gw-radius-control: 999px;
   --gw-radius-chip: 999px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-normal);
+  --gw-border-color: var(--gw-color-border-normal);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -1107,15 +1107,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 999px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-normal);
+  --gw-border-color: var(--gw-color-border-normal);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -1361,15 +1361,15 @@
   --gw-radius-control: 4px;
   --gw-radius-chip: 2px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-normal);
+  --gw-border-color: var(--gw-color-border-normal);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: calc(var(--gw-space-1) * 1.5);
 }
 
@@ -1615,15 +1615,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -1815,15 +1815,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -1911,15 +1911,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -2111,15 +2111,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -2311,15 +2311,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -2511,15 +2511,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -2607,15 +2607,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 
@@ -2807,15 +2807,15 @@
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
   --gw-border-width: 1px;
-  --gw-border-colour: var(--gw-color-border-quiet);
+  --gw-border-color: var(--gw-color-border-quiet);
   --gw-label-transform: none;
   --gw-label-tracking: normal;
-  --gw-link-colour: var(--gw-color-link);
+  --gw-link-color: var(--gw-color-link);
   --gw-link-underline: 1px;
   --gw-panel-sheen: none;
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
-  --gw-panel-flange-colour: var(--gw-border-colour);
+  --gw-panel-flange-color: var(--gw-border-color);
   --gw-row-padding: var(--gw-space-3);
 }
 

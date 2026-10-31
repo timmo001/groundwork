@@ -1,4 +1,4 @@
-import { toCss, toHex } from "./colour.ts";
+import { toCss, toHex } from "./color.ts";
 import type { Font, MonoFont, Style } from "./schema.ts";
 import {
   check,
@@ -26,7 +26,7 @@ const fontStack = (font: Font | MonoFont) => {
 
 const density = { compact: 0.85, normal: 1, roomy: 1.2 } as const;
 
-const borderColour = {
+const borderColor = {
   none: "transparent",
   hairline: "var(--gw-color-border-quiet)",
   soft: "var(--gw-color-border-normal)",
@@ -47,10 +47,10 @@ const styleProperties = (style: Style) => ({
   "radius-chip": `${style.radius.chip}px`,
   "border-width":
     style.border.strength === "none" ? "0px" : `${style.border.width}px`,
-  "border-colour": borderColour[style.border.strength],
+  "border-color": borderColor[style.border.strength],
   "label-transform": style.capitals ? "uppercase" : "none",
   "label-tracking": style.capitals ? "0.06em" : "normal",
-  "link-colour": "var(--gw-color-link)",
+  "link-color": "var(--gw-color-link)",
   "link-underline": style.link.underline === "thick" ? "2px" : "1px",
   "panel-sheen":
     style.surfaceAccent === "sheen"
@@ -58,10 +58,10 @@ const styleProperties = (style: Style) => ({
       : "none",
   "panel-marker": style.surfaceAccent === "marker" ? "4px" : "0px",
   "panel-flange": style.surfaceAccent === "flange" ? "3px" : "0px",
-  "panel-flange-colour":
+  "panel-flange-color":
     style.surfaceAccent === "flange"
       ? "var(--gw-color-accent)"
-      : "var(--gw-border-colour)",
+      : "var(--gw-border-color)",
   "row-padding":
     style.rows === "dense"
       ? "calc(var(--gw-space-1) * 1.5)"
@@ -131,18 +131,18 @@ const declarations = (properties: Record<string, string>, indent = "  ") =>
     .map(([name, value]) => `${indent}--gw-${name}: ${value};`)
     .join("\n");
 
-const colourProperties = (roles: Roles) =>
+const colorProperties = (roles: Roles) =>
   Object.fromEntries(
-    Object.entries(roles).map(([role, colour]) => [
+    Object.entries(roles).map(([role, color]) => [
       `color-${role}`,
-      toCss(colour),
+      toCss(color),
     ]),
   );
 
 const modeBlock = (roles: Roles, dark: boolean, indent = "  ") =>
   [
     `${indent}color-scheme: ${dark ? "dark" : "light"};`,
-    declarations({ ...colourProperties(roles), ...shadows(dark) }, indent),
+    declarations({ ...colorProperties(roles), ...shadows(dark) }, indent),
   ].join("\n");
 
 const themeCss = (theme: ResolvedTheme) => {
@@ -213,12 +213,12 @@ const blumeRoles = {
 };
 
 /** Blume's colour tokens from a theme's roles in one mode. */
-const blumeColours = (roles: Roles) =>
+const blumeColors = (roles: Roles) =>
   Object.fromEntries(
     Object.entries(blumeRoles).flatMap(([token, role]) => {
-      const colour = roles[role];
+      const color = roles[role];
 
-      return colour === undefined ? [] : [[token, toCss(colour)]];
+      return color === undefined ? [] : [[token, toCss(color)]];
     }),
   );
 
@@ -242,19 +242,19 @@ const blumeRules = (theme: ResolvedTheme, root: string) => {
   };
 
   const lightTokens: Record<string, string> =
-    light === undefined ? style : { ...style, ...blumeColours(light) };
+    light === undefined ? style : { ...style, ...blumeColors(light) };
 
   const rules = [`${root} {\n${blumeDeclarations(lightTokens)}\n}`];
 
   if (dark !== undefined) {
     rules.push(
-      `${root}[data-theme="dark"] {\n${blumeDeclarations(blumeColours(dark))}\n}`,
+      `${root}[data-theme="dark"] {\n${blumeDeclarations(blumeColors(dark))}\n}`,
     );
   }
 
   if (darker !== undefined) {
     rules.push(
-      `${root}[data-theme="dark"][data-gw-darker] {\n${blumeDeclarations(blumeColours(darker))}\n}`,
+      `${root}[data-theme="dark"][data-gw-darker] {\n${blumeDeclarations(blumeColors(darker))}\n}`,
     );
   }
 
@@ -288,7 +288,7 @@ export const blumeThemes = (themes: readonly ResolvedTheme[]) =>
 
 const hexRoles = (roles: Roles) =>
   Object.fromEntries(
-    Object.entries(roles).map(([role, colour]) => [role, toHex(colour)]),
+    Object.entries(roles).map(([role, color]) => [role, toHex(color)]),
   );
 
 const hexModes = (theme: ResolvedTheme) =>
@@ -448,7 +448,7 @@ const styleSummary = (style: Style) => [
   `| Weights | ${style.weights.regular} and ${style.weights.strong} |`,
   `| Density | ${style.density}${style.rows === "dense" ? ", lists as dense rows" : ""} |`,
   `| Labels | ${style.capitals ? "Capitals" : "Sentence case"} |`,
-  `| Links | ${style.link.colour === "accent" ? "Accent" : "Strong text"}, ${style.link.underline} underline |`,
+  `| Links | ${style.link.color === "accent" ? "Accent" : "Strong text"}, ${style.link.underline} underline |`,
   `| Surface accent | ${style.surfaceAccent} |`,
 ];
 

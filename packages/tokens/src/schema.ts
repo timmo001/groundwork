@@ -54,7 +54,7 @@ export const Style = Schema.Struct({
   density: Schema.Literals(["compact", "normal", "roomy"]),
   capitals: Schema.Boolean,
   link: Schema.Struct({
-    colour: Schema.Literals(["text", "accent"]),
+    color: Schema.Literals(["text", "accent"]),
     underline: Schema.Literals(["thin", "thick"]),
   }),
   surfaceAccent: Schema.Literals(["none", "sheen", "marker", "flange"]),

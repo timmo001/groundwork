@@ -13,7 +13,7 @@
     "weights": { "regular": 500, "strong": 700 },
     "density": "normal",
     "capitals": false,
-    "link": { "colour": "accent", "underline": "thick" },
+    "link": { "color": "accent", "underline": "thick" },
     "surfaceAccent": "marker",
     "rows": "cards"
   }

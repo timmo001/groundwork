@@ -56,7 +56,7 @@ export class GwMenuButton extends LitElement {
         color: var(--gw-color-text-strong);
         cursor: pointer;
         background: var(--gw-color-fill-neutral-resting);
-        border: var(--gw-border-width) solid var(--gw-border-colour);
+        border: var(--gw-border-width) solid var(--gw-border-color);
         border-radius: var(--gw-radius-control);
         transition: background-color var(--gw-motion-fast)
           var(--gw-motion-easing);

@@ -67,7 +67,7 @@ const checkDefinitions = (manifest: Manifest): readonly Problem[] => {
 
       if (
         existing !== undefined &&
-        (existing.colour !== label.colour ||
+        (existing.color !== label.color ||
           existing.description !== label.description)
       ) {
         problems.push(
@@ -138,13 +138,13 @@ const checkRepo = (manifest: Manifest, repo: Repo): readonly Problem[] => {
 
   for (const [index, a] of labels.entries()) {
     for (const b of labels.slice(index + 1)) {
-      const apart = distance(`#${a.colour}`, `#${b.colour}`);
+      const apart = distance(`#${a.color}`, `#${b.color}`);
 
       if (apart < minimumDistance) {
         problems.push(
           problem(
             where,
-            `${a.name} (#${a.colour}) and ${b.name} (#${b.colour}) are too close (${apart.toFixed(3)})`,
+            `${a.name} (#${a.color}) and ${b.name} (#${b.color}) are too close (${apart.toFixed(3)})`,
           ),
         );
       }

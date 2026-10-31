@@ -50,7 +50,7 @@ export class GwMeter extends LitElement {
 
       .fill {
         height: 100%;
-        background: var(--gw-meter-colour, var(--gw-color-fill-accent-resting));
+        background: var(--gw-meter-color, var(--gw-color-fill-accent-resting));
         border-radius: inherit;
         transition: width var(--gw-motion-slow) var(--gw-motion-easing);
       }
@@ -80,7 +80,7 @@ export class GwMeter extends LitElement {
     this.loading = false;
   }
 
-  get #colour() {
+  get #color() {
     if (this.tone !== undefined) return "var(--gw-tone)";
 
     if (this.critical !== undefined && this.value >= this.critical) {
@@ -141,7 +141,7 @@ export class GwMeter extends LitElement {
       >
         <div
           class="fill"
-          style="width: ${percent}%; --gw-meter-colour: ${this.#colour}"
+          style="width: ${percent}%; --gw-meter-color: ${this.#color}"
         ></div>
       </div>
     `;

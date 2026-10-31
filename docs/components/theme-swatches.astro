@@ -28,8 +28,8 @@ const roles = Object.keys(modes[0]?.[1] ?? {});
             <th scope="row">
               <code>--gw-color-{role}</code>
             </th>
-            {modes.map(([, colours]) => {
-              const hex = (colours as Record<string, string>)[role] ?? "";
+            {modes.map(([, colors]) => {
+              const hex = (colors as Record<string, string>)[role] ?? "";
 
               return (
                 <td>

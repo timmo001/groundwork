@@ -8,7 +8,7 @@ import { base } from "./styles.js";
  * for an action in progress. It's hidden from assistive technology, so mark
  * the region it sits in `aria-busy`.
  *
- * @cssprop --gw-skeleton-colour - The fill. Defaults to the neutral fill.
+ * @cssprop --gw-skeleton-color - The fill. Defaults to the neutral fill.
  * @cssprop --gw-skeleton-radius - The corners. Defaults to the control radius.
  */
 export class GwSkeleton extends LitElement {
@@ -19,7 +19,7 @@ export class GwSkeleton extends LitElement {
         display: block;
         min-height: 1rem;
         background: var(
-          --gw-skeleton-colour,
+          --gw-skeleton-color,
           var(--gw-color-fill-neutral-resting)
         );
         border-radius: var(--gw-skeleton-radius, var(--gw-radius-control));

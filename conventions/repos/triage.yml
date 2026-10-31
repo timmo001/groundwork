@@ -7,22 +7,22 @@ renovate:
 areas:
   - name: Home Assistant
     description: Related to the Home Assistant app and collecting from Home Assistant
-    colour: "03a9f4"
+    color: "03a9f4"
   - name: Collection
     description: Related to what the agent captures and where from
-    colour: "4f46e5"
+    color: "4f46e5"
   - name: Decision Models
     description: Related to the decision models and how they're used
-    colour: "c084fc"
+    color: "c084fc"
   - name: Notifications
     description: Related to telling you about issues
-    colour: "fb923c"
+    color: "fb923c"
   - name: Hosting
     description: Related to where and how the server runs
-    colour: "065f46"
+    color: "065f46"
   - name: Web UI
     description: Related to the web UI
-    colour: "006b75"
+    color: "006b75"
   - name: Demo
     description: Related to the web UI demo with fake data
-    colour: "a7f3d0"
+    color: "a7f3d0"

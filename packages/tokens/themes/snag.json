@@ -14,7 +14,7 @@
     "weights": { "regular": 400, "strong": 600 },
     "density": "compact",
     "capitals": false,
-    "link": { "colour": "accent", "underline": "thin" },
+    "link": { "color": "accent", "underline": "thin" },
     "surfaceAccent": "none",
     "rows": "dense"
   }

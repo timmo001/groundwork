@@ -1,12 +1,12 @@
 import { Schema } from "effect";
 
 /** A six-digit hex colour without `#`, as GitHub takes label colours. */
-export const Colour = Schema.String.check(Schema.isPattern(/^[0-9a-f]{6}$/));
+export const Color = Schema.String.check(Schema.isPattern(/^[0-9a-f]{6}$/));
 
 export const Label = Schema.Struct({
   name: Schema.String,
   description: Schema.String,
-  colour: Colour,
+  color: Color,
   /** Older names the label job renames to this one. Matched without case. */
   aliases: Schema.optionalKey(Schema.Array(Schema.String)),
 });

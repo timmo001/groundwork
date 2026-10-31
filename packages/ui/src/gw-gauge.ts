@@ -16,7 +16,7 @@ const track = (circumference * sweep) / 360;
  * the warning and danger colours. Lower is worse when `inverted`, such as for
  * a battery.
  */
-export const severityColour = (
+export const severityColor = (
   value: number | undefined,
   warning: number,
   danger: number,
@@ -30,7 +30,7 @@ export const severityColour = (
 
   if (worse(warning)) return "var(--gw-color-warning)";
 
-  return "var(--gw-gauge-colour, var(--gw-color-fill-accent-resting))";
+  return "var(--gw-gauge-color, var(--gw-color-fill-accent-resting))";
 };
 
 /**
@@ -216,7 +216,7 @@ export class GwGauge extends LitElement {
             <circle class="track" cx="50" cy="50" r=${radius}
               stroke-dasharray="${track} ${circumference}"></circle>
             <circle class="fill" cx="50" cy="50" r=${radius}
-              stroke=${severityColour(value, this.warning, this.danger, this.inverted)}
+              stroke=${severityColor(value, this.warning, this.danger, this.inverted)}
               stroke-dasharray="${track} ${circumference}"
               stroke-dashoffset=${track * (1 - fraction)}
               opacity=${fraction === 0 ? 0 : 1}></circle>

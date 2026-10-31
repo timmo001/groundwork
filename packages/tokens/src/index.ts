@@ -1,4 +1,4 @@
-export * from "./colour.ts";
+export * from "./color.ts";
 
 export * from "./schema.ts";
 

@@ -7,7 +7,7 @@ import {
   withAlpha,
   withLightness,
   type Oklch,
-} from "./colour.ts";
+} from "./color.ts";
 import type { MappedTheme, SolvedTheme, Style, Theme } from "./schema.ts";
 
 export const statuses = [
@@ -75,7 +75,7 @@ const accentRoles = (
   surfaces: { readonly default: Oklch; readonly ground: Oklch },
   dark: boolean,
   textStrong: Oklch,
-  link: Style["link"]["colour"],
+  link: Style["link"]["color"],
 ) => {
   const direction = dark ? "lighter" : "darker";
 
@@ -222,7 +222,7 @@ const solvedMode = (theme: SolvedTheme, mode: "light" | "dark") => {
       { default: surfaces.default, ground },
       dark,
       textStrong,
-      theme.style.link.colour,
+      theme.style.link.color,
     ),
     ...statusRoles(seeds, ground, dark, true),
   };
@@ -241,9 +241,9 @@ const darker = (dark: Roles, by = 0.045) => {
           role.startsWith("fill-neutral-") ||
           role === "on-primary",
       )
-      .map(([role, colour]) => [
+      .map(([role, color]) => [
         role,
-        inGamut(withLightness(colour, colour.l - by)),
+        inGamut(withLightness(color, color.l - by)),
       ]),
   );
 
@@ -324,7 +324,7 @@ const mappedStyle = (base: Style): Style => ({
   weights: base.weights,
   density: base.density,
   capitals: base.capitals,
-  link: { colour: "accent", underline: base.link.underline },
+  link: { color: "accent", underline: base.link.underline },
   surfaceAccent: base.surfaceAccent,
   rows: base.rows,
 });
