@@ -18,4 +18,6 @@ Every token starts with `--gw-`, for Groundwork, and every element with `gw-`. S
 
 ## References
 
-- Home Assistant's design tokens, whose naming the purpose roles follow, so moving a card onto Home Assistant's own tokens is a rename
+- Home Assistant: [Foundations](https://contributors.home-assistant.io/design/foundations/) · [Code](https://github.com/home-assistant/frontend/tree/dev/src/resources/theme)
+- Web Awesome: [Colour tokens](https://webawesome.com/docs/tokens/color) · [Code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/styles)
+- Primer: [Primitives](https://primer.style/product/primitives/) · [Code](https://github.com/primer/primitives)

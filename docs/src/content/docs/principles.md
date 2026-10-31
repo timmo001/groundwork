@@ -17,4 +17,5 @@ description: The rules every part of Groundwork follows, from data-first themes 
 
 ## References
 
-- [Home Assistant's frontend](https://github.com/home-assistant/frontend) and its Web Awesome fork, for accessibility and global CSS variables
+- Home Assistant: [Principles](https://contributors.home-assistant.io/design/principles/) · [Code](https://github.com/home-assistant/frontend)
+- Web Awesome: [Docs](https://webawesome.com/docs/) · [Code](https://github.com/shoelace-style/webawesome)
