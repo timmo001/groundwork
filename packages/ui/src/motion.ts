@@ -1,4 +1,32 @@
 /**
+ * Glides `element` from the height it had before a change to the height it
+ * has after, as an expansion panel opens, so content arriving or going never
+ * jumps the layout. Measure with `before = element.offsetHeight` ahead of the
+ * change, then call this once it's rendered. Skipped when motion is reduced.
+ */
+export const animateHeight = (element: HTMLElement, before: number) => {
+  const after = element.offsetHeight;
+
+  if (
+    before === after ||
+    before === 0 ||
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return;
+  }
+
+  const duration =
+    Number.parseFloat(
+      getComputedStyle(element).getPropertyValue("--gw-motion-normal"),
+    ) || 250;
+
+  element.animate(
+    { height: [`${before}px`, `${after}px`], overflow: ["clip", "clip"] },
+    { duration, easing: "cubic-bezier(0.2, 0, 0, 1)" },
+  );
+};
+
+/**
  * Runs a DOM change inside a View Transition where the browser supports one
  * and motion isn't reduced, otherwise runs it straight away, after Home
  * Assistant's `withViewTransition()`. Use it for changes to the whole view,

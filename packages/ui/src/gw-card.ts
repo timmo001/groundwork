@@ -1,5 +1,6 @@
-import { LitElement, css, html, nothing } from "lit";
+import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 import "./gw-skeleton.js";
+import { animateHeight } from "./motion.js";
 import { base } from "./styles.js";
 
 /**
@@ -80,6 +81,21 @@ export class GwCard extends LitElement {
     this.flush = false;
     this.loading = false;
     this.lines = 3;
+  }
+
+  #before = 0;
+
+  override willUpdate(changed: PropertyValues<this>) {
+    if (this.hasUpdated && changed.has("loading")) {
+      this.#before = this.offsetHeight;
+    }
+  }
+
+  override updated(changed: PropertyValues<this>) {
+    if (changed.has("loading") && this.#before > 0) {
+      animateHeight(this, this.#before);
+      this.#before = 0;
+    }
   }
 
   override render() {

@@ -24,6 +24,8 @@ export * from "./gw-dot.js";
 
 export * from "./gw-empty-state.js";
 
+export * from "./gw-expansion.js";
+
 export * from "./gw-facts.js";
 
 export * from "./gw-gauge.js";

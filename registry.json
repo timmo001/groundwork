@@ -100,7 +100,7 @@
     {
       "name": "gw-button",
       "kind": "lit",
-      "description": "A native button or link, in neutral, primary, accent, plain and danger",
+      "description": "A native button or link, with a colour variant and an accent, filled, outlined or plain appearance",
       "files": ["packages/ui/src/gw-button.ts"],
       "needs": ["ui-base"]
     },
@@ -144,6 +144,13 @@
       "kind": "lit",
       "description": "What a list shows when there's nothing in it",
       "files": ["packages/ui/src/gw-empty-state.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-expansion",
+      "kind": "lit",
+      "description": "A heading that glides its content open and shut, on native details",
+      "files": ["packages/ui/src/gw-expansion.ts"],
       "needs": ["ui-base"]
     },
     {

@@ -1,5 +1,6 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, type PropertyValues } from "lit";
 import "./gw-skeleton.js";
+import { animateHeight } from "./motion.js";
 import { base } from "./styles.js";
 
 export interface Fact {
@@ -59,6 +60,21 @@ export class GwFacts extends LitElement {
     this.items = [];
     this.loading = false;
     this.rows = 4;
+  }
+
+  #before = 0;
+
+  override willUpdate(changed: PropertyValues<this>) {
+    if (this.hasUpdated && (changed.has("loading") || changed.has("items"))) {
+      this.#before = this.offsetHeight;
+    }
+  }
+
+  override updated() {
+    if (this.#before > 0) {
+      animateHeight(this, this.#before);
+      this.#before = 0;
+    }
   }
 
   override render() {

@@ -1,5 +1,5 @@
 import { LitElement, css, html, nothing } from "lit";
-import { base } from "./styles.js";
+import { base, icon } from "./styles.js";
 
 /**
  * A native button styled through `--gw-*` variables, so it follows the
@@ -27,6 +27,8 @@ export class GwButton extends LitElement {
     href: {},
     label: {},
     disabled: { type: Boolean, reflect: true },
+    icon: {},
+    labels: { reflect: true },
   };
 
   static override styles = [
@@ -172,9 +174,44 @@ export class GwButton extends LitElement {
         background: transparent;
       }
 
-      ::slotted([slot="icon"]) {
+      ::slotted([slot="icon"]),
+      .icon {
+        flex: none;
         width: var(--gw-icon-size);
         height: var(--gw-icon-size);
+        fill: currentColor;
+      }
+
+      /* Icon only, to save space: square, with the text kept for assistive
+         technology. auto does this on narrow screens */
+      :host([labels="hide"]) .button.has-icon {
+        min-width: calc(2.5rem * var(--gw-scale));
+        padding: 0;
+      }
+
+      :host([labels="hide"]) .has-icon .text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      @media (width < 40rem) {
+        :host([labels="auto"]) .button.has-icon {
+          min-width: calc(2.5rem * var(--gw-scale));
+          padding: 0;
+        }
+
+        :host([labels="auto"]) .has-icon .text {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
       }
     `,
   ];
@@ -187,9 +224,15 @@ export class GwButton extends LitElement {
   declare href: string;
   declare label: string;
   declare disabled: boolean;
+  /** SVG path data for an icon before the text. */
+  declare icon: string;
+  /** Whether the text shows beside an icon: always, never, or not on narrow screens. */
+  declare labels: "show" | "hide" | "auto";
 
   constructor() {
     super();
+    this.icon = "";
+    this.labels = "show";
     this.variant = "brand";
     this.appearance = "accent";
     this.size = "medium";
@@ -200,13 +243,27 @@ export class GwButton extends LitElement {
   }
 
   override render() {
-    const content = html`<slot name="icon"></slot><slot></slot>`;
+    const hasIcon =
+      this.icon !== "" || this.querySelector("[slot='icon']") !== null;
+
+    const classes = hasIcon ? "button has-icon" : "button";
+
+    const title =
+      hasIcon && this.labels !== "show"
+        ? this.textContent.trim() || nothing
+        : nothing;
+
+    const content = html`${this.icon ? icon(this.icon) : nothing}<slot
+        name="icon"
+      ></slot
+      ><span class="text"><slot></slot></span>`;
 
     if (this.href) {
       return html`<a
-        class="button"
+        class=${classes}
         part="button"
         href=${this.disabled ? nothing : this.href}
+        title=${title}
         aria-label=${this.label || nothing}
         aria-disabled=${this.disabled ? "true" : nothing}
         >${content}</a
@@ -214,9 +271,10 @@ export class GwButton extends LitElement {
     }
 
     return html`<button
-      class="button"
+      class=${classes}
       part="button"
       type=${this.type}
+      title=${title}
       aria-label=${this.label || nothing}
       ?disabled=${this.disabled}
     >

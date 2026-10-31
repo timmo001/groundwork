@@ -17,6 +17,19 @@ Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`,
 
 `heading` adds a header, with an `actions` slot beside it. `href` makes the whole card a link, and `flush` drops the padding for a table or image that fills it.
 
+## Expansion panel
+
+<Demo id="expansion" layout="stack">
+  <gw-expansion heading="Network" description="Wake on LAN, interfaces and ports" open>
+    <gw-facts items='[{"label":"Interface","value":"enp5s0"},{"label":"Address","value":"192.168.1.20"}]'></gw-facts>
+  </gw-expansion>
+  <gw-expansion heading="Advanced" description="Logging and diagnostics">
+    <p>Log level, crash reports and the debug endpoint.</p>
+  </gw-expansion>
+</Demo>
+
+A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`.
+
 ## Chip and dot
 
 <Demo id="chip">
