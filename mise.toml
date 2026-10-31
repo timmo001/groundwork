@@ -19,22 +19,22 @@ run = "bun install --frozen-lockfile"
 [tasks.lint]
 description = "Lint every package with the shared Oxlint rules"
 depends = ["install"]
-run = "bun run --filter './packages/*' lint"
+run = "bun run --filter './packages/*' --filter './templates/*' lint"
 
 [tasks.typecheck]
 description = "Type-check every package"
 depends = ["install"]
-run = "bun run --filter './packages/*' typecheck"
+run = "bun run --filter './packages/*' --filter './templates/*' typecheck"
 
 [tasks.format]
 description = "Format every package"
 depends = ["install"]
-run = "bun run --filter './packages/*' format"
+run = "bun run --filter './packages/*' --filter './templates/*' format"
 
 [tasks."format:check"]
 description = "Check formatting without writing"
 depends = ["install"]
-run = "bun run --filter './packages/*' format:check"
+run = "bun run --filter './packages/*' --filter './templates/*' format:check"
 
 [tasks.gen]
 description = "Generate every token target, the conventions data and the generated docs pages"

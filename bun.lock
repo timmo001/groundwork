@@ -102,6 +102,25 @@
         "typescript": "7.0.2",
       },
     },
+    "templates/cli-tool": {
+      "name": "cli-tool",
+      "bin": {
+        "cli-tool": "./src/cli.ts",
+      },
+      "dependencies": {
+        "@effect/platform-node": "4.1.1",
+        "effect": "4.1.1",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
   },
   "trustedDependencies": [
     "sharp",
@@ -959,6 +978,8 @@
     "ci-info": ["ci-info@4.4.0", "", {}, "sha512-77PSwercCZU2Fc4sX94eF8k8Pxte6JAwL4/ICZLFjJLqegs7kCuAsqqj/70NQF6TvDpgFjkubQB2FW2ZZddvQg=="],
 
     "citty": ["citty@0.2.2", "", {}, "sha512-+6vJA3L98yv+IdfKGZHBNiGW5KHn22e/JwID0Strsz8h4S/csAu/OuICwxrg44k5MRiZHWIo8XXuJgQTriRP4w=="],
+
+    "cli-tool": ["cli-tool@workspace:templates/cli-tool"],
 
     "cliui": ["cliui@9.0.1", "", { "dependencies": { "string-width": "^7.2.0", "strip-ansi": "^7.1.0", "wrap-ansi": "^9.0.0" } }, "sha512-k7ndgKhwoQveBL+/1tqGJYNz097I7WOvwbmmU2AR5+magtbjPWQTS1C5vzGkBC8Ym8UWRzfKUzUUqFLypY4Q+w=="],
 
