@@ -154,6 +154,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-gauge",
+      "kind": "lit",
+      "description": "A reading on a dial, coloured by warning and danger levels",
+      "files": ["packages/ui/src/gw-gauge.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-input",
       "kind": "lit",
       "description": "A labelled native input in light DOM",

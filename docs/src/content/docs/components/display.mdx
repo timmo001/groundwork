@@ -1,6 +1,6 @@
 ---
 title: Display
-description: Cards, chips, badges, dots, alerts, facts and meters.
+description: Cards, chips, badges, dots, alerts, facts, meters and gauges.
 ---
 
 Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`, `danger` or `important`, each from the theme's status roles.
@@ -72,3 +72,14 @@ Label and value pairs as a description list. Set `items` to `[{ "label", "value"
 </Demo>
 
 A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it turns warning and past `critical` danger, unless a `tone` is set. `display` replaces the percentage shown beside the label.
+
+## Gauge
+
+<Demo id="gauge">
+  <gw-gauge label="CPU" value="23"></gw-gauge>
+  <gw-gauge label="Memory" value="81" caption="52 of 64 GB"></gw-gauge>
+  <gw-gauge label="Temperature" value="94" unit="°C" warning="80" danger="90"></gw-gauge>
+  <gw-gauge label="Battery" value="12" inverted warning="25" danger="15"></gw-gauge>
+</Demo>
+
+A reading on a dial, after Home Assistant's gauge card. The arc fills to `value` between `min` and `max` and glides when it changes. It turns warning at `warning` (75) and danger at `danger` (90); `inverted` makes lower readings worse, for a battery. `display` replaces the number, `unit` (`%`) sits under it, and `caption` goes under the label. Set its size with `--gw-gauge-size`.

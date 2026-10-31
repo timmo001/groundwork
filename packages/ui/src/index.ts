@@ -26,6 +26,8 @@ export * from "./gw-empty-state.js";
 
 export * from "./gw-facts.js";
 
+export * from "./gw-gauge.js";
+
 export * from "./gw-input.js";
 
 export * from "./gw-menu-button.js";
