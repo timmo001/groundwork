@@ -236,6 +236,12 @@ sets:
       - name: "OS: macOS"
         description: Specific to macOS
         colour: "334155"
+      - name: "OS: Android"
+        description: Specific to Android
+        colour: "0f172a"
+      - name: "OS: iOS"
+        description: Specific to iOS and iPadOS
+        colour: "5b7fa6"
 
   - id: tests
     name: Test kinds

@@ -399,6 +399,16 @@
           "name": "OS: macOS",
           "description": "Specific to macOS",
           "colour": "334155"
+        },
+        {
+          "name": "OS: Android",
+          "description": "Specific to Android",
+          "colour": "0f172a"
+        },
+        {
+          "name": "OS: iOS",
+          "description": "Specific to iOS and iPadOS",
+          "colour": "5b7fa6"
         }
       ]
     },
@@ -826,7 +836,7 @@
           "colour": "57534e"
         }
       ],
-      "labels": 58
+      "labels": 60
     },
     {
       "repo": "timmo001/timmo.dev",
