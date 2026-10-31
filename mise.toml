@@ -108,11 +108,29 @@ depends = ["install"]
 dir = "packages/bump-consumers"
 run = "bun run src/bump-consumers.ts"
 
+[tasks.sync]
+description = "Carry QML edits back from the apps, then copy changed items out to them"
+depends = ["install"]
+run = "bun run packages/sync/src/cli.ts run"
+
+[tasks."sync:check"]
+description = "List what a sync would change without changing anything"
+run = "bun run packages/sync/src/cli.ts run --check"
+
+[tasks."sync:status"]
+description = "Show where every app's copies stand"
+run = "bun run packages/sync/src/cli.ts status"
+
+[tasks.test]
+description = "Run the tests next to code that computes"
+run = "bun test packages"
+
 [tasks.check]
-description = "Lint, type-check, verify formatting, generated files, contrast and conventions"
+description = "Lint, type-check, test, verify formatting, generated files, contrast and conventions"
 depends = [
   "lint",
   "typecheck",
+  "test",
   "format:check",
   "gen:check",
   "contrast",

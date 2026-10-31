@@ -18,6 +18,9 @@ document attached to it.
 | [`docs`](docs)                                                            | The Groundwork docs site, showing every theme live                                      |
 | [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                          |
 | [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behaviour conventions, with Code Mode and MCP                        |
+| [`qml`](qml)                                                              | The shared Omarchy panel components                                                     |
+| [`registry.json`](registry.json)                                          | What apps can take through the sync                                                     |
+| [`packages/sync`](packages/sync)                                          | Copies items into apps and carries QML edits back                                       |
 | [`packages/conventions`](packages/conventions)                            | Checks the manifest and prints each repository's labels                                 |
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
 | [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |

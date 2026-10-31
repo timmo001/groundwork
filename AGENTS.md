@@ -54,6 +54,15 @@ document usage and development.
 - `mise run check` fails when a label is defined two ways, a description
   breaks the voice, or two colours in a repository are too close in OKLab.
 
+## Sync
+
+- `registry.json` lists what apps can take; `packages/sync` copies items into
+  apps with a `sync.json`, recording each copy in `sync.lock.json`.
+- The QML panel components live in `qml/` and mirror both ways. Edit them here
+  or in any copy, then run `mise run sync` and commit groundwork and each app.
+- Other items only travel out. A flagged copy means an app edited one; move the
+  edit into groundwork or a wrapper rather than overwriting it.
+
 ## docs-kit
 
 The package lives in `packages/docs-kit/` and is the only one published.

@@ -84,6 +84,25 @@
         "blume": "2.2.6",
       },
     },
+    "packages/sync": {
+      "name": "@groundwork/sync",
+      "bin": {
+        "sync": "./src/cli.ts",
+      },
+      "dependencies": {
+        "@effect/platform-node": "4.1.1",
+        "effect": "4.1.1",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/tokens": {
       "name": "@groundwork/tokens",
       "dependencies": {
@@ -340,6 +359,8 @@
     "@fontsource/ibm-plex-sans": ["@fontsource/ibm-plex-sans@5.3.0", "", {}, "sha512-CbE4CbbEEZJX860XyUiRpsksXIQR8Rp2XDva2VO53NJox9tVNtusrysd2x5YkUEY3ErQ66W1IiiQL8/wihhw5w=="],
 
     "@groundwork/conventions": ["@groundwork/conventions@workspace:packages/conventions"],
+
+    "@groundwork/sync": ["@groundwork/sync@workspace:packages/sync"],
 
     "@groundwork/tokens": ["@groundwork/tokens@workspace:packages/tokens"],
 

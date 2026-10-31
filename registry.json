@@ -1,0 +1,70 @@
+{
+  "items": [
+    {
+      "name": "filterable-panel",
+      "kind": "qml",
+      "description": "A filtered list with a keyboard cursor over its rows",
+      "files": ["qml/FilterablePanel.qml"]
+    },
+    {
+      "name": "output-view",
+      "kind": "qml",
+      "description": "Read-only monospace output, such as a log, that scrolls and stays selectable",
+      "files": ["qml/OutputView.qml"]
+    },
+    {
+      "name": "panel-flickable",
+      "kind": "qml",
+      "description": "A panel's scrolling body, smooth on the wheel and touchpad",
+      "files": ["qml/PanelFlickable.qml"]
+    },
+    {
+      "name": "panel-header",
+      "kind": "qml",
+      "description": "A panel's title row, with an optional back button",
+      "files": ["qml/PanelHeader.qml"]
+    },
+    {
+      "name": "section-heading",
+      "kind": "qml",
+      "description": "A heading between groups of rows, optionally collapsible or refreshable",
+      "files": ["qml/SectionHeading.qml"]
+    },
+    {
+      "name": "themes-css",
+      "kind": "tokens",
+      "description": "Every theme as CSS variables",
+      "files": ["packages/tokens/generated/themes.css"]
+    },
+    {
+      "name": "themes-ts",
+      "kind": "tokens",
+      "description": "Every theme as a TypeScript object",
+      "files": ["packages/tokens/generated/themes.ts"]
+    },
+    {
+      "name": "themes-json",
+      "kind": "tokens",
+      "description": "Every theme as JSON",
+      "files": ["packages/tokens/generated/themes.json"]
+    },
+    {
+      "name": "themes-qml",
+      "kind": "tokens",
+      "description": "Every theme as a QML singleton",
+      "files": ["packages/tokens/generated/Themes.qml"]
+    },
+    {
+      "name": "opentui",
+      "kind": "tokens",
+      "description": "Resolved theme colours for OpenTUI",
+      "files": ["packages/tokens/generated/opentui.ts"]
+    },
+    {
+      "name": "ansi",
+      "kind": "tokens",
+      "description": "Status colours mapped to the terminal's ANSI palette",
+      "files": ["packages/tokens/generated/ansi.json"]
+    }
+  ]
+}
