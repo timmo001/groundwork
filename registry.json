@@ -189,6 +189,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-popover",
+      "kind": "lit",
+      "description": "A confirmation, rename or small form beside the button that opened it, a bottom sheet on phones",
+      "files": ["packages/ui/src/gw-popover.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-section-title",
       "kind": "lit",
       "description": "A small heading between groups",

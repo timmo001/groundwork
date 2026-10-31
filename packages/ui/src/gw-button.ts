@@ -11,6 +11,12 @@ import { base } from "./styles.js";
  * Sizes run `xs` to `xl`, and `--gw-button-scale` sets any size in between.
  */
 export class GwButton extends LitElement {
+  /** Focusing the element focuses its native button, such as from a dialog opening. */
+  static override shadowRootOptions = {
+    ...LitElement.shadowRootOptions,
+    delegatesFocus: true,
+  };
+
   static override properties = {
     variant: { reflect: true },
     size: { reflect: true },

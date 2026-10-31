@@ -151,8 +151,10 @@ export class GwDemoFrame extends LitElement {
       if (target.dataset.opens) {
         const dialog = this.querySelector(`#${target.dataset.opens}`);
 
+        // A popover opens next to the button, unless the demo asks for it
+        // without one, as after a save
         if (dialog !== null && "show" in dialog && typeof dialog.show === "function") {
-          dialog.show();
+          dialog.show(target.dataset.centred === undefined ? target : undefined);
         }
       }
 
