@@ -26,9 +26,9 @@ export class GwMeter extends LitElement {
 
       .top {
         display: flex;
-        gap: var(--gw-space-3);
+        gap: var(--gw-space-2);
         justify-content: space-between;
-        margin-block-end: var(--gw-space-2);
+        margin-block-end: var(--gw-space-1);
         font-size: var(--gw-font-size-s);
       }
 

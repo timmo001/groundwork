@@ -25,10 +25,10 @@ export class GwMenuButton extends LitElement {
 
       .trigger {
         display: inline-flex;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         align-items: center;
         min-height: 2.25rem;
-        padding: 0 var(--gw-space-4);
+        padding: 0 var(--gw-space-3);
         font: inherit;
         font-size: var(--gw-font-size-s);
         font-weight: var(--gw-font-weight-strong);
@@ -49,7 +49,7 @@ export class GwMenuButton extends LitElement {
         height: 0.5rem;
         border-inline-end: 2px solid currentColor;
         border-block-end: 2px solid currentColor;
-        margin-inline-start: var(--gw-space-1);
+        margin-inline-start: var(--gw-space-0-5);
         rotate: 45deg;
         translate: 0 -0.125rem;
       }
@@ -60,8 +60,8 @@ export class GwMenuButton extends LitElement {
         top: anchor(bottom);
         left: anchor(left);
         min-width: 12rem;
-        padding: var(--gw-space-1);
-        margin: var(--gw-space-1) 0 0;
+        padding: var(--gw-space-0-5);
+        margin: var(--gw-space-0-5) 0 0;
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-overlay);
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
@@ -75,11 +75,43 @@ export class GwMenuButton extends LitElement {
         flex-direction: column;
       }
 
+      /* Eases in and out of the top layer */
+      [popover] {
+        opacity: 0;
+        translate: 0 -0.25rem;
+        transition:
+          opacity var(--gw-motion-fast) var(--gw-motion-easing),
+          translate var(--gw-motion-normal) var(--gw-motion-easing),
+          display var(--gw-motion-normal) allow-discrete,
+          overlay var(--gw-motion-normal) allow-discrete;
+      }
+
+      [popover]:popover-open {
+        opacity: 1;
+        translate: 0 0;
+      }
+
+      @starting-style {
+        [popover]:popover-open {
+          opacity: 0;
+          translate: 0 -0.25rem;
+        }
+      }
+
+      .chevron {
+        transition: rotate var(--gw-motion-normal) var(--gw-motion-easing);
+      }
+
+      .trigger[aria-expanded="true"] .chevron {
+        rotate: 225deg;
+        translate: 0 0.125rem;
+      }
+
       ::slotted(button) {
         display: flex;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         align-items: center;
-        padding: var(--gw-space-2) var(--gw-space-3);
+        padding: var(--gw-space-1) var(--gw-space-2);
         font: inherit;
         font-size: var(--gw-font-size-s);
         color: var(--gw-color-text-primary);

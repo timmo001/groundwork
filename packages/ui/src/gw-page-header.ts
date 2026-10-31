@@ -17,7 +17,7 @@ export class GwPageHeader extends LitElement {
     css`
       :host {
         display: flex;
-        gap: var(--gw-space-4);
+        gap: var(--gw-space-3);
         align-items: flex-start;
       }
 
@@ -37,7 +37,7 @@ export class GwPageHeader extends LitElement {
         display: flex;
         flex: 1;
         flex-direction: column;
-        gap: var(--gw-space-1);
+        gap: var(--gw-space-0-5);
         min-width: 0;
       }
 
@@ -58,7 +58,7 @@ export class GwPageHeader extends LitElement {
       .actions {
         display: flex;
         flex: none;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         align-items: center;
         margin-inline-start: auto;
       }

@@ -1,5 +1,7 @@
 export * from "./styles.js";
 
+export * from "./motion.js";
+
 export * from "./fields.js";
 
 export * from "./layout.js";

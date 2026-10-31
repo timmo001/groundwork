@@ -24,21 +24,21 @@ export class GwToaster extends LitElement {
     css`
       :host {
         position: fixed;
-        inset: auto 0 var(--gw-space-5);
+        inset: auto 0 var(--gw-space-4);
         z-index: 1000;
         display: flex;
         flex-direction: column;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         align-items: center;
         pointer-events: none;
       }
 
       .toast {
         display: flex;
-        gap: var(--gw-space-3);
+        gap: var(--gw-space-2);
         align-items: center;
-        max-width: min(32rem, calc(100vw - 2 * var(--gw-space-4)));
-        padding: var(--gw-space-3) var(--gw-space-4);
+        max-width: min(32rem, calc(100vw - 2 * var(--gw-space-3)));
+        padding: var(--gw-space-2) var(--gw-space-3);
         font-size: var(--gw-font-size-s);
         color: var(--gw-color-text-strong);
         pointer-events: auto;

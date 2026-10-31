@@ -70,7 +70,11 @@
       "name": "ui-base",
       "kind": "lit",
       "description": "Shared styles, tones and the icon helper every web component needs",
-      "files": ["packages/ui/src/styles.ts", "packages/ui/src/fields.ts"]
+      "files": [
+        "packages/ui/src/styles.ts",
+        "packages/ui/src/fields.ts",
+        "packages/ui/src/motion.ts"
+      ]
     },
     {
       "name": "gw-layout",

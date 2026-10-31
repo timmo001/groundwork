@@ -14,11 +14,13 @@ export class GwChip extends LitElement {
         display: inline-flex;
       }
 
+      /* 32px, as Home Assistant's chips, with 12px padding */
       .chip {
         display: inline-flex;
         gap: var(--gw-space-2);
         align-items: center;
-        min-height: 1.75rem;
+        box-sizing: border-box;
+        height: 2rem;
         padding: 0 var(--gw-space-3);
         font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-strong);

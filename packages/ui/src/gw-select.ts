@@ -70,24 +70,26 @@ export class GwSelect extends LightElement {
 
     return html`
       <label for=${this.#id}>${this.label}</label>
-      <select
-        id=${this.#id}
-        name=${this.name || nothing}
-        aria-describedby=${this.hint ? hintId : nothing}
-        ?disabled=${this.disabled}
-        .value=${live(this.value)}
-        @change=${this.#onChange}
+      <span class="gw-select-control"
+        ><select
+          id=${this.#id}
+          name=${this.name || nothing}
+          aria-describedby=${this.hint ? hintId : nothing}
+          ?disabled=${this.disabled}
+          .value=${live(this.value)}
+          @change=${this.#onChange}
+        >
+          ${this.options.map(
+            (option) =>
+              html`<option
+                value=${option.value}
+                ?selected=${option.value === this.value}
+              >
+                ${option.label}
+              </option>`,
+          )}
+        </select></span
       >
-        ${this.options.map(
-          (option) =>
-            html`<option
-              value=${option.value}
-              ?selected=${option.value === this.value}
-            >
-              ${option.label}
-            </option>`,
-        )}
-      </select>
       ${this.hint ? html`<p class="gw-hint" id=${hintId}>${this.hint}</p>` : nothing}
     `;
   }

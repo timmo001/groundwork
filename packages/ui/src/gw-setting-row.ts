@@ -22,10 +22,10 @@ export class GwSettingRow extends LitElement {
       .row {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gw-space-2) var(--gw-space-4);
+        gap: var(--gw-space-1) var(--gw-space-3);
         align-items: center;
         justify-content: space-between;
-        padding: var(--gw-row-padding, var(--gw-space-3)) 0;
+        padding: var(--gw-row-padding, var(--gw-space-2)) 0;
       }
 
       /* A full line even in themes without borders, since it separates rows */

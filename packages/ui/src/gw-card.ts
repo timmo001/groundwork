@@ -22,9 +22,9 @@ export class GwCard extends LitElement {
       .card {
         display: flex;
         flex-direction: column;
-        gap: var(--gw-space-4);
+        gap: var(--gw-space-3);
         height: 100%;
-        padding: var(--gw-space-5);
+        padding: var(--gw-space-4);
         color: inherit;
         text-decoration: none;
         background: var(--gw-color-surface-raised);
@@ -48,7 +48,7 @@ export class GwCard extends LitElement {
 
       header {
         display: flex;
-        gap: var(--gw-space-3);
+        gap: var(--gw-space-2);
         align-items: center;
       }
 

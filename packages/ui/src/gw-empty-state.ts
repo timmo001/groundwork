@@ -21,10 +21,10 @@ export class GwEmptyState extends LitElement {
       .empty {
         display: flex;
         flex-direction: column;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         align-items: center;
         justify-content: center;
-        padding: var(--gw-space-8) var(--gw-space-4);
+        padding: var(--gw-space-12) var(--gw-space-3);
         color: var(--gw-color-text-secondary);
         text-align: center;
         --gw-icon-size: 2.5rem;
@@ -42,7 +42,7 @@ export class GwEmptyState extends LitElement {
       }
 
       ::slotted([slot="actions"]) {
-        margin-block-start: var(--gw-space-3);
+        margin-block-start: var(--gw-space-2);
       }
     `,
   ];

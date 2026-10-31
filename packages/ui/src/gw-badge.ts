@@ -22,14 +22,18 @@ export class GwBadge extends LitElement {
         vertical-align: middle;
       }
 
+      /* Home Assistant's badge: 36px tall, 12px padding, 8px between the
+         18px icon and the text */
       .badge {
+        --gw-icon-size: 1.125rem;
+
         display: inline-flex;
         gap: var(--gw-space-2);
         align-items: center;
+        box-sizing: border-box;
         max-width: 100%;
-        min-height: 2.25rem;
-        padding: var(--gw-space-1) var(--gw-space-4) var(--gw-space-1)
-          var(--gw-space-3);
+        height: 2.25rem;
+        padding: 0 var(--gw-space-4) 0 var(--gw-space-3);
         vertical-align: middle;
         color: var(--gw-color-text-strong);
         background: var(--gw-color-surface-raised);
@@ -38,10 +42,11 @@ export class GwBadge extends LitElement {
       }
 
       :host([size="small"]) .badge {
-        gap: var(--gw-space-1);
-        min-height: 1.75rem;
-        padding: 0 var(--gw-space-2) 0 var(--gw-space-2);
         --gw-icon-size: 1rem;
+
+        gap: var(--gw-space-1);
+        height: 1.75rem;
+        padding: 0 var(--gw-space-3) 0 var(--gw-space-2);
       }
 
       .icon {
@@ -55,14 +60,16 @@ export class GwBadge extends LitElement {
       }
 
       .label {
-        font-size: var(--gw-font-size-xs);
+        font-size: var(--gw-font-size-2xs);
+        line-height: 1.1;
         color: var(--gw-color-text-secondary);
       }
 
       .content {
-        font-size: var(--gw-font-size-s);
+        font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-strong);
-        overflow-wrap: anywhere;
+        line-height: 1.2;
+        white-space: nowrap;
       }
 
       :host([size="small"]) .content {

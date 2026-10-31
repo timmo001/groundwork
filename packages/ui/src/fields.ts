@@ -34,6 +34,33 @@ export const fieldStyles = css`
     transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
+  /* A drawn chevron with room around it, in the text colour, instead of the
+     browser's arrow pressed against the edge. A select can't take
+     pseudo-elements, so its wrapper draws it */
+  gw-select select {
+    padding-inline-end: calc(var(--gw-space-4) * 2 + 0.5rem);
+    appearance: none;
+  }
+
+  gw-select .gw-select-control {
+    position: relative;
+    display: block;
+  }
+
+  gw-select .gw-select-control::after {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: var(--gw-space-4);
+    width: 0.4rem;
+    height: 0.4rem;
+    pointer-events: none;
+    content: "";
+    border-block-end: 1.5px solid var(--gw-color-text-secondary);
+    border-inline-end: 1.5px solid var(--gw-color-text-secondary);
+    translate: 0 -70%;
+    rotate: 45deg;
+  }
+
   :where(gw-input, gw-select) :where(input, select):hover {
     border-color: var(--gw-color-border-loud);
   }
@@ -100,7 +127,9 @@ export const fieldStyles = css`
     background: var(--gw-color-surface-lower);
     border: var(--gw-border-width) solid var(--gw-color-border-loud);
     border-radius: var(--gw-radius-pill);
-    transition: background-color var(--gw-motion-fast) var(--gw-motion-easing);
+    transition:
+      background-color var(--gw-motion-normal) var(--gw-motion-easing),
+      border-color var(--gw-motion-normal) var(--gw-motion-easing);
   }
 
   gw-switch input::after {
@@ -112,7 +141,9 @@ export const fieldStyles = css`
     content: "";
     background: var(--gw-color-text-secondary);
     border-radius: 50%;
-    transition: translate var(--gw-motion-fast) var(--gw-motion-easing);
+    transition:
+      translate var(--gw-motion-normal) var(--gw-motion-easing),
+      background-color var(--gw-motion-normal) var(--gw-motion-easing);
   }
 
   gw-switch input:checked {

@@ -47,7 +47,7 @@ export class GwPage extends LitElement {
 
 const gaps = css`
   :host([gap="s"]) {
-    --gw-gap: var(--gw-space-2);
+    --gw-gap: var(--gw-space-1);
   }
 
   :host([gap="l"]) {
@@ -63,7 +63,7 @@ export class GwStack extends LitElement {
       :host {
         display: flex;
         flex-direction: column;
-        gap: var(--gw-gap, var(--gw-space-4));
+        gap: var(--gw-gap, var(--gw-space-3));
       }
     `,
   ];
@@ -81,7 +81,7 @@ export class GwRow extends LitElement {
       :host {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gw-gap, var(--gw-space-3));
+        gap: var(--gw-gap, var(--gw-space-2));
         align-items: center;
       }
 
@@ -107,7 +107,7 @@ export class GwGrid extends LitElement {
           auto-fill,
           minmax(min(100%, var(--gw-grid-min, 18rem)), 1fr)
         );
-        gap: var(--gw-gap, var(--gw-space-4));
+        gap: var(--gw-gap, var(--gw-space-3));
       }
     `,
   ];

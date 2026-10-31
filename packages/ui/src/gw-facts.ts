@@ -22,7 +22,7 @@ export class GwFacts extends LitElement {
       dl {
         display: grid;
         grid-template-columns: minmax(7rem, max-content) 1fr;
-        gap: var(--gw-space-2) var(--gw-space-4);
+        gap: var(--gw-space-1) var(--gw-space-3);
         margin: 0;
         font-size: var(--gw-font-size-s);
       }

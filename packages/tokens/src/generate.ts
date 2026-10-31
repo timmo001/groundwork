@@ -64,8 +64,8 @@ const styleProperties = (style: Style) => ({
       : "var(--gw-border-colour)",
   "row-padding":
     style.rows === "dense"
-      ? "calc(var(--gw-space-2) * 1.5)"
-      : "var(--gw-space-4)",
+      ? "calc(var(--gw-space-1) * 1.5)"
+      : "var(--gw-space-3)",
 });
 
 const shadows = (dark: boolean) => {
@@ -85,14 +85,14 @@ const shadows = (dark: boolean) => {
  * theme beside its density, not only on `:root`.
  */
 const spacing = {
-  "space-1": "calc(0.125rem * var(--gw-density))",
-  "space-2": "calc(0.25rem * var(--gw-density))",
-  "space-3": "calc(0.5rem * var(--gw-density))",
-  "space-4": "calc(0.75rem * var(--gw-density))",
-  "space-5": "calc(1rem * var(--gw-density))",
-  "space-6": "calc(1.5rem * var(--gw-density))",
-  "space-7": "calc(2rem * var(--gw-density))",
-  "space-8": "calc(3rem * var(--gw-density))",
+  // Home Assistant's scale: 4px steps, space-1 to space-20, plus a half step
+  "space-0-5": "calc(0.125rem * var(--gw-density))",
+  ...Object.fromEntries(
+    Array.from({ length: 20 }, (_, index) => [
+      `space-${index + 1}`,
+      `calc(${(index + 1) * 0.25}rem * var(--gw-density))`,
+    ]),
+  ),
 };
 
 const foundations = {
@@ -114,8 +114,11 @@ const foundations = {
   "radius-l": "12px",
   "radius-xl": "16px",
   "radius-pill": "999px",
-  "motion-fast": "120ms",
-  "motion-slow": "220ms",
+  // Home Assistant's animation durations
+  "motion-instant": "75ms",
+  "motion-fast": "150ms",
+  "motion-normal": "250ms",
+  "motion-slow": "350ms",
   "motion-easing": "cubic-bezier(0.2, 0, 0, 1)",
   "focus-width": "2px",
   "focus-offset": "2px",
@@ -179,7 +182,7 @@ export const css = (themes: readonly ResolvedTheme[]) =>
   [
     `/* ${header} */`,
     `:root {\n${declarations(foundations)}\n}`,
-    `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-fast: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
+    `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-instant: 1ms;\n    --gw-motion-fast: 1ms;\n    --gw-motion-normal: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";
 

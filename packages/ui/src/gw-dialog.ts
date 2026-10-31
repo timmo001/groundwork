@@ -18,7 +18,7 @@ export class GwDialog extends LitElement {
     base,
     css`
       dialog {
-        width: min(32rem, calc(100vw - 2 * var(--gw-space-4)));
+        width: min(32rem, calc(100vw - 2 * var(--gw-space-3)));
         padding: 0;
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-overlay);
@@ -31,8 +31,47 @@ export class GwDialog extends LitElement {
         background: rgb(0 0 0 / 50%);
       }
 
+      /* Fades and lifts in and out, the backdrop with it */
+      dialog,
+      dialog::backdrop {
+        transition:
+          opacity var(--gw-motion-normal) var(--gw-motion-easing),
+          scale var(--gw-motion-normal) var(--gw-motion-easing),
+          display var(--gw-motion-normal) allow-discrete,
+          overlay var(--gw-motion-normal) allow-discrete;
+      }
+
+      dialog,
+      dialog::backdrop {
+        opacity: 0;
+      }
+
+      dialog {
+        scale: 0.96;
+      }
+
+      dialog[open],
+      dialog[open]::backdrop {
+        opacity: 1;
+      }
+
+      dialog[open] {
+        scale: 1;
+      }
+
+      @starting-style {
+        dialog[open],
+        dialog[open]::backdrop {
+          opacity: 0;
+        }
+
+        dialog[open] {
+          scale: 0.96;
+        }
+      }
+
       header {
-        padding: var(--gw-space-5) var(--gw-space-5) 0;
+        padding: var(--gw-space-4) var(--gw-space-4) 0;
       }
 
       h2 {
@@ -43,16 +82,16 @@ export class GwDialog extends LitElement {
       }
 
       .body {
-        padding: var(--gw-space-4) var(--gw-space-5);
+        padding: var(--gw-space-3) var(--gw-space-4);
         font-size: var(--gw-font-size-s);
       }
 
       footer {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gw-space-2);
+        gap: var(--gw-space-1);
         justify-content: flex-end;
-        padding: 0 var(--gw-space-5) var(--gw-space-5);
+        padding: 0 var(--gw-space-4) var(--gw-space-4);
       }
     `,
   ];

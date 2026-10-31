@@ -21,9 +21,9 @@ export class GwAlert extends LitElement {
 
       .alert {
         display: flex;
-        gap: var(--gw-space-3);
+        gap: var(--gw-space-2);
         align-items: flex-start;
-        padding: var(--gw-space-3) var(--gw-space-4);
+        padding: var(--gw-space-2) var(--gw-space-3);
         font-size: var(--gw-font-size-s);
         color: var(--gw-color-text-primary);
         background: var(--gw-tone-fill, var(--gw-color-fill-info-quiet));

@@ -142,7 +142,7 @@ const statuses = [
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--gw-space-3) var(--gw-space-5);
+    padding: var(--gw-space-2) var(--gw-space-4);
     background: var(--gw-color-surface-lower);
     border-bottom: 1px solid var(--gw-color-border-quiet);
   }
@@ -162,20 +162,20 @@ const statuses = [
 
   .label {
     display: block;
-    margin: 0 0 var(--gw-space-2);
+    margin: 0 0 var(--gw-space-1);
     font-weight: var(--gw-font-weight-strong);
   }
 
   .body {
     display: grid;
-    gap: var(--gw-space-5);
-    padding: var(--gw-space-5);
+    gap: var(--gw-space-4);
+    padding: var(--gw-space-4);
   }
 
   .panel {
     position: relative;
-    padding: var(--gw-space-5);
-    padding-inline-start: calc(var(--gw-space-5) + var(--gw-panel-marker));
+    padding: var(--gw-space-4);
+    padding-inline-start: calc(var(--gw-space-4) + var(--gw-panel-marker));
     background-color: var(--gw-color-surface-raised);
     background-image: var(--gw-panel-sheen);
     border: var(--gw-border-width) solid var(--gw-border-colour);
@@ -187,7 +187,7 @@ const statuses = [
 
   .panel::before {
     position: absolute;
-    inset-block: var(--gw-space-4);
+    inset-block: var(--gw-space-3);
     inset-inline-start: 0;
     width: var(--gw-panel-marker);
     content: "";
@@ -195,7 +195,7 @@ const statuses = [
   }
 
   .heading {
-    margin: 0 0 var(--gw-space-2);
+    margin: 0 0 var(--gw-space-1);
     font-size: var(--gw-font-size-l);
     font-weight: var(--gw-font-weight-strong);
     color: var(--gw-color-text-strong);
@@ -205,7 +205,7 @@ const statuses = [
 
   .primary,
   .secondary {
-    margin: 0 0 var(--gw-space-3);
+    margin: 0 0 var(--gw-space-2);
   }
 
   .secondary {
@@ -222,11 +222,11 @@ const statuses = [
   .row {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gw-space-3);
+    gap: var(--gw-space-2);
   }
 
   .button {
-    padding: var(--gw-space-3) var(--gw-space-5);
+    padding: var(--gw-space-2) var(--gw-space-4);
     font: inherit;
     font-weight: var(--gw-font-weight-strong);
     text-transform: var(--gw-label-transform);
@@ -274,7 +274,7 @@ const statuses = [
   .field input {
     box-sizing: border-box;
     width: 100%;
-    padding: var(--gw-space-3) var(--gw-space-4);
+    padding: var(--gw-space-2) var(--gw-space-3);
     font: inherit;
     color: var(--gw-color-text-strong);
     background: var(--gw-color-surface-raised);
@@ -283,7 +283,7 @@ const statuses = [
   }
 
   .chip {
-    padding: var(--gw-space-1) var(--gw-space-4);
+    padding: var(--gw-space-0-5) var(--gw-space-3);
     font-size: var(--gw-font-size-xs);
     color: var(--gw-color-text-primary);
     background: var(--gw-color-fill-neutral-resting);
@@ -298,12 +298,12 @@ const statuses = [
 
   .alerts {
     display: grid;
-    gap: var(--gw-space-2);
+    gap: var(--gw-space-1);
   }
 
   .alert {
     margin: 0;
-    padding: var(--gw-space-3) var(--gw-space-4);
+    padding: var(--gw-space-2) var(--gw-space-3);
     color: var(--gw-color-text-primary);
     border-inline-start: 3px solid currentcolor;
     border-radius: var(--gw-radius-s);
@@ -321,7 +321,7 @@ const statuses = [
   }
 
   .rows td {
-    padding: var(--gw-row-padding) var(--gw-space-3);
+    padding: var(--gw-row-padding) var(--gw-space-2);
     border-top: 1px solid var(--gw-color-border-quiet);
   }
 
@@ -332,7 +332,7 @@ const statuses = [
   }
 
   .badge {
-    padding: 0 var(--gw-space-3);
+    padding: 0 var(--gw-space-2);
     font-size: var(--gw-font-size-2xs);
     font-weight: var(--gw-font-weight-strong);
     text-transform: var(--gw-label-transform);

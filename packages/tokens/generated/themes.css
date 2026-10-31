@@ -2,14 +2,27 @@
 
 :root {
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-font-size-multiplier: 1;
   --gw-font-size-2xs: calc(0.6875rem * var(--gw-font-size-multiplier));
   --gw-font-size-xs: calc(0.75rem * var(--gw-font-size-multiplier));
@@ -26,8 +39,10 @@
   --gw-radius-l: 12px;
   --gw-radius-xl: 16px;
   --gw-radius-pill: 999px;
-  --gw-motion-fast: 120ms;
-  --gw-motion-slow: 220ms;
+  --gw-motion-instant: 75ms;
+  --gw-motion-fast: 150ms;
+  --gw-motion-normal: 250ms;
+  --gw-motion-slow: 350ms;
   --gw-motion-easing: cubic-bezier(0.2, 0, 0, 1);
   --gw-focus-width: 2px;
   --gw-focus-offset: 2px;
@@ -37,7 +52,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --gw-motion-instant: 1ms;
     --gw-motion-fast: 1ms;
+    --gw-motion-normal: 1ms;
     --gw-motion-slow: 1ms;
   }
 }
@@ -49,14 +66,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -70,7 +100,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="base"] {
@@ -290,14 +320,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1.2;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 16px;
   --gw-radius-control: 12px;
   --gw-radius-chip: 10px;
@@ -311,7 +354,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="glazing"] {
@@ -531,14 +574,27 @@
   --gw-font-weight-regular: 500;
   --gw-font-weight-strong: 700;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 2px;
   --gw-radius-control: 2px;
   --gw-radius-chip: 2px;
@@ -552,7 +608,7 @@
   --gw-panel-marker: 4px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="survey"] {
@@ -772,14 +828,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 20px;
   --gw-radius-control: 999px;
   --gw-radius-chip: 999px;
@@ -793,7 +862,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="slate"] {
@@ -1013,14 +1082,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 12px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 999px;
@@ -1034,7 +1116,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="bridge"] {
@@ -1254,14 +1336,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 0.85;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 6px;
   --gw-radius-control: 4px;
   --gw-radius-chip: 2px;
@@ -1275,7 +1370,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: calc(var(--gw-space-2) * 1.5);
+  --gw-row-padding: calc(var(--gw-space-1) * 1.5);
 }
 
 [data-gw-theme="snag"] {
@@ -1495,14 +1590,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -1516,7 +1624,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="catppuccin-frappe"] {
@@ -1682,14 +1790,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -1703,7 +1824,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="catppuccin-latte"] {
@@ -1765,14 +1886,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -1786,7 +1920,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="catppuccin-macchiato"] {
@@ -1952,14 +2086,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -1973,7 +2120,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="catppuccin-mocha"] {
@@ -2139,14 +2286,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -2160,7 +2320,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="tokyo-night"] {
@@ -2326,14 +2486,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -2347,7 +2520,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="tokyo-night-day"] {
@@ -2409,14 +2582,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -2430,7 +2616,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="tokyo-night-moon"] {
@@ -2596,14 +2782,27 @@
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
-  --gw-space-1: calc(0.125rem * var(--gw-density));
-  --gw-space-2: calc(0.25rem * var(--gw-density));
-  --gw-space-3: calc(0.5rem * var(--gw-density));
-  --gw-space-4: calc(0.75rem * var(--gw-density));
-  --gw-space-5: calc(1rem * var(--gw-density));
+  --gw-space-0-5: calc(0.125rem * var(--gw-density));
+  --gw-space-1: calc(0.25rem * var(--gw-density));
+  --gw-space-2: calc(0.5rem * var(--gw-density));
+  --gw-space-3: calc(0.75rem * var(--gw-density));
+  --gw-space-4: calc(1rem * var(--gw-density));
+  --gw-space-5: calc(1.25rem * var(--gw-density));
   --gw-space-6: calc(1.5rem * var(--gw-density));
-  --gw-space-7: calc(2rem * var(--gw-density));
-  --gw-space-8: calc(3rem * var(--gw-density));
+  --gw-space-7: calc(1.75rem * var(--gw-density));
+  --gw-space-8: calc(2rem * var(--gw-density));
+  --gw-space-9: calc(2.25rem * var(--gw-density));
+  --gw-space-10: calc(2.5rem * var(--gw-density));
+  --gw-space-11: calc(2.75rem * var(--gw-density));
+  --gw-space-12: calc(3rem * var(--gw-density));
+  --gw-space-13: calc(3.25rem * var(--gw-density));
+  --gw-space-14: calc(3.5rem * var(--gw-density));
+  --gw-space-15: calc(3.75rem * var(--gw-density));
+  --gw-space-16: calc(4rem * var(--gw-density));
+  --gw-space-17: calc(4.25rem * var(--gw-density));
+  --gw-space-18: calc(4.5rem * var(--gw-density));
+  --gw-space-19: calc(4.75rem * var(--gw-density));
+  --gw-space-20: calc(5rem * var(--gw-density));
   --gw-radius-panel: 10px;
   --gw-radius-control: 8px;
   --gw-radius-chip: 6px;
@@ -2617,7 +2816,7 @@
   --gw-panel-marker: 0px;
   --gw-panel-flange: 0px;
   --gw-panel-flange-colour: var(--gw-border-colour);
-  --gw-row-padding: var(--gw-space-4);
+  --gw-row-padding: var(--gw-space-3);
 }
 
 [data-gw-theme="tokyo-night-storm"] {

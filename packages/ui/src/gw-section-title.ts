@@ -12,7 +12,7 @@ export class GwSectionTitle extends LitElement {
     css`
       :host {
         display: flex;
-        gap: var(--gw-space-3);
+        gap: var(--gw-space-2);
         align-items: center;
       }
 

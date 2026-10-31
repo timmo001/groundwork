@@ -27,22 +27,23 @@ export class GwButton extends LitElement {
         display: inline-block;
       }
 
-      /* Everything scales from --gw-button-scale: the size presets set it, and
+      /* Everything scales from --gw-button-scale, around Home Assistant's 40px
+         medium button: the presets give HA's 24, 32 and 48px and a 56px xl, and
          an app can set any value for a size between or beyond them */
       :host([size="xs"]) {
-        --gw-button-scale: 0.75;
+        --gw-button-scale: 0.6;
       }
 
       :host([size="small"]) {
-        --gw-button-scale: 0.85;
+        --gw-button-scale: 0.8;
       }
 
       :host([size="large"]) {
-        --gw-button-scale: 1.3;
+        --gw-button-scale: 1.2;
       }
 
       :host([size="xl"]) {
-        --gw-button-scale: 1.6;
+        --gw-button-scale: 1.4;
       }
 
       .button {
@@ -53,7 +54,7 @@ export class GwButton extends LitElement {
         gap: calc(var(--gw-space-2) * var(--gw-scale));
         align-items: center;
         justify-content: center;
-        min-height: calc(2.25rem * var(--gw-scale));
+        min-height: calc(2.5rem * var(--gw-scale));
         padding: 0 calc(var(--gw-space-4) * var(--gw-scale));
         font: inherit;
         font-size: calc(var(--gw-font-size-s) * var(--gw-scale));
@@ -68,8 +69,16 @@ export class GwButton extends LitElement {
         background: var(--gw-color-fill-neutral-resting);
         border: var(--gw-border-width) solid var(--gw-border-colour);
         border-radius: var(--gw-radius-control);
-        transition: background-color var(--gw-motion-fast)
-          var(--gw-motion-easing);
+        transition:
+          background-color var(--gw-motion-fast) var(--gw-motion-easing),
+          border-color var(--gw-motion-fast) var(--gw-motion-easing),
+          color var(--gw-motion-fast) var(--gw-motion-easing),
+          scale var(--gw-motion-fast) var(--gw-motion-easing);
+      }
+
+      /* A slight press, so a click feels physical */
+      .button:active {
+        scale: 0.97;
       }
 
       .button:hover {
