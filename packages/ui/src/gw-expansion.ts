@@ -48,17 +48,28 @@ export class GwExpansion extends LitElement {
         padding: var(--gw-space-2) var(--gw-space-4);
         cursor: pointer;
         list-style: none;
-        border-radius: var(--gw-radius-panel);
-        transition: background-color var(--gw-motion-fast)
-          var(--gw-motion-easing);
+        border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width));
+        user-select: none;
+        transition:
+          background-color var(--gw-motion-fast) var(--gw-motion-easing),
+          border-radius var(--gw-motion-normal) var(--gw-motion-easing);
       }
 
       summary::-webkit-details-marker {
         display: none;
       }
 
+      details[open] summary {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+      }
+
       summary:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      summary:active {
+        background: var(--gw-color-fill-neutral-pressed);
       }
 
       summary:focus-visible {
@@ -84,13 +95,33 @@ export class GwExpansion extends LitElement {
         color: var(--gw-color-text-secondary);
       }
 
-      .chevron {
+      /* The chevron sits in a round neutral button, so the heading reads as
+         something to press */
+      .toggle {
+        display: grid;
         flex: none;
+        place-items: center;
+        width: 2rem;
+        height: 2rem;
+        background: var(--gw-color-fill-neutral-resting);
+        border-radius: 50%;
+        transition: background-color var(--gw-motion-fast)
+          var(--gw-motion-easing);
+      }
+
+      summary:hover .toggle {
+        background: var(--gw-color-fill-neutral-pressed);
+      }
+
+      summary:active .toggle {
+        background: var(--gw-color-fill-neutral-selected);
+      }
+
+      .chevron {
         width: 0.45rem;
         height: 0.45rem;
-        margin-inline: var(--gw-space-1);
-        border-inline-end: 1.5px solid var(--gw-color-text-secondary);
-        border-block-end: 1.5px solid var(--gw-color-text-secondary);
+        border-inline-end: 1.5px solid var(--gw-color-text-primary);
+        border-block-end: 1.5px solid var(--gw-color-text-primary);
         rotate: 45deg;
         translate: 0 -0.125rem;
         transition:
@@ -104,7 +135,9 @@ export class GwExpansion extends LitElement {
       }
 
       .content {
-        padding: 0 var(--gw-space-4) var(--gw-space-4);
+        padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4);
+        border-block-start: var(--gw-border-width) solid
+          var(--gw-color-border-quiet);
         font-size: var(--gw-font-size-s);
       }
     `,
@@ -145,7 +178,9 @@ export class GwExpansion extends LitElement {
               : nothing
           }
         </span>
-        <span class="chevron" aria-hidden="true"></span>
+        <span class="toggle" aria-hidden="true"
+          ><span class="chevron"></span
+        ></span>
       </summary>
       <div class="content" part="content"><slot></slot></div>
     </details>`;
