@@ -17,7 +17,7 @@ document attached to it.
 | [`packages/tokens`](packages/tokens/themes)                               | Theme documents, the solver and the generators for CSS, JSON, TS, QML, OpenTUI and ANSI |
 | [`docs`](docs)                                                            | The Groundwork docs site, showing every theme live                                      |
 | [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                          |
-| [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behavior conventions, with Code Mode and MCP                        |
+| [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behavior conventions, with Code Mode and MCP                         |
 | [`qml`](qml)                                                              | The shared Omarchy panel components                                                     |
 | [`registry.json`](registry.json)                                          | What apps can take through the sync                                                     |
 | [`packages/sync`](packages/sync)                                          | Copies items into apps and carries QML edits back                                       |
@@ -25,7 +25,7 @@ document attached to it.
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
 | [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |
 | [`skills/docs-kit`](skills/docs-kit/SKILL.md)                             | An agent skill for setting up or changing a site with docs-kit                          |
-| [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                     |
+| [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                      |
 
 ## docs-kit
 
