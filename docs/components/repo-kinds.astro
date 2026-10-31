@@ -1,0 +1,63 @@
+---
+import conventions from "@groundwork/conventions/conventions.json";
+import LabelChip from "./label-chip.astro";
+---
+
+{
+  conventions.kinds.map((kind) => {
+    const repos = conventions.repos.filter((repo) => repo.kind === kind.id);
+
+    return (
+      <section class="kind">
+        <h3>
+          {kind.name} <span class="count">{repos.length}</span>
+        </h3>
+        <p>{kind.description}</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Repository</th>
+              <th scope="col">Labels</th>
+              <th scope="col">Areas</th>
+            </tr>
+          </thead>
+          <tbody>
+            {repos.map((repo) => (
+              <tr>
+                <td>
+                  <a href={`https://github.com/${repo.repo}`}>{repo.repo}</a>
+                  {repo.discussions && <span class="note"> · Discussions</span>}
+                </td>
+                <td>{repo.labels}</td>
+                <td class="areas">
+                  {repo.areas.map((area) => (
+                    <LabelChip colour={area.colour} name={area.name} />
+                  ))}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    );
+  })
+}
+
+<style>
+  .count {
+    font-size: 0.875rem;
+    font-weight: 400;
+    opacity: 0.7;
+  }
+
+  .note {
+    font-size: 0.8125rem;
+    opacity: 0.8;
+  }
+
+  .areas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+</style>

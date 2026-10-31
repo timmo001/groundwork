@@ -38,6 +38,11 @@ export default defineConfig(
           ],
         },
         {
+          label: "Conventions",
+          root: "/conventions",
+          items: ["/conventions/labels", "/conventions/repositories"],
+        },
+        {
           label: "Components",
           items: ["/components/demo"],
         },

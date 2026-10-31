@@ -1,0 +1,37 @@
+---
+interface Props {
+  name: string;
+  colour: string;
+}
+
+const { name, colour } = Astro.props;
+
+// GitHub picks black or white label text by the background's luminance.
+const channel = (offset: number) => {
+  const value = Number.parseInt(colour.slice(offset, offset + 2), 16) / 255;
+
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+};
+
+const luminance =
+  0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
+---
+
+<span
+  class="chip"
+  style={`background: #${colour}; color: ${luminance > 0.4 ? "#1f2328" : "#ffffff"}`}
+  >{name}</span
+>
+
+<style>
+  .chip {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    border: 1px solid #8884;
+    border-radius: 999px;
+  }
+</style>

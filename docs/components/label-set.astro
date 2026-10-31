@@ -1,0 +1,45 @@
+---
+import conventions from "@groundwork/conventions/conventions.json";
+import LabelChip from "./label-chip.astro";
+
+interface Props {
+  set: string;
+}
+
+const set = conventions.sets.find((item) => item.id === Astro.props.set);
+
+if (set === undefined) throw new Error(`Unknown label set: ${Astro.props.set}`);
+
+type Label = (typeof set.labels)[number] & { aliases?: string[] };
+const labels: Label[] = set.labels;
+---
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Label</th>
+      <th scope="col">Description</th>
+      <th scope="col">Renames</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      labels.map((label) => (
+        <tr>
+          <td>
+            <LabelChip colour={label.colour} name={label.name} />
+          </td>
+          <td>{label.description}</td>
+          <td>
+            {(label.aliases ?? []).map((alias, index) => (
+              <>
+                {index > 0 && ", "}
+                <code>{alias}</code>
+              </>
+            ))}
+          </td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
