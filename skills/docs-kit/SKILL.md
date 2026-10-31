@@ -25,8 +25,12 @@ on `main`, follow the installed release.
    other options where the site differs from the defaults the README lists.
 3. Import the components directly in `components.ts`. Blume reads that file
    without running it, so re-exports or helper functions there won't work.
-4. Start `theme.css` with `@import "@timmo001/docs-kit/blume/theme.css";`. Put
-   site overrides, such as the `--home-banner-*` properties, after it.
+4. Start `theme.css` with `@import "@timmo001/docs-kit/blume/theme.css";`, then
+   the app's Groundwork theme, such as
+   `@import "@timmo001/docs-kit/blume/themes/bridge.css";` (Base until the app
+   has its own), and the theme's font files. Leave `theme.accent` out of the
+   config. Put site overrides, such as the `--home-banner-*` properties, after
+   them.
 5. Generate brand images with `writeBrandImages` from a site script rather than
    a copied generator. Commit the PNGs it writes. Remind the user that GitHub's
    social preview needs a manual upload.

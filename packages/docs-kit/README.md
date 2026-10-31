@@ -91,6 +91,19 @@ This widens the content column on large screens and keeps the "On this page"
 rail next to the content. The banner's full-width layout relies on these
 columns.
 
+Then import the Groundwork theme of the app the site documents, such as Base,
+Glazing, Survey, Slate, Bridge or Snag:
+
+```css
+@import "@timmo001/docs-kit/blume/themes/bridge.css";
+```
+
+It sets Blume's colours, radius and fonts from the theme in light and dark, so
+leave `theme.accent` out of `blume.config.ts`. The fonts are stacks, so load
+the theme's font files in `theme.css` too, for example with
+`@import "@fontsource-variable/inter";`. Use Base until the app has a theme of
+its own.
+
 Set these in `theme.css` to change the banner:
 
 ```css

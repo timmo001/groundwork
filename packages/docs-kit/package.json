@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/docs-kit",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Shared branding, layout and config for timmo001 documentation sites",
   "license": "Apache-2.0",
   "type": "module",
@@ -10,6 +10,7 @@
     "./blume/header-search.astro": "./src/blume/header-search.astro",
     "./blume/home-banner.astro": "./src/blume/home-banner.astro",
     "./blume/theme.css": "./src/blume/theme.css",
+    "./blume/themes/*.css": "./src/blume/themes/*.css",
     "./package.json": "./package.json"
   },
   "files": [

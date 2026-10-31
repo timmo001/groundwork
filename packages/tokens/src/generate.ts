@@ -172,6 +172,79 @@ export const css = (themes: readonly ResolvedTheme[]) =>
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";
 
+/** Each Blume colour token and the role it takes. */
+const blumeRoles = {
+  background: "surface-default",
+  foreground: "text-primary",
+  muted: "surface-low",
+  "muted-foreground": "text-secondary",
+  border: "border-normal",
+  accent: "accent",
+  "accent-foreground": "on-accent",
+  action: "fill-primary-resting",
+  "action-foreground": "on-primary",
+  "code-background": "surface-raised",
+  "code-highlight": "fill-info-quiet",
+  "code-highlight-border": "border-info",
+  "code-add": "fill-success-quiet",
+  "code-add-border": "border-success",
+  "code-remove": "fill-danger-quiet",
+  "code-remove-border": "border-danger",
+  "code-error": "fill-danger-quiet",
+  "code-error-border": "border-danger",
+  "code-warning": "fill-warning-quiet",
+  "code-warning-border": "border-warning",
+  "code-word": "fill-info-quiet",
+  "code-word-border": "border-info",
+};
+
+/** Blume's colour tokens from a theme's roles in one mode. */
+const blumeColours = (roles: Roles) =>
+  Object.fromEntries(
+    Object.entries(blumeRoles).flatMap(([token, role]) => {
+      const colour = roles[role];
+
+      return colour === undefined ? [] : [[token, toCss(colour)]];
+    }),
+  );
+
+const blumeDeclarations = (properties: Record<string, string>) =>
+  Object.entries(properties)
+    .map(([name, value]) => `  --blume-${name}: ${value};`)
+    .join("\n");
+
+/**
+ * One theme as Blume's tokens, for docs-kit: light on `:root` and dark on
+ * Blume's `data-theme="dark"`. Fonts are stacks, so the site loads the files.
+ */
+export const blumeTheme = (theme: ResolvedTheme) => {
+  const { light, dark } = theme.modes;
+
+  const style = {
+    radius: `${theme.style.radius.panel}px`,
+    "font-body": fontStack(theme.style.font),
+    "font-display": fontStack(theme.style.font),
+    "font-mono": fontStack(theme.style.mono),
+  };
+
+  const lightTokens: Record<string, string> =
+    light === undefined ? style : { ...style, ...blumeColours(light) };
+
+  const blocks = [
+    `/* ${header} */`,
+    `/* ${theme.name}: ${theme.description} */`,
+    `:root {\n${blumeDeclarations(lightTokens)}\n}`,
+  ];
+
+  if (dark !== undefined) {
+    blocks.push(
+      `:root[data-theme="dark"] {\n${blumeDeclarations(blumeColours(dark))}\n}`,
+    );
+  }
+
+  return blocks.join("\n\n") + "\n";
+};
+
 const hexRoles = (roles: Roles) =>
   Object.fromEntries(
     Object.entries(roles).map(([role, colour]) => [role, toHex(colour)]),

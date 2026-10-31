@@ -4,6 +4,7 @@ import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import { Command, Flag } from "effect/cli";
 import {
   ansi,
+  blumeTheme,
   contrastPage,
   css,
   json,
@@ -79,11 +80,19 @@ const outputs = Effect.fn("outputs")(function* (
   const docs = (file: string) =>
     path.join(root, "../../docs/src/content/docs/themes", file);
 
+  const docsKit = (file: string) =>
+    path.join(root, "../docs-kit/src/blume/themes", file);
+
   const output = (file: string, contents: string): Output => [file, contents];
 
   return [
     ...themes.flatMap((theme) =>
-      theme.optional ? [] : [output(docs(`${theme.id}.mdx`), themePage(theme))],
+      theme.optional
+        ? []
+        : [
+            output(docs(`${theme.id}.mdx`), themePage(theme)),
+            output(docsKit(`${theme.id}.css`), blumeTheme(theme)),
+          ],
     ),
     output(docs("optional.mdx"), optionalPage(themes)),
     output(generated("themes.css"), css(themes)),
