@@ -110,6 +110,7 @@ export class GwDemoFrame extends LitElement {
     }
 
     .stage {
+      position: relative;
       display: flex;
       flex-wrap: wrap;
       gap: var(--gw-space-3);
@@ -119,13 +120,33 @@ export class GwDemoFrame extends LitElement {
 
     :host([layout="stack"]) .stage {
       flex-direction: column;
+      flex-wrap: nowrap;
       align-items: stretch;
     }
 
+    /* An overlay in the stage's corner, so a new event never moves the
+       layout around it */
     .event {
-      margin-inline-start: auto;
+      position: absolute;
+      inset-block-start: var(--gw-space-2);
+      inset-inline-end: var(--gw-space-2);
+      padding: var(--gw-space-1) var(--gw-space-3);
       font-family: var(--gw-font-mono);
+      font-size: var(--gw-font-size-xs);
       color: var(--gw-color-text-secondary);
+      pointer-events: none;
+      background: var(--gw-color-surface-raised);
+      border: 1px solid var(--gw-color-border-quiet);
+      border-radius: var(--gw-radius-pill);
+      box-shadow: var(--gw-shadow-s);
+      transition:
+        opacity var(--gw-motion-normal) var(--gw-motion-easing),
+        translate var(--gw-motion-normal) var(--gw-motion-easing);
+    }
+
+    .event[data-empty] {
+      opacity: 0;
+      translate: 0 calc(var(--gw-space-1) * -1);
     }
   `;
 
@@ -251,9 +272,13 @@ export class GwDemoFrame extends LitElement {
             }
           }}
         ></gw-segmented>
-        <span class="event" aria-live="polite">${this.event}</span>
       </div>
-      <div class="stage"><slot></slot></div>
+      <div class="stage">
+        <slot></slot>
+        <span class="event" ?data-empty=${this.event === ""} aria-live="polite"
+          >${this.event}</span
+        >
+      </div>
     `;
   }
 }

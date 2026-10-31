@@ -1,15 +1,19 @@
 import { LitElement, css, html, nothing } from "lit";
+import "./gw-skeleton.js";
 import { base } from "./styles.js";
 
 /**
  * A surface for one group of content, with an optional heading and actions.
- * With `href` the whole card is a link.
+ * With `href` the whole card is a link. While `loading`, lines of skeleton
+ * stand in for the content, and for the heading until it's known.
  */
 export class GwCard extends LitElement {
   static override properties = {
     heading: {},
     href: {},
     flush: { type: Boolean, reflect: true },
+    loading: { type: Boolean, reflect: true },
+    lines: { type: Number },
   };
 
   static override styles = [
@@ -65,30 +69,51 @@ export class GwCard extends LitElement {
   declare heading: string;
   declare href: string;
   declare flush: boolean;
+  declare loading: boolean;
+  /** How many lines of skeleton stand in for the content while loading. */
+  declare lines: number;
 
   constructor() {
     super();
     this.heading = "";
     this.href = "";
     this.flush = false;
+    this.loading = false;
+    this.lines = 3;
   }
 
   override render() {
+    const heading = this.heading
+      ? html`<h2>${this.heading}</h2>`
+      : this.loading
+        ? html`<h2><gw-skeleton-text></gw-skeleton-text></h2>`
+        : nothing;
+
     const content = html`
       ${
-        this.heading
-          ? html`<header>
-              <h2>${this.heading}</h2>
+        heading === nothing
+          ? nothing
+          : html`<header>
+              ${heading}
               <slot name="actions"></slot>
             </header>`
-          : nothing
       }
-      <slot></slot>
+      ${
+        this.loading
+          ? html`<gw-skeleton-lines lines=${this.lines}></gw-skeleton-lines>`
+          : html`<slot></slot>`
+      }
     `;
 
+    const busy = this.loading ? "true" : nothing;
+
     return this.href
-      ? html`<a class="card" part="card" href=${this.href}>${content}</a>`
-      : html`<section class="card" part="card">${content}</section>`;
+      ? html`<a class="card" part="card" href=${this.href} aria-busy=${busy}
+          >${content}</a
+        >`
+      : html`<section class="card" part="card" aria-busy=${busy}>
+          ${content}
+        </section>`;
   }
 }
 

@@ -6,55 +6,19 @@ description: Buttons, menu buttons and segmented controls, on native buttons and
 ## Button
 
 <Demo id="button">
-  <gw-button variant="primary">Reboot</gw-button>
-  <gw-button>Cancel</gw-button>
-  <gw-button variant="accent">Plan boot</gw-button>
-  <gw-button variant="plain">Details</gw-button>
+  <gw-button>Reboot</gw-button>
+  <gw-button variant="neutral" appearance="filled">Plan boot</gw-button>
+  <gw-button variant="neutral" appearance="plain">Cancel</gw-button>
   <gw-button disabled>Unavailable</gw-button>
 </Demo>
 
-The status variants take their colour from the theme's status roles:
-
-<Demo id="button-status">
-  <gw-button variant="info">Check for updates</gw-button>
-  <gw-button variant="success">Mark resolved</gw-button>
-  <gw-button variant="warning">Restart later</gw-button>
-  <gw-button variant="danger">Remove backup</gw-button>
-</Demo>
-
-Sizes scale everything together, from `xs` to `xl`, and `--gw-button-scale` sets any size in between or beyond:
-
-<Demo id="button-sizes">
-  <gw-button size="xs">Extra small</gw-button>
-  <gw-button size="small">
-    <svg slot="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
-    Export
-  </gw-button>
-  <gw-button>Medium</gw-button>
-  <gw-button size="large" variant="primary" href="#button">Open as a link</gw-button>
-  <gw-button size="xl" variant="accent">Extra large</gw-button>
-  <gw-button style="--gw-button-scale: 2">Scale 2</gw-button>
-</Demo>
-
-| Attribute | Values |
-| --- | --- |
-| `variant` | `primary`, `secondary` (default), `accent`, `plain`, `info`, `success`, `warning` or `danger` |
-| `size` | `xs`, `small`, `medium` (default), `large` or `xl`; or set `--gw-button-scale` |
-| `type` | `button` (default), `submit` or `reset` |
-| `href` | Renders a link that looks the same |
-| `label` | An accessible name, for a button with only an icon |
-| `disabled` | Disables it |
-
-It renders a native `<button>`, or an `<a>` with `href`. Put an icon in the `icon` slot. Style the inner element with `::part(button)`.
-
-### Preview: colour and appearance
-
-This is a preview of Home Assistant's Design Kit model, which may replace the variants above. The `variant` picks the colour (brand, neutral, success, warning or danger) and `appearance` how it's applied, from most to least important: accent, filled, outlined or plain. Every button is a pill.
+As in Home Assistant's Design Kit, `variant` picks the colour and `appearance` how it's applied, from most to least important: accent (a solid fill, the default), filled (a soft tint), outlined (a stroke) or plain (text only). Every button is a pill. Info joins the kit's five colours, so buttons match the alert colours.
 
 <Demo id="button-appearance" layout="stack">
   <gw-row>
     <gw-button variant="brand" appearance="accent">Brand</gw-button>
     <gw-button variant="neutral" appearance="accent">Neutral</gw-button>
+    <gw-button variant="info" appearance="accent">Info</gw-button>
     <gw-button variant="success" appearance="accent">Success</gw-button>
     <gw-button variant="warning" appearance="accent">Warning</gw-button>
     <gw-button variant="danger" appearance="accent">Danger</gw-button>
@@ -62,6 +26,7 @@ This is a preview of Home Assistant's Design Kit model, which may replace the va
   <gw-row>
     <gw-button variant="brand" appearance="filled">Brand</gw-button>
     <gw-button variant="neutral" appearance="filled">Neutral</gw-button>
+    <gw-button variant="info" appearance="filled">Info</gw-button>
     <gw-button variant="success" appearance="filled">Success</gw-button>
     <gw-button variant="warning" appearance="filled">Warning</gw-button>
     <gw-button variant="danger" appearance="filled">Danger</gw-button>
@@ -69,6 +34,7 @@ This is a preview of Home Assistant's Design Kit model, which may replace the va
   <gw-row>
     <gw-button variant="brand" appearance="outlined">Brand</gw-button>
     <gw-button variant="neutral" appearance="outlined">Neutral</gw-button>
+    <gw-button variant="info" appearance="outlined">Info</gw-button>
     <gw-button variant="success" appearance="outlined">Success</gw-button>
     <gw-button variant="warning" appearance="outlined">Warning</gw-button>
     <gw-button variant="danger" appearance="outlined">Danger</gw-button>
@@ -76,20 +42,47 @@ This is a preview of Home Assistant's Design Kit model, which may replace the va
   <gw-row>
     <gw-button variant="brand" appearance="plain">Brand</gw-button>
     <gw-button variant="neutral" appearance="plain">Neutral</gw-button>
+    <gw-button variant="info" appearance="plain">Info</gw-button>
     <gw-button variant="success" appearance="plain">Success</gw-button>
     <gw-button variant="warning" appearance="plain">Warning</gw-button>
     <gw-button variant="danger" appearance="plain">Danger</gw-button>
   </gw-row>
 </Demo>
 
-In practice a screen pairs them by importance, such as a danger accent button beside a neutral plain one:
+A screen pairs them by importance: one accent button for the main action, with quieter ones beside it.
 
-<Demo id="button-appearance-pairs">
+<Demo id="button-pairs">
   <gw-button variant="neutral" appearance="plain">Cancel</gw-button>
-  <gw-button variant="danger" appearance="accent">Remove backup</gw-button>
-  <gw-button variant="brand" appearance="outlined">Check for updates</gw-button>
+  <gw-button variant="danger">Remove backup</gw-button>
+  <gw-button variant="info" appearance="outlined">Check for updates</gw-button>
   <gw-button variant="success" appearance="filled">Mark resolved</gw-button>
 </Demo>
+
+Sizes scale everything together, from `xs` to `xl`, and `--gw-button-scale` sets any size in between or beyond:
+
+<Demo id="button-sizes">
+  <gw-button size="xs">Extra small</gw-button>
+  <gw-button size="small" variant="neutral" appearance="filled">
+    <svg slot="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
+    Export
+  </gw-button>
+  <gw-button>Medium</gw-button>
+  <gw-button size="large" appearance="outlined" href="#button">Open as a link</gw-button>
+  <gw-button size="xl">Extra large</gw-button>
+  <gw-button style="--gw-button-scale: 2" appearance="filled">Scale 2</gw-button>
+</Demo>
+
+| Attribute | Values |
+| --- | --- |
+| `variant` | `brand` (default), `neutral`, `info`, `success`, `warning` or `danger` |
+| `appearance` | `accent` (default), `filled`, `outlined` or `plain` |
+| `size` | `xs`, `small`, `medium` (default), `large` or `xl`; or set `--gw-button-scale` |
+| `type` | `button` (default), `submit` or `reset` |
+| `href` | Renders a link that looks the same |
+| `label` | An accessible name, for a button with only an icon |
+| `disabled` | Disables it |
+
+It renders a native `<button>`, or an `<a>` with `href`. Put an icon in the `icon` slot. Style the inner element with `::part(button)`.
 
 ## Menu button
 

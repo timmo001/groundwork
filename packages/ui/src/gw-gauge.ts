@@ -1,4 +1,5 @@
 import { LitElement, css, html, nothing, svg } from "lit";
+import "./gw-skeleton.js";
 import { base } from "./styles.js";
 
 /** How much of the circle the gauge's track covers. */
@@ -35,7 +36,8 @@ export const severityColour = (
 /**
  * A reading on a dial, after Home Assistant's gauge card. The arc fills to
  * `value` between `min` and `max`, coloured by `warning` and `danger`, and
- * glides when the value changes.
+ * glides when the value changes. While `loading`, the track pulses and a
+ * skeleton stands in for the reading.
  */
 export class GwGauge extends LitElement {
   static override properties = {
@@ -49,6 +51,7 @@ export class GwGauge extends LitElement {
     warning: { type: Number },
     danger: { type: Number },
     inverted: { type: Boolean },
+    loading: { type: Boolean, reflect: true },
   };
 
   static override styles = [
@@ -85,6 +88,21 @@ export class GwGauge extends LitElement {
 
       .track {
         stroke: var(--gw-color-surface-lower);
+      }
+
+      :host([loading]) .track {
+        stroke: var(--gw-color-fill-neutral-resting);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        50% {
+          opacity: 0.45;
+        }
+      }
+
+      .reading gw-skeleton-text {
+        font-size: calc(var(--gw-gauge-size, 8.5rem) * 0.2);
       }
 
       .fill {
@@ -142,6 +160,7 @@ export class GwGauge extends LitElement {
   declare danger: number;
   /** Lower readings are worse, such as for a battery. */
   declare inverted: boolean;
+  declare loading: boolean;
 
   constructor() {
     super();
@@ -155,11 +174,12 @@ export class GwGauge extends LitElement {
     this.warning = 75;
     this.danger = 90;
     this.inverted = false;
+    this.loading = false;
   }
 
   override render() {
     const value =
-      this.value !== undefined && Number.isFinite(this.value)
+      this.value !== undefined && Number.isFinite(this.value) && !this.loading
         ? this.value
         : undefined;
 
@@ -173,17 +193,18 @@ export class GwGauge extends LitElement {
     const shown =
       this.display || (value === undefined ? "-" : String(Math.round(value)));
 
-    const text =
-      value === undefined
+    const text = this.loading
+      ? "Loading"
+      : value === undefined
         ? "Unknown"
         : [`${shown}${this.unit}`, this.caption]
             .filter((part) => part !== "")
             .join(", ");
 
-    return html`
-      <div
+    return html` <div
         class="dial"
         role="meter"
+        aria-busy=${this.loading ? "true" : nothing}
         aria-label=${this.label || nothing}
         aria-valuemin=${this.min}
         aria-valuemax=${this.max}
@@ -202,13 +223,28 @@ export class GwGauge extends LitElement {
           `}
         </svg>
         <div class="reading">
-          <span class="value">${shown}</span>
-          ${this.unit === "" ? nothing : html`<span class="unit">${this.unit}</span>`}
+          ${
+            this.loading
+              ? html`<gw-skeleton-text
+                  style="--gw-skeleton-width: 2em"
+                ></gw-skeleton-text>`
+              : html`<span class="value">${shown}</span>
+                  ${this.unit === "" ? nothing : html`<span class="unit">${this.unit}</span>`}`
+          }
         </div>
       </div>
       ${this.label === "" ? nothing : html`<span class="label">${this.label}</span>`}
-      ${this.caption === "" ? nothing : html`<span class="caption">${this.caption}</span>`}
-    `;
+      ${
+        this.loading && this.caption === ""
+          ? nothing
+          : this.loading
+            ? html`<gw-skeleton-text
+                style="--gw-skeleton-width: 5rem"
+              ></gw-skeleton-text>`
+            : this.caption === ""
+              ? nothing
+              : html`<span class="caption">${this.caption}</span>`
+      }`;
   }
 }
 

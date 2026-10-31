@@ -95,7 +95,7 @@
       "kind": "lit",
       "description": "A pill with an icon, a value and an optional label",
       "files": ["packages/ui/src/gw-badge.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-button",
@@ -109,7 +109,7 @@
       "kind": "lit",
       "description": "A surface for one group of content, optionally a link",
       "files": ["packages/ui/src/gw-card.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-checkbox",
@@ -123,7 +123,7 @@
       "kind": "lit",
       "description": "A short status or category, by tone",
       "files": ["packages/ui/src/gw-chip.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-dialog",
@@ -151,14 +151,14 @@
       "kind": "lit",
       "description": "Label and value pairs",
       "files": ["packages/ui/src/gw-facts.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-gauge",
       "kind": "lit",
       "description": "A reading on a dial, coloured by warning and danger levels",
       "files": ["packages/ui/src/gw-gauge.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-input",
@@ -179,7 +179,7 @@
       "kind": "lit",
       "description": "A labelled bar for a value in a range",
       "files": ["packages/ui/src/gw-meter.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-page-header",
@@ -221,12 +221,12 @@
       "kind": "lit",
       "description": "A setting's name and description beside its control",
       "files": ["packages/ui/src/gw-setting-row.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-skeleton",
       "kind": "lit",
-      "description": "A placeholder while data loads",
+      "description": "A placeholder while data loads, with text, lines and icon shapes built on it",
       "files": ["packages/ui/src/gw-skeleton.ts"],
       "needs": ["ui-base"]
     },

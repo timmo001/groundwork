@@ -1,10 +1,15 @@
-import { LitElement, css, html } from "lit";
+import { LitElement, css, html, nothing } from "lit";
+import "./gw-skeleton.js";
 import { base, type Tone } from "./styles.js";
 
-/** A short status or category, tinted by its `tone`. */
+/**
+ * A short status or category, tinted by its `tone`. While `loading`, a
+ * skeleton stands in for its text.
+ */
 export class GwChip extends LitElement {
   static override properties = {
     tone: { reflect: true },
+    loading: { type: Boolean, reflect: true },
   };
 
   static override styles = [
@@ -35,16 +40,27 @@ export class GwChip extends LitElement {
   ];
 
   declare tone: Tone;
+  declare loading: boolean;
 
   constructor() {
     super();
     this.tone = "neutral";
+    this.loading = false;
   }
 
   override render() {
-    return html`<span class="chip" part="chip"
-      ><slot name="icon"></slot><slot></slot
-    ></span>`;
+    return html`<span
+      class="chip"
+      part="chip"
+      aria-busy=${this.loading ? "true" : nothing}
+      >${
+        this.loading
+          ? html`<gw-skeleton-text
+              style="--gw-skeleton-width: 3.5rem"
+            ></gw-skeleton-text>`
+          : html`<slot name="icon"></slot><slot></slot>`
+      }</span
+    >`;
   }
 }
 

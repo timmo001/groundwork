@@ -1,9 +1,12 @@
 import { LitElement, css, html, nothing } from "lit";
+import "./gw-skeleton.js";
 import { base, icon, type Tone } from "./styles.js";
 
 /**
  * A pill with an icon, a value and an optional small label above it, after
- * Home Assistant's badges. The icon takes the `tone`'s colour.
+ * Home Assistant's badges. The icon takes the `tone`'s colour. While
+ * `loading`, a skeleton stands in for the value, and for the icon if it has
+ * none yet.
  */
 export class GwBadge extends LitElement {
   static override properties = {
@@ -11,6 +14,7 @@ export class GwBadge extends LitElement {
     label: {},
     tone: { reflect: true },
     size: { reflect: true },
+    loading: { type: Boolean, reflect: true },
   };
 
   static override styles = [
@@ -83,6 +87,7 @@ export class GwBadge extends LitElement {
   declare label: string;
   declare tone: Tone;
   declare size: "small" | "medium";
+  declare loading: boolean;
 
   constructor() {
     super();
@@ -90,14 +95,33 @@ export class GwBadge extends LitElement {
     this.label = "";
     this.tone = "accent";
     this.size = "medium";
+    this.loading = false;
   }
 
   override render() {
-    return html`<span class="badge" part="badge">
-      ${this.icon ? icon(this.icon) : nothing}
+    return html`<span
+      class="badge"
+      part="badge"
+      aria-busy=${this.loading ? "true" : nothing}
+    >
+      ${
+        this.icon
+          ? icon(this.icon)
+          : this.loading
+            ? html`<gw-skeleton-icon></gw-skeleton-icon>`
+            : nothing
+      }
       <span class="info">
         ${this.label ? html`<span class="label">${this.label}</span>` : nothing}
-        <span class="content"><slot></slot></span>
+        <span class="content"
+          >${
+            this.loading
+              ? html`<gw-skeleton-text
+                  style="--gw-skeleton-width: 3rem"
+                ></gw-skeleton-text>`
+              : html`<slot></slot>`
+          }</span
+        >
       </span>
     </span>`;
   }

@@ -11,20 +11,20 @@ Whatever a button asks or offers opens next to that button, not in the middle of
   <gw-button variant="danger" data-opens="forget-device">Forget device</gw-button>
   <gw-popover id="forget-device" confirm>
     <p>Forget Living room speaker? It has to be paired again before it can connect.</p>
-    <gw-button slot="actions" size="small" variant="plain" value="cancel">Cancel</gw-button>
+    <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="cancel">Cancel</gw-button>
     <gw-button slot="actions" size="small" variant="danger" value="forget">Forget</gw-button>
   </gw-popover>
-  <gw-button data-opens="rename-section">Rename</gw-button>
+  <gw-button variant="neutral" appearance="filled" data-opens="rename-section">Rename</gw-button>
   <gw-popover id="rename-section" heading="Rename section">
     <gw-input label="Name" value="Living room"></gw-input>
-    <gw-button slot="actions" size="small" variant="plain" value="cancel">Cancel</gw-button>
-    <gw-button slot="actions" size="small" variant="primary" value="save">Save</gw-button>
+    <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="cancel">Cancel</gw-button>
+    <gw-button slot="actions" size="small" value="save">Save</gw-button>
   </gw-popover>
-  <gw-button variant="primary" data-opens="restart-after-save" data-toast="Settings saved" data-tone="success">Save settings</gw-button>
+  <gw-button data-opens="restart-after-save" data-toast="Settings saved" data-tone="success">Save settings</gw-button>
   <gw-popover id="restart-after-save" heading="Restart now?">
     <p>The new settings take effect after a restart.</p>
-    <gw-button slot="actions" size="small" variant="plain" value="later">Later</gw-button>
-    <gw-button slot="actions" size="small" variant="primary" value="restart">Restart</gw-button>
+    <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="later">Later</gw-button>
+    <gw-button slot="actions" size="small" value="restart">Restart</gw-button>
   </gw-popover>
   <gw-toaster></gw-toaster>
 </Demo>
@@ -43,11 +43,11 @@ It's on the Popover API, in the top layer, so a scrolling parent never clips it.
 ## Dialog
 
 <Demo id="dialog">
-  <gw-button variant="plain" data-opens="connection-lost">Lose the connection</gw-button>
+  <gw-button variant="neutral" appearance="plain" data-opens="connection-lost">Lose the connection</gw-button>
   <gw-dialog id="connection-lost" heading="Connection lost">
     <p>Can't reach the server. Changes made since will be lost if this page is closed.</p>
-    <gw-button slot="actions" value="wait">Keep waiting</gw-button>
-    <gw-button slot="actions" variant="primary" value="retry">Try again</gw-button>
+    <gw-button slot="actions" variant="neutral" appearance="plain" value="wait">Keep waiting</gw-button>
+    <gw-button slot="actions" value="retry">Try again</gw-button>
   </gw-dialog>
 </Demo>
 

@@ -3,27 +3,68 @@ title: Feedback
 description: Spinners, skeletons, empty states and toasts.
 ---
 
-## Spinner and skeleton
+## Loading
 
-<Demo id="loading" layout="stack">
-  <gw-row><gw-spinner label="Loading sensors"></gw-spinner> Loading sensors</gw-row>
-  <div aria-busy="true">
-    <gw-stack gap="s">
-      <gw-skeleton style="width: 40%; height: 1.5rem"></gw-skeleton>
-      <gw-skeleton style="width: 100%"></gw-skeleton>
-      <gw-skeleton style="width: 80%"></gw-skeleton>
-    </gw-stack>
+Anything that loads data shows a skeleton shaped like what's coming, so the layout doesn't jump when it arrives. A spinner is the last resort, for an action in progress such as a button that's saving, where there's no shape to stand in for.
+
+<Demo id="loading-components" layout="stack">
+  <gw-grid style="--gw-grid-min: 16rem">
+    <gw-card heading="Living room" loading></gw-card>
+    <gw-card loading lines="2"></gw-card>
+  </gw-grid>
+  <gw-row>
+    <gw-badge label="CPU" loading></gw-badge>
+    <gw-badge loading></gw-badge>
+    <gw-chip loading></gw-chip>
+  </gw-row>
+  <gw-row>
+    <gw-gauge label="CPU" loading></gw-gauge>
+    <gw-gauge label="Memory" caption="52 of 64 GB" loading></gw-gauge>
+  </gw-row>
+  <gw-meter label="Disk" loading></gw-meter>
+  <gw-facts loading rows="3"></gw-facts>
+  <div>
+    <gw-setting-row heading="Wake on LAN" description="Turn the machine on over the network" loading></gw-setting-row>
+    <gw-setting-row loading></gw-setting-row>
   </div>
 </Demo>
 
-The spinner is announced by its `label`. A skeleton stands in for what's loading at its size, set in CSS; it's hidden from assistive technology, so mark the region it's in `aria-busy`.
+Set `loading` on a card, badge, chip, gauge, meter, facts or setting row. Whatever is already known, such as a heading or label, stays, and skeletons fill the rest. Each marks itself `aria-busy`.
+
+For a layout of your own, build it from the shapes. They all extend `gw-skeleton`, so they share its colour, pulse and reduced-motion handling:
+
+<Demo id="skeleton-shapes" layout="stack">
+  <gw-row>
+    <gw-skeleton-icon></gw-skeleton-icon>
+    <gw-skeleton-text style="--gw-skeleton-width: 10rem"></gw-skeleton-text>
+  </gw-row>
+  <gw-skeleton-lines lines="3"></gw-skeleton-lines>
+  <gw-skeleton style="height: 6rem"></gw-skeleton>
+</Demo>
+
+| Element | What it stands in for |
+| --- | --- |
+| `gw-skeleton` | Anything, sized in CSS, such as an image or chart. Set `--gw-skeleton-radius` to match |
+| `gw-skeleton-text` | A line of text, 1em tall so it follows the font size; width from `--gw-skeleton-width` |
+| `gw-skeleton-lines` | A paragraph of `lines` lines, the last one shorter |
+| `gw-skeleton-icon` | An icon or avatar, sized by `--gw-icon-size` |
+
+Skeletons are hidden from assistive technology, so mark the region they're in `aria-busy`, as the components above do.
+
+## Spinner
+
+<Demo id="spinner">
+  <gw-row><gw-spinner label="Saving"></gw-spinner> Saving</gw-row>
+</Demo>
+
+For an action in progress, never for content loading. It's announced by its `label`.
 
 ## Empty state
 
 <Demo id="empty-state" layout="stack">
   <gw-empty-state heading="Nothing to apply" icon="M19 3H5A2 2 0 0 0 3 5V19A2 2 0 0 0 5 21H19A2 2 0 0 0 21 19V5A2 2 0 0 0 19 3M5 19V17H8.13A4.13 4.13 0 0 0 9.4 19M19 19H14.6A4.13 4.13 0 0 0 15.87 17H19M19 15H14V16A2 2 0 0 1 10 16V15H5V5H19Z">
     <p>Every item is up to date.</p>
-    <gw-button slot="actions" size="small">Check again</gw-button>
+    <gw-button slot="actions" size="small" appearance="filled">Check again</gw-button>
   </gw-empty-state>
 </Demo>
 
@@ -32,8 +73,8 @@ What a list or page shows when it's empty or there's nothing to do. Say so in on
 ## Toast
 
 <Demo id="toast">
-  <gw-button data-toast="Backup finished" data-tone="success">Finish a backup</gw-button>
-  <gw-button data-toast="Disk nearly full" data-tone="warning">Fill a disk</gw-button>
+  <gw-button variant="success" appearance="filled" data-toast="Backup finished" data-tone="success">Finish a backup</gw-button>
+  <gw-button variant="warning" appearance="filled" data-toast="Disk nearly full" data-tone="warning">Fill a disk</gw-button>
   <gw-toaster duration="4000"></gw-toaster>
 </Demo>
 

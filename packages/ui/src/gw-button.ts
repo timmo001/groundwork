@@ -6,9 +6,11 @@ import { base } from "./styles.js";
  * theme and mode around it. With `href` it renders a link that looks the
  * same. Put an icon in the `icon` slot.
  *
- * Variants: `primary`, `secondary` (the default), `accent` and `plain`, plus
- * `info`, `success`, `warning` and `danger` from the theme's status roles.
- * Sizes run `xs` to `xl`, and `--gw-button-scale` sets any size in between.
+ * As in Home Assistant's Design Kit, `variant` picks the colour and
+ * `appearance` how it's applied, from most to least important: `accent` (a
+ * solid fill), `filled` (a soft tint), `outlined` (a stroke) or `plain` (text
+ * only). Every button is a pill. Sizes run `xs` to `xl`, and
+ * `--gw-button-scale` sets any size in between.
  */
 export class GwButton extends LitElement {
   /** Focusing the element focuses its native button, such as from a dialog opening. */
@@ -31,6 +33,8 @@ export class GwButton extends LitElement {
     base,
     css`
       :host {
+        --gw-button-tone: var(--gw-color-accent);
+
         display: inline-block;
       }
 
@@ -53,88 +57,11 @@ export class GwButton extends LitElement {
         --gw-button-scale: 1.4;
       }
 
-      .button {
-        --gw-scale: var(--gw-button-scale, 1);
-        --gw-icon-size: calc(1.125rem * var(--gw-scale));
-
-        display: inline-flex;
-        gap: calc(var(--gw-space-2) * var(--gw-scale));
-        align-items: center;
-        justify-content: center;
-        min-height: calc(2.5rem * var(--gw-scale));
-        padding: 0 calc(var(--gw-space-4) * var(--gw-scale));
-        font: inherit;
-        font-size: calc(var(--gw-font-size-s) * var(--gw-scale));
-        font-weight: var(--gw-font-weight-strong);
-        line-height: 1;
-        color: var(--gw-color-text-strong);
-        text-decoration: none;
-        text-transform: var(--gw-label-transform);
-        letter-spacing: var(--gw-label-tracking);
-        white-space: nowrap;
-        cursor: pointer;
-        background: var(--gw-color-fill-neutral-resting);
-        border: var(--gw-border-width) solid var(--gw-border-colour);
-        border-radius: var(--gw-radius-control);
-        transition:
-          background-color var(--gw-motion-fast) var(--gw-motion-easing),
-          border-color var(--gw-motion-fast) var(--gw-motion-easing),
-          color var(--gw-motion-fast) var(--gw-motion-easing),
-          scale var(--gw-motion-fast) var(--gw-motion-easing);
+      :host([variant="neutral"]) {
+        --gw-button-tone: var(--gw-color-text-secondary);
+        --gw-button-ink: var(--gw-color-text-strong);
       }
 
-      /* A slight press, so a click feels physical */
-      .button:active {
-        scale: 0.97;
-      }
-
-      .button:hover {
-        background: var(--gw-color-fill-neutral-hovered);
-      }
-
-      .button:active {
-        background: var(--gw-color-fill-neutral-pressed);
-      }
-
-      :host([variant="primary"]) .button {
-        color: var(--gw-color-on-primary);
-        background: var(--gw-color-fill-primary-resting);
-        border-color: transparent;
-      }
-
-      :host([variant="primary"]) .button:hover {
-        background: var(--gw-color-fill-primary-hovered);
-      }
-
-      :host([variant="primary"]) .button:active {
-        background: var(--gw-color-fill-primary-pressed);
-      }
-
-      :host([variant="accent"]) .button {
-        color: var(--gw-color-on-accent);
-        background: var(--gw-color-fill-accent-resting);
-        border-color: transparent;
-      }
-
-      :host([variant="accent"]) .button:hover {
-        background: var(--gw-color-fill-accent-hovered);
-      }
-
-      :host([variant="accent"]) .button:active {
-        background: var(--gw-color-fill-accent-pressed);
-      }
-
-      :host([variant="plain"]) .button {
-        background: transparent;
-        border-color: transparent;
-      }
-
-      :host([variant="plain"]) .button:hover {
-        background: var(--gw-color-fill-neutral-hovered);
-      }
-
-      /* Status buttons take their colour from the theme's status roles, as a
-         tinted fill and border, with strong text so they read in every theme */
       :host([variant="info"]) {
         --gw-button-tone: var(--gw-color-info);
       }
@@ -151,87 +78,52 @@ export class GwButton extends LitElement {
         --gw-button-tone: var(--gw-color-danger);
       }
 
-      :host(
-          :is(
-            [variant="info"],
-            [variant="success"],
-            [variant="warning"],
-            [variant="danger"]
-          ):not([appearance])
-        )
-        .button {
-        color: var(--gw-color-text-strong);
-        background: color-mix(
-          in oklch,
-          var(--gw-button-tone) 18%,
-          var(--gw-color-surface-raised)
-        );
-        border-color: var(--gw-button-tone);
-      }
+      .button {
+        --gw-scale: var(--gw-button-scale, 1);
+        --gw-icon-size: calc(1.125rem * var(--gw-scale));
 
-      :host(
-          :is(
-            [variant="info"],
-            [variant="success"],
-            [variant="warning"],
-            [variant="danger"]
-          ):not([appearance])
-        )
-        .button:hover {
-        background: color-mix(
-          in oklch,
-          var(--gw-button-tone) 28%,
-          var(--gw-color-surface-raised)
-        );
-      }
-
-      :host(
-          :is(
-            [variant="info"],
-            [variant="success"],
-            [variant="warning"],
-            [variant="danger"]
-          ):not([appearance])
-        )
-        .button:active {
-        background: color-mix(
-          in oklch,
-          var(--gw-button-tone) 36%,
-          var(--gw-color-surface-raised)
-        );
-      }
-
-      /* Preview of the Design Kit's split: the variant picks the colour and
-         the appearance how it's applied. Accent is a solid fill with text
-         that flips between black and white for contrast, filled a soft tint,
-         outlined a stroke and plain text only. All are pills */
-      :host([variant="brand"]) {
-        --gw-button-tone: var(--gw-color-accent);
-      }
-
-      :host([variant="neutral"]) {
-        --gw-button-tone: var(--gw-color-text-secondary);
-        --gw-button-ink: var(--gw-color-text-strong);
-      }
-
-      :host([appearance]) .button {
+        display: inline-flex;
+        gap: calc(var(--gw-space-2) * var(--gw-scale));
+        align-items: center;
+        justify-content: center;
+        min-height: calc(2.5rem * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-4) * var(--gw-scale));
+        font: inherit;
+        font-size: calc(var(--gw-font-size-s) * var(--gw-scale));
+        font-weight: var(--gw-font-weight-strong);
+        line-height: 1;
         color: var(--gw-button-ink, var(--gw-button-tone));
+        text-decoration: none;
+        text-transform: var(--gw-label-transform);
+        letter-spacing: var(--gw-label-tracking);
+        white-space: nowrap;
+        cursor: pointer;
         background: transparent;
-        border-color: transparent;
+        border: max(var(--gw-border-width), 1px) solid transparent;
         border-radius: var(--gw-radius-pill);
+        transition:
+          background-color var(--gw-motion-fast) var(--gw-motion-easing),
+          border-color var(--gw-motion-fast) var(--gw-motion-easing),
+          color var(--gw-motion-fast) var(--gw-motion-easing),
+          scale var(--gw-motion-fast) var(--gw-motion-easing);
       }
 
-      :host([appearance]) .button:hover {
+      /* A slight press, so a click feels physical */
+      .button:active {
+        scale: 0.97;
+      }
+
+      .button:hover {
         background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
       }
 
-      :host([appearance]) .button:active {
+      .button:active {
         background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent);
       }
 
-      :host([appearance="accent"]) .button,
-      :host([appearance="accent"]) .button:hover,
-      :host([appearance="accent"]) .button:active {
+      /* A solid fill, with text that flips between black and white by the
+         fill's lightness so it reads on every theme's colours */
+      :host([appearance="accent"]) .button {
         color: oklch(
           from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0
         );
@@ -264,7 +156,6 @@ export class GwButton extends LitElement {
 
       :host([appearance="outlined"]) .button {
         border-color: var(--gw-button-tone);
-        border-width: max(var(--gw-border-width), 1px);
       }
 
       .button:disabled,
@@ -276,6 +167,11 @@ export class GwButton extends LitElement {
         border-color: transparent;
       }
 
+      :host([appearance="plain"]) .button:disabled,
+      :host([appearance="plain"]) .button[aria-disabled="true"] {
+        background: transparent;
+      }
+
       ::slotted([slot="icon"]) {
         width: var(--gw-icon-size);
         height: var(--gw-icon-size);
@@ -284,18 +180,8 @@ export class GwButton extends LitElement {
   ];
 
   declare variant:
-    | "primary"
-    | "secondary"
-    | "accent"
-    | "plain"
-    | "info"
-    | "success"
-    | "warning"
-    | "danger"
-    | "brand"
-    | "neutral";
-  /** The Design Kit's appearances, in preview. Unset keeps the old variants. */
-  declare appearance: "accent" | "filled" | "outlined" | "plain" | undefined;
+    "brand" | "neutral" | "info" | "success" | "warning" | "danger";
+  declare appearance: "accent" | "filled" | "outlined" | "plain";
   declare size: "xs" | "small" | "medium" | "large" | "xl";
   declare type: "button" | "submit" | "reset";
   declare href: string;
@@ -304,8 +190,8 @@ export class GwButton extends LitElement {
 
   constructor() {
     super();
-    this.variant = "secondary";
-    this.appearance = undefined;
+    this.variant = "brand";
+    this.appearance = "accent";
     this.size = "medium";
     this.type = "button";
     this.href = "";

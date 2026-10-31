@@ -1,9 +1,11 @@
 import { LitElement, css, html, nothing } from "lit";
+import "./gw-skeleton.js";
 import { base, type Tone } from "./styles.js";
 
 /**
  * A labelled bar for a value in a range, such as disk use. Past `high` it
- * turns warning, and past `critical` danger, unless a `tone` is set.
+ * turns warning, and past `critical` danger, unless a `tone` is set. While
+ * `loading`, the track pulses and a skeleton stands in for the value.
  */
 export class GwMeter extends LitElement {
   static override properties = {
@@ -15,6 +17,7 @@ export class GwMeter extends LitElement {
     critical: { type: Number },
     display: {},
     tone: { reflect: true },
+    loading: { type: Boolean, reflect: true },
   };
 
   static override styles = [
@@ -62,6 +65,7 @@ export class GwMeter extends LitElement {
   declare critical: number | undefined;
   declare display: string;
   declare tone: Tone | undefined;
+  declare loading: boolean;
 
   constructor() {
     super();
@@ -73,6 +77,7 @@ export class GwMeter extends LitElement {
     this.critical = undefined;
     this.display = "";
     this.tone = undefined;
+    this.loading = false;
   }
 
   get #colour() {
@@ -98,6 +103,27 @@ export class GwMeter extends LitElement {
     );
 
     const text = this.display || `${Math.round(percent)}%`;
+
+    if (this.loading) {
+      return html`
+        <div class="top" aria-busy="true">
+          <span
+            >${
+              this.label ||
+              html`<gw-skeleton-text
+                style="--gw-skeleton-width: 6rem"
+              ></gw-skeleton-text>`
+            }</span
+          >
+          <gw-skeleton-text
+            style="--gw-skeleton-width: 2.5rem"
+          ></gw-skeleton-text>
+        </div>
+        <gw-skeleton
+          style="min-height: 0; height: 0.5rem; --gw-skeleton-radius: var(--gw-radius-pill)"
+        ></gw-skeleton>
+      `;
+    }
 
     return html`
       <div class="top">

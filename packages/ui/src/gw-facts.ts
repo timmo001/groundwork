@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "lit";
+import "./gw-skeleton.js";
 import { base } from "./styles.js";
 
 export interface Fact {
@@ -6,10 +7,18 @@ export interface Fact {
   readonly value: string;
 }
 
-/** Label and value pairs, as a description list. */
+/** Widths for skeleton values, so the rows don't read as a solid block. */
+const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
+
+/**
+ * Label and value pairs, as a description list. While `loading`, `rows`
+ * skeleton pairs stand in for them, keeping any labels already known.
+ */
 export class GwFacts extends LitElement {
   static override properties = {
     items: { type: Array },
+    loading: { type: Boolean, reflect: true },
+    rows: { type: Number },
   };
 
   static override styles = [
@@ -42,13 +51,41 @@ export class GwFacts extends LitElement {
   ];
 
   declare items: readonly Fact[];
+  declare loading: boolean;
+  declare rows: number;
 
   constructor() {
     super();
     this.items = [];
+    this.loading = false;
+    this.rows = 4;
   }
 
   override render() {
+    if (this.loading) {
+      const count = Math.max(this.rows, this.items.length);
+
+      return html`<dl aria-busy="true">
+        ${Array.from(
+          { length: count },
+          (_, index) =>
+            html`<dt>
+                ${
+                  this.items[index]?.label ??
+                  html`<gw-skeleton-text
+                    style="--gw-skeleton-width: 5rem"
+                  ></gw-skeleton-text>`
+                }
+              </dt>
+              <dd>
+                <gw-skeleton-text
+                  style="--gw-skeleton-width: ${skeletonWidths[index % skeletonWidths.length]}"
+                ></gw-skeleton-text>
+              </dd>`,
+        )}
+      </dl>`;
+    }
+
     return html`<dl>
       ${this.items.map(
         (item) =>
