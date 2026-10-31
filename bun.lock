@@ -20,6 +20,7 @@
         "@fontsource/ibm-plex-sans": "5.3.0",
         "@groundwork/conventions": "workspace:*",
         "@groundwork/tokens": "workspace:*",
+        "@groundwork/ui": "workspace:*",
         "@timmo001/docs-kit": "workspace:*",
         "blume": "2.2.6",
         "lit": "3.3.3",
@@ -84,6 +85,23 @@
         "blume": "2.2.6",
       },
     },
+    "packages/lit-effect": {
+      "name": "@groundwork/lit-effect",
+      "dependencies": {
+        "@lit/context": "1.1.6",
+        "effect": "4.1.1",
+        "lit": "3.3.3",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/sync": {
       "name": "@groundwork/sync",
       "bin": {
@@ -115,6 +133,20 @@
         "@timmo001/oxlint-rules": "0.6.3",
         "@types/bun": "1.4.4",
         "@types/culori": "4.0.1",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
+    "packages/ui": {
+      "name": "@groundwork/ui",
+      "dependencies": {
+        "lit": "3.3.3",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
         "oxlint": "1.90.0",
         "oxlint-tsgolint": "7.0.2005",
         "prettier": "3.9.10",
@@ -360,9 +392,13 @@
 
     "@groundwork/conventions": ["@groundwork/conventions@workspace:packages/conventions"],
 
+    "@groundwork/lit-effect": ["@groundwork/lit-effect@workspace:packages/lit-effect"],
+
     "@groundwork/sync": ["@groundwork/sync@workspace:packages/sync"],
 
     "@groundwork/tokens": ["@groundwork/tokens@workspace:packages/tokens"],
+
+    "@groundwork/ui": ["@groundwork/ui@workspace:packages/ui"],
 
     "@hono/node-server": ["@hono/node-server@2.1.5", "", { "peerDependencies": { "hono": "^4 || ^5.0.0-0" } }, "sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q=="],
 
@@ -439,6 +475,8 @@
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
     "@lit-labs/ssr-dom-shim": ["@lit-labs/ssr-dom-shim@1.6.0", "", {}, "sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ=="],
+
+    "@lit/context": ["@lit/context@1.1.6", "", { "dependencies": { "@lit/reactive-element": "^1.6.2 || ^2.1.0" } }, "sha512-M26qDE6UkQbZA2mQ3RjJ3Gzd8TxP+/0obMgE5HfkfLhEEyYE3Bui4A5XHiGPjy0MUGAyxB3QgVuw2ciS0kHn6A=="],
 
     "@lit/reactive-element": ["@lit/reactive-element@2.1.2", "", { "dependencies": { "@lit-labs/ssr-dom-shim": "^1.5.0" } }, "sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A=="],
 

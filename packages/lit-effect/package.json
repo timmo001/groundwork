@@ -1,0 +1,29 @@
+{
+  "name": "@groundwork/lit-effect",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@lit/context": "1.1.6",
+    "effect": "4.1.1",
+    "lit": "3.3.3"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.90.0",
+    "@timmo001/oxlint-rules": "0.6.3",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.90.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

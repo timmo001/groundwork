@@ -65,6 +65,175 @@
       "kind": "tokens",
       "description": "Status colours mapped to the terminal's ANSI palette",
       "files": ["packages/tokens/generated/ansi.json"]
+    },
+    {
+      "name": "ui-base",
+      "kind": "lit",
+      "description": "Shared styles, tones and the icon helper every web component needs",
+      "files": ["packages/ui/src/styles.ts", "packages/ui/src/fields.ts"]
+    },
+    {
+      "name": "gw-layout",
+      "kind": "lit",
+      "description": "gw-page, gw-stack, gw-row and gw-grid",
+      "files": ["packages/ui/src/layout.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-alert",
+      "kind": "lit",
+      "description": "A message in the flow of the page, by tone",
+      "files": ["packages/ui/src/gw-alert.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-badge",
+      "kind": "lit",
+      "description": "A pill with an icon, a value and an optional label",
+      "files": ["packages/ui/src/gw-badge.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-button",
+      "kind": "lit",
+      "description": "A native button or link, in neutral, primary, accent, plain and danger",
+      "files": ["packages/ui/src/gw-button.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-card",
+      "kind": "lit",
+      "description": "A surface for one group of content, optionally a link",
+      "files": ["packages/ui/src/gw-card.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-checkbox",
+      "kind": "lit",
+      "description": "A labelled native checkbox, and gw-switch, the same drawn as a switch",
+      "files": ["packages/ui/src/gw-checkbox.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-chip",
+      "kind": "lit",
+      "description": "A short status or category, by tone",
+      "files": ["packages/ui/src/gw-chip.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-dialog",
+      "kind": "lit",
+      "description": "A modal on the native dialog element",
+      "files": ["packages/ui/src/gw-dialog.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-dot",
+      "kind": "lit",
+      "description": "A small status dot",
+      "files": ["packages/ui/src/gw-dot.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-empty-state",
+      "kind": "lit",
+      "description": "What a list shows when there's nothing in it",
+      "files": ["packages/ui/src/gw-empty-state.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-facts",
+      "kind": "lit",
+      "description": "Label and value pairs",
+      "files": ["packages/ui/src/gw-facts.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-input",
+      "kind": "lit",
+      "description": "A labelled native input in light DOM",
+      "files": ["packages/ui/src/gw-input.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-menu-button",
+      "kind": "lit",
+      "description": "A button that opens a menu on the Popover API",
+      "files": ["packages/ui/src/gw-menu-button.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-meter",
+      "kind": "lit",
+      "description": "A labelled bar for a value in a range",
+      "files": ["packages/ui/src/gw-meter.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-page-header",
+      "kind": "lit",
+      "description": "A page's title, description and actions",
+      "files": ["packages/ui/src/gw-page-header.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-section-title",
+      "kind": "lit",
+      "description": "A small heading between groups",
+      "files": ["packages/ui/src/gw-section-title.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-segmented",
+      "kind": "lit",
+      "description": "One of a few options, as native radio buttons",
+      "files": ["packages/ui/src/gw-segmented.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-select",
+      "kind": "lit",
+      "description": "A labelled native select in light DOM",
+      "files": ["packages/ui/src/gw-select.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-setting-row",
+      "kind": "lit",
+      "description": "A setting's name and description beside its control",
+      "files": ["packages/ui/src/gw-setting-row.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-skeleton",
+      "kind": "lit",
+      "description": "A placeholder while data loads",
+      "files": ["packages/ui/src/gw-skeleton.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-spinner",
+      "kind": "lit",
+      "description": "A spinning ring while something loads",
+      "files": ["packages/ui/src/gw-spinner.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-toast",
+      "kind": "lit",
+      "description": "gw-toaster, which shows toasts at the bottom of the screen",
+      "files": ["packages/ui/src/gw-toast.ts"],
+      "needs": ["ui-base"]
+    },
+    {
+      "name": "lit-effect",
+      "kind": "lit",
+      "description": "AtomController, the registry context and a typed router",
+      "files": [
+        "packages/lit-effect/src/atom-controller.ts",
+        "packages/lit-effect/src/router.ts"
+      ]
     }
   ]
 }

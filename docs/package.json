@@ -26,6 +26,7 @@
     "@fontsource/ibm-plex-sans": "5.3.0",
     "@groundwork/conventions": "workspace:*",
     "@groundwork/tokens": "workspace:*",
+    "@groundwork/ui": "workspace:*",
     "@timmo001/docs-kit": "workspace:*",
     "blume": "2.2.6",
     "lit": "3.3.3",

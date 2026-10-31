@@ -1,0 +1,49 @@
+import { LitElement, css, html } from "lit";
+import { base, type Tone } from "./styles.js";
+
+/** A short status or category, tinted by its `tone`. */
+export class GwChip extends LitElement {
+  static override properties = {
+    tone: { reflect: true },
+  };
+
+  static override styles = [
+    base,
+    css`
+      :host {
+        display: inline-flex;
+        gap: var(--gw-space-2);
+        align-items: center;
+        min-height: 1.75rem;
+        padding: 0 var(--gw-space-3);
+        font-size: var(--gw-font-size-xs);
+        font-weight: var(--gw-font-weight-strong);
+        color: var(--gw-tone, var(--gw-color-text-primary));
+        background: var(--gw-tone-fill, var(--gw-color-fill-neutral-resting));
+        border: var(--gw-border-width) solid
+          var(--gw-tone-border, var(--gw-color-border-quiet));
+        border-radius: var(--gw-radius-chip);
+        --gw-icon-size: 1rem;
+      }
+    `,
+  ];
+
+  declare tone: Tone;
+
+  constructor() {
+    super();
+    this.tone = "neutral";
+  }
+
+  override render() {
+    return html`<slot name="icon"></slot><slot></slot>`;
+  }
+}
+
+customElements.define("gw-chip", GwChip);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "gw-chip": GwChip;
+  }
+}
