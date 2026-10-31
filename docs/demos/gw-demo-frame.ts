@@ -1,5 +1,5 @@
 import tokens from "@groundwork/tokens/themes.json";
-import { withViewTransition } from "@groundwork/ui";
+import { GwButton, withViewTransition } from "@groundwork/ui";
 import { LitElement, css, html } from "lit";
 
 const tones = ["neutral", "accent", "info", "success", "warning", "danger", "important"] as const;
@@ -168,10 +168,22 @@ export class GwDemoFrame extends LitElement {
         .find(
           (node) =>
             node instanceof HTMLElement &&
-            (node.dataset.opens || node.dataset.toast || node.dataset.replays !== undefined),
+            (node.dataset.opens ||
+              node.dataset.toast ||
+              node.dataset.replays !== undefined ||
+              node.dataset.loads !== undefined),
         );
 
       if (!(target instanceof HTMLElement)) return;
+
+      // Stands in for work, such as a refresh, so the button shows its
+      // loading state, then returns
+      if (target.dataset.loads !== undefined && target instanceof GwButton) {
+        target.loading = true;
+        setTimeout(() => {
+          target.loading = false;
+        }, 1500);
+      }
 
       if (target.dataset.replays !== undefined) {
         for (const fade of this.querySelectorAll("gw-fade-in")) fade.replay();

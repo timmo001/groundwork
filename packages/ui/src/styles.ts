@@ -1,4 +1,5 @@
-import { css, html, svg } from "lit";
+import { html, svg } from "lit";
+import { css } from "./element.js";
 
 /**
  * What every component shares: box sizing, the focus ring, icons and the
@@ -103,3 +104,30 @@ export const icon = (path: string, label?: string) =>
   >
     ${svg`<path d=${path}></path>`}
   </svg>`;
+
+const svgNamespace = "http://www.w3.org/2000/svg";
+
+/**
+ * The same icon as an element, for components built on `GwElement`. Change
+ * its path later with `setIconPath`.
+ */
+export const createIcon = (path: string, label?: string) => {
+  const element = document.createElementNS(svgNamespace, "svg");
+
+  element.classList.add("icon");
+  element.setAttribute("viewBox", "0 0 24 24");
+  element.setAttribute("role", label === undefined ? "presentation" : "img");
+  element.setAttribute("aria-hidden", label === undefined ? "true" : "false");
+
+  if (label !== undefined) element.setAttribute("aria-label", label);
+
+  element.append(document.createElementNS(svgNamespace, "path"));
+  setIconPath(element, path);
+
+  return element;
+};
+
+/** Changes an icon's path data. */
+export const setIconPath = (icon: SVGSVGElement, path: string) => {
+  icon.querySelector("path")?.setAttribute("d", path);
+};

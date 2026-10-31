@@ -1,11 +1,11 @@
-import { LitElement, css, html } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /** A spinning ring while something loads, announced by its `label`. */
-export class GwSpinner extends LitElement {
+export class GwSpinner extends GwElement {
   static override properties = {
     label: {},
-  };
+  } as const;
 
   static override styles = [
     base,
@@ -44,19 +44,23 @@ export class GwSpinner extends LitElement {
 
   declare label: string;
 
+  readonly #label = h("span", { class: "label" });
+
   constructor() {
     super();
     this.label = "Loading";
   }
 
-  override render() {
-    return html`<span class="ring" role="status"
-      ><span class="label">${this.label}</span></span
-    >`;
+  protected override create(root: ShadowRoot) {
+    root.append(h("span", { class: "ring", role: "status" }, this.#label));
+  }
+
+  protected override update() {
+    this.#label.textContent = this.label;
   }
 }
 
-customElements.define("gw-spinner", GwSpinner);
+GwSpinner.define("gw-spinner");
 
 declare global {
   interface HTMLElementTagNameMap {

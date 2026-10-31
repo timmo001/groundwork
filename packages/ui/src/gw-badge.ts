@@ -1,21 +1,22 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
-import { base, icon, type Tone } from "./styles.js";
+import { fadeIn } from "./motion.js";
+import { base, createIcon, setIconPath, type Tone } from "./styles.js";
 
 /**
- * A pill with an icon, a value and an optional small label above it, after
- * Home Assistant's badges. The icon takes the `tone`'s color. While
- * `loading`, a skeleton stands in for the value, and for the icon if it has
- * none yet.
+ * A pill with an icon, a value and an optional small label above it. The
+ * icon takes the `tone`'s color. While `loading`, a skeleton stands in for
+ * the value, and for the icon if it has none yet, and the value fades in
+ * once it's loaded.
  */
-export class GwBadge extends LitElement {
+export class GwBadge extends GwElement {
   static override properties = {
     icon: {},
     label: {},
     tone: { reflect: true },
     size: { reflect: true },
-    loading: { type: Boolean, reflect: true },
-  };
+    loading: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -26,8 +27,7 @@ export class GwBadge extends LitElement {
         vertical-align: middle;
       }
 
-      /* Home Assistant's badge: 36px tall, 12px padding, 8px between the
-         18px icon and the text */
+      /* 36px tall, 12px padding, 8px between the 18px icon and the text */
       .badge {
         --gw-icon-size: 1.125rem;
 
@@ -76,9 +76,8 @@ export class GwBadge extends LitElement {
         white-space: nowrap;
       }
 
-      :host([size="small"]) .content {
-        font-size: var(--gw-font-size-xs);
-        white-space: nowrap;
+      .value {
+        display: inline-block;
       }
     `,
   ];
@@ -89,6 +88,20 @@ export class GwBadge extends LitElement {
   declare size: "small" | "medium";
   declare loading: boolean;
 
+  readonly #badge = h("span", { class: "badge", part: "badge" });
+
+  readonly #icon = createIcon("");
+
+  readonly #iconSkeleton = h("gw-skeleton-icon");
+
+  readonly #label = h("span", { class: "label" });
+
+  readonly #skeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 3rem",
+  });
+
+  readonly #value = h("span", { class: "value" }, h("slot"));
+
   constructor() {
     super();
     this.icon = "";
@@ -98,36 +111,39 @@ export class GwBadge extends LitElement {
     this.loading = false;
   }
 
-  override render() {
-    return html`<span
-      class="badge"
-      part="badge"
-      aria-busy=${this.loading ? "true" : nothing}
-    >
-      ${
-        this.icon
-          ? icon(this.icon)
-          : this.loading
-            ? html`<gw-skeleton-icon></gw-skeleton-icon>`
-            : nothing
-      }
-      <span class="info">
-        ${this.label ? html`<span class="label">${this.label}</span>` : nothing}
-        <span class="content"
-          >${
-            this.loading
-              ? html`<gw-skeleton-text
-                  style="--gw-skeleton-width: 3rem"
-                ></gw-skeleton-text>`
-              : html`<slot></slot>`
-          }</span
-        >
-      </span>
-    </span>`;
+  protected override create(root: ShadowRoot) {
+    this.#badge.append(
+      this.#icon,
+      this.#iconSkeleton,
+      h(
+        "span",
+        { class: "info" },
+        this.#label,
+        h("span", { class: "content" }, this.#skeleton, this.#value),
+      ),
+    );
+    root.append(this.#badge);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
+    const wasLoading = this.#value.hidden;
+
+    setAttribute(this.#badge, "aria-busy", this.loading ? "true" : null);
+    setIconPath(this.#icon, this.icon);
+    this.#icon.style.display = this.icon ? "" : "none";
+    this.#iconSkeleton.hidden = this.icon !== "" || !this.loading;
+    this.#label.textContent = this.label;
+    this.#label.hidden = !this.label;
+    this.#skeleton.hidden = !this.loading;
+    this.#value.hidden = this.loading;
+
+    if (changed.has("loading") && wasLoading && !this.loading) {
+      fadeIn(this.#value);
+    }
   }
 }
 
-customElements.define("gw-badge", GwBadge);
+GwBadge.define("gw-badge");
 
 declare global {
   interface HTMLElementTagNameMap {

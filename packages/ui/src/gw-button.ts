@@ -1,24 +1,21 @@
-import { LitElement, css, html, nothing } from "lit";
-import { base, icon } from "./styles.js";
+import { GwElement, css, h, setAttribute } from "./element.js";
+import { base, createIcon, setIconPath } from "./styles.js";
 
 /**
  * A native button styled through `--gw-*` variables, so it follows the
  * theme and mode around it. With `href` it renders a link that looks the
  * same. Put an icon in the `icon` slot.
  *
- * As in Home Assistant's Design Kit, `variant` picks the color and
- * `appearance` how it's applied, from most to least important: `accent` (a
- * solid fill), `filled` (a soft tint), `outlined` (a stroke) or `plain` (text
- * only). Every button is a pill. Sizes run `xs` to `xl`, and
- * `--gw-button-scale` sets any size in between.
+ * `variant` picks the color and `appearance` how it's applied, from most to
+ * least important: `accent` (a solid fill), `filled` (a soft tint),
+ * `outlined` (a stroke) or `plain` (text only). Every button is a pill.
+ * Sizes run `xs` to `xl`, and `--gw-button-scale` sets any size in between.
+ *
+ * While `loading`, a spinning ring takes the icon's place, or the text's
+ * when there's no icon, so the button keeps its size, and clicks are
+ * ignored. The icon fades back once it's done.
  */
-export class GwButton extends LitElement {
-  /** Focusing the element focuses its native button, such as from a dialog opening. */
-  static override shadowRootOptions = {
-    ...LitElement.shadowRootOptions,
-    delegatesFocus: true,
-  };
-
+export class GwButton extends GwElement {
   static override properties = {
     variant: { reflect: true },
     appearance: { reflect: true },
@@ -26,9 +23,16 @@ export class GwButton extends LitElement {
     type: {},
     href: {},
     label: {},
-    disabled: { type: Boolean, reflect: true },
+    disabled: { type: "boolean", reflect: true },
+    loading: { type: "boolean", reflect: true },
     icon: {},
     labels: { reflect: true },
+  } as const;
+
+  /** Focusing the element focuses its native button, such as from a dialog opening. */
+  static override shadowRootOptions: ShadowRootInit = {
+    mode: "open",
+    delegatesFocus: true,
   };
 
   static override styles = [
@@ -40,9 +44,9 @@ export class GwButton extends LitElement {
         display: inline-block;
       }
 
-      /* Everything scales from --gw-button-scale, around Home Assistant's 40px
-         medium button: the presets give HA's 24, 32 and 48px and a 56px xl, and
-         an app can set any value for a size between or beyond them */
+      /* Everything scales from --gw-button-scale, around a 40px medium
+         button: the presets give 24, 32, 48 and 56px, and an app can set any
+         value for a size between or beyond them */
       :host([size="xs"]) {
         --gw-button-scale: 0.6;
       }
@@ -84,6 +88,7 @@ export class GwButton extends LitElement {
         --gw-scale: var(--gw-button-scale, 1);
         --gw-icon-size: calc(1.125rem * var(--gw-scale));
 
+        position: relative;
         display: inline-flex;
         gap: calc(var(--gw-space-2) * var(--gw-scale));
         align-items: center;
@@ -182,6 +187,65 @@ export class GwButton extends LitElement {
         fill: currentColor;
       }
 
+      /* The icon and the ring share one cell and crossfade */
+      .lead {
+        display: grid;
+        place-items: center;
+      }
+
+      .lead > * {
+        grid-area: 1 / 1;
+      }
+
+      .lead > *,
+      .text,
+      .ring {
+        transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      /* Sized to the icon's drawn area, which is inset in its 24px box */
+      .ring {
+        width: calc(var(--gw-icon-size) * 0.8);
+        height: calc(var(--gw-icon-size) * 0.8);
+        border: calc(2px * var(--gw-scale)) solid
+          color-mix(in oklch, currentColor 25%, transparent);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        opacity: 0;
+        animation: spin 0.9s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Without an icon, the ring sits over the hidden text */
+      .ring.over {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+      }
+
+      :host([loading]) .button {
+        cursor: progress;
+      }
+
+      :host([loading]) .lead > .ring,
+      :host([loading]) .button:not(.has-icon) > .ring.over {
+        opacity: 1;
+      }
+
+      :host([loading]) .lead > :not(.ring),
+      :host([loading]) .button:not(.has-icon) > .text {
+        opacity: 0;
+      }
+
+      .button:not(.has-icon) > .lead {
+        display: none;
+      }
+
       /* Icon only, to save space: square, with the text kept for assistive
          technology. auto does this on narrow screens */
       :host([labels="hide"]) .button.has-icon {
@@ -224,10 +288,33 @@ export class GwButton extends LitElement {
   declare href: string;
   declare label: string;
   declare disabled: boolean;
+  /** Shows a spinning ring in place of the icon and ignores clicks. */
+  declare loading: boolean;
   /** SVG path data for an icon before the text. */
   declare icon: string;
   /** Whether the text shows beside an icon: always, never, or not on narrow screens. */
   declare labels: "show" | "hide" | "auto";
+
+  readonly #icon = createIcon("");
+
+  readonly #iconSlot = h("slot", { name: "icon" });
+
+  readonly #lead = h(
+    "span",
+    { class: "lead" },
+    this.#icon,
+    this.#iconSlot,
+    h("span", { class: "ring" }),
+  );
+
+  readonly #text = h("span", { class: "text" }, h("slot"));
+
+  readonly #over = h("span", { class: "ring over" });
+
+  #control: HTMLButtonElement | HTMLAnchorElement = h("button", {
+    class: "button",
+    part: "button",
+  });
 
   constructor() {
     super();
@@ -240,50 +327,70 @@ export class GwButton extends LitElement {
     this.href = "";
     this.label = "";
     this.disabled = false;
+    this.loading = false;
+
+    // Registered first, so it runs before any listener an app adds
+    this.addEventListener("click", (event) => {
+      if (this.loading) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    });
+
+    this.#iconSlot.addEventListener("slotchange", () => {
+      this.requestUpdate("icon");
+    });
   }
 
-  override render() {
+  protected override create(root: ShadowRoot) {
+    this.#control.append(this.#lead, this.#text, this.#over);
+    root.append(this.#control);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
+    if (changed.has("href")) {
+      const wanted = this.href ? "A" : "BUTTON";
+
+      if (this.#control.tagName !== wanted) {
+        const next = this.href
+          ? h("a", { class: "button", part: "button" })
+          : h("button", { class: "button", part: "button" });
+
+        next.append(...this.#control.childNodes);
+        this.#control.replaceWith(next);
+        this.#control = next;
+      }
+    }
+
+    const control = this.#control;
+
     const hasIcon =
       this.icon !== "" || this.querySelector("[slot='icon']") !== null;
 
-    const classes = hasIcon ? "button has-icon" : "button";
-
-    const title =
+    control.classList.toggle("has-icon", hasIcon);
+    setIconPath(this.#icon, this.icon);
+    this.#icon.style.display = this.icon ? "" : "none";
+    setAttribute(
+      control,
+      "title",
       hasIcon && this.labels !== "show"
-        ? this.textContent.trim() || nothing
-        : nothing;
+        ? this.textContent.trim() || null
+        : null,
+    );
+    setAttribute(control, "aria-label", this.label || null);
+    setAttribute(control, "aria-busy", this.loading ? "true" : null);
 
-    const content = html`${this.icon ? icon(this.icon) : nothing}<slot
-        name="icon"
-      ></slot
-      ><span class="text"><slot></slot></span>`;
-
-    if (this.href) {
-      return html`<a
-        class=${classes}
-        part="button"
-        href=${this.disabled ? nothing : this.href}
-        title=${title}
-        aria-label=${this.label || nothing}
-        aria-disabled=${this.disabled ? "true" : nothing}
-        >${content}</a
-      >`;
+    if (control instanceof HTMLAnchorElement) {
+      setAttribute(control, "href", this.disabled ? null : this.href);
+      setAttribute(control, "aria-disabled", this.disabled ? "true" : null);
+    } else {
+      control.type = this.type;
+      control.disabled = this.disabled;
     }
-
-    return html`<button
-      class=${classes}
-      part="button"
-      type=${this.type}
-      title=${title}
-      aria-label=${this.label || nothing}
-      ?disabled=${this.disabled}
-    >
-      ${content}
-    </button>`;
   }
 }
 
-customElements.define("gw-button", GwButton);
+GwButton.define("gw-button");
 
 declare global {
   interface HTMLElementTagNameMap {

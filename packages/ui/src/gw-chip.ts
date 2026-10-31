@@ -1,16 +1,17 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
+import { fadeIn } from "./motion.js";
 import { base, type Tone } from "./styles.js";
 
 /**
  * A short status or category, tinted by its `tone`. While `loading`, a
- * skeleton stands in for its text.
+ * skeleton stands in for its text, and the text fades in once it's loaded.
  */
-export class GwChip extends LitElement {
+export class GwChip extends GwElement {
   static override properties = {
     tone: { reflect: true },
-    loading: { type: Boolean, reflect: true },
-  };
+    loading: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -19,7 +20,7 @@ export class GwChip extends LitElement {
         display: inline-flex;
       }
 
-      /* 32px, as Home Assistant's chips, with 12px padding */
+      /* 32px, with 12px padding */
       .chip {
         display: inline-flex;
         gap: var(--gw-space-2);
@@ -36,11 +37,30 @@ export class GwChip extends LitElement {
         border-radius: var(--gw-radius-chip);
         --gw-icon-size: 1rem;
       }
+
+      .content {
+        display: inline-flex;
+        gap: inherit;
+        align-items: center;
+      }
     `,
   ];
 
   declare tone: Tone;
   declare loading: boolean;
+
+  readonly #chip = h("span", { class: "chip", part: "chip" });
+
+  readonly #skeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 3.5rem",
+  });
+
+  readonly #content = h(
+    "span",
+    { class: "content" },
+    h("slot", { name: "icon" }),
+    h("slot"),
+  );
 
   constructor() {
     super();
@@ -48,23 +68,25 @@ export class GwChip extends LitElement {
     this.loading = false;
   }
 
-  override render() {
-    return html`<span
-      class="chip"
-      part="chip"
-      aria-busy=${this.loading ? "true" : nothing}
-      >${
-        this.loading
-          ? html`<gw-skeleton-text
-              style="--gw-skeleton-width: 3.5rem"
-            ></gw-skeleton-text>`
-          : html`<slot name="icon"></slot><slot></slot>`
-      }</span
-    >`;
+  protected override create(root: ShadowRoot) {
+    this.#chip.append(this.#skeleton, this.#content);
+    root.append(this.#chip);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
+    const wasLoading = this.#content.hidden;
+
+    setAttribute(this.#chip, "aria-busy", this.loading ? "true" : null);
+    this.#skeleton.hidden = !this.loading;
+    this.#content.hidden = this.loading;
+
+    if (changed.has("loading") && wasLoading && !this.loading) {
+      fadeIn(this.#content);
+    }
   }
 }
 
-customElements.define("gw-chip", GwChip);
+GwChip.define("gw-chip");
 
 declare global {
   interface HTMLElementTagNameMap {

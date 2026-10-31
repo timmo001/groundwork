@@ -1,16 +1,16 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base, type Tone } from "./styles.js";
 
 /**
  * A message in the flow of the page. `urgent` announces it at once, for
  * errors that need attention; otherwise it's announced politely.
  */
-export class GwAlert extends LitElement {
+export class GwAlert extends GwElement {
   static override properties = {
     tone: { reflect: true },
     heading: {},
-    urgent: { type: Boolean },
-  };
+    urgent: { type: "boolean" },
+  } as const;
 
   static override styles = [
     base,
@@ -62,6 +62,10 @@ export class GwAlert extends LitElement {
   declare heading: string;
   declare urgent: boolean;
 
+  readonly #alert = h("div", { class: "alert", part: "alert" });
+
+  readonly #heading = h("strong");
+
   constructor() {
     super();
     this.tone = "info";
@@ -69,23 +73,23 @@ export class GwAlert extends LitElement {
     this.urgent = false;
   }
 
-  override render() {
-    return html`<div
-      class="alert"
-      role=${this.urgent ? "alert" : "status"}
-      part="alert"
-    >
-      <slot name="icon"></slot>
-      <div class="body">
-        ${this.heading ? html`<strong>${this.heading}</strong>` : nothing}
-        <slot></slot>
-      </div>
-      <slot name="actions"></slot>
-    </div>`;
+  protected override create(root: ShadowRoot) {
+    this.#alert.append(
+      h("slot", { name: "icon" }),
+      h("div", { class: "body" }, this.#heading, h("slot")),
+      h("slot", { name: "actions" }),
+    );
+    root.append(this.#alert);
+  }
+
+  protected override update() {
+    this.#alert.setAttribute("role", this.urgent ? "alert" : "status");
+    this.#heading.textContent = this.heading;
+    this.#heading.hidden = !this.heading;
   }
 }
 
-customElements.define("gw-alert", GwAlert);
+GwAlert.define("gw-alert");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,4 +1,4 @@
-import { LitElement, css, html, type CSSResultGroup } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
@@ -11,8 +11,8 @@ import { base } from "./styles.js";
  * @cssprop --gw-skeleton-color - The fill. Defaults to the neutral fill.
  * @cssprop --gw-skeleton-radius - The corners. Defaults to the control radius.
  */
-export class GwSkeleton extends LitElement {
-  static override styles: CSSResultGroup = [
+export class GwSkeleton extends GwElement {
+  static override styles: readonly CSSStyleSheet[] = [
     base,
     css`
       :host {
@@ -54,7 +54,7 @@ export class GwSkeleton extends LitElement {
  */
 export class GwSkeletonText extends GwSkeleton {
   static override styles = [
-    GwSkeleton.styles,
+    ...GwSkeleton.styles,
     css`
       :host {
         display: inline-block;
@@ -72,10 +72,10 @@ export class GwSkeletonText extends GwSkeleton {
  * Several lines of text, as a paragraph, with a shorter last line so it
  * doesn't read as a solid block.
  */
-export class GwSkeletonLines extends LitElement {
+export class GwSkeletonLines extends GwElement {
   static override properties = {
-    lines: { type: Number },
-  };
+    lines: { type: "number" },
+  } as const;
 
   static override styles = [
     base,
@@ -108,10 +108,11 @@ export class GwSkeletonLines extends LitElement {
     this.setAttribute("aria-hidden", "true");
   }
 
-  override render() {
-    return Array.from(
-      { length: Math.max(1, this.lines) },
-      () => html`<gw-skeleton-text></gw-skeleton-text>`,
+  protected override update() {
+    this.renderRoot.replaceChildren(
+      ...Array.from({ length: Math.max(1, this.lines || 1) }, () =>
+        h("gw-skeleton-text"),
+      ),
     );
   }
 }
@@ -119,7 +120,7 @@ export class GwSkeletonLines extends LitElement {
 /** A round placeholder for an icon or avatar. */
 export class GwSkeletonIcon extends GwSkeleton {
   static override styles = [
-    GwSkeleton.styles,
+    ...GwSkeleton.styles,
     css`
       :host {
         display: inline-block;
@@ -134,13 +135,13 @@ export class GwSkeletonIcon extends GwSkeleton {
   ];
 }
 
-customElements.define("gw-skeleton", GwSkeleton);
+GwSkeleton.define("gw-skeleton");
 
-customElements.define("gw-skeleton-text", GwSkeletonText);
+GwSkeletonText.define("gw-skeleton-text");
 
-customElements.define("gw-skeleton-lines", GwSkeletonLines);
+GwSkeletonLines.define("gw-skeleton-lines");
 
-customElements.define("gw-skeleton-icon", GwSkeletonIcon);
+GwSkeletonIcon.define("gw-skeleton-icon");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,3 +1,43 @@
+/** Whether the person asked for reduced motion. */
+export const reducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/**
+ * Reads a motion duration token in milliseconds, such as
+ * `--gw-motion-slow`, falling back when the tokens aren't loaded.
+ */
+export const motionDuration = (
+  element: Element,
+  token: string,
+  fallback: number,
+) =>
+  Number.parseFloat(getComputedStyle(element).getPropertyValue(token)) ||
+  fallback;
+
+/**
+ * The curve for fades. A decelerating curve lands most of an opacity change
+ * in the first frames and reads as a pop, so fades ease in and out.
+ */
+export const fadeEasing = "cubic-bezier(0.4, 0, 0.2, 1)";
+
+/**
+ * Fades `element` in, after `delay`, over `duration` (`--gw-motion-slow` by
+ * default). Use it when content replaces a skeleton. With reduced motion it
+ * shows at once.
+ */
+export const fadeIn = (
+  element: HTMLElement,
+  { delay = 0, duration }: { delay?: number; duration?: number } = {},
+) =>
+  element.animate([{ opacity: 0 }, { opacity: 1 }], {
+    delay,
+    duration: reducedMotion()
+      ? 0
+      : (duration ?? motionDuration(element, "--gw-motion-slow", 350)),
+    easing: fadeEasing,
+    fill: "backwards",
+  });
+
 /**
  * Glides `element` from the height it had before a change to the height it
  * has after, as an expansion panel opens, so content arriving or going never
@@ -7,18 +47,11 @@
 export const animateHeight = (element: HTMLElement, before: number) => {
   const after = element.offsetHeight;
 
-  if (
-    before === after ||
-    before === 0 ||
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  ) {
+  if (before === after || before === 0 || reducedMotion()) {
     return;
   }
 
-  const duration =
-    Number.parseFloat(
-      getComputedStyle(element).getPropertyValue("--gw-motion-normal"),
-    ) || 250;
+  const duration = motionDuration(element, "--gw-motion-normal", 250);
 
   element.animate(
     { height: [`${before}px`, `${after}px`], overflow: ["clip", "clip"] },
@@ -39,7 +72,7 @@ export const animateHeight = (element: HTMLElement, before: number) => {
 export const withViewTransition = (
   change: () => void | Promise<void>,
 ): Promise<void> => {
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduced = reducedMotion();
 
   if (document.startViewTransition === undefined || reduced) {
     return Promise.resolve(change());

@@ -1,17 +1,5 @@
-const sheet = new CSSStyleSheet();
-
-sheet.replaceSync(":host { display: block; }");
-
-// Opacity reads as a pop with a decelerating curve, since most of the change
-// lands in the first frames, so fades ease in and out.
-const easing = "cubic-bezier(0.4, 0, 0.2, 1)";
-
-const reducedMotion = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const motion = (element: Element, token: string, fallback: number) =>
-  Number.parseFloat(getComputedStyle(element).getPropertyValue(token)) ||
-  fallback;
+import { GwElement, css, h } from "./element.js";
+import { fadeEasing, fadeIn, motionDuration, reducedMotion } from "./motion.js";
 
 /**
  * Waits `delay` milliseconds, then fades its content in over `duration`.
@@ -23,45 +11,41 @@ const motion = (element: Element, token: string, fallback: number) =>
  * @attr delay - Milliseconds to wait before fading in. Defaults to 0.
  * @attr duration - Milliseconds the fade takes. Defaults to `--gw-motion-slow`.
  */
-export class GwFadeIn extends HTMLElement {
-  static readonly observedAttributes = ["delay", "duration"];
+export class GwFadeIn extends GwElement {
+  static override properties = {
+    delay: { type: "number" },
+    duration: { type: "number" },
+  } as const;
+
+  static override styles = [
+    css`
+      :host {
+        display: block;
+      }
+    `,
+  ];
+
+  declare delay: number;
+  declare duration: number | undefined;
 
   #animation: Animation | undefined;
 
   constructor() {
     super();
-
-    const root = this.attachShadow({ mode: "open" });
-
-    root.adoptedStyleSheets = [sheet];
-    root.append(document.createElement("slot"));
+    this.delay = 0;
+    this.duration = undefined;
   }
 
-  get delay() {
-    return Number(this.getAttribute("delay") ?? 0) || 0;
+  protected override create(root: ShadowRoot) {
+    root.append(h("slot"));
   }
 
-  set delay(value: number) {
-    this.setAttribute("delay", String(value));
-  }
-
-  get duration() {
-    const own = Number(this.getAttribute("duration"));
-
-    if (own > 0) return own;
-
-    return motion(this, "--gw-motion-slow", 350);
-  }
-
-  set duration(value: number) {
-    this.setAttribute("duration", String(value));
-  }
-
-  connectedCallback() {
+  override connectedCallback() {
+    super.connectedCallback();
     this.#fadeIn();
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     this.#animation?.cancel();
     this.#animation = undefined;
   }
@@ -74,8 +58,8 @@ export class GwFadeIn extends HTMLElement {
       this.#animation?.cancel();
 
       const out = this.animate([{ opacity: from }, { opacity: 0 }], {
-        duration: motion(this, "--gw-motion-fast", 150),
-        easing,
+        duration: motionDuration(this, "--gw-motion-fast", 150),
+        easing: fadeEasing,
         fill: "forwards",
       });
 
@@ -95,16 +79,16 @@ export class GwFadeIn extends HTMLElement {
 
   #fadeIn() {
     this.#animation?.cancel();
-    this.#animation = this.animate([{ opacity: 0 }, { opacity: 1 }], {
-      delay: this.delay,
-      duration: reducedMotion() ? 0 : this.duration,
-      easing,
-      fill: "both",
-    });
+    this.#animation = fadeIn(
+      this,
+      this.duration && this.duration > 0
+        ? { delay: this.delay || 0, duration: this.duration }
+        : { delay: this.delay || 0 },
+    );
   }
 }
 
-customElements.define("gw-fade-in", GwFadeIn);
+GwFadeIn.define("gw-fade-in");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,16 +1,16 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base, type Tone } from "./styles.js";
 
 /**
  * A small status dot. Give it a `label`, such as "Online", unless text
  * beside it already says the same.
  */
-export class GwDot extends LitElement {
+export class GwDot extends GwElement {
   static override properties = {
     tone: { reflect: true },
     label: {},
-    pulse: { type: Boolean, reflect: true },
-  };
+    pulse: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -48,6 +48,8 @@ export class GwDot extends LitElement {
   declare label: string;
   declare pulse: boolean;
 
+  readonly #label = h("span");
+
   constructor() {
     super();
     this.tone = "neutral";
@@ -55,12 +57,17 @@ export class GwDot extends LitElement {
     this.pulse = false;
   }
 
-  override render() {
-    return this.label ? html`<span>${this.label}</span>` : nothing;
+  protected override create(root: ShadowRoot) {
+    root.append(this.#label);
+  }
+
+  protected override update() {
+    this.#label.textContent = this.label;
+    this.#label.hidden = !this.label;
   }
 }
 
-customElements.define("gw-dot", GwDot);
+GwDot.define("gw-dot");
 
 declare global {
   interface HTMLElementTagNameMap {
