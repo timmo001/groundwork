@@ -183,6 +183,7 @@ export const css = (themes: readonly ResolvedTheme[]) =>
     `/* ${header} */`,
     `:root {\n${declarations(foundations)}\n}`,
     `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-instant: 1ms;\n    --gw-motion-fast: 1ms;\n    --gw-motion-normal: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
+    "gw-fade-in:not(:defined) {\n  opacity: 0;\n}",
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";
 

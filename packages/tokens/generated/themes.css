@@ -59,6 +59,10 @@
   }
 }
 
+gw-fade-in:not(:defined) {
+  opacity: 0;
+}
+
 [data-gw-theme="base"] {
   --gw-font-sans: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
   --gw-font-figures: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;

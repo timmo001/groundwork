@@ -71,13 +71,13 @@ Skeletons are hidden from assistive technology, so mark the region they're in `a
   </gw-grid>
 </Demo>
 
-`gw-fade-in` waits `delay` milliseconds, then fades its content in over `duration` (`--gw-motion-normal` by default). Use it for most content that arrives after the page:
+`gw-fade-in` waits `delay` milliseconds, then fades its content in over `duration` (`--gw-motion-slow` by default), easing in and out so it never pops. Use it for most content that arrives after the page:
 
 - Wrap a skeleton with a `delay` of about 500ms, so a load that finishes quickly never flashes a placeholder.
 - Wrap the loaded content with no delay, so it eases in where the skeleton was.
 - Wrap a page or panel body that appears after a navigation.
 
-It keeps its size while hidden, so nothing around it moves. `replay()` runs the wait and fade again. With reduced motion it still waits, then shows at once.
+It keeps its size while hidden, so nothing around it moves, and the tokens stylesheet hides it until the element is defined, so its content never flashes before the fade. `replay()` fades it out, then runs the wait and fade again. With reduced motion it still waits, then shows at once.
 
 ## Spinner
 
