@@ -287,7 +287,7 @@ export const contrastPage = (themes: readonly ResolvedTheme[]) => {
           );
 
           return result === undefined
-            ? ""
+            ? "n/a"
             : `${result.ratio.toFixed(2)}${result.passes ? "" : " ✗"}`;
         });
 
