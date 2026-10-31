@@ -1,0 +1,11 @@
+---
+import tokens from "@groundwork/tokens/themes.json";
+import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
+
+/** The core themes, for the header's theme picker. */
+const themes = tokens.themes
+  .filter((theme) => !theme.optional)
+  .map((theme) => ({ id: theme.id, name: theme.name }));
+---
+
+<HeaderSearch {...Astro.props} themes={themes} defaultTheme="base" />
