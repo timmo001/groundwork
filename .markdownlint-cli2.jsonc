@@ -10,6 +10,8 @@
     "docs/dist/**",
     "docs/.blume/**",
     "docs/.blume-verify/**",
+    "docs/test-results/**",
+    "docs/playwright-report/**",
     ".agents/skills/**",
   ],
 }

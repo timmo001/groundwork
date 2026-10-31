@@ -4,6 +4,9 @@ dist/
 .astro/
 .blume/
 .blume-verify/
+# Playwright output
+test-results/
+playwright-report/
 
 # dependencies
 node_modules/
