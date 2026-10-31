@@ -21,6 +21,7 @@ export default defineConfig(
           items: [
             "/foundations/colour",
             "/foundations/type",
+            "/foundations/spacing",
             "/foundations/layout",
           ],
         },

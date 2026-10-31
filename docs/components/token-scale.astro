@@ -1,0 +1,225 @@
+---
+interface Props {
+  /** Which scale to draw. */
+  kind: "space" | "radius" | "shadow" | "size";
+  theme?: string;
+}
+
+const { kind, theme = "base" } = Astro.props;
+
+const space = [
+  ["0-5", "2px", "Hairline gaps, such as inside a toggle's track"],
+  ["1", "4px", "Icon to text in a chip"],
+  ["2", "8px", "Icon to text in a button or badge, gaps between chips"],
+  ["3", "12px", "Field and badge padding, rows"],
+  ["4", "16px", "Button padding, gaps between controls"],
+  ["5", "20px", "Card padding"],
+  ["6", "24px", "Gaps between sections of a page"],
+  ["8", "32px", "Empty states"],
+  ["12", "48px", "Page margins on wide screens"],
+] as const;
+
+const radius = [
+  ["xs", "2px"],
+  ["s", "4px"],
+  ["m", "8px"],
+  ["l", "12px"],
+  ["xl", "16px"],
+  ["pill", "999px"],
+  ["control", "Theme"],
+  ["chip", "Theme"],
+  ["panel", "Theme"],
+] as const;
+
+const shadow = [
+  ["s", "Raised items, such as a toast's event pill"],
+  ["m", "Menus and pickers"],
+  ["l", "Popovers and dialogs"],
+] as const;
+
+const sizes = [
+  ["Button xs", "1.5rem"],
+  ["Button small", "2rem"],
+  ["Button medium, input, select", "2.5rem"],
+  ["Badge", "2.25rem"],
+  ["Button large", "3rem"],
+  ["Button xl", "3.5rem"],
+  ["Chip", "1.75rem"],
+] as const;
+---
+
+<div
+  class="scale"
+  data-gw-theme={theme}
+  data-gw-mode={kind === "shadow" ? "light" : "dark"}
+  data-kind={kind}
+>
+  {
+    kind === "space" &&
+      space.map(([step, px, use]) => (
+        <div class="row">
+          <code>--gw-space-{step}</code>
+          <span class="measure">{px}</span>
+          <span class="track">
+            <span class="bar" style={`width: var(--gw-space-${step})`} />
+          </span>
+          <span class="use">{use}</span>
+        </div>
+      ))
+  }
+  {
+    kind === "size" &&
+      sizes.map(([name, height]) => (
+        <div class="row">
+          <span class="name">{name}</span>
+          <span class="measure">{Number.parseFloat(height) * 16}px</span>
+          <span class="track">
+            <span class="height" style={`height: ${height}`} />
+          </span>
+        </div>
+      ))
+  }
+  {
+    kind === "radius" && (
+      <div class="tiles">
+        {radius.map(([step, value]) => (
+          <figure>
+            <span class="corner" style={`border-radius: var(--gw-radius-${step})`} />
+            <figcaption>
+              <code>--gw-radius-{step}</code>
+              <span class="measure">{value}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "shadow" && (
+      <div class="tiles">
+        {shadow.map(([step, use]) => (
+          <figure>
+            <span class="lift" style={`box-shadow: var(--gw-shadow-${step})`} />
+            <figcaption>
+              <code>--gw-shadow-{step}</code>
+              <span class="measure">{use}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .scale {
+    display: grid;
+    gap: var(--gw-space-2);
+    padding: var(--gw-space-5);
+    margin-block: 1.5rem;
+    font-family: var(--gw-font-sans);
+    font-size: var(--gw-font-size-s);
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-default);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 9.5rem 3rem minmax(5rem, 6rem) 1fr;
+    gap: var(--gw-space-4);
+    align-items: center;
+    min-height: 2rem;
+  }
+
+  [data-kind="size"] .row {
+    grid-template-columns: 14rem 3rem 1fr;
+  }
+
+  /* Outranks the page's inline code style, which is drawn for the docs'
+     own colours rather than the theme's */
+  .scale code {
+    padding: 0;
+    font-family: var(--gw-font-mono);
+    font-size: var(--gw-font-size-xs);
+    color: var(--gw-color-text-strong);
+    background: none;
+    border: 0;
+  }
+
+  .measure,
+  .use {
+    font-size: var(--gw-font-size-xs);
+    color: var(--gw-color-text-secondary);
+  }
+
+  .measure {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The bar is the gap itself, drawn between two hairlines as a redline */
+  .track {
+    display: flex;
+    align-items: center;
+  }
+
+  .bar {
+    display: block;
+    height: 1rem;
+    background: color-mix(in oklab, var(--gw-color-danger) 30%, transparent);
+    border-inline: 1px solid var(--gw-color-danger);
+  }
+
+  .height {
+    display: block;
+    width: 5rem;
+    background: var(--gw-color-fill-neutral-resting);
+    border: 1px dashed var(--gw-color-border-loud);
+    border-radius: var(--gw-radius-pill);
+  }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+    gap: var(--gw-space-5);
+  }
+
+  figure {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--gw-space-2);
+    align-content: start;
+    margin: 0;
+  }
+
+  figcaption {
+    display: grid;
+    gap: var(--gw-space-0-5);
+  }
+
+  .corner {
+    display: block;
+    height: 4rem;
+    background: var(--gw-color-fill-accent-quiet);
+    border: 2px solid var(--gw-color-border-accent);
+  }
+
+  .lift {
+    display: block;
+    height: 4.5rem;
+    background: var(--gw-color-surface-overlay);
+    border-radius: var(--gw-radius-l);
+  }
+
+  @media (width < 40rem) {
+    .row {
+      grid-template-columns: 1fr auto;
+    }
+
+    .row .track,
+    .row .use {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

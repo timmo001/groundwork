@@ -8,6 +8,7 @@ import RepoKinds from "./components/repo-kinds.astro";
 import ThemeGrid from "./components/theme-grid.astro";
 import ThemePreview from "./components/theme-preview.astro";
 import ThemeSwatches from "./components/theme-swatches.astro";
+import TokenScale from "./components/token-scale.astro";
 
 export default defineComponents({
   layout: {
@@ -22,5 +23,6 @@ export default defineComponents({
     ThemeGrid,
     ThemePreview,
     ThemeSwatches,
+    TokenScale,
   },
 });
