@@ -1,6 +1,6 @@
 ---
 title: Components
-description: Lit components on native elements, styled only through --gw-* variables, and kept current in each app by the sync.
+description: Web components on native elements, styled only through --gw-* variables, and shipped as a package.
 ---
 
 The web components are Lit elements built on native elements: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
@@ -31,13 +31,20 @@ The data group (table, virtual list, time series chart and JSON view) comes next
 
 ## Taking them into an app
 
-The [sync](/sync) brings components into an app and keeps them current. Add the ones an app uses once, and `mise run sync` updates them after every groundwork change:
+Components and tokens ship as packages, `@timmo001/groundwork-ui` and `@timmo001/groundwork-tokens`, on npm and JSR. Each release rolls out to the apps that use them, so nothing waits on Renovate:
 
 ```sh
-bun packages/sync/src/cli.ts add --app ../my-app --to src/ui gw-button gw-popover themes-css
+bun add -E @timmo001/groundwork-ui @timmo001/groundwork-tokens
 ```
 
-Each component needs `ui-base` (its shared styles and the `icon()` helper), which the sync brings along. Load `themes.css` and set `data-gw-theme` and `data-gw-mode` on a container, and everything inside follows. Extend a component by wrapping it or setting variables and `::part()`, never by editing it in the app, since the sync flags those edits.
+```ts
+import "@timmo001/groundwork-tokens/themes.css";
+import "@timmo001/groundwork-ui";
+```
+
+Set `data-gw-theme` and `data-gw-mode` on a container, and everything inside follows. Extend a component by wrapping it, or through its variables and `::part()`. A change every app needs goes into Groundwork instead.
+
+The packages publish once the components no longer need Lit. Until then, apps keep the copies the [sync](/sync) gave them.
 
 ## Fields stay in light DOM
 
