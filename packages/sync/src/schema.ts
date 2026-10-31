@@ -1,7 +1,7 @@
 import { Schema } from "effect";
 
 /** QML copies mirror both ways; every other kind only travels out. */
-export const Kind = Schema.Literals(["qml", "tokens", "lit"]);
+export const Kind = Schema.Literals(["qml", "tokens", "lit", "element"]);
 
 export type Kind = typeof Kind.Type;
 

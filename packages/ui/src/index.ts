@@ -28,6 +28,8 @@ export * from "./gw-expansion.js";
 
 export * from "./gw-facts.js";
 
+export * from "./gw-fade-in.js";
+
 export * from "./gw-gauge.js";
 
 export * from "./gw-input.js";

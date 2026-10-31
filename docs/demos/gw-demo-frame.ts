@@ -165,9 +165,17 @@ export class GwDemoFrame extends LitElement {
     this.addEventListener("click", (event) => {
       const target = event
         .composedPath()
-        .find((node) => node instanceof HTMLElement && (node.dataset.opens || node.dataset.toast));
+        .find(
+          (node) =>
+            node instanceof HTMLElement &&
+            (node.dataset.opens || node.dataset.toast || node.dataset.replays !== undefined),
+        );
 
       if (!(target instanceof HTMLElement)) return;
+
+      if (target.dataset.replays !== undefined) {
+        for (const fade of this.querySelectorAll("gw-fade-in")) fade.replay();
+      }
 
       if (target.dataset.opens) {
         const dialog = this.querySelector(`#${target.dataset.opens}`);

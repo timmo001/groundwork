@@ -161,6 +161,13 @@
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
+      "name": "gw-fade-in",
+      "kind": "element",
+      "description": "Waits, then fades its content in, for skeletons and content as it arrives",
+      "files": ["packages/ui/src/gw-fade-in.ts"],
+      "needs": []
+    },
+    {
       "name": "gw-gauge",
       "kind": "lit",
       "description": "A reading on a dial, coloured by warning and danger levels",
