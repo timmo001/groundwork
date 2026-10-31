@@ -5,7 +5,7 @@ description: Anchored popovers for confirmations, renames and small forms, dialo
 
 ## Popover
 
-A confirmation, a rename or a small form that opens from a button opens next to that button, not as a dialog in the middle of the screen, so it stays tied to what was asked. On phones it's a bottom sheet. Anything opened without a button, such as after a save, sits in the middle like a dialog. This follows the [anchored popovers](https://github.com/OpenHomeFoundation/ux-design/discussions/80) idea for Home Assistant, which System Bridge already uses.
+Whatever a button asks or offers opens next to that button, not in the middle of the screen, so it stays tied to what was pressed. That covers a confirmation, a rename, a small form and a question that follows the action, such as asking to restart after a save: it opens from the Save button. On phones it's a bottom sheet. This builds on the [anchored popovers](https://github.com/OpenHomeFoundation/ux-design/discussions/80) idea for Home Assistant, which System Bridge already uses.
 
 <Demo id="popover">
   <gw-button variant="danger" data-opens="forget-device">Forget device</gw-button>
@@ -20,17 +20,20 @@ A confirmation, a rename or a small form that opens from a button opens next to 
     <gw-button slot="actions" size="small" variant="plain" value="cancel">Cancel</gw-button>
     <gw-button slot="actions" size="small" variant="primary" value="save">Save</gw-button>
   </gw-popover>
-  <gw-button variant="plain" data-opens="saved-elsewhere" data-centred>Save, then ask</gw-button>
-  <gw-popover id="saved-elsewhere" heading="Restart now?">
+  <gw-button variant="primary" data-opens="restart-after-save" data-toast="Settings saved" data-tone="success">Save settings</gw-button>
+  <gw-popover id="restart-after-save" heading="Restart now?">
     <p>The new settings take effect after a restart.</p>
     <gw-button slot="actions" size="small" variant="plain" value="later">Later</gw-button>
     <gw-button slot="actions" size="small" variant="primary" value="restart">Restart</gw-button>
   </gw-popover>
+  <gw-toaster></gw-toaster>
 </Demo>
+
+Keep a popover to one or two fields. A longer form is a view of its own, not a popover or a dialog stacked on the page.
 
 | Attribute or method | What it does |
 | --- | --- |
-| `show(anchor)` | Opens under `anchor`, or above it when there's more room there, lined up with the edge on the button's side of the screen. Without one it opens in the middle |
+| `show(anchor)` | Opens under `anchor`, or above it when there's more room there, lined up with the edge on the button's side of the screen. Without one it opens in the middle, which is only for something nothing on screen started |
 | `heading` | A heading. A confirmation that's only a question leaves it out, and the question is the message |
 | `confirm` | Makes it an `alertdialog`, for a question that needs an answer |
 | `close(value)` | Closes it; `returnValue` holds the value when it fires `close` |
@@ -40,15 +43,17 @@ It's on the Popover API, in the top layer, so a scrolling parent never clips it.
 ## Dialog
 
 <Demo id="dialog">
-  <gw-button variant="danger" data-opens="remove-backup">Remove backup</gw-button>
-  <gw-dialog id="remove-backup" heading="Remove this backup?">
-    <p>The backup from 28 October will be deleted. This can't be undone.</p>
-    <gw-button slot="actions" value="cancel">Cancel</gw-button>
-    <gw-button slot="actions" variant="danger" value="remove">Remove</gw-button>
+  <gw-button variant="plain" data-opens="connection-lost">Lose the connection</gw-button>
+  <gw-dialog id="connection-lost" heading="Connection lost">
+    <p>Can't reach the server. Changes made since will be lost if this page is closed.</p>
+    <gw-button slot="actions" value="wait">Keep waiting</gw-button>
+    <gw-button slot="actions" variant="primary" value="retry">Try again</gw-button>
   </gw-dialog>
 </Demo>
 
-For anything bigger than a small form, or that needs the whole screen's attention. It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, Esc closes it, and the page behind can't be reached. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
+Only for something nothing on screen started, that needs the whole screen's attention: a lost connection, an expired sign-in or an update that's ready. Anything a button starts is a [popover](#popover) instead. The button in the demo stands in for the app losing its connection.
+
+It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, Esc closes it, and the page behind can't be reached. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
 
 ## Menus
 

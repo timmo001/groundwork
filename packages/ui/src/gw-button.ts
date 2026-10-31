@@ -19,6 +19,7 @@ export class GwButton extends LitElement {
 
   static override properties = {
     variant: { reflect: true },
+    appearance: { reflect: true },
     size: { reflect: true },
     type: {},
     href: {},
@@ -156,7 +157,7 @@ export class GwButton extends LitElement {
             [variant="success"],
             [variant="warning"],
             [variant="danger"]
-          )
+          ):not([appearance])
         )
         .button {
         color: var(--gw-color-text-strong);
@@ -174,7 +175,7 @@ export class GwButton extends LitElement {
             [variant="success"],
             [variant="warning"],
             [variant="danger"]
-          )
+          ):not([appearance])
         )
         .button:hover {
         background: color-mix(
@@ -190,7 +191,7 @@ export class GwButton extends LitElement {
             [variant="success"],
             [variant="warning"],
             [variant="danger"]
-          )
+          ):not([appearance])
         )
         .button:active {
         background: color-mix(
@@ -198,6 +199,72 @@ export class GwButton extends LitElement {
           var(--gw-button-tone) 36%,
           var(--gw-color-surface-raised)
         );
+      }
+
+      /* Preview of the Design Kit's split: the variant picks the colour and
+         the appearance how it's applied. Accent is a solid fill with text
+         that flips between black and white for contrast, filled a soft tint,
+         outlined a stroke and plain text only. All are pills */
+      :host([variant="brand"]) {
+        --gw-button-tone: var(--gw-color-accent);
+      }
+
+      :host([variant="neutral"]) {
+        --gw-button-tone: var(--gw-color-text-secondary);
+        --gw-button-ink: var(--gw-color-text-strong);
+      }
+
+      :host([appearance]) .button {
+        color: var(--gw-button-ink, var(--gw-button-tone));
+        background: transparent;
+        border-color: transparent;
+        border-radius: var(--gw-radius-pill);
+      }
+
+      :host([appearance]) .button:hover {
+        background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
+      }
+
+      :host([appearance]) .button:active {
+        background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent);
+      }
+
+      :host([appearance="accent"]) .button,
+      :host([appearance="accent"]) .button:hover,
+      :host([appearance="accent"]) .button:active {
+        color: oklch(
+          from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0
+        );
+        background: var(--gw-button-tone);
+      }
+
+      :host([appearance="accent"]) .button:hover {
+        background: oklch(
+          from var(--gw-button-tone) calc(l + (0.6 - l) * 0.2) c h
+        );
+      }
+
+      :host([appearance="accent"]) .button:active {
+        background: oklch(
+          from var(--gw-button-tone) calc(l + (0.6 - l) * 0.35) c h
+        );
+      }
+
+      :host([appearance="filled"]) .button {
+        background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
+      }
+
+      :host([appearance="filled"]) .button:hover {
+        background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent);
+      }
+
+      :host([appearance="filled"]) .button:active {
+        background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent);
+      }
+
+      :host([appearance="outlined"]) .button {
+        border-color: var(--gw-button-tone);
+        border-width: max(var(--gw-border-width), 1px);
       }
 
       .button:disabled,
@@ -224,7 +291,11 @@ export class GwButton extends LitElement {
     | "info"
     | "success"
     | "warning"
-    | "danger";
+    | "danger"
+    | "brand"
+    | "neutral";
+  /** The Design Kit's appearances, in preview. Unset keeps the old variants. */
+  declare appearance: "accent" | "filled" | "outlined" | "plain" | undefined;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
   declare type: "button" | "submit" | "reset";
   declare href: string;
@@ -234,6 +305,7 @@ export class GwButton extends LitElement {
   constructor() {
     super();
     this.variant = "secondary";
+    this.appearance = undefined;
     this.size = "medium";
     this.type = "button";
     this.href = "";
