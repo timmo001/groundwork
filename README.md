@@ -12,15 +12,16 @@ document attached to it.
 
 ## What's here
 
-| Path                                                 | What it is                                                                              |
-| ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| [`packages/tokens`](packages/tokens/themes)          | Theme documents, the solver and the generators for CSS, JSON, TS, QML, OpenTUI and ANSI |
-| [`docs`](docs)                                       | The Groundwork docs site, showing every theme live                                      |
-| [`conventions`](conventions)                         | Repository kinds, the label manifest and a file per repository                          |
-| [`packages/conventions`](packages/conventions)       | Checks the manifest and prints each repository's labels                                 |
-| [`packages/docs-kit`](packages/docs-kit)             | `@timmo001/docs-kit`, published on npm and JSR                                          |
-| [`packages/bump-consumers`](packages/bump-consumers) | Rolls a docs-kit release out to the sites that use it                                   |
-| [`skills/docs-kit`](skills/docs-kit/SKILL.md)        | An agent skill for setting up or changing a site with docs-kit                          |
+| Path                                                                      | What it is                                                                              |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [`packages/tokens`](packages/tokens/themes)                               | Theme documents, the solver and the generators for CSS, JSON, TS, QML, OpenTUI and ANSI |
+| [`docs`](docs)                                                            | The Groundwork docs site, showing every theme live                                      |
+| [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                          |
+| [`packages/conventions`](packages/conventions)                            | Checks the manifest and prints each repository's labels                                 |
+| [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
+| [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |
+| [`skills/docs-kit`](skills/docs-kit/SKILL.md)                             | An agent skill for setting up or changing a site with docs-kit                          |
+| [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labelling from the manifest                     |
 
 ## docs-kit
 
