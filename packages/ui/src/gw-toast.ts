@@ -10,8 +10,8 @@ interface Toast {
 /**
  * Where toasts appear, fixed at the bottom of the screen. Call
  * `show(message, tone)`; each toast is announced politely and leaves after
- * `duration` milliseconds. Keep them for something new that needs the
- * person; nothing for routine success.
+ * `duration` milliseconds. A last resort: show an outcome where it happened,
+ * on the button, a popover from it or the page, instead.
  */
 export class GwToaster extends LitElement {
   static override properties = {

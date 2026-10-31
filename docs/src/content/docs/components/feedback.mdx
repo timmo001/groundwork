@@ -100,10 +100,20 @@ What a list or page shows when it's empty or there's nothing to do. Say so in on
 
 ## Toast
 
+Avoid toasts. A toast shows up away from what caused it, covers content and leaves before it's read. Show the outcome where it happened instead:
+
+- **The action's own button.** It shows [`loading`](/components/actions#button-loading) while the work runs, then the result. A save that worked needs nothing more.
+- **A [popover](/components/overlays#popover) from the button** for a question that follows the action, such as asking to restart after a save, or an undo after a cut.
+- **An [alert](/components/display#alert) in the page** for an error the person needs to read or fix.
+- **A bar across the top** for app-wide state: a restart is needed, the connection is lost, or an update is ready.
+- **The notification center** for something new that needs the person, which stays until it's dealt with.
+
+A toast is the last resort, for something brief that nothing on screen can show.
+
 <Demo id="toast">
   <gw-button variant="success" appearance="filled" data-toast="Backup finished" data-tone="success">Finish a backup</gw-button>
   <gw-button variant="warning" appearance="filled" data-toast="Disk nearly full" data-tone="warning">Fill a disk</gw-button>
   <gw-toaster duration="4000"></gw-toaster>
 </Demo>
 
-Put one `gw-toaster` on the page and call `show(message, tone)`. Each toast is announced politely and leaves after `duration` milliseconds. Toasts are for something new that needs the person, not for routine success.
+Put one `gw-toaster` on the page and call `show(message, tone)`. Each toast is announced politely and leaves after `duration` milliseconds. Never use one for routine success.

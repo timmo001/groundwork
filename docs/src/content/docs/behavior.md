@@ -41,5 +41,5 @@ Long commands run as jobs only, so an agent starts them and comes back for the r
 
 - One status source per system, as `dot updates status --json` is for updates. The bar widget, the OpenCode footer, the CLI and the panel all read it, so each shows the same counts.
 - The bar counts what needs you, and hides in quiet hours.
-- Toasts only for something new that needs you. Nothing for green runs.
+- Avoid toasts. Show an outcome where it happened (the button, a popover from it, or the page), app-wide state in a bar, and anything that needs you in the notification center. Nothing for green runs.
 - Decisions go to the Plannotator Inbox; reviews go through Plannotator, not GitHub.

@@ -20,13 +20,12 @@ Whatever a button asks or offers opens next to that button, not in the middle of
     <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="cancel">Cancel</gw-button>
     <gw-button slot="actions" size="small" value="save">Save</gw-button>
   </gw-popover>
-  <gw-button data-opens="restart-after-save" data-toast="Settings saved" data-tone="success">Save settings</gw-button>
+  <gw-button data-opens="restart-after-save">Save settings</gw-button>
   <gw-popover id="restart-after-save" heading="Restart now?">
     <p>The new settings take effect after a restart.</p>
     <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="later">Later</gw-button>
     <gw-button slot="actions" size="small" value="restart">Restart</gw-button>
   </gw-popover>
-  <gw-toaster></gw-toaster>
 </Demo>
 
 Keep a popover to one or two fields. A longer form is a view of its own, not a popover or a dialog stacked on the page.
