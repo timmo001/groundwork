@@ -17,6 +17,7 @@ document attached to it.
 | [`packages/tokens`](packages/tokens/themes)                               | Theme documents, the solver and the generators for CSS, JSON, TS, QML, OpenTUI and ANSI |
 | [`docs`](docs)                                                            | The Groundwork docs site, showing every theme live                                      |
 | [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                          |
+| [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behaviour conventions, with Code Mode and MCP                        |
 | [`packages/conventions`](packages/conventions)                            | Checks the manifest and prints each repository's labels                                 |
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
 | [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |

@@ -18,10 +18,10 @@ Discussions go by size, not kind. A big community project routes questions and i
 
 Work is tracked in one of two places:
 
-- **In public, in issues**, with sub-issues, parents and blocked-by relationships set. Plans, mocks, research and decisions are attached to the issue they belong to, so the issue carries its own design history. One label scheme everywhere, so an overview can track issues the same way across every repository.
-- **In private, alongside the agent**: the [Plannotator](https://github.com/backnotprop/plannotator) board and Inbox threads, Plannotator plans shared as links, [notes](https://github.com/timmo001/notes) and handoffs (notes flagged for the next session), and local Markdown and scratch files.
+- **In public, on GitHub.** Work goes in issues, with sub-issues, parents and blocked-by relationships set. Plans, mocks, research and decisions are attached to the issue they belong to, so the issue carries its own design history. Questions, ideas and feature requests go to Discussions where a repository has them on, and to Feature Request issues where it doesn't. One label scheme everywhere, so an overview can track issues the same way across every repository.
+- **In private, with whatever fits.** It's fluid: the [Plannotator](https://github.com/backnotprop/plannotator) board, Inbox threads and shared plans, [notes](https://github.com/timmo001/notes) and handoffs, local Markdown and scratch files, or a tracker such as Linear.
 
-Private tracking suits work that isn't ready to share or doesn't belong in public. When it turns into work on a public repository, it moves into issues there.
+Private tracking suits work that isn't ready to share or doesn't belong in public. When it turns into work on a public repository, it moves to GitHub there.
 
 ## The manifest
 

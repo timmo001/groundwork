@@ -18,9 +18,10 @@ document usage and development.
 - Use the shared `@timmo001/oxlint-rules/configs/recommended` preset and its
   supported Oxlint peers.
 - Track public work in issues with sub-issues and blocked-by relationships set;
-  plans, research and decisions are attached to the issue. Private work can
-  stay on the Plannotator board, Inbox threads, notes and handoffs until it
-  lands on a public repo.
+  plans, research and decisions are attached to the issue. Ideas and feature
+  requests go to Discussions where a repo has them on. Private work can stay in
+  whatever tool fits (the Plannotator board and Inbox, notes and handoffs, or
+  another tracker) until it lands on a public repo.
 
 ## Background Dev Servers
 

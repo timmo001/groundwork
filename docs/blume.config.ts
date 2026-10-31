@@ -13,6 +13,7 @@ export default defineConfig(
         "/",
         "/principles",
         "/targets",
+        "/behaviour",
         {
           label: "Foundations",
           root: "/foundations",
