@@ -1,6 +1,6 @@
 ---
 name: groundwork-bump-consumers
-description: Roll a @timmo001/docs-kit release out to the docs sites that use it with `mise run bump-consumers`. Use after publishing a groundwork release when asked to bump, update or roll out docs-kit to its consumers, instead of waiting for Renovate or editing each site by hand.
+description: Roll a @timmo001/docs-kit release out to the docs sites that use it with `mise run bump-consumers`. Use straight after every groundwork release, or when asked to bump, update or roll out docs-kit to its consumers, instead of waiting for Renovate or editing each site by hand.
 ---
 
 # Bump consumers
@@ -33,6 +33,7 @@ those afterwards.
 
 1. Publish the release and wait for npm to serve it; the install fails until it
    does.
-2. Run with `--push` when the user has asked for the rollout. A site whose
+2. Run with `--push` straight after every release. The rollout is automatic and
+   doesn't wait for a go-ahead; report what landed afterwards. A site whose
    install or build fails isn't committed; the summary counts it and the
    command exits non-zero. Fix it and rerun with `--repo`.

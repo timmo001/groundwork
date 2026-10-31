@@ -23,6 +23,19 @@ document usage and development.
   whatever tool fits (the Plannotator board and Inbox, notes and handoffs, or
   another tracker) until it lands on a public repo.
 
+## Rollout
+
+Changes made here reach their consumers by the end of the session, with no
+go-ahead needed. Before the session ends, once `mise run check` passes:
+
+1. Commit the session's own changes through `dot git commit`, leaving other
+   sessions' work alone, and push.
+2. When `packages/docs-kit` changed, bump its version in `package.json` and
+   `jsr.json`, publish a GitHub release with that version as the tag, then
+   roll it out with `mise run bump-consumers -- --push` once npm serves it.
+3. When a registry item changed, run `mise run sync` and push each app.
+4. Report what landed and anything flagged.
+
 ## Background Dev Servers
 
 - Start the docs dev server with `mise run serve:docs`, which runs it through
@@ -59,7 +72,8 @@ document usage and development.
 - `registry.json` lists what apps can take; `packages/sync` copies items into
   apps with a `sync.json`, recording each copy in `sync.lock.json`.
 - The QML panel components live in `qml/` and mirror both ways. Edit them here
-  or in any copy, then run `mise run sync` and commit groundwork and each app.
+  or in any copy, then run `mise run sync` and commit and push groundwork and
+  each app.
 - Other items only travel out. A flagged copy means an app edited one; move the
   edit into groundwork or a wrapper rather than overwriting it.
 

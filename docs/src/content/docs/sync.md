@@ -3,7 +3,12 @@ title: Sync
 description: How components and token files reach apps as copies, and how edits travel back.
 ---
 
-Parts reach apps as copies, the way [shadcn/ui](https://ui.shadcn.com) works: each app owns its copy, and the sync keeps it current. Nothing here is published as a package except docs-kit.
+Everything Groundwork makes reaches what uses it on its own, as soon as it changes. Nothing waits on Renovate or a go-ahead: each update runs the consumer's checks, with [agent-checks](https://github.com/timmo001/agent-checks) and an agent where a check needs judgement, pushes when they pass, and sends a notification. If it can be automated, it is; only what can't is flagged.
+
+- Published packages, such as docs-kit, roll out to every consumer on each release.
+- Everything else reaches apps as copies, the way [shadcn/ui](https://ui.shadcn.com) works: each app owns its copy, and the sync keeps it current.
+
+Today the sync runs with `mise run sync`. Running it on every push is part of [#38](https://github.com/timmo001/groundwork/issues/38).
 
 ## Files
 
