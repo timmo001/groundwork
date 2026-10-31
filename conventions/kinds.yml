@@ -1,0 +1,27 @@
+---
+# The four kinds of repository. Every repository starts Personal and moves up
+# a kind when it's used more widely. Discussions go by size, not kind: set
+# `discussions: true` in a repository's own file.
+kinds:
+  - id: community
+    name: Community
+    description: Open to ideas and contributions when they don't break my flow.
+    issues: A bug form, a stale bot that skips No Stale, and ideas as Feature Request issues unless Discussions are on.
+    labels:
+      - community
+  - id: shared
+    name: Shared
+    description: Built for others to use. Issues for bugs and drift; input is taken when it fits, otherwise people fork.
+    issues: Blank issues allowed, no stale bot.
+    labels:
+      - shared
+  - id: library
+    name: Library
+    description: Follows my apps and setup. Issues for bugs; the README says to fork for other needs.
+    issues: Blank issues allowed, no stale bot.
+    labels: []
+  - id: personal
+    name: Personal
+    description: My own issue tracker.
+    issues: Blank issues allowed, no stale bot.
+    labels: []

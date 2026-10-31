@@ -37,16 +37,26 @@ depends = ["install"]
 run = "bun run --filter './packages/*' format:check"
 
 [tasks.gen]
-description = "Generate every token target and generated docs page from the theme documents"
+description = "Generate every token target, the conventions data and the generated docs pages"
 depends = ["install"]
-dir = "packages/tokens"
-run = "bun run gen"
+run = [
+  "bun run --cwd packages/tokens gen",
+  "bun run --cwd packages/conventions gen",
+]
 
 [tasks."gen:check"]
-description = "Check generated files match the theme documents"
+description = "Check generated files match the theme documents and conventions"
 depends = ["install"]
-dir = "packages/tokens"
-run = "bun run gen:check"
+run = [
+  "bun run --cwd packages/tokens gen:check",
+  "bun run --cwd packages/conventions gen:check",
+]
+
+[tasks.conventions]
+description = "Check the label sets, repository kinds and repository files"
+depends = ["install"]
+dir = "packages/conventions"
+run = "bun run check"
 
 [tasks.contrast]
 description = "Check every core theme meets its contrast targets"
@@ -99,5 +109,12 @@ dir = "packages/bump-consumers"
 run = "bun run src/bump-consumers.ts"
 
 [tasks.check]
-description = "Lint, type-check, verify formatting, generated files and contrast"
-depends = ["lint", "typecheck", "format:check", "gen:check", "contrast"]
+description = "Lint, type-check, verify formatting, generated files, contrast and conventions"
+depends = [
+  "lint",
+  "typecheck",
+  "format:check",
+  "gen:check",
+  "contrast",
+  "conventions",
+]

@@ -1,0 +1,6 @@
+---
+repo: timmo001/ha-card-calendar-agenda
+kind: community
+renovate:
+  - GitHub Actions
+  - JavaScript

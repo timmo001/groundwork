@@ -43,6 +43,14 @@ usage and development.
   `mise run check` fails when they're stale or a core theme misses a contrast
   target.
 
+## Conventions
+
+- Repository kinds and the label manifest are data in `conventions/`. Every
+  repository has a file in `conventions/repos/` with its kind; private ones
+  live outside this repo in `$XDG_CONFIG_HOME/groundwork/conventions/repos`.
+- `mise run check` fails when a label is defined two ways, a description
+  breaks the voice, or two colours in a repository are too close in OKLab.
+
 ## docs-kit
 
 The package lives in `packages/docs-kit/` and is the only one published.

@@ -1,0 +1,6 @@
+---
+repo: timmo001/oxlint-rules
+kind: library
+renovate:
+  - GitHub Actions
+  - JavaScript

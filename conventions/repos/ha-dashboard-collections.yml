@@ -1,0 +1,6 @@
+---
+repo: timmo001/ha-dashboard-collections
+kind: community
+renovate:
+  - GitHub Actions
+  - JavaScript

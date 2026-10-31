@@ -1,0 +1,6 @@
+---
+repo: timmo001/context
+kind: library
+renovate:
+  - GitHub Actions
+  - JavaScript

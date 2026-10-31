@@ -1,0 +1,10 @@
+---
+repo: timmo001/ha-bridge
+kind: shared
+renovate:
+  - GitHub Actions
+  - JavaScript
+areas:
+  - name: Published API
+    description: Related to the @timmo001/effect-ha and @timmo001/effect-ha-bridge exports
+    colour: "a16207"

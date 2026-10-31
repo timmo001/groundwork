@@ -1,0 +1,6 @@
+---
+repo: timmo001/agent-checks
+kind: library
+renovate:
+  - GitHub Actions
+  - JavaScript

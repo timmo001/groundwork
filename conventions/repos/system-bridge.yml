@@ -1,0 +1,46 @@
+---
+repo: timmo001/system-bridge
+kind: community
+discussions: true
+sets:
+  - priority
+  - os
+renovate:
+  - GitHub Actions
+  - Go
+  - JavaScript
+  - Python
+areas:
+  - name: Backend
+    description: Related to the Go backend, its data modules and APIs
+    colour: "4d7c0f"
+  - name: CLI
+    description: Related to the command-line interface
+    colour: "795548"
+  - name: Web Client
+    description: Related to the web client
+    colour: "3949ab"
+  - name: MCP Server
+    description: Related to the MCP server
+    colour: "d876e3"
+  - name: Omarchy Plugin
+    description: Related to the Omarchy plugin
+    colour: "26a69a"
+  - name: Packaging
+    description: Related to installers and packages
+    colour: "a1887f"
+  - name: Python Connector
+    description: Related to the systembridgeconnector Python package
+    colour: "1e3a8a"
+  - name: TypeScript Connector
+    description: Related to the @timmo001/effect-system-bridge package
+    colour: "818cf8"
+  - name: Home Assistant
+    description: Related to the Home Assistant integration
+    colour: "03a9f4"
+  - name: Legacy
+    description: Related to the old application, which is no longer developed
+    colour: "57534e"
+keep:
+  - hacktoberfest
+  - hacktoberfest-accepted

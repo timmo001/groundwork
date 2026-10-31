@@ -1,0 +1,6 @@
+---
+repo: timmo001/float-app
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

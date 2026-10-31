@@ -1,0 +1,6 @@
+---
+repo: timmo001/ha-card-energy-breakdown
+kind: community
+renovate:
+  - GitHub Actions
+  - JavaScript

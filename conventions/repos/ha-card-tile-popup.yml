@@ -1,0 +1,6 @@
+---
+repo: timmo001/ha-card-tile-popup
+kind: community
+renovate:
+  - GitHub Actions
+  - JavaScript

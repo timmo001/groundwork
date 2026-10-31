@@ -1,0 +1,6 @@
+---
+repo: timmo001/app-opencode
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

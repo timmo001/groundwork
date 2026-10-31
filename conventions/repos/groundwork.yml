@@ -1,0 +1,6 @@
+---
+repo: timmo001/groundwork
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

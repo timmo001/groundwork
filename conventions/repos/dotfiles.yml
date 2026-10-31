@@ -1,0 +1,10 @@
+---
+repo: timmo001/dotfiles
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript
+keep:
+  - skill-update
+  - skill-updates-dashboard
+  - agent:ready

@@ -1,0 +1,5 @@
+---
+repo: timmo001/omarchy-momentumctl
+kind: shared
+renovate:
+  - GitHub Actions

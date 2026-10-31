@@ -1,0 +1,6 @@
+---
+repo: timmo001/timmo.dev
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

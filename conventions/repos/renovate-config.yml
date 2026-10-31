@@ -1,0 +1,5 @@
+---
+repo: timmo001/renovate-config
+kind: personal
+renovate:
+  - GitHub Actions

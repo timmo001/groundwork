@@ -18,6 +18,7 @@
         "@fontsource-variable/mona-sans": "5.3.0",
         "@fontsource-variable/noto-sans": "5.3.0",
         "@fontsource/ibm-plex-sans": "5.3.0",
+        "@groundwork/conventions": "workspace:*",
         "@groundwork/tokens": "workspace:*",
         "@timmo001/docs-kit": "workspace:*",
         "blume": "2.2.6",
@@ -34,6 +35,23 @@
       "dependencies": {
         "@effect/platform-node": "4.1.1",
         "@timmo001/effect-gh": "0.9.2",
+        "effect": "4.1.1",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
+    "packages/conventions": {
+      "name": "@groundwork/conventions",
+      "dependencies": {
+        "@effect/platform-node": "4.1.1",
+        "@groundwork/tokens": "workspace:*",
         "effect": "4.1.1",
       },
       "devDependencies": {
@@ -301,6 +319,8 @@
     "@fontsource-variable/noto-sans": ["@fontsource-variable/noto-sans@5.3.0", "", {}, "sha512-e3ZuxzY9AL2psXPZlhwhnYrHUHv6PMoyK9MQ7croF0CUgURLqu9EMjW7q2FgVLwij1tjLsIHQrnwQ8aUcg4BiA=="],
 
     "@fontsource/ibm-plex-sans": ["@fontsource/ibm-plex-sans@5.3.0", "", {}, "sha512-CbE4CbbEEZJX860XyUiRpsksXIQR8Rp2XDva2VO53NJox9tVNtusrysd2x5YkUEY3ErQ66W1IiiQL8/wihhw5w=="],
+
+    "@groundwork/conventions": ["@groundwork/conventions@workspace:packages/conventions"],
 
     "@groundwork/tokens": ["@groundwork/tokens@workspace:packages/tokens"],
 

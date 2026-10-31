@@ -1,0 +1,929 @@
+{
+  "kinds": [
+    {
+      "id": "community",
+      "name": "Community",
+      "description": "Open to ideas and contributions when they don't break my flow.",
+      "issues": "A bug form, a stale bot that skips No Stale, and ideas as Feature Request issues unless Discussions are on.",
+      "labels": [
+        "community"
+      ]
+    },
+    {
+      "id": "shared",
+      "name": "Shared",
+      "description": "Built for others to use. Issues for bugs and drift; input is taken when it fits, otherwise people fork.",
+      "issues": "Blank issues allowed, no stale bot.",
+      "labels": [
+        "shared"
+      ]
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "description": "Follows my apps and setup. Issues for bugs; the README says to fork for other needs.",
+      "issues": "Blank issues allowed, no stale bot.",
+      "labels": []
+    },
+    {
+      "id": "personal",
+      "name": "Personal",
+      "description": "My own issue tracker.",
+      "issues": "Blank issues allowed, no stale bot.",
+      "labels": []
+    }
+  ],
+  "sets": [
+    {
+      "id": "type",
+      "name": "Type",
+      "scope": "every",
+      "labels": [
+        {
+          "name": "Bug",
+          "description": "Something isn't working as it should",
+          "colour": "d73a4a"
+        },
+        {
+          "name": "Bug Fix",
+          "description": "Fixes a bug",
+          "colour": "c5236e",
+          "aliases": [
+            "bugfix"
+          ]
+        },
+        {
+          "name": "Feature",
+          "description": "Adds a new feature or option",
+          "colour": "0e8a16",
+          "aliases": [
+            "new-feature"
+          ]
+        },
+        {
+          "name": "Enhancement",
+          "description": "Improves an existing feature",
+          "colour": "84b6eb"
+        },
+        {
+          "name": "Refactor",
+          "description": "Restructures code without changing behaviour",
+          "colour": "5319e7"
+        },
+        {
+          "name": "Performance",
+          "description": "Improves performance without adding features",
+          "colour": "09abc4"
+        },
+        {
+          "name": "Breaking Change",
+          "description": "Changes behaviour existing users rely on",
+          "colour": "b60205",
+          "aliases": [
+            "breaking-change"
+          ]
+        },
+        {
+          "name": "Security",
+          "description": "A security issue that needs fixing as soon as possible",
+          "colour": "ee0701"
+        },
+        {
+          "name": "Documentation",
+          "description": "Related to the docs site, README or other documentation",
+          "colour": "0052cc"
+        },
+        {
+          "name": "Tests",
+          "description": "Related to tests",
+          "colour": "10b981"
+        },
+        {
+          "name": "CI",
+          "description": "Related to GitHub workflows and continuous integration",
+          "colour": "6e7781"
+        },
+        {
+          "name": "Maintenance",
+          "description": "General upkeep and housekeeping",
+          "colour": "2af79e"
+        },
+        {
+          "name": "Dependencies",
+          "description": "Upgrades or downgrades dependencies",
+          "colour": "0366d6"
+        },
+        {
+          "name": "Agents",
+          "description": "Changes to agent instructions, skills and related configuration",
+          "colour": "8b5cf6"
+        },
+        {
+          "name": "Accessibility",
+          "description": "Affects people using assistive technology, keyboards or high contrast",
+          "colour": "f143ab"
+        }
+      ]
+    },
+    {
+      "id": "status",
+      "name": "Status",
+      "scope": "every",
+      "labels": [
+        {
+          "name": "Planned",
+          "description": "Accepted and planned to be implemented",
+          "colour": "1d76db"
+        },
+        {
+          "name": "Ready",
+          "description": "Unblocked and ready to start",
+          "colour": "7ee787"
+        },
+        {
+          "name": "In Progress",
+          "description": "Someone is working on this",
+          "colour": "fbca04",
+          "aliases": [
+            "in-progress"
+          ]
+        },
+        {
+          "name": "Needs Decision",
+          "description": "Waiting on a decision before work can start",
+          "colour": "d4c5f9"
+        },
+        {
+          "name": "Needs Research",
+          "description": "Needs looking into before it can be planned",
+          "colour": "0f766e",
+          "aliases": [
+            "needs-research",
+            "Needs Investigation",
+            "investigation"
+          ]
+        },
+        {
+          "name": "Blocked",
+          "description": "Blocked by something else and can't continue",
+          "colour": "6a040f"
+        },
+        {
+          "name": "On Hold",
+          "description": "Paused until something else is done or decided",
+          "colour": "f2ea98"
+        },
+        {
+          "name": "Future",
+          "description": "Wanted, but for a later round",
+          "colour": "c5def5"
+        }
+      ]
+    },
+    {
+      "id": "resolution",
+      "name": "Resolution",
+      "scope": "every",
+      "labels": [
+        {
+          "name": "Duplicate",
+          "description": "This issue or pull request already exists",
+          "colour": "cfd3d7"
+        },
+        {
+          "name": "Invalid",
+          "description": "Not valid or not applicable to this project",
+          "colour": "9ca3af"
+        },
+        {
+          "name": "Won't Fix",
+          "description": "This will not be worked on",
+          "colour": "ffffff",
+          "aliases": [
+            "wontfix"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "priority",
+      "name": "Priority",
+      "scope": "opt-in",
+      "labels": [
+        {
+          "name": "Priority: Critical",
+          "description": "Needs fixing as soon as possible",
+          "colour": "9a3412",
+          "aliases": [
+            "priority-critical"
+          ]
+        },
+        {
+          "name": "Priority: High",
+          "description": "Next to be dealt with after critical issues",
+          "colour": "ea580c",
+          "aliases": [
+            "priority-high"
+          ]
+        },
+        {
+          "name": "Priority: Medium",
+          "description": "Useful and needs some attention",
+          "colour": "fdba74",
+          "aliases": [
+            "priority-medium"
+          ]
+        },
+        {
+          "name": "Priority: Low",
+          "description": "Nice to have, maybe someday",
+          "colour": "fed7aa",
+          "aliases": [
+            "priority-low"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "renovate",
+      "name": "Renovate",
+      "scope": "opt-in",
+      "labels": [
+        {
+          "name": "GitHub Actions",
+          "description": "Updates GitHub Actions",
+          "colour": "000000",
+          "aliases": [
+            "github_actions"
+          ]
+        },
+        {
+          "name": "Go",
+          "description": "Updates Go code or modules",
+          "colour": "007d9c"
+        },
+        {
+          "name": "JavaScript",
+          "description": "Updates JavaScript or TypeScript code or packages",
+          "colour": "f1e05a"
+        },
+        {
+          "name": "Python",
+          "description": "Updates Python code or packages",
+          "colour": "3572a5"
+        }
+      ]
+    },
+    {
+      "id": "community",
+      "name": "Community extras",
+      "scope": "kind",
+      "labels": [
+        {
+          "name": "Needs More Information",
+          "description": "More information is needed before this can continue",
+          "colour": "fca5a5",
+          "aliases": [
+            "incomplete"
+          ]
+        },
+        {
+          "name": "Waiting for Reply",
+          "description": "Waiting for the author to reply",
+          "colour": "ffee58",
+          "aliases": [
+            "waiting-for-response"
+          ]
+        },
+        {
+          "name": "Unable to Reproduce",
+          "description": "Can't be reproduced, may be down to configuration or the system",
+          "colour": "bdb76b",
+          "aliases": [
+            "unable-to-reproduce"
+          ]
+        },
+        {
+          "name": "Upstream Issue",
+          "description": "Caused by a dependency or the operating system, not this project",
+          "colour": "f2733c"
+        },
+        {
+          "name": "Feature Request",
+          "description": "An idea to weigh, or a discussion where Discussions are on",
+          "colour": "f9f92f"
+        },
+        {
+          "name": "Good First Issue",
+          "description": "Suitable for first-time contributors",
+          "colour": "7057ff",
+          "aliases": [
+            "beginner-friendly"
+          ]
+        },
+        {
+          "name": "Help Wanted",
+          "description": "Extra hands or expertise are needed to resolve this",
+          "colour": "159818",
+          "aliases": [
+            "help-wanted"
+          ]
+        },
+        {
+          "name": "Stale",
+          "description": "No activity for some time, marked by the stale bot",
+          "colour": "ededed"
+        },
+        {
+          "name": "No Stale",
+          "description": "The stale bot won't mark or close this",
+          "colour": "89b875",
+          "aliases": [
+            "no-stale"
+          ]
+        },
+        {
+          "name": "Version: Major",
+          "description": "Needs a major version bump",
+          "colour": "8e1c0b",
+          "aliases": [
+            "major"
+          ]
+        },
+        {
+          "name": "Version: Minor",
+          "description": "Needs a minor version bump",
+          "colour": "c2e0c6",
+          "aliases": [
+            "minor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shared",
+      "name": "Shared extras",
+      "scope": "kind",
+      "labels": [
+        {
+          "name": "Upstream Issue",
+          "description": "Caused by a dependency or the operating system, not this project",
+          "colour": "f2733c"
+        },
+        {
+          "name": "Needs More Information",
+          "description": "More information is needed before this can continue",
+          "colour": "fca5a5",
+          "aliases": [
+            "incomplete"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "os",
+      "name": "Operating system",
+      "scope": "opt-in",
+      "labels": [
+        {
+          "name": "OS: Linux",
+          "description": "Specific to Linux",
+          "colour": "7c6f64"
+        },
+        {
+          "name": "OS: Windows",
+          "description": "Specific to Windows",
+          "colour": "475569"
+        },
+        {
+          "name": "OS: macOS",
+          "description": "Specific to macOS",
+          "colour": "334155"
+        }
+      ]
+    },
+    {
+      "id": "tests",
+      "name": "Test kinds",
+      "scope": "opt-in",
+      "labels": [
+        {
+          "name": "Tests: Unit",
+          "description": "Related to unit tests",
+          "colour": "0d9488"
+        },
+        {
+          "name": "Tests: E2E",
+          "description": "Related to end-to-end tests",
+          "colour": "2dd4bf"
+        }
+      ]
+    }
+  ],
+  "repos": [
+    {
+      "repo": "timmo001/agent-checks",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/app-opencode",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/arch-repo",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 27
+    },
+    {
+      "repo": "timmo001/chromium-relaunch-as-app",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/context",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/dotfiles",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/effect-gh",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/float-app",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/groundwork",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/ha-bridge",
+      "kind": "shared",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "shared"
+      ],
+      "areas": [
+        {
+          "name": "Published API",
+          "description": "Related to the @timmo001/effect-ha and @timmo001/effect-ha-bridge exports",
+          "colour": "a16207"
+        }
+      ],
+      "labels": 31
+    },
+    {
+      "repo": "timmo001/ha-card-anchor",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-card-calendar-agenda",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-card-energy-breakdown",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-card-feature-state",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-card-feature-weather-forecast",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-card-tile-popup",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-dashboard-collections",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/ha-dashboard-maintenance",
+      "kind": "community",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "community"
+      ],
+      "areas": [],
+      "labels": 39
+    },
+    {
+      "repo": "timmo001/herdr-mascot",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/home-assistant-apps",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 27
+    },
+    {
+      "repo": "timmo001/notes",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/omarchy-clock",
+      "kind": "shared",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "shared"
+      ],
+      "areas": [],
+      "labels": 29
+    },
+    {
+      "repo": "timmo001/omarchy-momentumctl",
+      "kind": "shared",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "shared"
+      ],
+      "areas": [],
+      "labels": 29
+    },
+    {
+      "repo": "timmo001/oxlint-rules",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/renovate-config",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 27
+    },
+    {
+      "repo": "timmo001/site-defluffer",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/skills",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/system-bridge",
+      "kind": "community",
+      "discussions": true,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "priority",
+        "community",
+        "os"
+      ],
+      "areas": [
+        {
+          "name": "Backend",
+          "description": "Related to the Go backend, its data modules and APIs",
+          "colour": "4d7c0f"
+        },
+        {
+          "name": "CLI",
+          "description": "Related to the command-line interface",
+          "colour": "795548"
+        },
+        {
+          "name": "Web Client",
+          "description": "Related to the web client",
+          "colour": "3949ab"
+        },
+        {
+          "name": "MCP Server",
+          "description": "Related to the MCP server",
+          "colour": "d876e3"
+        },
+        {
+          "name": "Omarchy Plugin",
+          "description": "Related to the Omarchy plugin",
+          "colour": "26a69a"
+        },
+        {
+          "name": "Packaging",
+          "description": "Related to installers and packages",
+          "colour": "a1887f"
+        },
+        {
+          "name": "Python Connector",
+          "description": "Related to the systembridgeconnector Python package",
+          "colour": "1e3a8a"
+        },
+        {
+          "name": "TypeScript Connector",
+          "description": "Related to the @timmo001/effect-system-bridge package",
+          "colour": "818cf8"
+        },
+        {
+          "name": "Home Assistant",
+          "description": "Related to the Home Assistant integration",
+          "colour": "03a9f4"
+        },
+        {
+          "name": "Legacy",
+          "description": "Related to the old application, which is no longer developed",
+          "colour": "57534e"
+        }
+      ],
+      "labels": 58
+    },
+    {
+      "repo": "timmo001/timmo.dev",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/tooling-drift",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/triage",
+      "kind": "shared",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "shared"
+      ],
+      "areas": [
+        {
+          "name": "Home Assistant",
+          "description": "Related to the Home Assistant app and collecting from Home Assistant",
+          "colour": "03a9f4"
+        },
+        {
+          "name": "Collection",
+          "description": "Related to what the agent captures and where from",
+          "colour": "4f46e5"
+        },
+        {
+          "name": "Decision Models",
+          "description": "Related to the decision models and how they're used",
+          "colour": "c084fc"
+        },
+        {
+          "name": "Notifications",
+          "description": "Related to telling you about issues",
+          "colour": "fb923c"
+        },
+        {
+          "name": "Hosting",
+          "description": "Related to where and how the server runs",
+          "colour": "065f46"
+        },
+        {
+          "name": "Web UI",
+          "description": "Related to the web UI",
+          "colour": "006b75"
+        },
+        {
+          "name": "Demo",
+          "description": "Related to the web UI demo with fake data",
+          "colour": "a7f3d0"
+        }
+      ],
+      "labels": 37
+    },
+    {
+      "repo": "timmo001/upnext",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
+      "repo": "timmo001/workflows",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    }
+  ]
+}

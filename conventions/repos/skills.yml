@@ -1,0 +1,6 @@
+---
+repo: timmo001/skills
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

@@ -1,5 +1,6 @@
 import {
   converter,
+  differenceEuclidean,
   formatHex,
   formatHex8,
   parse,
@@ -61,6 +62,11 @@ export const toCss = (colour: Oklch) => {
 
   return `oklch(${round(l * 100, 2)}% ${round(c, 4)} ${round(h, 2)}${alpha})`;
 };
+
+const oklabDistance = differenceEuclidean("oklab");
+
+/** How far apart two hex colours look, as the Euclidean distance in OKLab. */
+export const distance = (a: string, b: string) => oklabDistance(a, b);
 
 /** The WCAG 2 contrast ratio between two colours, ignoring alpha. */
 export const contrast = (a: Oklch, b: Oklch) =>

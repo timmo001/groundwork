@@ -1,0 +1,6 @@
+---
+repo: timmo001/herdr-mascot
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

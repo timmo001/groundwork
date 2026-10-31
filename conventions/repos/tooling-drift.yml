@@ -1,0 +1,6 @@
+---
+repo: timmo001/tooling-drift
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

@@ -1,0 +1,6 @@
+---
+repo: timmo001/ha-card-feature-state
+kind: community
+renovate:
+  - GitHub Actions
+  - JavaScript

@@ -1,0 +1,6 @@
+---
+repo: timmo001/effect-gh
+kind: library
+renovate:
+  - GitHub Actions
+  - JavaScript

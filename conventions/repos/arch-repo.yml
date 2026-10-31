@@ -1,0 +1,5 @@
+---
+repo: timmo001/arch-repo
+kind: personal
+renovate:
+  - GitHub Actions

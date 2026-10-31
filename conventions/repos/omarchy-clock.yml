@@ -1,0 +1,5 @@
+---
+repo: timmo001/omarchy-clock
+kind: shared
+renovate:
+  - GitHub Actions

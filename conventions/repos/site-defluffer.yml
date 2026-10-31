@@ -1,0 +1,6 @@
+---
+repo: timmo001/site-defluffer
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript

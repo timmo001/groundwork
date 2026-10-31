@@ -1,0 +1,5 @@
+---
+repo: timmo001/home-assistant-apps
+kind: personal
+renovate:
+  - GitHub Actions
