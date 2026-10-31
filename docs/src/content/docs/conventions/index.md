@@ -14,11 +14,14 @@ Every repository has a kind. It sets how open the repository is to outside input
 
 Discussions go by size, not kind. A big community project routes questions and ideas to Discussions; a smaller one takes ideas as issues labelled Feature Request.
 
-## Issues
+## Tracking work
 
-- Work is tracked in issues, with sub-issues, parents and blocked-by relationships set.
-- Plans, mocks, research and decisions live as artifacts on the issue they belong to, so the issue carries its own design history.
-- One label scheme everywhere, so an overview can track issues the same way across every repository.
+Work is tracked in one of two places:
+
+- **In public, in issues**, with sub-issues, parents and blocked-by relationships set. Plans, mocks, research and decisions live as artifacts on the issue they belong to, so the issue carries its own design history. One label scheme everywhere, so an overview can track issues the same way across every repository.
+- **In private, alongside the agent**: the [Plannotator](https://github.com/backnotprop/plannotator) board and Inbox threads, Plannotator plans shared as links, [notes](https://github.com/timmo001/notes) and handoffs (notes flagged for the next session), and local Markdown and scratch files.
+
+Private tracking suits work that isn't ready to share or doesn't belong in public. When it turns into work on a public repository, it moves into issues there.
 
 ## The manifest
 
