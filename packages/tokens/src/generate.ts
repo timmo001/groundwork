@@ -225,11 +225,11 @@ const blumeDeclarations = (properties: Record<string, string>) =>
     .join("\n");
 
 /**
- * One theme as Blume's tokens, for docs-kit: light on `:root` and dark on
- * Blume's `data-theme="dark"`. Fonts are stacks, so the site loads the files.
+ * A theme's Blume rules under one root selector: light on the root, dark on
+ * Blume's `data-theme="dark"`, and Darker when `data-gw-darker` is set too.
  */
-export const blumeTheme = (theme: ResolvedTheme) => {
-  const { light, dark } = theme.modes;
+const blumeRules = (theme: ResolvedTheme, root: string) => {
+  const { light, dark, darker } = theme.modes;
 
   const style = {
     radius: `${theme.style.radius.panel}px`,
@@ -241,20 +241,47 @@ export const blumeTheme = (theme: ResolvedTheme) => {
   const lightTokens: Record<string, string> =
     light === undefined ? style : { ...style, ...blumeColours(light) };
 
-  const blocks = [
-    `/* ${header} */`,
-    `/* ${theme.name}: ${theme.description} */`,
-    `:root {\n${blumeDeclarations(lightTokens)}\n}`,
-  ];
+  const rules = [`${root} {\n${blumeDeclarations(lightTokens)}\n}`];
 
   if (dark !== undefined) {
-    blocks.push(
-      `:root[data-theme="dark"] {\n${blumeDeclarations(blumeColours(dark))}\n}`,
+    rules.push(
+      `${root}[data-theme="dark"] {\n${blumeDeclarations(blumeColours(dark))}\n}`,
     );
   }
 
-  return blocks.join("\n\n") + "\n";
+  if (darker !== undefined) {
+    rules.push(
+      `${root}[data-theme="dark"][data-gw-darker] {\n${blumeDeclarations(blumeColours(darker))}\n}`,
+    );
+  }
+
+  return rules;
 };
+
+/**
+ * One theme as Blume's tokens, for docs-kit. Fonts are stacks, so the site
+ * loads the files.
+ */
+export const blumeTheme = (theme: ResolvedTheme) =>
+  [
+    `/* ${header} */`,
+    `/* ${theme.name}: ${theme.description} */`,
+    ...blumeRules(theme, ":root"),
+  ].join("\n\n") + "\n";
+
+/**
+ * Every core theme as Blume's tokens, each under `data-gw-docs-theme`, for a
+ * site that lets readers pick one with the theme picker.
+ */
+export const blumeThemes = (themes: readonly ResolvedTheme[]) =>
+  [
+    `/* ${header} */`,
+    ...themes
+      .filter((theme) => !theme.optional)
+      .flatMap((theme) =>
+        blumeRules(theme, `:root[data-gw-docs-theme="${theme.id}"]`),
+      ),
+  ].join("\n\n") + "\n";
 
 const hexRoles = (roles: Roles) =>
   Object.fromEntries(

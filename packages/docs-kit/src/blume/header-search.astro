@@ -2,13 +2,21 @@
 import Search from "blume/components/layout/Search.astro";
 import { SOCIAL_ICONS } from "blume/components/layout/footer-socials.ts";
 import data from "blume:data";
+import ThemePicker from "./theme-picker.astro";
+
+/**
+ * `themes` and `defaultTheme` go to the theme picker; everything else Blume
+ * passes goes to its search.
+ */
+const { themes, defaultTheme, ...searchProps } = Astro.props;
 
 const repoUrl = data.config.repoUrl;
 
 const github = SOCIAL_ICONS.github;
 ---
 
-<Search {...Astro.props} />
+<Search {...searchProps} />
+<ThemePicker themes={themes} defaultTheme={defaultTheme} />
 {
   repoUrl && (
     <a

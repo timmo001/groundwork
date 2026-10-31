@@ -98,11 +98,34 @@ Glazing, Survey, Slate, Bridge or Snag:
 @import "@timmo001/docs-kit/blume/themes/bridge.css";
 ```
 
-It sets Blume's colours, radius and fonts from the theme in light and dark, so
-leave `theme.accent` out of `blume.config.ts`. The fonts are stacks, so load
-the theme's font files in `theme.css` too, for example with
+It sets Blume's colours, radius and fonts from the theme in light, dark and
+Darker, so leave `theme.accent` out of `blume.config.ts`. The fonts are stacks,
+so load the theme's font files in `theme.css` too, for example with
 `@import "@fontsource-variable/inter";`. Use Base until the app has a theme of
 its own.
+
+`HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
+Light, Dark and Darker. To let readers pick the theme as well, import every
+theme after the site's default and pass the themes to `HeaderSearch` from a
+wrapper component:
+
+```css
+@import "@timmo001/docs-kit/blume/themes/base.css";
+@import "@timmo001/docs-kit/blume/themes/all.css";
+```
+
+```astro
+---
+import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
+
+const themes = [
+  { id: "base", name: "Base" },
+  { id: "bridge", name: "Bridge" },
+];
+---
+
+<HeaderSearch {...Astro.props} themes={themes} defaultTheme="base" />
+```
 
 Set these in `theme.css` to change the banner:
 

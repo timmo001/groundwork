@@ -5,6 +5,7 @@ import { Command, Flag } from "effect/cli";
 import {
   ansi,
   blumeTheme,
+  blumeThemes,
   contrastPage,
   css,
   json,
@@ -94,6 +95,7 @@ const outputs = Effect.fn("outputs")(function* (
             output(docsKit(`${theme.id}.css`), blumeTheme(theme)),
           ],
     ),
+    output(docsKit("all.css"), blumeThemes(themes)),
     output(docs("optional.mdx"), optionalPage(themes)),
     output(generated("themes.css"), css(themes)),
     output(generated("themes.json"), json(themes)),

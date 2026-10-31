@@ -30,7 +30,9 @@ on `main`, follow the installed release.
    `@import "@timmo001/docs-kit/blume/themes/bridge.css";` (Base until the app
    has its own), and the theme's font files. Leave `theme.accent` out of the
    config. Put site overrides, such as the `--home-banner-*` properties, after
-   them.
+   them. `HeaderSearch` brings a Light, Dark and Darker picker; to offer every
+   theme, import `themes/all.css` too and pass `themes` to `HeaderSearch` from
+   a wrapper, as the README shows.
 5. Generate brand images with `writeBrandImages` from a site script rather than
    a copied generator. Commit the PNGs it writes. Remind the user that GitHub's
    social preview needs a manual upload.
