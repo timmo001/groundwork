@@ -11,7 +11,7 @@ import { parseFlags, printHelp, resolveSubcommand } from "./flags.js";
 import { menuItemsById, registerUpdates } from "./menu.js";
 import { createCommandRunner } from "./services/command-runner.js";
 import { createItemsRunner } from "./services/items.js";
-import { loadTheme } from "./theme.js";
+import { loadTheme } from "@timmo001/groundwork-tui";
 import { App } from "./tui/app.js";
 import { Toast } from "./tui/toast.js";
 

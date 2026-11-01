@@ -1,0 +1,41 @@
+{
+  "name": "@timmo001/groundwork-tui",
+  "version": "0.3.1",
+  "description": "Groundwork's terminal components: OpenTUI renderables on the terminal tokens",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/tui"
+  },
+  "scripts": {
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@opentui/core": "0.8.0",
+    "@timmo001/groundwork-tokens": "workspace:*",
+    "effect": "4.1.1"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.90.0",
+    "@timmo001/oxlint-rules": "0.6.3",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.90.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

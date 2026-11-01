@@ -12,9 +12,13 @@ import {
   fg,
 } from "@opentui/core";
 import type { MenuItem } from "../types.js";
-import type { Theme } from "../theme.js";
+import {
+  formatHelpBar,
+  GLOBAL_HELP,
+  type HelpEntry,
+  type Theme,
+} from "@timmo001/groundwork-tui";
 import { mainMenuItems } from "../menu.js";
-import { formatHelpBar, GLOBAL_HELP, type HelpEntry } from "./help-bar.js";
 import { MenuList } from "./menu-list.js";
 
 /** Help entries for the main menu */

@@ -5,7 +5,7 @@
  */
 import type { CliRenderer } from "@opentui/core";
 import type { ViewId, MenuItem, MenuAction } from "../types.js";
-import type { Theme } from "../theme.js";
+import type { Theme } from "@timmo001/groundwork-tui";
 import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
 import type { ItemsRunnerService } from "../services/items.js";

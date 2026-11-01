@@ -13,7 +13,7 @@ import {
   fg,
 } from "@opentui/core";
 import type { ToastVariant } from "../types.js";
-import type { Theme } from "../theme.js";
+import type { Theme } from "@timmo001/groundwork-tui";
 
 /** Auto-dismiss delay per variant (milliseconds) */
 const DISMISS_MS: Record<ToastVariant, number> = {

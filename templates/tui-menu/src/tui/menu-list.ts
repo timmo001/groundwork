@@ -15,7 +15,7 @@ import {
 } from "@opentui/core";
 import Fuse from "fuse.js";
 import type { MenuItem } from "../types.js";
-import type { Theme } from "../theme.js";
+import type { Theme } from "@timmo001/groundwork-tui";
 
 /** Width of the left icon column in characters */
 const ICON_COLUMN_WIDTH = 4;

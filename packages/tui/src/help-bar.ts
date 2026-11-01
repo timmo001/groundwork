@@ -6,7 +6,7 @@
  */
 import { StyledText, fg } from "@opentui/core";
 import type { TextChunk } from "@opentui/core";
-import type { Theme } from "../theme.js";
+import type { Theme } from "./theme.ts";
 
 /** A key-action pair displayed in a help bar */
 export interface HelpEntry {
@@ -34,14 +34,14 @@ const SEPARATOR = "   ";
  * @param theme - Active color theme
  * @param entries - Key-action pairs to display
  * @param suffix - Optional styled suffix appended after the last row (e.g. model ID badge)
+ * @param columns - Width to wrap at, the terminal's by default
  */
 export function formatHelpBar(
   theme: Theme,
   entries: readonly HelpEntry[],
   suffix?: TextChunk,
+  columns: number = process.stdout.columns || 80,
 ): StyledText {
-  const columns = process.stdout.columns || 80;
-
   // Wrap into rows that fit within terminal width using plain-text widths
   const rows: HelpEntry[][] = [];
   let currentWidth = 0;

@@ -12,10 +12,14 @@ import {
   fg,
 } from "@opentui/core";
 import type { MenuItem } from "../types.js";
-import type { Theme } from "../theme.js";
+import {
+  formatBreadcrumb,
+  formatHelpBar,
+  GLOBAL_HELP,
+  type HelpEntry,
+  type Theme,
+} from "@timmo001/groundwork-tui";
 import { submenus, submenuTitles } from "../menu.js";
-import { formatBreadcrumb } from "./breadcrumb.js";
-import { formatHelpBar, GLOBAL_HELP, type HelpEntry } from "./help-bar.js";
 import { MenuList } from "./menu-list.js";
 
 /** Help entries for submenu views */

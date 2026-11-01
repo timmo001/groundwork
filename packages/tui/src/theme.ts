@@ -1,6 +1,7 @@
 /**
- * The TUI's colors, from Groundwork's terminal tokens: the roles of one theme
- * and mode, picked with `GW_THEME` and `GW_MODE` (Base and dark by default).
+ * Terminal colors from Groundwork's tokens: the roles of one theme and mode,
+ * placed into the slots the terminal components use, and picked with
+ * `GW_THEME` and `GW_MODE` (Base and dark by default).
  *
  * @module
  */
@@ -70,6 +71,20 @@ const isTheme = (id: string): id is ThemeId => id in opentuiThemes;
 export const DEFAULT_THEME: Theme = fromRoles(opentuiThemes.base.dark);
 
 /**
+ * A core theme's slots in one mode, or Base and dark when there's no such
+ * theme or mode.
+ */
+export const themeFor = (id: string, mode: string): Theme => {
+  if (!isTheme(id)) return DEFAULT_THEME;
+
+  const roles = Object.entries(opentuiThemes[id]).find(
+    ([name]) => name === mode,
+  )?.[1];
+
+  return roles === undefined ? DEFAULT_THEME : fromRoles(roles);
+};
+
+/**
  * Loads the theme from `GW_THEME` (a core theme's id) and `GW_MODE` (`light`,
  * `dark` or `darker`), falling back to Base and dark.
  */
@@ -81,11 +96,5 @@ export const loadTheme: Effect.Effect<Theme> = Effect.gen(function* () {
     "GW_MODE",
   ).pipe(Config.withDefault("dark"));
 
-  if (!isTheme(id)) return DEFAULT_THEME;
-
-  const roles = Object.entries(opentuiThemes[id]).find(
-    ([name]) => name === mode,
-  )?.[1];
-
-  return roles === undefined ? DEFAULT_THEME : fromRoles(roles);
+  return themeFor(id, mode);
 }).pipe(Effect.orElseSucceed(() => DEFAULT_THEME));

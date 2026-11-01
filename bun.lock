@@ -162,6 +162,24 @@
         "typescript": "7.0.2",
       },
     },
+    "packages/tui": {
+      "name": "@timmo001/groundwork-tui",
+      "version": "0.3.1",
+      "dependencies": {
+        "@opentui/core": "0.8.0",
+        "@timmo001/groundwork-tokens": "workspace:*",
+        "effect": "4.1.1",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
       "version": "0.3.1",
@@ -203,7 +221,7 @@
       "dependencies": {
         "@opentui/core": "0.8.0",
         "@timmo001/groundwork-demo": "workspace:*",
-        "@timmo001/groundwork-tokens": "workspace:*",
+        "@timmo001/groundwork-tui": "workspace:*",
         "effect": "4.1.1",
         "fuse.js": "7.5.0",
       },
@@ -880,6 +898,8 @@
     "@timmo001/groundwork-sync": ["@timmo001/groundwork-sync@workspace:packages/sync"],
 
     "@timmo001/groundwork-tokens": ["@timmo001/groundwork-tokens@workspace:packages/tokens"],
+
+    "@timmo001/groundwork-tui": ["@timmo001/groundwork-tui@workspace:packages/tui"],
 
     "@timmo001/groundwork-ui": ["@timmo001/groundwork-ui@workspace:packages/ui"],
 

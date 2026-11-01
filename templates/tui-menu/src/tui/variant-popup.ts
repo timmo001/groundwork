@@ -16,7 +16,7 @@ import {
   fg,
 } from "@opentui/core";
 import type { MenuAction, MenuItem, MenuVariant } from "../types.js";
-import type { Theme } from "../theme.js";
+import type { Theme } from "@timmo001/groundwork-tui";
 
 /** Width of the popup box in characters */
 const POPUP_WIDTH = 50;

@@ -5,7 +5,7 @@
  */
 import { t, bold, fg } from "@opentui/core";
 import type { StyledText } from "@opentui/core";
-import type { Theme } from "../theme.js";
+import type { Theme } from "./theme.ts";
 
 const SEPARATOR = " › ";
 
