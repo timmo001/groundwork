@@ -253,6 +253,7 @@ const preUpgrade = {
     "min-block-size": "2.5rem",
     "vertical-align": "middle",
   },
+  "gw-theme-gallery": { display: "block" },
   "gw-button[icon]": {
     "padding-inline-start":
       "calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px)",

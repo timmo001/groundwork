@@ -151,6 +151,10 @@ gw-theme-picker:not(:defined) {
   vertical-align: middle;
 }
 
+gw-theme-gallery:not(:defined) {
+  display: block;
+}
+
 gw-button[icon]:not(:defined) {
   padding-inline-start: calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px);
 }

@@ -13193,6 +13193,12 @@
           "kind": "class",
           "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. On\nnarrow screens it's a bottom sheet. Opened without a button, such as after\na save, it sits in the middle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a\nclick on one with a `value` closes it with that value, and fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
           "name": "GwPopover",
+          "cssProperties": [
+            {
+              "description": "Its width beside a button. Defaults to `20rem`.",
+              "name": "--gw-popover-width"
+            }
+          ],
           "slots": [
             {
               "description": "The content.",
@@ -13224,7 +13230,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(20rem, calc(100vw - 2 * ${gap}px)); padding: var(--gw-space-4); margin: 0; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: rgb(0 0 0 / 40%); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-space-4) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); padding: var(--gw-space-4); margin: 0; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: rgb(0 0 0 / 40%); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-space-4) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17760,12 +17766,36 @@
     },
     {
       "kind": "javascript-module",
-      "path": "src/gw-theme-picker.ts",
+      "path": "src/gw-theme-gallery.ts",
       "declarations": [
         {
           "kind": "class",
-          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.",
-          "name": "GwThemePicker",
+          "description": "Picks a theme from a grid of cards, each a small picture of an app in that\ntheme's colors: a rail, a panel and the status tones. For a settings page,\nor inside `gw-theme-picker` with `gallery`.\n\nThemes with a `group` sit together under its name, and lone ones under\n\"Other\", so a family's light and dark variants line up. Previews draw in\n`mode`, or the mode of the page or themed container it sits in, from the\ntheme CSS already on the page, including a custom theme `pageTheme`\nimported. Call `refresh()` after that CSS changes.\n\nIt's a `<fieldset>` of native radio buttons, so arrow keys move the choice.\nIt fires `theme`.",
+          "name": "GwThemeGallery",
+          "cssProperties": [
+            {
+              "description": "The narrowest a card gets. Defaults to `9rem`.",
+              "name": "--gw-theme-gallery-min"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "Each theme's card.",
+              "name": "card"
+            },
+            {
+              "description": "The picture of an app in the theme.",
+              "name": "preview"
+            },
+            {
+              "description": "The theme's name under it.",
+              "name": "name"
+            },
+            {
+              "description": "Each group's heading.",
+              "name": "group"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -17774,7 +17804,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, status: {}, label: {}, }",
+              "default": "{ label: {}, theme: { reflect: true }, themes: { type: \"json\" }, mode: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17787,7 +17817,528 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-block; } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, css` :host { display: block; } fieldset { display: flex; flex-direction: column; gap: var(--gw-space-4); min-width: 0; padding: 0; margin: 0; border: 0; } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } .group { display: grid; grid-template-columns: repeat( auto-fill, minmax(var(--gw-theme-gallery-min, 9rem), 1fr) ); gap: var(--gw-space-3); } .group-name { grid-column: 1 / -1; margin: 0; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); text-transform: var(--gw-label-transform); letter-spacing: var(--gw-label-tracking); } label { position: relative; display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2); cursor: pointer; background: var(--gw-color-surface-raised); border: 2px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } label:hover { border-color: var(--gw-color-border-accent); } label:has(input:checked) { background: var(--gw-color-fill-accent-quiet); border-color: var(--gw-color-accent); } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* A small app in the theme's own colors */ .preview { display: grid; grid-template-columns: 22% 1fr; gap: 6px; height: 5.5rem; padding: 6px; background: var(--p-bg); border-radius: calc(var(--gw-radius-panel) - 2px); } .rail { display: flex; flex-direction: column; gap: 4px; padding: 4px; } .rail i { height: 5px; background: var(--p-muted); border-radius: 3px; opacity: 0.5; } .rail i:first-child { background: var(--p-accent); opacity: 1; } .panel { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 6px; background: var(--p-surface); border: 1px solid var(--p-border); border-radius: min(var(--p-radius), 6px); } .line { width: 60%; height: 5px; background: var(--p-text); border-radius: 3px; } .line.short { width: 40%; background: var(--p-muted); } .bars { display: flex; flex: 1; gap: 3px; align-items: flex-end; } .bars i { flex: 1; border-radius: 2px 2px 0 0; } .name { display: flex; flex-direction: column; padding: 0 var(--gw-space-1) var(--gw-space-1); font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .name small { font-size: var(--gw-font-size-xs); font-weight: normal; color: var(--gw-color-text-secondary); } label:has(input:checked) .name { color: var(--gw-color-accent); } .check { position: absolute; inset-block-start: var(--gw-space-3); inset-inline-end: var(--gw-space-3); display: none; place-items: center; width: 1.5rem; height: 1.5rem; color: var(--gw-color-on-accent); background: var(--gw-color-fill-accent-resting); border-radius: 50%; --gw-icon-size: 1rem; } label:has(input:checked) .check { display: grid; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Theme\""
+            },
+            {
+              "kind": "field",
+              "name": "theme",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "themes",
+              "type": {
+                "text": "readonly OptionItem[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#legend",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#fieldset",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "readonly": true,
+              "default": "`gw-theme-gallery-${Math.random().toString(36).slice(2)}`"
+            },
+            {
+              "kind": "field",
+              "name": "#cards",
+              "privacy": "private",
+              "type": {
+                "text": "{\n    input: HTMLInputElement;\n    preview: HTMLElement;\n    id: string;\n  }[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#scheme",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onScheme",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#modeRoot",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationObserver(() => { if (!this.mode) this.refresh(); })"
+            },
+            {
+              "kind": "method",
+              "name": "#mode",
+              "privacy": "private",
+              "description": "`mode`, or the mode of the page or themed container around it."
+            },
+            {
+              "kind": "method",
+              "name": "refresh",
+              "description": "Redraws the previews from the page's theme CSS, such as after an import."
+            },
+            {
+              "kind": "method",
+              "name": "#card",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "theme",
+                  "type": {
+                    "text": "OptionItem"
+                  }
+                },
+                {
+                  "name": "inOther",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "theme",
+              "type": {
+                "text": "CustomEvent<{ id: string }>"
+              },
+              "description": "When a theme is picked."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The group's accessible name. Defaults to `Theme`.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The chosen theme, by id.",
+              "name": "theme"
+            },
+            {
+              "type": {
+                "text": "OptionItem[]"
+              },
+              "description": "The themes, as JSON: `value` is the id, `label` the name, and `group` the family.",
+              "name": "themes"
+            },
+            {
+              "type": {
+                "text": "\"auto\"|\"light\"|\"dark\"|\"darker\""
+              },
+              "description": "The mode the previews show. Defaults to the mode it sits in.",
+              "name": "mode"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-theme-gallery",
+          "customElement": true,
+          "summary": "Picks a theme from cards that preview each one."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwThemeGallery",
+          "declaration": {
+            "name": "GwThemeGallery",
+            "module": "src/gw-theme-gallery.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-theme-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.",
+          "name": "GwThemePicker",
+          "cssParts": [
+            {
+              "description": "The theme gallery, with `gallery`.",
+              "name": "gallery"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17816,6 +18367,14 @@
                 "text": "readonly OptionItem[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "gallery",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
             },
             {
               "kind": "field",
@@ -17848,6 +18407,12 @@
             {
               "kind": "field",
               "name": "#theme",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#gallery",
               "privacy": "private",
               "readonly": true
             },
@@ -18254,8 +18819,15 @@
               "type": {
                 "text": "OptionItem[]"
               },
-              "description": "The themes to offer, as JSON.",
+              "description": "The themes to offer, as JSON. With `gallery`, a `group` gathers a family's themes.",
               "name": "themes"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows the themes as preview cards rather than a select.",
+              "name": "gallery"
             },
             {
               "type": {
@@ -19004,6 +19576,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-spinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-theme-gallery.js"
           }
         },
         {

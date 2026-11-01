@@ -208,6 +208,31 @@ picker.addEventListener("import", async (event) => {
 });
 ```
 
+Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme-gallery) does, rather than a select:
+
+<Demo id="theme-picker-gallery">
+  <gw-theme-picker gallery theme="snag" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"},{"value":"slate","label":"Slate"},{"value":"bridge","label":"Bridge"},{"value":"snag","label":"Snag"}]'></gw-theme-picker>
+</Demo>
+
+## Theme gallery
+
+<Demo id="theme-gallery" layout="stack">
+  <gw-theme-gallery theme="catppuccin-mocha" themes='[{"value":"base","label":"Base","group":"Groundwork"},{"value":"glazing","label":"Glazing","group":"Groundwork"},{"value":"survey","label":"Survey","group":"Groundwork"},{"value":"slate","label":"Slate","group":"Groundwork"},{"value":"bridge","label":"Bridge","group":"Groundwork"},{"value":"snag","label":"Snag","group":"Groundwork"},{"value":"catppuccin-latte","label":"Latte","group":"Catppuccin"},{"value":"catppuccin-frappe","label":"Frappé","group":"Catppuccin"},{"value":"catppuccin-macchiato","label":"Macchiato","group":"Catppuccin"},{"value":"catppuccin-mocha","label":"Mocha","group":"Catppuccin"},{"value":"tokyo-night","label":"Tokyo Night","group":"Tokyo Night"}]'></gw-theme-gallery>
+</Demo>
+
+Cards that each show a small app in a theme's colors: a rail, a panel and the status tones. It's for a settings page, or the theme picker's popover with `gallery`. Picking one fires `theme` with its `id`, as the picker does, so it pairs with [`pageTheme`](/themes/#on-a-page) the same way.
+
+Give themes a `group` to keep a family together, such as a theme's light and dark variants. A group with only one theme joins the others like it under Other, at the end. The previews draw in `mode` from the theme CSS already on the page, so a custom theme `pageTheme` imported shows too. Call `refresh()` after an import changes that CSS.
+
+| Attribute | Values |
+| --- | --- |
+| `theme` | The chosen theme's id |
+| `themes` | JSON: `[{ "value", "label", "group" }]`, or set the property |
+| `mode` | `auto`, `light`, `dark` or `darker`: the mode the previews show |
+| `label` | Names the group for assistive technology. Defaults to `Theme` |
+
+It's a `<fieldset>` of native radio buttons, so arrow keys move the choice. Set `--gw-theme-gallery-min` for wider or narrower cards, and style the `card`, `preview`, `name` and `group` parts.
+
 ## References
 
 - Home Assistant: [Button](https://contributors.home-assistant.io/design/components/button/), [Dropdown](https://contributors.home-assistant.io/design/components/dropdown/) · Code: [button](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-button.ts), [dropdown](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-dropdown.ts), [toggle group](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-button-toggle-group.ts)

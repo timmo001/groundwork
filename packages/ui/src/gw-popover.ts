@@ -38,6 +38,8 @@ const sheetBelow = 600;
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
+ * @cssprop --gw-popover-width - Its width beside a button. Defaults to `20rem`.
+ *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */
 export class GwPopover extends GwElement {
@@ -54,7 +56,7 @@ export class GwPopover extends GwElement {
         position: fixed;
         inset: unset;
         box-sizing: border-box;
-        width: min(20rem, calc(100vw - 2 * ${gap}px));
+        width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px));
         padding: var(--gw-space-4);
         margin: 0;
         color: var(--gw-color-text-primary);

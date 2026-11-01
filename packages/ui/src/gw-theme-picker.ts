@@ -10,6 +10,7 @@ import type { OptionItem } from "./gw-option-list.js";
 import "./gw-popover.js";
 import "./gw-segmented.js";
 import "./gw-select.js";
+import "./gw-theme-gallery.js";
 import { base } from "./styles.js";
 
 // MDI's palette
@@ -33,14 +34,20 @@ const modes = [
  * `@timmo001/groundwork-tokens/page` does all of that. Show an import's
  * result, such as contrast misses, in `status`.
  *
+ * `gallery` swaps the theme select for `gw-theme-gallery`'s cards, which
+ * preview each theme in the chosen mode.
+ *
  * @element gw-theme-picker
  * @summary A button opening the page's mode, theme and import.
  *
  * @attr {"auto"|"light"|"dark"|"darker"} mode - The mode in use. Defaults to `auto`.
  * @attr {string} theme - The theme in use, by id.
- * @attr {OptionItem[]} themes - The themes to offer, as JSON.
+ * @attr {OptionItem[]} themes - The themes to offer, as JSON. With `gallery`, a `group` gathers a family's themes.
+ * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
  * @attr {string} status - A line under the controls, such as an import's result.
  * @attr {string} label - The button's accessible name and the popover's heading. Defaults to `Theme`.
+ *
+ * @csspart gallery - The theme gallery, with `gallery`.
  *
  * @fires {CustomEvent<{ mode: string }>} mode - When a mode is picked.
  * @fires {CustomEvent<{ id: string }>} theme - When a theme is picked.
@@ -52,6 +59,7 @@ export class GwThemePicker extends GwElement {
     mode: { reflect: true },
     theme: { reflect: true },
     themes: { type: "json" },
+    gallery: { type: "boolean", reflect: true },
     status: {},
     label: {},
   } as const;
@@ -61,6 +69,18 @@ export class GwThemePicker extends GwElement {
     css`
       :host {
         display: inline-block;
+      }
+
+      :host([gallery]) gw-popover {
+        --gw-popover-width: 34rem;
+      }
+
+      .gallery {
+        max-height: min(24rem, 50vh);
+        overflow: auto;
+        /* Room for the cards' focus rings */
+        padding: var(--gw-space-1);
+        margin: calc(var(--gw-space-1) * -1);
       }
 
       .controls {
@@ -81,6 +101,7 @@ export class GwThemePicker extends GwElement {
   declare mode: string;
   declare theme: string;
   declare themes: readonly OptionItem[];
+  declare gallery: boolean;
   declare status: string;
   declare label: string;
 
@@ -95,6 +116,11 @@ export class GwThemePicker extends GwElement {
 
   readonly #theme = h("gw-select", { label: "Theme" });
 
+  readonly #gallery = h("gw-theme-gallery", {
+    class: "gallery",
+    part: "gallery",
+  });
+
   readonly #status = h("p", { class: "status", role: "status" });
 
   readonly #file = h("input", {
@@ -106,7 +132,14 @@ export class GwThemePicker extends GwElement {
   readonly #popover = h(
     "gw-popover",
     {},
-    h("div", { class: "controls" }, this.#mode, this.#theme, this.#status),
+    h(
+      "div",
+      { class: "controls" },
+      this.#mode,
+      this.#theme,
+      this.#gallery,
+      this.#status,
+    ),
     h(
       "gw-button",
       {
@@ -129,6 +162,7 @@ export class GwThemePicker extends GwElement {
     this.mode = "auto";
     this.theme = "";
     this.themes = [];
+    this.gallery = false;
     this.status = "";
     this.label = "Theme";
   }
@@ -136,6 +170,9 @@ export class GwThemePicker extends GwElement {
   /** Opens the popover under the button. */
   show() {
     this.#popover.show(this.#button);
+
+    // A custom theme's CSS may have changed since the cards were drawn
+    if (this.gallery) this.#gallery.refresh();
   }
 
   #detail<Detail>(type: string, detail: Detail) {
@@ -155,6 +192,11 @@ export class GwThemePicker extends GwElement {
     this.#theme.addEventListener("change", (event) => {
       event.stopPropagation();
       this.theme = this.#theme.value;
+      this.dispatchEvent(this.#detail("theme", { id: this.theme }));
+    });
+    this.#gallery.addEventListener("theme", (event) => {
+      event.stopPropagation();
+      this.theme = this.#gallery.theme;
       this.dispatchEvent(this.#detail("theme", { id: this.theme }));
     });
     this.#popover.querySelector(".import")?.addEventListener("click", () => {
@@ -186,6 +228,12 @@ export class GwThemePicker extends GwElement {
     this.#mode.value = this.mode;
     this.#theme.options = Array.isArray(this.themes) ? this.themes : [];
     this.#theme.value = this.theme;
+    this.#theme.hidden = this.gallery;
+    this.#gallery.hidden = !this.gallery;
+    this.#gallery.themes = Array.isArray(this.themes) ? this.themes : [];
+    this.#gallery.theme = this.theme;
+    // Auto leaves it to follow the page, or the themed container around it
+    this.#gallery.mode = this.mode === "auto" ? "" : this.mode;
     this.#status.textContent = this.status;
     this.#status.hidden = !this.status;
   }

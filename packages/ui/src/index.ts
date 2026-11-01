@@ -77,6 +77,8 @@ export * from "./gw-skeleton.js";
 
 export * from "./gw-spinner.js";
 
+export * from "./gw-theme-gallery.js";
+
 export * from "./gw-theme-picker.js";
 
 export * from "./gw-toast.js";
