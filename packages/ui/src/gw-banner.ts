@@ -90,7 +90,7 @@ export class GwBanner extends GwElement {
   declare open: boolean;
   declare urgent: boolean;
 
-  readonly #bar = h(
+  readonly #bar: HTMLDivElement = h(
     "div",
     { class: "bar", part: "bar" },
     h("slot", { name: "icon" }),

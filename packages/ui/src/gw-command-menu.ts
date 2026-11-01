@@ -156,7 +156,7 @@ export class GwCommandMenu extends GwElement {
 
   readonly #list = h("gw-option-list", { search: true, part: "list" });
 
-  readonly #dialog = h(
+  readonly #dialog: HTMLDialogElement = h(
     "dialog",
     { part: "dialog" },
     this.#list,

@@ -115,7 +115,7 @@ export class GwChip extends GwElement {
     style: "--gw-skeleton-width: 3.5rem",
   });
 
-  readonly #content = h(
+  readonly #content: HTMLSpanElement = h(
     "span",
     { class: "content" },
     h("slot", { name: "icon" }, this.#icon, this.#swatch),

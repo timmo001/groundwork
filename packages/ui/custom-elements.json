@@ -1628,6 +1628,9 @@
               "kind": "field",
               "name": "#nav",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
               "readonly": true
             },
             {
@@ -2228,6 +2231,9 @@
               "kind": "field",
               "name": "#value",
               "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
               "readonly": true
             },
             {
@@ -2696,6 +2702,9 @@
               "kind": "field",
               "name": "#bar",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
               "readonly": true
             },
             {
@@ -3816,6 +3825,9 @@
               "kind": "field",
               "name": "#header",
               "privacy": "private",
+              "type": {
+                "text": "HTMLElement"
+              },
               "readonly": true
             },
             {
@@ -3828,6 +3840,9 @@
               "kind": "field",
               "name": "#body",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
               "readonly": true
             },
             {
@@ -5461,6 +5476,9 @@
               "kind": "field",
               "name": "#content",
               "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
               "readonly": true
             },
             {
@@ -5932,6 +5950,9 @@
               "kind": "field",
               "name": "#dialog",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDialogElement"
+              },
               "readonly": true
             },
             {
@@ -7809,6 +7830,9 @@
               "kind": "field",
               "name": "#details",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDetailsElement"
+              },
               "readonly": true
             },
             {
@@ -14325,6 +14349,9 @@
               "kind": "field",
               "name": "#heading",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
               "readonly": true
             },
             {
@@ -16079,6 +16106,9 @@
               "kind": "field",
               "name": "#descriptionSkeleton",
               "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
               "readonly": true
             },
             {

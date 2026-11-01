@@ -115,7 +115,7 @@ export class GwSettingRow extends GwElement {
 
   readonly #description = h("div", { class: "description" });
 
-  readonly #descriptionSkeleton = h(
+  readonly #descriptionSkeleton: HTMLDivElement = h(
     "div",
     { class: "description" },
     h("gw-skeleton-text", { style: "--gw-skeleton-width: 12rem" }),

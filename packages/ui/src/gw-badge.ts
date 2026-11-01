@@ -134,7 +134,7 @@ export class GwBadge extends GwElement {
     style: "--gw-skeleton-width: 3rem",
   });
 
-  readonly #value = h("span", { class: "value" }, h("slot"));
+  readonly #value: HTMLSpanElement = h("span", { class: "value" }, h("slot"));
 
   constructor() {
     super();

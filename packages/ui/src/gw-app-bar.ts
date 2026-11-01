@@ -237,7 +237,11 @@ export class GwAppBar extends GwElement {
     this.#menuIcon,
   );
 
-  readonly #nav = h("div", { class: "nav", part: "nav" }, h("slot"));
+  readonly #nav: HTMLDivElement = h(
+    "div",
+    { class: "nav", part: "nav" },
+    h("slot"),
+  );
 
   #observer: IntersectionObserver | undefined;
 

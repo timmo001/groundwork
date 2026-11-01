@@ -178,7 +178,7 @@ export class GwExpansion extends GwElement {
     part: "description",
   });
 
-  readonly #details = h(
+  readonly #details: HTMLDetailsElement = h(
     "details",
     { part: "details" },
     h(

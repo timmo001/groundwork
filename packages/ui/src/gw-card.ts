@@ -139,7 +139,7 @@ export class GwCard extends GwElement {
 
   readonly #headingSlot = h("slot", { name: "heading" });
 
-  readonly #header = h(
+  readonly #header: HTMLElement = h(
     "header",
     { part: "header" },
     h(
@@ -154,7 +154,11 @@ export class GwCard extends GwElement {
 
   readonly #skeleton = h("gw-skeleton-lines");
 
-  readonly #body = h("div", { class: "body", part: "body" }, h("slot"));
+  readonly #body: HTMLDivElement = h(
+    "div",
+    { class: "body", part: "body" },
+    h("slot"),
+  );
 
   #card: HTMLElement = h("section", { class: "card", part: "card" });
 

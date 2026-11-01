@@ -48,7 +48,11 @@ export class GwSectionTitle extends GwElement {
 
   declare level: number;
 
-  readonly #heading = h("div", { role: "heading", part: "heading" }, h("slot"));
+  readonly #heading: HTMLDivElement = h(
+    "div",
+    { role: "heading", part: "heading" },
+    h("slot"),
+  );
 
   constructor() {
     super();
