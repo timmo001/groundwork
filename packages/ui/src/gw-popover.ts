@@ -1,8 +1,13 @@
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import "./gw-button.js";
 import { base } from "./styles.js";
 
 const gap = 8;
+
+// MDI's close
+const closeIcon =
+  "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z";
 
 /** Below this width the popover is a bottom sheet, as Home Assistant's adaptive dialogs are. */
 const sheetBelow = 600;
@@ -118,6 +123,20 @@ export class GwPopover extends GwElement {
         background: rgb(0 0 0 / 40%);
       }
 
+      header {
+        display: flex;
+        gap: var(--gw-space-2);
+        align-items: flex-start;
+        margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1)
+          var(--gw-space-2) 0;
+      }
+
+      header .content {
+        flex: 1;
+        min-width: 0;
+        padding-block-start: var(--gw-space-2);
+      }
+
       h2 {
         margin: 0 0 var(--gw-space-2);
         font-size: var(--gw-font-size-m);
@@ -151,11 +170,33 @@ export class GwPopover extends GwElement {
 
   readonly #heading = h("h2", { id: "heading" });
 
+  readonly #closeButton = h(
+    "gw-button",
+    {
+      class: "close",
+      variant: "neutral",
+      appearance: "plain",
+      size: "small",
+      labels: "hide",
+      icon: closeIcon,
+    },
+    "Close",
+  );
+
   readonly #popover = h(
     "div",
     { popover: "manual", tabindex: "-1", "data-placement": "center" },
-    this.#heading,
-    h("div", { class: "body", id: "body" }, h("slot")),
+    h(
+      "header",
+      {},
+      h(
+        "div",
+        { class: "content" },
+        this.#heading,
+        h("div", { class: "body", id: "body" }, h("slot")),
+      ),
+      this.#closeButton,
+    ),
     h("footer", {}, h("slot", { name: "actions" })),
   );
 
@@ -262,10 +303,8 @@ export class GwPopover extends GwElement {
       window.addEventListener("scroll", this.#position, true);
       document.addEventListener("pointerdown", this.#onPointerdown, true);
 
-      // The first action, usually Cancel, so Enter never confirms by accident
-      const first = this.querySelector("[slot='actions']");
-
-      if (first instanceof HTMLElement) first.focus();
+      // The close button takes focus, so Enter never confirms by accident
+      this.#closeButton.focus();
 
       return;
     }
@@ -297,6 +336,9 @@ export class GwPopover extends GwElement {
   protected override create(root: ShadowRoot) {
     this.#popover.addEventListener("toggle", this.#onToggle);
     this.#popover.addEventListener("keydown", this.#onKeydown);
+    this.#closeButton.addEventListener("click", () => {
+      this.#dismissal.request();
+    });
     this.#popover
       .querySelector("footer")
       ?.addEventListener("click", this.#onAction);
