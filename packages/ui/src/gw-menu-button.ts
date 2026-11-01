@@ -47,6 +47,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  * @summary A button that opens a menu of items and actions.
  *
  * @attr {string} label - The trigger's text.
+ * @attr {string} heading - What the menu is for, such as "Sort by", when the trigger shows the current choice: it names the menu, starts the trigger's accessible name and is its tooltip.
  * @attr {string} icon - SVG path data for an icon before the trigger's text.
  * @attr {string} empty - What the menu says with no items. Defaults to `Nothing here yet`.
  * @attr {MenuItem[]} items - The items, as JSON.
@@ -65,6 +66,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
 export class GwMenuButton extends GwElement {
   static override properties = {
     label: {},
+    heading: {},
     icon: {},
     empty: {},
     items: { type: "json" },
@@ -309,6 +311,8 @@ export class GwMenuButton extends GwElement {
   ];
 
   declare label: string;
+  /** What the menu is for, such as "Sort by", when the trigger shows the current choice. */
+  declare heading: string;
   /** SVG path data for an icon before the trigger's label. */
   declare icon: string;
   /** What the menu says when it has no items, such as "No backups yet". */
@@ -329,7 +333,16 @@ export class GwMenuButton extends GwElement {
     "aria-expanded": "false",
   });
 
-  readonly #triggerText: HTMLSpanElement = h("span", { class: "label" });
+  readonly #triggerText: HTMLSpanElement = h("span", {
+    class: "label",
+    id: "label",
+  });
+
+  // Read before the label, for a trigger that shows the current choice
+  readonly #heading: HTMLSpanElement = h("span", {
+    id: "heading",
+    hidden: true,
+  });
 
   readonly #triggerIcon = createIcon("");
 
@@ -347,6 +360,7 @@ export class GwMenuButton extends GwElement {
   constructor() {
     super();
     this.label = "";
+    this.heading = "";
     this.icon = "";
     this.empty = "Nothing here yet";
     this.items = [];
@@ -451,7 +465,7 @@ export class GwMenuButton extends GwElement {
     );
     this.#popover.addEventListener("toggle", this.#onToggle);
     this.#popover.addEventListener("keydown", this.#onKeydown);
-    root.append(this.#trigger, this.#popover);
+    root.append(this.#heading, this.#trigger, this.#popover);
   }
 
   protected override update(changed: ReadonlySet<string>) {
@@ -459,13 +473,22 @@ export class GwMenuButton extends GwElement {
     setIconPath(this.#triggerIcon, this.icon);
     this.#triggerIcon.toggleAttribute("hidden", !this.icon);
     this.#trigger.classList.toggle("has-icon", this.icon !== "");
-    // A tooltip for when the text is hidden beside the icon
+    this.#heading.textContent = this.heading;
+    setAttribute(
+      this.#trigger,
+      "aria-labelledby",
+      this.heading ? "heading label" : null,
+    );
+    // A tooltip saying what the menu is for, or the text when it's hidden
     setAttribute(
       this.#trigger,
       "title",
-      this.icon !== "" && this.labels !== "show" ? this.label || null : null,
+      this.heading ||
+        (this.icon !== "" && this.labels !== "show"
+          ? this.label || null
+          : null),
     );
-    this.#popover.setAttribute("aria-label", this.label);
+    this.#popover.setAttribute("aria-label", this.heading || this.label);
 
     if (changed.has("items") || changed.has("empty")) {
       const items = Array.isArray(this.items) ? this.items : [];

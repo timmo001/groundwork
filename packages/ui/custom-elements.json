@@ -10344,7 +10344,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, }",
+              "default": "{ label: {}, heading: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10369,6 +10369,15 @@
               "type": {
                 "text": "string"
               },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "description": "What the menu is for, such as \"Sort by\", when the trigger shows the current choice.",
               "default": "\"\""
             },
             {
@@ -10440,6 +10449,15 @@
             {
               "kind": "field",
               "name": "#triggerText",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#heading",
               "privacy": "private",
               "type": {
                 "text": "HTMLSpanElement"
@@ -10854,6 +10872,13 @@
               },
               "description": "The trigger's text.",
               "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the menu is for, such as \"Sort by\", when the trigger shows the current choice: it names the menu, starts the trigger's accessible name and is its tooltip.",
+              "name": "heading"
             },
             {
               "type": {
