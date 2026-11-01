@@ -12,12 +12,26 @@ export type { GwEventMap } from "./events.js";
 
 type EventTag = keyof GwEventMap;
 
+/**
+ * Each event-firing element's class, by tag. An app only declares the tags it
+ * imports, so the ones it doesn't load are `never` rather than an error.
+ */
+type Loaded = {
+  [T in EventTag]: T extends keyof HTMLElementTagNameMap
+    ? HTMLElementTagNameMap[T]
+    : never;
+};
+
 /** A `gw-` element that fires events of its own. */
-export type GwEventTarget = HTMLElementTagNameMap[EventTag];
+export type GwEventTarget = Loaded[EventTag];
 
 /** The events an element fires, found from the tag its class is defined for. */
 export type GwEventsOf<E extends GwEventTarget> = {
-  [T in EventTag]: E extends HTMLElementTagNameMap[T] ? GwEventMap[T] : never;
+  [T in EventTag]: [Loaded[T]] extends [never]
+    ? never
+    : E extends Loaded[T]
+      ? GwEventMap[T]
+      : never;
 }[EventTag];
 
 /**
