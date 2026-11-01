@@ -155,6 +155,21 @@ A page shouldn't move while its components load. Before a `gw-` element's script
 - Reserve room for anything that appears after load, such as a banner or a header control, rather than pushing the page down.
 - Animate entrances with opacity and transforms, which don't move anything around them.
 
+## Scrollbars
+
+`themes.css` gives the page and everything in it small scrollbars: a rounded thumb in the theme's secondary text color on a clear track, with no arrow buttons, a little stronger on hover. The thumb squares off where it meets the top or bottom of its track, or either end of a sideways one. Components draw the same inside their own scrolling parts. There's nothing to set up. Restyle them anywhere with `--gw-scrollbar-size` (0.4rem by default), `--gw-scrollbar-thumb` and `--gw-scrollbar-track`, or hide one with `scrollbar-width: none`. The rules have no specificity, so any rule of a page's wins. Firefox, which has no WebKit scrollbar styling, shows its own thin scrollbar in the same colors.
+
+The square ends follow each scroller's scroll through the `gw-scrollbar-edges-y` and `gw-scrollbar-edges-x` animations, which components run on their own scrolling parts and the ui package keeps in step for the page. A scroller of your own keeps round ends unless it runs them too:
+
+```css
+.my-list {
+  animation:
+    gw-scrollbar-edges-y linear both,
+    gw-scrollbar-edges-x linear both;
+  animation-timeline: scroll(self y), scroll(self x);
+}
+```
+
 The docs check every page with a Playwright test that measures the layout shift while it loads. It fails above 0.025, a quarter of the 0.1 the web counts as good, and lists what moved.
 
 ## References

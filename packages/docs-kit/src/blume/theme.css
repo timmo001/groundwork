@@ -35,3 +35,17 @@
     grid-column: 4;
   }
 }
+
+/* Blume's own thin scrollbars bring back the arrow buttons; let the
+   Groundwork ones from themes.css show instead, squaring off at the ends */
+@supports selector(::-webkit-scrollbar) {
+  [class*="scrollbar-thin"],
+  .prose pre > code {
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+    animation:
+      gw-scrollbar-edges-y linear both,
+      gw-scrollbar-edges-x linear both;
+    animation-timeline: scroll(self y), scroll(self x);
+  }
+}

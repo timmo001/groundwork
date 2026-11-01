@@ -189,7 +189,6 @@ export class GwSheet extends GwElement {
            makes it scroll sideways */
         overflow: hidden auto;
         overscroll-behavior: contain;
-        scrollbar-width: thin;
       }
     `,
   ];

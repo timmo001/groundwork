@@ -361,11 +361,87 @@ const preUpgradeCss = Object.entries(preUpgrade)
   })
   .join("\n\n");
 
+/**
+ * Small scrollbars with a rounded, quiet thumb on a clear track and no arrow
+ * buttons, for the page and every element in it, at no specificity so any
+ * rule of a page's wins. `--gw-scrollbar-size`, `--gw-scrollbar-thumb` and
+ * `--gw-scrollbar-track` restyle them anywhere; `scrollbar-width: none` hides
+ * one. Firefox, without the WebKit pseudo-elements, gets its thin scrollbar.
+ */
+const scrollbarCss = (scope: string) => {
+  const each = (pseudo = "") => `:where(${scope})${pseudo}`;
+
+  return `@supports not selector(::-webkit-scrollbar) {
+  ${each()} {
+    scrollbar-width: thin;
+    scrollbar-color: ${scrollbarThumb(45)} var(--gw-scrollbar-track, transparent);
+  }
+}
+
+${each("::-webkit-scrollbar")} {
+  width: var(--gw-scrollbar-size, 0.4rem);
+  height: var(--gw-scrollbar-size, 0.4rem);
+  background: var(--gw-scrollbar-track, transparent);
+}
+
+${each("::-webkit-scrollbar-thumb")} {
+  background: ${scrollbarThumb(45)};
+  border-radius: ${scrollbarRadius("top", "top", "bottom", "bottom")};
+}
+
+${each("::-webkit-scrollbar-thumb:horizontal")} {
+  border-radius: ${scrollbarRadius("left", "right", "right", "left")};
+}
+
+${each("::-webkit-scrollbar-thumb:hover")} {
+  background: ${scrollbarThumb(70)};
+}
+
+${each("::-webkit-scrollbar-corner")} {
+  background: transparent;
+}`;
+};
+
+const scrollbarThumb = (strength: number) =>
+  `var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) ${strength}%, transparent))`;
+
+/**
+ * The thumb's corners, from top left: round, or square where it meets the end
+ * of its track. `--gw-scrollbar-top`, `-bottom`, `-left` and `-right` are 0 at
+ * that end and 1 elsewhere.
+ */
+const scrollbarRadius = (...edges: readonly string[]) =>
+  edges
+    .map(
+      (edge) =>
+        `calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-${edge}, 1))`,
+    )
+    .join(" ");
+
+/**
+ * Where a scroller is against each end, for the thumb's square ends. A
+ * scroller takes its own from the `gw-scrollbar-edges-y` and `-x` animations
+ * on its scroll timeline; everything else resets them, so a scroller without
+ * them never takes its parent's. The page's own come from the ui package,
+ * since an animation on the root doesn't repaint the window's scrollbar.
+ */
+const scrollbarEdgesCss = [
+  ...["top", "bottom", "left", "right"].map(
+    (edge) =>
+      `@property --gw-scrollbar-${edge} {\n  syntax: "<number>";\n  inherits: true;\n  initial-value: 1;\n}`,
+  ),
+  `@keyframes gw-scrollbar-edges-y {\n  0% {\n    --gw-scrollbar-top: 0;\n  }\n\n  1% {\n    --gw-scrollbar-top: 1;\n  }\n\n  99% {\n    --gw-scrollbar-bottom: 1;\n  }\n\n  100% {\n    --gw-scrollbar-bottom: 0;\n  }\n}`,
+  `@keyframes gw-scrollbar-edges-x {\n  0% {\n    --gw-scrollbar-left: 0;\n  }\n\n  1% {\n    --gw-scrollbar-left: 1;\n  }\n\n  99% {\n    --gw-scrollbar-right: 1;\n  }\n\n  100% {\n    --gw-scrollbar-right: 0;\n  }\n}`,
+  `:where(:root *) {\n  --gw-scrollbar-top: 1;\n  --gw-scrollbar-bottom: 1;\n  --gw-scrollbar-left: 1;\n  --gw-scrollbar-right: 1;\n}`,
+].join("\n\n");
+
 export const css = (themes: readonly ResolvedTheme[]) =>
   [
     `/* ${header} */`,
     `:root {\n${declarations(foundations)}\n}`,
     `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-instant: 1ms;\n    --gw-motion-fast: 1ms;\n    --gw-motion-normal: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
+    scrollbarCss(":root, :root *"),
+    scrollbarEdgesCss,
     preUpgradeCss,
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";

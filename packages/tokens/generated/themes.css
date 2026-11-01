@@ -60,6 +60,103 @@
   }
 }
 
+@supports not selector(::-webkit-scrollbar) {
+  :where(:root, :root *) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) 45%, transparent)) var(--gw-scrollbar-track, transparent);
+  }
+}
+
+:where(:root, :root *)::-webkit-scrollbar {
+  width: var(--gw-scrollbar-size, 0.4rem);
+  height: var(--gw-scrollbar-size, 0.4rem);
+  background: var(--gw-scrollbar-track, transparent);
+}
+
+:where(:root, :root *)::-webkit-scrollbar-thumb {
+  background: var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) 45%, transparent));
+  border-radius: calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-top, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-top, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-bottom, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-bottom, 1));
+}
+
+:where(:root, :root *)::-webkit-scrollbar-thumb:horizontal {
+  border-radius: calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-left, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-right, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-right, 1)) calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-left, 1));
+}
+
+:where(:root, :root *)::-webkit-scrollbar-thumb:hover {
+  background: var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) 70%, transparent));
+}
+
+:where(:root, :root *)::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+@property --gw-scrollbar-top {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --gw-scrollbar-bottom {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --gw-scrollbar-left {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@property --gw-scrollbar-right {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+@keyframes gw-scrollbar-edges-y {
+  0% {
+    --gw-scrollbar-top: 0;
+  }
+
+  1% {
+    --gw-scrollbar-top: 1;
+  }
+
+  99% {
+    --gw-scrollbar-bottom: 1;
+  }
+
+  100% {
+    --gw-scrollbar-bottom: 0;
+  }
+}
+
+@keyframes gw-scrollbar-edges-x {
+  0% {
+    --gw-scrollbar-left: 0;
+  }
+
+  1% {
+    --gw-scrollbar-left: 1;
+  }
+
+  99% {
+    --gw-scrollbar-right: 1;
+  }
+
+  100% {
+    --gw-scrollbar-right: 0;
+  }
+}
+
+:where(:root *) {
+  --gw-scrollbar-top: 1;
+  --gw-scrollbar-bottom: 1;
+  --gw-scrollbar-left: 1;
+  --gw-scrollbar-right: 1;
+}
+
 gw-fade-in:not(:defined) {
   opacity: 0;
 }

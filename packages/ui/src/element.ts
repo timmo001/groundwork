@@ -136,6 +136,43 @@ const toAttribute = (value: PropertyValue, type: PropertyOptions["type"]) => {
 const attributeName = (name: string, options: PropertyOptions) =>
   options.attribute === undefined ? name.toLowerCase() : options.attribute;
 
+let followingPageScroll = false;
+
+/**
+ * Sets `--gw-scrollbar-top`, `-bottom`, `-left` and `-right` on the root as
+ * the page scrolls, 0 against that end and 1 elsewhere, so the window's
+ * scrollbar thumb squares off at the ends like the others. The window's
+ * scrollbar doesn't repaint for the scroll-driven animation the themes give
+ * other scrollers.
+ */
+const followPageScroll = () => {
+  if (followingPageScroll) return;
+
+  followingPageScroll = true;
+
+  const root = document.documentElement;
+
+  const set = (edge: string, against: boolean) => {
+    const value = against ? "0" : "1";
+
+    if (root.style.getPropertyValue(`--gw-scrollbar-${edge}`) !== value)
+      root.style.setProperty(`--gw-scrollbar-${edge}`, value);
+  };
+
+  const update = () => {
+    const page = document.scrollingElement ?? root;
+
+    set("top", page.scrollTop <= 0);
+    set("bottom", page.scrollTop + page.clientHeight >= page.scrollHeight - 1);
+    set("left", page.scrollLeft <= 0);
+    set("right", page.scrollLeft + page.clientWidth >= page.scrollWidth - 1);
+  };
+
+  update();
+  addEventListener("scroll", update, { passive: true });
+  new ResizeObserver(update).observe(root);
+};
+
 /**
  * The base for every `gw-` element, with no framework underneath.
  *
@@ -182,6 +219,8 @@ export class GwElement extends HTMLElement {
     }
 
     if (!customElements.get(tag)) customElements.define(tag, this);
+
+    followPageScroll();
   }
 
   readonly #values = new Map<string, PropertyValue>();
