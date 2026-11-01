@@ -36,6 +36,9 @@ Run these before bumping, and fix or explain anything they report:
   and any flagged copy, where an app edited a registry item. Move flagged edits
   into groundwork or a wrapper before releasing; don't overwrite them.
 - `mise run docs:build`: the docs site builds against the workspace packages.
+- Each published package has a `check` script that passes on its own
+  (`bun run check` in its directory). The publish workflow runs it to
+  validate, and fails the package's job without one.
 
 ## 3. Bump the version
 
@@ -63,14 +66,23 @@ Check the packed file lists: ui must ship `custom-elements.json`.
 
 1. Commit only the version files and `bun.lock` through `dot git commit` as
    `Release <version>`, and push.
-2. Resolve the target after the push with `git rev-parse HEAD`, and create the
+2. Write the release notes yourself, never `--generate-notes`, which only
+   lists merged pull requests and misses the direct commits. Read the commits
+   since the last tag and follow the `writing-style` skill and earlier releases:
+   a line on anything new about the release itself, then one bullet per
+   package, prefixed `**tokens**:`, `**ui**:`, `**tui**:` or `**docs-kit**:`,
+   saying what changed for someone using it. A package with nothing new gets
+   "released at the same version, with no changes". Leave out repository-only
+   work such as skills, CI and demos. Save them to the release's scratch
+   directory.
+3. Resolve the target after the push with `git rev-parse HEAD`, and create the
    release with that full 40-character SHA, never an abbreviated one:
 
    ```sh
-   gh release create <version> --target <sha> --generate-notes
+   gh release create <version> --target <sha> --notes-file <notes.md>
    ```
 
-3. Watch that release's Release workflow run. All five publish jobs must pass:
+4. Watch that release's Release workflow run. All five publish jobs must pass:
    npm tokens, npm ui, npm tui, npm docs-kit and JSR docs-kit.
 
 ## 5. Verify publication
