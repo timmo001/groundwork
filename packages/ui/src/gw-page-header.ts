@@ -8,8 +8,9 @@ import { GwElement, css, h } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
 /**
- * A page's title, with an optional icon tile and description, and its
- * controls at the top right in the `actions` slot.
+ * A page's title, with an optional icon tile and description, a back button
+ * or similar in the `start` slot, and its controls at the top right in the
+ * `actions` slot.
  *
  * @element gw-page-header
  * @summary A page's title, icon, description and actions.
@@ -18,6 +19,7 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} description - A line under the title.
  * @attr {string} icon - SVG path data for the icon tile.
  *
+ * @slot start - Before the icon tile, such as a back button.
  * @slot actions - The page's controls.
  *
  * @csspart tile - The icon tile.
@@ -38,6 +40,17 @@ export class GwPageHeader extends GwElement {
         display: flex;
         gap: var(--gw-space-3);
         align-items: flex-start;
+      }
+
+      .start {
+        display: flex;
+        flex: none;
+        align-items: center;
+        min-height: 3rem;
+      }
+
+      .start[hidden] {
+        display: none;
       }
 
       .tile {
@@ -90,6 +103,11 @@ export class GwPageHeader extends GwElement {
 
   readonly #icon = createIcon("");
 
+  readonly #startSlot = h("slot", { name: "start" });
+
+  // Centered on the tile's height, and out of the row while it's empty
+  readonly #start = h("div", { class: "start", hidden: true }, this.#startSlot);
+
   readonly #tile = h("span", { class: "tile", part: "tile" }, this.#icon);
 
   readonly #heading = h("h1", { part: "heading" });
@@ -104,7 +122,11 @@ export class GwPageHeader extends GwElement {
   }
 
   protected override create(root: ShadowRoot) {
+    this.#startSlot.addEventListener("slotchange", () => {
+      this.#start.hidden = this.#startSlot.assignedElements().length === 0;
+    });
     root.append(
+      this.#start,
       this.#tile,
       h("div", { class: "titles" }, this.#heading, this.#description),
       h("div", { class: "actions" }, h("slot", { name: "actions" })),
