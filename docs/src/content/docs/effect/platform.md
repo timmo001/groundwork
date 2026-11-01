@@ -5,7 +5,7 @@ description: The services Effect already has for commands, files, the terminal, 
 
 Effect ships services for most of what a system talks to. Use them before writing a wrapper: they're typed, testable through their layers, and traced. The platform layer (`NodeServices.layer` from `@effect/platform-node`, or the Bun and browser equivalents) provides the ones that touch the machine.
 
-Modules under `effect/<name>` are still marked unstable in Effect 4, so pin the version and read the release notes before bumping.
+Modules under `effect/<name>` are still marked unstable in Effect 4. Use them anyway: an unstable Effect module is almost always better than writing your own. Pin the version and read the release notes before bumping.
 
 These tables are a starting point, not a full list. Effect has more modules than this, and their APIs change between releases, so check the [official Effect documentation](https://effect.website/docs) and the module's source before relying on one.
 
