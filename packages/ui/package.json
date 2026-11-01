@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-ui",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Groundwork's framework-free web components, styled by the --gw-* tokens",
   "license": "Apache-2.0",
   "type": "module",
