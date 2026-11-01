@@ -88,7 +88,7 @@ export const fieldStyles = css`
     --gw-field-scale: 1.4;
   }
 
-  :where(gw-input, gw-select) :where(input, .gw-select-trigger) {
+  :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger) {
     --gw-field-size: var(--gw-field-scale, 1);
     --gw-icon-size: calc(
       1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1)
@@ -133,6 +133,79 @@ export const fieldStyles = css`
   gw-input .gw-input-control > .icon:not([hidden]) + input {
     padding-inline-start: calc(
       (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1)
+    );
+  }
+
+  /* A textarea keeps the field's padding on every side and grows by its
+     corner, never sideways out of the layout */
+  gw-input textarea {
+    display: block;
+    padding-block: calc(var(--gw-space-2) * var(--gw-field-size));
+    line-height: 1.5;
+    resize: vertical;
+  }
+
+  gw-input[monospace] :where(input, textarea) {
+    font-family: var(--gw-font-mono);
+  }
+
+  gw-input .gw-optional {
+    font-weight: var(--gw-font-weight-regular);
+    color: var(--gw-color-text-secondary);
+  }
+
+  gw-input .gw-optional[hidden] {
+    display: none;
+  }
+
+  /* The show and hide button sits inside the end of a password field, with
+     the text kept clear of it */
+  gw-input .gw-reveal {
+    position: absolute;
+    inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1));
+    display: grid;
+    place-items: center;
+    width: calc(2rem * var(--gw-field-scale, 1));
+    height: calc(2rem * var(--gw-field-scale, 1));
+    padding: 0;
+    color: var(--gw-color-text-secondary);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: var(--gw-radius-control);
+    transition:
+      color var(--gw-motion-fast) var(--gw-motion-easing),
+      background-color var(--gw-motion-fast) var(--gw-motion-easing);
+  }
+
+  gw-input .gw-reveal:hover:not(:disabled) {
+    color: var(--gw-color-text-strong);
+    background: var(--gw-color-fill-neutral-hovered);
+  }
+
+  gw-input .gw-reveal:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: calc(var(--gw-focus-width) * -1);
+  }
+
+  gw-input .gw-reveal:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  gw-input .gw-reveal[hidden] {
+    display: none;
+  }
+
+  gw-input .gw-reveal > .icon {
+    width: calc(1.125rem * var(--gw-field-scale, 1));
+    height: calc(1.125rem * var(--gw-field-scale, 1));
+    fill: currentColor;
+  }
+
+  gw-input .gw-input-control:has(> .gw-reveal:not([hidden])) > input {
+    padding-inline-end: calc(
+      (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1)
     );
   }
 
@@ -308,12 +381,13 @@ export const fieldStyles = css`
     color: var(--gw-color-text-strong);
   }
 
-  :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover {
+  :where(gw-input, gw-select)
+    :where(input, textarea, .gw-select-trigger):hover {
     border-color: var(--gw-color-border-loud);
   }
 
   :where(gw-input, gw-select, gw-switch, gw-checkbox)
-    :where(input, .gw-select-trigger):focus-visible {
+    :where(input, textarea, .gw-select-trigger):focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
   }

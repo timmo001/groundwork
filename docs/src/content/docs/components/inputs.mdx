@@ -10,19 +10,33 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 <Demo id="input" layout="stack">
   <gw-input label="Host" name="host" placeholder="192.168.1.20" hint="The address System Bridge listens on" info="Use the address of the machine running System Bridge on your network, such as 192.168.1.20 or desktop.local. Find it in System Bridge's settings, under Connection."></gw-input>
   <gw-input label="Port" name="port" type="number" value="9170" error="Port 9170 is already in use"></gw-input>
-  <gw-input label="Token" name="token" type="password" autocomplete="current-password"></gw-input>
+  <gw-input label="Token" name="token" type="password" autocomplete="current-password" monospace reveal></gw-input>
 </Demo>
 
 | Attribute | Values |
 | --- | --- |
 | `label` | The visible label, linked to the input |
-| `type`, `name`, `value`, `placeholder`, `autocomplete` | Passed to the `<input>` |
+| `type`, `name`, `value`, `placeholder`, `autocomplete`, `inputmode` | Passed to the `<input>` |
 | `hint` | One line of help under it, linked with `aria-describedby` |
 | `info` | Longer help, opened from an (i) button by the label in a popover anchored to it |
-| `error` | An error under it; marks the input invalid |
+| `error` | An error under it; marks the input invalid and is announced |
 | `required`, `disabled` | Passed to the `<input>` |
+| `optional` | Adds "(optional)" after the label, for the few optional fields in a form that mostly requires them |
+| `multiline`, `rows` | A `<textarea>` instead, starting `rows` lines tall (3 by default) and growing by its corner |
+| `monospace` | The monospace font, with spellcheck off, for paths, commands and tokens |
+| `reveal` | On a password field, a button at the end that shows and hides what's typed |
 | `icon` | SVG path data for an icon inside the field, before the text |
 | `hide-label` | Keeps the label as the accessible name without showing it |
+
+### Longer text
+
+`multiline` takes text that runs over lines. `optional` marks the one field a form doesn't need.
+
+<Demo id="input-multiline" layout="stack">
+  <gw-input label="Title" placeholder="Backup finished" required></gw-input>
+  <gw-input label="Message" multiline placeholder="All 3 folders were copied" required></gw-input>
+  <gw-input label="Command" monospace optional placeholder="/usr/bin/notify-send" hint="A program to run when it's clicked"></gw-input>
+</Demo>
 
 ### In a form
 
