@@ -45,3 +45,6 @@ const exit = await runtime.runPromiseExit(
 - Wrap each method in `Effect.fn("Service.method")` so traces name it.
 - Fail with a tagged error class carrying a message a person can read, never a thrown `Error`.
 - Fixtures live next to the service, so tests, demos and docs share them.
+- Build on Effect's [built-in services](/effect/platform), such as `ChildProcess`, `HttpClient` or `Socket`, rather than wrapping Node APIs yourself.
+
+The [`effect-service-design`](https://github.com/dmmulroy/skills/tree/main/effect-service-design) skill goes deeper on shaping a service and its layers. Where a system doesn't use Effect, [`effect-principles`](https://github.com/timmo001/skills/tree/main/effect-principles) keeps the same boundaries in plain code.
