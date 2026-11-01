@@ -629,7 +629,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: var(--gw-space-2); align-items: center; padding-inline-end: var(--gw-space-3); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: var(--gw-space-4) var(--gw-space-3); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } `",
+          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: var(--gw-space-2); align-items: center; padding-inline-end: var(--gw-space-3); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: var(--gw-space-4) var(--gw-space-3); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ gw-select .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } gw-select .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } gw-select .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } gw-select .gw-select-clear[hidden] { display: none; } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -1455,6 +1455,558 @@
           "declaration": {
             "name": "GwAlert",
             "module": "src/gw-alert.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-app-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A site or app header pinned to the top of the page, with a brand, nav\nlinks and actions, full width with its content kept to the content width.\nIt's transparent at first, then gets a blurred surface and a bottom border\nonce the page scrolls, or once the element\n`reveal-after` names scrolls out of view, such as a hero. With\n`reveal-after` the brand stays hidden until then, so a large logo in the\nhero hands over to the small one in the bar.\n\n`overlay` lays it over the top of the page rather than taking room, for a\npage that opens with a hero. Below 600px wide the nav moves into a menu\nopened from a button, which closes on Esc, a click outside or a link.",
+          "name": "GwAppBar",
+          "cssParts": [
+            {
+              "description": "The bar.",
+              "name": "bar"
+            },
+            {
+              "description": "The nav links' container, the menu panel on narrow screens.",
+              "name": "nav"
+            }
+          ],
+          "slots": [
+            {
+              "description": "A logo or name linking home.",
+              "name": "brand"
+            },
+            {
+              "description": "The nav links.",
+              "name": ""
+            },
+            {
+              "description": "Icon links and buttons at the end.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ revealAfter: { attribute: \"reveal-after\" }, overlay: { type: \"boolean\", reflect: true }, floating: { type: \"boolean\", reflect: true }, menuOpen: { type: \"boolean\", attribute: \"menu-open\", reflect: true }, menuLabel: { attribute: \"menu-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } .brand { display: flex; flex: none; align-items: center; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } :host([reveal-after]:not([floating])) .brand { pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } .nav { display: flex; flex: 1; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; margin-inline-start: auto; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } @media (max-width: ${menuBelow - 0.02}px) { .menu { display: inline-grid; } .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) var(--gw-space-3); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "revealAfter",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "overlay",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "floating",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "menuOpen",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "menuLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Menu\""
+            },
+            {
+              "kind": "field",
+              "name": "#menuIcon",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#menu",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#nav",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#observer",
+              "privacy": "private",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "toggleMenu",
+              "parameters": [
+                {
+                  "name": "open",
+                  "default": "!this.menuOpen"
+                }
+              ],
+              "description": "Opens or closes the nav menu on narrow screens."
+            },
+            {
+              "kind": "field",
+              "name": "#onScroll",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onKeydown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onOutside",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#unwatch",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#watch",
+              "privacy": "private",
+              "description": "Floats past the `reveal-after` element, or once the page scrolls without one."
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the nav menu opens or closes."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "A CSS selector for the element, such as a hero, to scroll past before the bar floats and the brand shows.",
+              "name": "reveal-after"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Lays the bar over the top of the page instead of taking room.",
+              "name": "overlay"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether it floats. Set by the bar as the page scrolls.",
+              "name": "floating"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the nav menu is open on narrow screens.",
+              "name": "menu-open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The menu button's accessible name. Defaults to `Menu`.",
+              "name": "menu-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-app-bar",
+          "customElement": true,
+          "summary": "A header pinned to the top, floating once the page scrolls."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwAppBar",
+          "declaration": {
+            "name": "GwAppBar",
+            "module": "src/gw-app-bar.ts"
           }
         }
       ]
@@ -11480,7 +12032,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The searchable, keyboard-driven list behind `gw-select` and\n`gw-command-menu`. Only the rows in view are rendered, so it stays quick\nwith thousands of options. Type to filter, move with the arrow keys, Home,\nEnd and Page Up or Down, and pick with Enter or a click; it fires `pick`\nwith the option's value. Call `reset()` each time it's shown.",
+          "description": "The searchable, keyboard-driven list behind `gw-select` and\n`gw-command-menu`. Only the rows in view are rendered, so it stays quick\nwith thousands of options. Type to filter, move with the arrow keys, Home,\nEnd and Page Up or Down, and pick with Enter or a click; it fires `pick`\nwith the option's value. Call `reset()` each time it's shown.\n\nWith `multiple`, every value in `values` is marked as chosen and the list\nis announced as multi-select; the owner toggles `values` on each `pick`.",
           "name": "GwOptionList",
           "cssProperties": [
             {
@@ -11496,7 +12048,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ options: { type: \"json\" }, value: {}, label: {}, search: { type: \"boolean\", reflect: true }, placeholder: {}, }",
+              "default": "{ options: { type: \"json\" }, value: {}, multiple: { type: \"boolean\" }, values: { type: \"json\" }, label: {}, search: { type: \"boolean\", reflect: true }, placeholder: {}, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11509,7 +12061,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; min-height: 0; } .search { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-1) var(--gw-space-3); color: var(--gw-color-text-secondary); border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } :host(:not([search])) .search { display: none; } input { flex: 1; min-width: 0; height: 2.5rem; padding: 0; font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: none; border: 0; outline: none; } /* The search field is always focused while the list is open, so the row's divider marks it rather than a ring */ input:focus-visible { outline: none; } input::placeholder { color: var(--gw-color-text-secondary); } [role=\"listbox\"] { position: relative; max-height: var(--gw-option-list-height, 20rem); overflow-y: auto; overscroll-behavior: contain; outline: none; } .spacer { position: relative; } .row { position: absolute; inset-inline: ${listPadding}px; box-sizing: border-box; display: flex; gap: var(--gw-space-3); align-items: center; padding: 0 var(--gw-space-2); } .group { align-items: flex-end; padding-block-end: var(--gw-space-1); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } [role=\"option\"] { font-size: var(--gw-font-size-s); cursor: pointer; border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } [role=\"option\"][data-active] { background: var(--gw-color-fill-neutral-hovered); } [role=\"option\"][aria-selected=\"true\"] { color: var(--gw-color-text-strong); } [role=\"option\"] > .icon { flex: none; color: var(--gw-color-text-secondary); } [role=\"option\"] > .check { color: var(--gw-color-accent); } .text { display: flex; flex: 1; flex-direction: column; min-width: 0; } .text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .swatches { display: flex; flex: none; } .swatches span { width: 0.875rem; height: 0.875rem; margin-inline-start: -0.25rem; border: 1px solid color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent); border-radius: 50%; } .none { padding: var(--gw-space-4); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; min-height: 0; } .search { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-1) var(--gw-space-3); color: var(--gw-color-text-secondary); border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } :host(:not([search])) .search { display: none; } input { flex: 1; min-width: 0; height: 2.5rem; padding: 0; font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: none; border: 0; outline: none; } /* The search field is always focused while the list is open, so the row's divider marks it rather than a ring */ input:focus-visible { outline: none; } input::placeholder { color: var(--gw-color-text-secondary); } [role=\"listbox\"] { position: relative; max-height: var(--gw-option-list-height, 20rem); overflow-y: auto; overscroll-behavior: contain; outline: none; } .spacer { position: relative; } .row { position: absolute; inset-inline: ${listPadding}px; box-sizing: border-box; display: flex; gap: var(--gw-space-3); align-items: center; padding: 0 var(--gw-space-2); } .group { align-items: flex-end; padding-block-end: var(--gw-space-1); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } [role=\"option\"] { font-size: var(--gw-font-size-s); cursor: pointer; border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } [role=\"option\"][data-active] { background: var(--gw-color-fill-neutral-hovered); } [role=\"option\"][aria-selected=\"true\"] { color: var(--gw-color-text-strong); } [role=\"option\"] > .icon { flex: none; color: var(--gw-color-text-secondary); } [role=\"option\"] > .check { color: var(--gw-color-accent); } .text { display: flex; flex: 1; flex-direction: column; min-width: 0; } .text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .swatches { display: flex; flex: none; } .swatches span, .swatch { width: 0.875rem; height: 0.875rem; margin-inline-start: -0.25rem; border: 1px solid color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent); border-radius: 50%; } .swatch { flex: none; width: 0.625rem; height: 0.625rem; margin-inline: 0.125rem; } .none { padding: var(--gw-space-4); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11530,6 +12082,22 @@
                 "text": "string"
               },
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -11639,6 +12207,19 @@
                 "text": "number"
               },
               "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "#isChosen",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "OptionItem"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -11787,6 +12368,19 @@
                   "name": "top",
                   "type": {
                     "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#swatch",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "color",
+                  "type": {
+                    "text": "string"
                   }
                 }
               ]
@@ -12090,6 +12684,20 @@
               },
               "description": "The selected option's value.",
               "name": "value"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Marks every value in `values` as chosen, for picking several.",
+              "name": "multiple"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The chosen values with `multiple`, as JSON.",
+              "name": "values"
             },
             {
               "type": {
@@ -14036,7 +14644,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below 600px wide the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon` and `data-description`), which it reads once when\nit first connects. A hidden input carries the value in forms, and it fires\n`change` when the value changes.",
+          "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below 600px wide the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
           "name": "GwSelect",
           "members": [
             {
@@ -14046,7 +14654,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, }",
+              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14075,6 +14683,22 @@
                 "text": "string"
               },
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "multiple",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "values",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
             },
             {
               "kind": "field",
@@ -14201,6 +14825,12 @@
             },
             {
               "kind": "field",
+              "name": "#inputs",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#hint",
               "privacy": "private",
               "readonly": true
@@ -14208,6 +14838,12 @@
             {
               "kind": "field",
               "name": "#list",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#clear",
               "privacy": "private",
               "readonly": true
             },
@@ -14271,6 +14907,20 @@
                 "name": "GwElement",
                 "module": "src/element.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "#summary",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "readonly OptionItem[]"
+                  }
+                }
+              ],
+              "description": "What the trigger says: the choice, or with `multiple` the first and how many more."
             },
             {
               "kind": "method",
@@ -14585,7 +15235,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When the value changes."
+              "description": "When the value, or `values` with `multiple`, changes."
             }
           ],
           "attributes": [
@@ -14609,6 +15259,20 @@
               },
               "description": "The chosen option's value.",
               "name": "value"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Picks several options, kept in `values`.",
+              "name": "multiple"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The chosen options' values with `multiple`, as JSON.",
+              "name": "values"
             },
             {
               "type": {
@@ -17096,6 +17760,540 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-theme-picker.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.",
+          "name": "GwThemePicker",
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, status: {}, label: {}, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: inline-block; } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "theme",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "themes",
+              "type": {
+                "text": "readonly OptionItem[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "status",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Theme\""
+            },
+            {
+              "kind": "field",
+              "name": "#button",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#mode",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#theme",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#status",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#file",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#popover",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Opens the popover under the button."
+            },
+            {
+              "kind": "method",
+              "name": "#detail",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "type",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "detail",
+                  "type": {
+                    "text": "Detail"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "reset",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When Reset is pressed."
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{ mode: string }>"
+              },
+              "description": "When a mode is picked.",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{ id: string }>"
+              },
+              "description": "When a theme is picked.",
+              "name": "theme"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{ text: string, name: string }>"
+              },
+              "description": "When a theme file is chosen, with its text and file name.",
+              "name": "import"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "\"auto\"|\"light\"|\"dark\"|\"darker\""
+              },
+              "description": "The mode in use. Defaults to `auto`.",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The theme in use, by id.",
+              "name": "theme"
+            },
+            {
+              "type": {
+                "text": "OptionItem[]"
+              },
+              "description": "The themes to offer, as JSON.",
+              "name": "themes"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "A line under the controls, such as an import's result.",
+              "name": "status"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button's accessible name and the popover's heading. Defaults to `Theme`.",
+              "name": "label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-theme-picker",
+          "customElement": true,
+          "summary": "A button opening the page's mode, theme and import."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwThemePicker",
+          "declaration": {
+            "name": "GwThemePicker",
+            "module": "src/gw-theme-picker.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-toast.ts",
       "declarations": [
         {
@@ -17581,6 +18779,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-app-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-badge.js"
           }
         },
@@ -17798,6 +19004,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-spinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-theme-picker.js"
           }
         },
         {

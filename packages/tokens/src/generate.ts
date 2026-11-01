@@ -233,6 +233,26 @@ const preUpgrade = {
   "gw-page-header": { display: "flex", "min-block-size": "3rem" },
   "gw-page-header[description]": { "min-block-size": "3.6875rem" },
   "gw-section-title": { display: "flex", "align-items": "center" },
+  "gw-app-bar": {
+    position: "sticky",
+    "inset-block-start": "0",
+    "z-index": "50",
+    display: "flex",
+    gap: "var(--gw-space-3)",
+    "align-items": "center",
+    "min-block-size": "calc(3.5rem + 1px)",
+    "padding-inline":
+      "max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2)",
+  },
+  "gw-app-bar[overlay]": { position: "fixed", "inset-inline": "0" },
+  'gw-app-bar[reveal-after]:not(:defined) > [slot="brand"]': {
+    visibility: "hidden",
+  },
+  "gw-theme-picker": {
+    display: "inline-block",
+    "min-block-size": "2.5rem",
+    "vertical-align": "middle",
+  },
   "gw-button[icon]": {
     "padding-inline-start":
       "calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px)",

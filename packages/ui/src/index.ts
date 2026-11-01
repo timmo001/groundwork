@@ -19,6 +19,8 @@ export * from "./on.js";
 
 export * from "./gw-alert.js";
 
+export * from "./gw-app-bar.js";
+
 export * from "./gw-badge.js";
 
 export * from "./gw-banner.js";
@@ -74,5 +76,7 @@ export * from "./gw-setting-row.js";
 export * from "./gw-skeleton.js";
 
 export * from "./gw-spinner.js";
+
+export * from "./gw-theme-picker.js";
 
 export * from "./gw-toast.js";

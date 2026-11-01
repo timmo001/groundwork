@@ -125,6 +125,32 @@ gw-section-title:not(:defined) {
   align-items: center;
 }
 
+gw-app-bar:not(:defined) {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  display: flex;
+  gap: var(--gw-space-3);
+  align-items: center;
+  min-block-size: calc(3.5rem + 1px);
+  padding-inline: max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2);
+}
+
+gw-app-bar[overlay]:not(:defined) {
+  position: fixed;
+  inset-inline: 0;
+}
+
+gw-app-bar[reveal-after]:not(:defined) > [slot="brand"] {
+  visibility: hidden;
+}
+
+gw-theme-picker:not(:defined) {
+  display: inline-block;
+  min-block-size: 2.5rem;
+  vertical-align: middle;
+}
+
 gw-button[icon]:not(:defined) {
   padding-inline-start: calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px);
 }

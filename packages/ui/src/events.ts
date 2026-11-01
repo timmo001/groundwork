@@ -2,6 +2,9 @@
 
 /** The events each `gw-` element fires, by tag. `on()` reads it. */
 export interface GwEventMap {
+  "gw-app-bar": {
+    toggle: Event;
+  };
   "gw-command-menu": {
     pick: CustomEvent<{ value: string }>;
   };
@@ -31,5 +34,11 @@ export interface GwEventMap {
   };
   "gw-select": {
     change: Event;
+  };
+  "gw-theme-picker": {
+    reset: Event;
+    mode: CustomEvent<{ mode: string }>;
+    theme: CustomEvent<{ id: string }>;
+    import: CustomEvent<{ text: string, name: string }>;
   };
 }

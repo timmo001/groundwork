@@ -1,7 +1,34 @@
 ---
 title: Layout
-description: Pages, page headers, section titles, stacks, rows and grids.
+description: App bars, pages, page headers, section titles, stacks, rows and grids.
 ---
+
+## App bar
+
+<Demo id="app-bar" layout="stack">
+  <gw-app-bar style="position: relative">
+    <strong slot="brand">Groundwork</strong>
+    <gw-button variant="neutral" appearance="plain" href="#app-bar">Components</gw-button>
+    <gw-button variant="neutral" appearance="plain" href="#app-bar">Themes</gw-button>
+    <gw-theme-picker slot="actions"></gw-theme-picker>
+  </gw-app-bar>
+</Demo>
+
+A site or app header pinned to the top of the page: a brand in the `brand` slot, nav links in the default slot and icon buttons in `actions`. It runs the full width of the page with its content kept to `--gw-content-width`, and stays transparent until the page scrolls; then it gets a blurred surface and a bottom border, and sets `floating`.
+
+For a page that opens with a hero, set `reveal-after` to a selector for it, such as `[data-hero]`. The bar then stays transparent and hides its brand until the hero scrolls out from under it, so the hero's large logo hands over to the bar's small one. `overlay` lays the bar over the top of the page instead of taking room, so the hero starts at the very top.
+
+Below 600px wide the nav moves into a menu opened from a button, which closes on Esc, a click outside or picking a link. `menu-label` names that button.
+
+```html
+<gw-app-bar reveal-after="[data-hero]" overlay>
+  <a slot="brand" href="/"><img src="/logo.svg" alt="Home" /></a>
+  <a href="/projects">Projects</a>
+  <a href="/stats">Stats</a>
+  <gw-theme-picker slot="actions"></gw-theme-picker>
+</gw-app-bar>
+<section data-hero>…</section>
+```
 
 ## Page header and section title
 
