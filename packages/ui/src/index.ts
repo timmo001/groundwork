@@ -42,6 +42,10 @@ export * from "./gw-menu-button.js";
 
 export * from "./gw-meter.js";
 
+export * from "./gw-notification.js";
+
+export * from "./gw-notification-center.js";
+
 export * from "./gw-page-header.js";
 
 export * from "./gw-popover.js";

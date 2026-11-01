@@ -99,6 +99,16 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-notification",
+      "kind": "element",
+      "description": "gw-notification and gw-notification-center, which keep what needs a decision until it's dealt with",
+      "files": [
+        "packages/ui/src/gw-notification.ts",
+        "packages/ui/src/gw-notification-center.ts"
+      ],
+      "needs": ["ui-base", "gw-button", "gw-empty-state"]
+    },
+    {
       "name": "gw-badge",
       "kind": "element",
       "description": "A pill with an icon, a value and an optional label",

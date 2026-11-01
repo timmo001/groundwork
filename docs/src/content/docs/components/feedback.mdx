@@ -124,6 +124,36 @@ A slim bar across the top of the app, above its content rather than over it, for
 | `open` | Shows it |
 | `urgent` | Announces it at once, for a lost connection |
 
+## Notifications
+
+<Demo id="notifications" layout="stack">
+  <gw-notification-center>
+    <gw-notification heading="Update available" tone="accent" unread time="2 minutes ago" icon="M21,10.12H14.22L16.96,7.3C14.230,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z">
+      <p>Version 2.4 is ready to install.</p>
+      <gw-button slot="actions" size="small" variant="neutral" appearance="outlined">Review update</gw-button>
+    </gw-notification>
+    <gw-notification heading="New device found" tone="info" unread time="1 hour ago" icon="M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z">
+      <p>A phone named Pixel wants to connect.</p>
+      <gw-button slot="actions" size="small" variant="neutral" appearance="outlined">Set up</gw-button>
+    </gw-notification>
+    <gw-notification heading="Backup finished" time="Yesterday" icon="M12,4C14.1,4 16.1,4.8 17.6,6.3C20.7,9.4 20.7,14.5 17.6,17.6C15.8,19.5 13.3,20.2 10.9,19.9L11.4,17.9C13.1,18.1 14.9,17.5 16.2,16.2C18.5,13.9 18.5,10.1 16.2,7.7C15.1,6.6 13.5,6 12,6V10.6L7,5.6L12,0.6V4M6.3,17.6C3.7,15 3.3,11 5.1,7.9L6.6,9.4C5.5,11.6 5.9,14.4 7.8,16.2C8.3,16.7 8.9,17.1 9.6,17.4L9,19.4C8,19 7.1,18.4 6.3,17.6Z">
+      <p>Everything up to today is saved.</p>
+    </gw-notification>
+  </gw-notification-center>
+</Demo>
+
+Something new the person needs to decide or know, such as an update to review or a device to set up. It waits in the notification center until it's dealt with, rather than appearing and leaving like a toast. Put the center on a page of its own, in a side panel, or in a popover from a bell button in the app bar, which shows how many are unread.
+
+Each `gw-notification` has a heading, a line of text, when it happened and up to two actions, which open what it's about. `unread` marks it with a stripe in its tone. Its close button dismisses it: it fires `dismiss`, which you can cancel, then folds away so the list closes up without a jump. Clear all dismisses every one, and once nothing's left the center says so.
+
+| Attribute | What it does                           |
+| --------- | -------------------------------------- |
+| `heading` | What happened, in a few words          |
+| `icon`    | SVG path data for its icon             |
+| `tone`    | Colors the icon and the unread stripe  |
+| `time`    | When it happened, as the app words it  |
+| `unread`  | Marks it as new                        |
+
 ## Toast
 
 Avoid toasts. A toast shows up away from what caused it, covers content and leaves before it's read, which also makes it hard to use with a screen reader or magnifier. Show the outcome where it happened instead:
@@ -132,7 +162,7 @@ Avoid toasts. A toast shows up away from what caused it, covers content and leav
 - **A [popover](/components/overlays#popover) from the button** for a question that follows the action, such as asking to restart after a save, or an undo after a cut.
 - **An [alert](/components/display#alert) in the page** for an error the person needs to read or fix.
 - **A [slim bar](#banner) across the top** for app-wide state: a restart is needed, the connection is lost, or a new version is ready. It's small and out of the way, and its action opens what it's about.
-- **A notification** for something new the person needs to decide or know. It stays in the notification center until it's dealt with.
+- **A [notification](#notifications)** for something new the person needs to decide or know. It stays in the notification center until it's dealt with.
 
 A toast is the last resort, for something brief that nothing on screen can show, such as a link copied with a keyboard shortcut. It only tells: it has no buttons or links, and clicks go straight through it. Anything with an action, such as "Update now", is a notification or a bar instead, since a toast leaves before it can be used and may sit under a dialog.
 
