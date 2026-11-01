@@ -58,7 +58,16 @@ export default defineConfig(
             "/components/feedback",
             "/components/overlays",
             "/components/layout",
-            "/components/lit-effect",
+          ],
+        },
+        {
+          label: "Effect",
+          root: "/effect",
+          items: [
+            "/effect/services",
+            "/effect/schema",
+            "/effect/cli-and-agents",
+            "/effect/lit",
           ],
         },
         "/roadmap",

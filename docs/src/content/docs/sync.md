@@ -5,7 +5,7 @@ description: How packages roll out to apps, and how QML panel components travel 
 
 Everything Groundwork makes reaches what uses it on its own, as soon as it changes. Nothing waits on Renovate or a go-ahead: each update runs the consumer's checks, with [agent-checks](https://github.com/timmo001/agent-checks) and an agent where a check needs judgment, pushes when they pass, and sends a notification. If it can be automated, it is; only what can't is flagged.
 
-- Packages roll out to every consumer on each release: docs-kit, and the web components, tokens and lit-effect once they publish.
+- Packages roll out to every consumer on each release: docs-kit, and the web components, tokens and [lit-effect](/effect/lit) once they publish.
 - QML panel components reach apps as copies. Each app owns its copy, and the sync keeps it current and carries edits back.
 - Until the web packages publish, web components and token files travel as copies too.
 

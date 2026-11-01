@@ -1,9 +1,9 @@
 ---
-title: lit-effect
-description: AtomController, the registry context and a typed router, joining Lit components to Effect atoms.
+title: Lit
+description: lit-effect's AtomController, registry context and typed router, joining Lit components to Effect atoms.
 ---
 
-The glue between Lit and Effect. App state lives in Effect atoms (`effect/reactivity`); components read them through a controller, and the URL is an atom too. It reaches apps through the [sync](/sync) as the `lit-effect` item.
+`lit-effect` is the glue between Lit and Effect. App state lives in Effect atoms (`effect/reactivity`); components read them through a controller, and the URL is an atom too. It reaches apps through the [sync](/sync) as the `lit-effect` item.
 
 ## AtomController
 
