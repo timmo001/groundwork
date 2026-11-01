@@ -35,6 +35,7 @@ Keep a popover to one or two fields. A longer form is a view of its own, not a p
 | `heading` | A heading. A confirmation that's only a question leaves it out, and the question is the message |
 | `confirm` | Makes it an `alertdialog`, for a question that needs an answer |
 | `close(value)` | Closes it; `returnValue` holds the value when it fires `close` |
+| `close-label` | The close button's name, for an app in another language. A dialog takes it too |
 
 It's on the Popover API, in the top layer, so a scrolling parent never clips it. It has a close button in its corner, like a dialog, and the footer holds only the real actions, never a Cancel or Later that does what the close button does. Focus starts on the close button, so Enter never confirms by accident, and goes back to the button afterward. It follows the button as the page scrolls, and it's a bottom sheet below 600px wide. Esc and a click outside close it the same way a [dialog](#closing) closes.
 
@@ -77,6 +78,7 @@ A panel of filters, settings or details that slides in from an edge over the pag
 | `side` | `auto` (the default), `start`, `end` or `bottom` |
 | `show()`, `close()`, `toggle()` | Opens or closes it; `toggle()` suits the button that opens it |
 | `open` | Whether it's open |
+| `close-label` | The close button's name, for an app in another language |
 
 It's on the Popover API, in the top layer. Esc, a click outside or the close button closes it, focus starts on the close button and goes back to where it was, and it fires `close`. Set `--gw-sheet-width` for the side edges and `--gw-sheet-height` for the bottom.
 

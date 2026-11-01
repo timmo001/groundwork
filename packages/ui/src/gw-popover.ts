@@ -34,6 +34,7 @@ const sheetBelow = 600;
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
+ * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  *
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
@@ -51,6 +52,7 @@ export class GwPopover extends GwElement {
   static override properties = {
     heading: {},
     confirm: { type: "boolean" },
+    closeLabel: { attribute: "close-label" },
   } as const;
 
   static override styles = [
@@ -188,6 +190,8 @@ export class GwPopover extends GwElement {
 
   declare heading: string;
   declare confirm: boolean;
+  /** The close button's name, for an app in another language. */
+  declare closeLabel: string;
 
   /** The value of the action that closed it, or "" for Esc or a click outside. */
   returnValue = "";
@@ -242,6 +246,7 @@ export class GwPopover extends GwElement {
     super();
     this.heading = "";
     this.confirm = false;
+    this.closeLabel = "Close";
   }
 
   /** Whether its content has changed since it opened, so closing it asks first. */
@@ -382,6 +387,7 @@ export class GwPopover extends GwElement {
     setAttribute(popover, "aria-describedby", this.heading ? "body" : null);
     this.#heading.textContent = this.heading;
     this.#heading.hidden = !this.heading;
+    this.#closeButton.textContent = this.closeLabel;
   }
 }
 

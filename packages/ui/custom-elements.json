@@ -6401,7 +6401,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, }",
+              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, closeLabel: { attribute: \"close-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6435,6 +6435,15 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language.",
+              "default": "\"Close\""
             },
             {
               "kind": "field",
@@ -6854,6 +6863,13 @@
               },
               "description": "Whether it shows.",
               "name": "open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language. Defaults to `Close`.",
+              "name": "close-label"
             }
           ],
           "superclass": {
@@ -13839,7 +13855,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, confirm: { type: \"boolean\" }, }",
+              "default": "{ heading: {}, confirm: { type: \"boolean\" }, closeLabel: { attribute: \"close-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13873,6 +13889,15 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language.",
+              "default": "\"Close\""
             },
             {
               "kind": "field",
@@ -14324,6 +14349,13 @@
               },
               "description": "Makes it an `alertdialog`, for a question that needs an answer.",
               "name": "confirm"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language. Defaults to `Close`.",
+              "name": "close-label"
             }
           ],
           "superclass": {
@@ -16614,7 +16646,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, side: { reflect: true }, }",
+              "default": "{ heading: {}, side: { reflect: true }, closeLabel: { attribute: \"close-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16648,6 +16680,15 @@
                 "text": "\"auto\" | Side"
               },
               "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language.",
+              "default": "\"Close\""
             },
             {
               "kind": "field",
@@ -17061,6 +17102,13 @@
               },
               "description": "The edge it slides in from. `auto` is the start edge, or the bottom on narrow screens. Defaults to `auto`.",
               "name": "side"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language. Defaults to `Close`.",
+              "name": "close-label"
             }
           ],
           "superclass": {

@@ -24,6 +24,7 @@ const closeIcon =
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} open - Whether it shows.
+ * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  *
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
@@ -40,6 +41,7 @@ export class GwDialog extends GwElement {
   static override properties = {
     heading: {},
     open: { type: "boolean", reflect: true },
+    closeLabel: { attribute: "close-label" },
   } as const;
 
   static override styles = [
@@ -135,6 +137,8 @@ export class GwDialog extends GwElement {
 
   declare heading: string;
   declare open: boolean;
+  /** The close button's name, for an app in another language. */
+  declare closeLabel: string;
 
   /** The value of the action that closed the dialog, or "" for Esc. */
   returnValue = "";
@@ -143,6 +147,7 @@ export class GwDialog extends GwElement {
     super();
     this.heading = "";
     this.open = false;
+    this.closeLabel = "Close";
   }
 
   readonly #heading = h("h2", { id: "heading", part: "heading" });
@@ -236,6 +241,7 @@ export class GwDialog extends GwElement {
     const dialog = this.#dialog;
 
     this.#heading.textContent = this.heading;
+    this.#closeButton.textContent = this.closeLabel;
 
     if (this.open && !dialog.open) {
       dialog.showModal();

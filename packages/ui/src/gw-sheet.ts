@@ -37,6 +37,7 @@ const narrow = "(width < 40rem)";
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {"auto"|"start"|"end"|"bottom"} side - The edge it slides in from. `auto` is the start edge, or the bottom on narrow screens. Defaults to `auto`.
+ * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  *
  * @slot - The content, which scrolls.
  * @slot actions - Buttons in the header, after the heading.
@@ -55,6 +56,7 @@ export class GwSheet extends GwElement {
   static override properties = {
     heading: {},
     side: { reflect: true },
+    closeLabel: { attribute: "close-label" },
   } as const;
 
   static override styles = [
@@ -179,6 +181,8 @@ export class GwSheet extends GwElement {
 
   declare heading: string;
   declare side: "auto" | Side;
+  /** The close button's name, for an app in another language. */
+  declare closeLabel: string;
 
   readonly #heading = h("h2", { id: "heading", part: "heading" });
 
@@ -220,6 +224,7 @@ export class GwSheet extends GwElement {
     super();
     this.heading = "";
     this.side = "auto";
+    this.closeLabel = "Close";
   }
 
   /** Whether it's open. */
@@ -294,6 +299,7 @@ export class GwSheet extends GwElement {
       this.heading ? "heading" : null,
     );
     this.#heading.hidden = !this.heading;
+    this.#closeButton.textContent = this.closeLabel;
     this.#place();
   }
 }
