@@ -87,10 +87,10 @@
     },
     "packages/docs-kit": {
       "name": "@timmo001/docs-kit",
-      "version": "0.9.23",
+      "version": "0.9.24",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.9.22",
-        "@timmo001/groundwork-ui": "0.9.22",
+        "@timmo001/groundwork-tokens": "0.9.24",
+        "@timmo001/groundwork-ui": "0.9.24",
         "sharp": "0.35.5",
       },
       "devDependencies": {
@@ -145,7 +145,7 @@
     },
     "packages/tokens": {
       "name": "@timmo001/groundwork-tokens",
-      "version": "0.9.23",
+      "version": "0.9.24",
       "dependencies": {
         "@types/culori": "4.0.1",
         "culori": "4.0.2",
@@ -164,10 +164,10 @@
     },
     "packages/tui": {
       "name": "@timmo001/groundwork-tui",
-      "version": "0.9.23",
+      "version": "0.9.24",
       "dependencies": {
         "@opentui/core": "0.8.1",
-        "@timmo001/groundwork-tokens": "0.9.22",
+        "@timmo001/groundwork-tokens": "0.9.24",
         "effect": "4.1.1",
         "fuse.js": "7.5.0",
       },
@@ -183,7 +183,7 @@
     },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
-      "version": "0.9.23",
+      "version": "0.9.24",
       "devDependencies": {
         "@custom-elements-manifest/analyzer": "0.11.0",
         "@oxlint/plugins": "1.90.0",
@@ -2332,12 +2332,6 @@
     "@tailwindcss/oxide-wasm32-wasi/@tybys/wasm-util": ["@tybys/wasm-util@0.10.4", "", { "dependencies": { "tslib": "^2.4.0" }, "bundled": true }, "sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A=="],
 
     "@tailwindcss/oxide-wasm32-wasi/tslib": ["tslib@2.8.1", "", { "bundled": true }, "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="],
-
-    "@timmo001/docs-kit/@timmo001/groundwork-tokens": ["@timmo001/groundwork-tokens@0.9.22", "", { "dependencies": { "@types/culori": "4.0.1", "culori": "4.0.2", "effect": "4.1.1" } }, "sha512-QFXF2jWDMKNmLyQ/L60H3R6PlOzojiGenfNI+CXJxk+0FXo2AdGSBanRVQr+NiGQl7qJ+DsvE8HaYHEl07O2FA=="],
-
-    "@timmo001/docs-kit/@timmo001/groundwork-ui": ["@timmo001/groundwork-ui@0.9.22", "", {}, "sha512-LtBFquKF2XFzKdAm66DGa+PmpQwxyclXVFS4V3B1bol6W4CpxRppDVzbJYpI3hURAaGfpvZvcBsmnoNsxoYV3g=="],
-
-    "@timmo001/groundwork-tui/@timmo001/groundwork-tokens": ["@timmo001/groundwork-tokens@0.9.22", "", { "dependencies": { "@types/culori": "4.0.1", "culori": "4.0.2", "effect": "4.1.1" } }, "sha512-QFXF2jWDMKNmLyQ/L60H3R6PlOzojiGenfNI+CXJxk+0FXo2AdGSBanRVQr+NiGQl7qJ+DsvE8HaYHEl07O2FA=="],
 
     "@vercel/cli-config/zod": ["zod@4.1.11", "", {}, "sha512-WPsqwxITS2tzx1bzhIKsEs19ABD5vmCVa4xBo2tq/SrV4RNZtfws1EnCWQXM6yh8bD08a1idvkB5MZSBiZsjwg=="],
 
