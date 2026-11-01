@@ -3652,7 +3652,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A surface for one group of content, with an optional heading and actions.\nWith `href` the whole card is a link. While `loading`, lines of skeleton\nstand in for the content, and for the heading until it's known. The card\nglides to its new height and the content fades in once it's loaded.",
+          "description": "A surface for one group of content, with an optional heading and actions.\nWith `href` the whole card is a link. While `loading`, lines of skeleton\nstand in for the content, and for the heading until it's known. The card\nglides to its new height and the content fades in once it's loaded.\n\nFor a link the page's HTML has to carry, such as one with a `target` or\n`rel`, put an `<a>` in the `heading` slot instead of `href`. A click\nanywhere on the card that isn't on another control follows it, the card\nshows the link's hover and focus, and the link stays a real one in the\npage, so the rest of the card's content stays plain text.",
           "name": "GwCard",
           "cssParts": [
             {
@@ -3676,6 +3676,10 @@
             {
               "description": "The content.",
               "name": ""
+            },
+            {
+              "description": "The heading, in place of `heading`. An `<a>` here makes the whole card follow it.",
+              "name": "heading"
             },
             {
               "description": "Buttons beside the heading.",
@@ -3703,7 +3707,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-space-3); height: 100%; padding: var(--gw-space-4); color: inherit; text-decoration: none; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-s); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover { border-color: var(--gw-color-border-accent); } header { display: flex; gap: var(--gw-space-2); align-items: center; } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
+              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-space-3); height: 100%; padding: var(--gw-space-4); color: inherit; text-decoration: none; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-s); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover, .card.linked:hover { border-color: var(--gw-color-border-accent); } /* A card following a link in its heading slot */ .card.linked { cursor: pointer; transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } .card.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } ::slotted([slot=\"heading\"]) { font: inherit; color: inherit; } ::slotted(a[slot=\"heading\"]) { text-decoration: none; outline: none; } header { display: flex; gap: var(--gw-space-2); align-items: center; } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -3764,6 +3768,12 @@
             },
             {
               "kind": "field",
+              "name": "#headingSlot",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#header",
               "privacy": "private",
               "readonly": true
@@ -3805,6 +3815,17 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#link",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "HTMLAnchorElement | null"
+                }
+              },
+              "description": "The `<a>` in the heading slot, or holding it, when there is one."
             },
             {
               "kind": "method",

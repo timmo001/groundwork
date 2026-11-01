@@ -15,6 +15,12 @@ import { base } from "./styles.js";
  * stand in for the content, and for the heading until it's known. The card
  * glides to its new height and the content fades in once it's loaded.
  *
+ * For a link the page's HTML has to carry, such as one with a `target` or
+ * `rel`, put an `<a>` in the `heading` slot instead of `href`. A click
+ * anywhere on the card that isn't on another control follows it, the card
+ * shows the link's hover and focus, and the link stays a real one in the
+ * page, so the rest of the card's content stays plain text.
+ *
  * @element gw-card
  * @summary A surface for one group of content, or a link to more.
  *
@@ -25,6 +31,7 @@ import { base } from "./styles.js";
  * @attr {number} lines - How many skeleton lines while loading. Defaults to 3.
  *
  * @slot - The content.
+ * @slot heading - The heading, in place of `heading`. An `<a>` here makes the whole card follow it.
  * @slot actions - Buttons beside the heading.
  *
  * @csspart card - The card's surface.
@@ -71,8 +78,30 @@ export class GwCard extends GwElement {
         transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
       }
 
-      a.card:hover {
+      a.card:hover,
+      .card.linked:hover {
         border-color: var(--gw-color-border-accent);
+      }
+
+      /* A card following a link in its heading slot */
+      .card.linked {
+        cursor: pointer;
+        transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
+      }
+
+      .card.focused {
+        outline: var(--gw-focus-width) solid var(--gw-color-focus);
+        outline-offset: var(--gw-focus-offset);
+      }
+
+      ::slotted([slot="heading"]) {
+        font: inherit;
+        color: inherit;
+      }
+
+      ::slotted(a[slot="heading"]) {
+        text-decoration: none;
+        outline: none;
       }
 
       header {
@@ -108,10 +137,18 @@ export class GwCard extends GwElement {
 
   readonly #titleSkeleton = h("gw-skeleton-text");
 
+  readonly #headingSlot = h("slot", { name: "heading" });
+
   readonly #header = h(
     "header",
     { part: "header" },
-    h("h2", { part: "heading" }, this.#title, this.#titleSkeleton),
+    h(
+      "h2",
+      { part: "heading" },
+      this.#title,
+      this.#headingSlot,
+      this.#titleSkeleton,
+    ),
     h("slot", { name: "actions" }),
   );
 
@@ -132,6 +169,57 @@ export class GwCard extends GwElement {
     this.flush = false;
     this.loading = false;
     this.lines = 3;
+
+    // A click on the card, but not on another control in it, follows the
+    // link in the heading slot
+    this.addEventListener("click", (event) => {
+      const link = this.#link();
+
+      if (link === null || this.loading) return;
+
+      const path = event.composedPath();
+      const own = path.slice(0, path.indexOf(this));
+
+      if (
+        own.some(
+          (node) =>
+            node instanceof HTMLElement &&
+            node.matches(
+              "a, button, input, select, textarea, label, [tabindex], gw-button",
+            ),
+        )
+      ) {
+        return;
+      }
+
+      // Selecting text in the card shouldn't open the link
+      if (getSelection()?.toString()) return;
+
+      link.click();
+    });
+
+    const focus = () => {
+      this.#card.classList.toggle(
+        "focused",
+        this.#link()?.matches(":focus-visible") === true,
+      );
+    };
+
+    this.addEventListener("focusin", focus);
+    this.addEventListener("focusout", focus);
+
+    this.#headingSlot.addEventListener("slotchange", () => {
+      this.requestUpdate("heading");
+    });
+  }
+
+  /** The `<a>` in the heading slot, or holding it, when there is one. */
+  #link(): HTMLAnchorElement | null {
+    const heading = this.querySelector(":scope > [slot='heading']");
+
+    if (heading instanceof HTMLAnchorElement) return heading;
+
+    return heading?.querySelector("a") ?? null;
   }
 
   protected override create(root: ShadowRoot) {
@@ -163,9 +251,14 @@ export class GwCard extends GwElement {
     if (this.#card instanceof HTMLAnchorElement) this.#card.href = this.href;
 
     setAttribute(this.#card, "aria-busy", this.loading ? "true" : null);
+
+    const slotted = this.querySelector(":scope > [slot='heading']") !== null;
+
+    this.#card.classList.toggle("linked", this.#link() !== null && !this.href);
     this.#title.textContent = this.heading;
-    this.#titleSkeleton.hidden = this.heading !== "" || !this.loading;
-    this.#header.hidden = !this.heading && !this.loading;
+    this.#titleSkeleton.hidden =
+      this.heading !== "" || slotted || !this.loading;
+    this.#header.hidden = !this.heading && !slotted && !this.loading;
     this.#skeleton.lines = this.lines;
     this.#skeleton.hidden = !this.loading;
     this.#body.hidden = this.loading;
