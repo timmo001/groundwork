@@ -34,4 +34,23 @@ const { theme = "base", layout = "row", id } = Astro.props;
     display: block;
     margin-block: 1.5rem;
   }
+
+  /* Before the frame's script runs, keep the room its toolbar and stage
+     will take, so the page doesn't move when it upgrades */
+  .demo:not(:defined) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gw-space-3);
+    align-items: center;
+    padding: calc(var(--gw-space-6) + var(--gw-space-3) * 2 + 2.5rem + 1px)
+      var(--gw-space-5) var(--gw-space-6);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .demo:not(:defined)[layout="stack"] {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
 </style>

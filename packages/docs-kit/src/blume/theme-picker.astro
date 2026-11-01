@@ -198,6 +198,13 @@ const modes = [
     margin-inline: 0.25rem;
   }
 
+  /* Keep the room the controls take once they upgrade, so the header
+     doesn't move */
+  .gw-theme-picker:has(:not(:defined)) {
+    min-inline-size: 16.75rem;
+    min-block-size: 2.5rem;
+  }
+
   /* The picker's mode toggle replaces Blume's own light and dark button */
   :global([data-blume-header]:has(.gw-theme-picker) [data-blume-theme-toggle]) {
     display: none;

@@ -63,6 +63,176 @@ gw-fade-in:not(:defined) {
   opacity: 0;
 }
 
+gw-button:not(:defined),
+gw-menu-button:not(:defined),
+gw-segmented:not(:defined) {
+  display: inline-block;
+  min-block-size: 2.5rem;
+  vertical-align: middle;
+}
+
+gw-button:not(:defined) {
+  padding-inline: calc(var(--gw-space-4) + 1px);
+  font-size: var(--gw-font-size-s);
+  font-weight: var(--gw-font-weight-strong);
+  line-height: 2.5rem;
+  white-space: nowrap;
+  text-transform: var(--gw-label-transform);
+  letter-spacing: var(--gw-label-tracking);
+}
+
+gw-button[size="xs"]:not(:defined) {
+  min-block-size: 1.5rem;
+  line-height: 1.5rem;
+}
+
+gw-button[size="small"]:not(:defined) {
+  min-block-size: 2rem;
+  line-height: 2rem;
+}
+
+gw-button[size="large"]:not(:defined) {
+  min-block-size: 3rem;
+  line-height: 3rem;
+}
+
+gw-button[size="xl"]:not(:defined) {
+  min-block-size: 3.5rem;
+  line-height: 3.5rem;
+}
+
+gw-card:not(:defined) {
+  display: block;
+  padding: var(--gw-space-4);
+  border: var(--gw-border-width) solid transparent;
+}
+
+gw-card[heading]:not(:defined) {
+  padding-block-start: calc(var(--gw-space-4) + 1.5rem + var(--gw-space-3));
+}
+
+gw-page-header:not(:defined) {
+  display: flex;
+  min-block-size: 3rem;
+}
+
+gw-page-header[description]:not(:defined) {
+  min-block-size: 3.6875rem;
+}
+
+gw-section-title:not(:defined) {
+  display: flex;
+  align-items: center;
+}
+
+gw-button[icon]:not(:defined) {
+  padding-inline-start: calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px);
+}
+
+gw-button:not(:defined) > [slot="icon"] {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  margin-inline-end: var(--gw-space-2);
+  vertical-align: middle;
+}
+
+gw-chip:not(:defined) {
+  display: inline-flex;
+  min-block-size: 2rem;
+}
+
+gw-badge:not(:defined) {
+  display: inline-flex;
+  min-block-size: 2.25rem;
+}
+
+gw-badge[size="small"]:not(:defined) {
+  min-block-size: 1.75rem;
+}
+
+gw-dot:not(:defined) {
+  display: inline-block;
+  inline-size: 0.5rem;
+  min-block-size: 0.5rem;
+}
+
+gw-meter:not(:defined) {
+  display: block;
+  min-block-size: 2.25rem;
+}
+
+gw-gauge:not(:defined) {
+  display: inline-block;
+  inline-size: 8.5rem;
+  min-block-size: 9.625rem;
+}
+
+gw-alert:not(:defined) {
+  display: block;
+  min-block-size: 2.5rem;
+}
+
+gw-spinner:not(:defined),
+gw-skeleton-icon:not(:defined) {
+  display: inline-flex;
+  min-block-size: 1.25rem;
+}
+
+gw-input:not(:defined),
+gw-select:not(:defined) {
+  display: flex;
+  min-block-size: 4.5rem;
+}
+
+gw-input:is([hint]:not(:defined),
+[error]):not(:defined),
+gw-select:is([hint]:not(:defined),
+[error]):not(:defined) {
+  min-block-size: 6.25rem;
+}
+
+gw-select:is([label-hidden]:not(:defined),
+[inline-label]):not(:defined) {
+  min-block-size: 2.5rem;
+}
+
+gw-select[inline-label]:not(:defined) {
+  display: inline-flex;
+}
+
+gw-checkbox:not(:defined),
+gw-switch:not(:defined) {
+  display: flex;
+  min-block-size: 1.5rem;
+}
+
+gw-stack:not(:defined) {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gw-space-3);
+}
+
+gw-row:not(:defined) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gw-space-2);
+}
+
+gw-grid:not(:defined) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--gw-grid-min, 18rem)), 1fr));
+  gap: var(--gw-space-3);
+}
+
+gw-dialog:not(:defined),
+gw-popover:not(:defined),
+gw-command-menu:not(:defined),
+gw-toaster:not(:defined),
+gw-option-list:not(:defined) {
+  display: none;
+}
+
 [data-gw-theme="base"] {
   --gw-font-sans: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
   --gw-font-figures: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;

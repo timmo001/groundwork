@@ -185,12 +185,137 @@ export const themeCss = (theme: ResolvedTheme) => {
   return blocks.join("\n\n");
 };
 
+/**
+ * What each `gw-` element looks like before its script defines it: the
+ * display and block size it will have, so nothing moves when it upgrades.
+ */
+const preUpgrade = {
+  "gw-fade-in": { opacity: "0" },
+  "gw-button, gw-menu-button, gw-segmented": {
+    display: "inline-block",
+    "min-block-size": "2.5rem",
+    "vertical-align": "middle",
+  },
+  "gw-button": {
+    "padding-inline": "calc(var(--gw-space-4) + 1px)",
+    "font-size": "var(--gw-font-size-s)",
+    "font-weight": "var(--gw-font-weight-strong)",
+    "line-height": "2.5rem",
+    "white-space": "nowrap",
+    "text-transform": "var(--gw-label-transform)",
+    "letter-spacing": "var(--gw-label-tracking)",
+  },
+  'gw-button[size="xs"]': {
+    "min-block-size": "1.5rem",
+    "line-height": "1.5rem",
+  },
+  'gw-button[size="small"]': {
+    "min-block-size": "2rem",
+    "line-height": "2rem",
+  },
+  'gw-button[size="large"]': {
+    "min-block-size": "3rem",
+    "line-height": "3rem",
+  },
+  'gw-button[size="xl"]': {
+    "min-block-size": "3.5rem",
+    "line-height": "3.5rem",
+  },
+  "gw-card": {
+    display: "block",
+    padding: "var(--gw-space-4)",
+    border: "var(--gw-border-width) solid transparent",
+  },
+  "gw-card[heading]": {
+    "padding-block-start":
+      "calc(var(--gw-space-4) + 1.5rem + var(--gw-space-3))",
+  },
+  "gw-page-header": { display: "flex", "min-block-size": "3rem" },
+  "gw-page-header[description]": { "min-block-size": "3.6875rem" },
+  "gw-section-title": { display: "flex", "align-items": "center" },
+  "gw-button[icon]": {
+    "padding-inline-start":
+      "calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px)",
+  },
+  'gw-button:not(:defined) > [slot="icon"]': {
+    "inline-size": "1.125rem",
+    "block-size": "1.125rem",
+    "margin-inline-end": "var(--gw-space-2)",
+    "vertical-align": "middle",
+  },
+  "gw-chip": { display: "inline-flex", "min-block-size": "2rem" },
+  "gw-badge": { display: "inline-flex", "min-block-size": "2.25rem" },
+  'gw-badge[size="small"]': { "min-block-size": "1.75rem" },
+  "gw-dot": {
+    display: "inline-block",
+    "inline-size": "0.5rem",
+    "min-block-size": "0.5rem",
+  },
+  "gw-meter": { display: "block", "min-block-size": "2.25rem" },
+  "gw-gauge": {
+    display: "inline-block",
+    "inline-size": "8.5rem",
+    "min-block-size": "9.625rem",
+  },
+  "gw-alert": { display: "block", "min-block-size": "2.5rem" },
+  "gw-spinner, gw-skeleton-icon": {
+    display: "inline-flex",
+    "min-block-size": "1.25rem",
+  },
+  "gw-input, gw-select": { display: "flex", "min-block-size": "4.5rem" },
+  "gw-input:is([hint], [error]), gw-select:is([hint], [error])": {
+    "min-block-size": "6.25rem",
+  },
+  "gw-select:is([label-hidden], [inline-label])": {
+    "min-block-size": "2.5rem",
+  },
+  "gw-select[inline-label]": { display: "inline-flex" },
+  "gw-checkbox, gw-switch": { display: "flex", "min-block-size": "1.5rem" },
+  "gw-stack": {
+    display: "flex",
+    "flex-direction": "column",
+    gap: "var(--gw-space-3)",
+  },
+  "gw-row": {
+    display: "flex",
+    "flex-wrap": "wrap",
+    "align-items": "center",
+    gap: "var(--gw-space-2)",
+  },
+  "gw-grid": {
+    display: "grid",
+    "grid-template-columns":
+      "repeat(auto-fill, minmax(min(100%, var(--gw-grid-min, 18rem)), 1fr))",
+    gap: "var(--gw-space-3)",
+  },
+  "gw-dialog, gw-popover, gw-command-menu, gw-toaster, gw-option-list": {
+    display: "none",
+  },
+};
+
+const preUpgradeCss = Object.entries(preUpgrade)
+  .map(([selectors, properties]) => {
+    const selector = selectors
+      .split(", ")
+      .map((item) =>
+        item.includes(":not(:defined)") ? item : `${item}:not(:defined)`,
+      )
+      .join(",\n");
+
+    const body = Object.entries(properties)
+      .map(([name, value]) => `  ${name}: ${value};`)
+      .join("\n");
+
+    return `${selector} {\n${body}\n}`;
+  })
+  .join("\n\n");
+
 export const css = (themes: readonly ResolvedTheme[]) =>
   [
     `/* ${header} */`,
     `:root {\n${declarations(foundations)}\n}`,
     `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-instant: 1ms;\n    --gw-motion-fast: 1ms;\n    --gw-motion-normal: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
-    "gw-fade-in:not(:defined) {\n  opacity: 0;\n}",
+    preUpgradeCss,
     ...themes.map(themeCss),
   ].join("\n\n") + "\n";
 

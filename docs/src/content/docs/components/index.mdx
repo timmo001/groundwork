@@ -54,6 +54,16 @@ Password managers and `<label for>` can't reach into a shadow root, and a form o
 
 Components that show an icon take it as path data in an `icon` attribute, or an `<svg slot="icon">`. [Iconography](/foundations/iconography) covers picking a set and when to show an icon on its own.
 
+## No jumps on load
+
+A page shouldn't move while its components load. Before a `gw-` element's script defines it, `themes.css` gives it the display and size it will have once it upgrades: buttons keep their height, padding and label width, fields keep their label and hint rows, layouts keep their flow, and dialogs, popovers and menus stay hidden until they're opened.
+
+- Size content that a script fills in (a chart, a list from a server) with a skeleton of the same size, so the real content replaces it in place.
+- Reserve room for anything that appears after load, such as a banner or a header control, rather than pushing the page down.
+- Animate entrances with opacity and transforms, which don't move anything around them.
+
+The docs check every page with a Playwright test that measures the layout shift while it loads. It fails above 0.025, a quarter of the 0.1 the web counts as good, and lists what moved.
+
 ## References
 
 - Home Assistant: [Components](https://contributors.home-assistant.io/design/components/) · [Code](https://github.com/home-assistant/frontend/tree/dev/src/components)
