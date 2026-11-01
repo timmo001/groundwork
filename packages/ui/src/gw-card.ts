@@ -7,7 +7,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { animateHeight, fadeIn } from "./motion.js";
-import { base } from "./styles.js";
+import { base, createIcon, setIconPath } from "./styles.js";
 
 /**
  * A surface for one group of content, with an optional heading and actions.
@@ -26,6 +26,7 @@ import { base } from "./styles.js";
  *
  * @attr {string} heading - The card's heading.
  * @attr {string} description - A line under the heading.
+ * @attr {string} icon - SVG path data for an icon before the heading, such as on a card that links to a section.
  * @attr {number} level - The heading's level for assistive tech, 2 by default. Use 3 for a card under a section heading.
  * @attr {string} href - Makes the whole card a link to this address.
  * @attr {boolean} flush - Drops the padding, for content that runs to the edges.
@@ -48,6 +49,7 @@ export class GwCard extends GwElement {
   static override properties = {
     heading: {},
     description: {},
+    icon: {},
     level: { type: "number" },
     href: {},
     flush: { type: "boolean", reflect: true },
@@ -117,6 +119,12 @@ export class GwCard extends GwElement {
         align-items: center;
       }
 
+      header > .icon {
+        flex-shrink: 0;
+        margin-inline-end: var(--gw-space-1);
+        color: var(--gw-color-accent);
+      }
+
       .titles {
         display: flex;
         flex: 1;
@@ -162,6 +170,8 @@ export class GwCard extends GwElement {
 
   declare heading: string;
   declare description: string;
+  /** SVG path data for an icon before the heading. */
+  declare icon: string;
   /** The heading's level for assistive tech. */
   declare level: number;
   declare href: string;
@@ -189,9 +199,12 @@ export class GwCard extends GwElement {
     part: "description",
   });
 
+  readonly #icon = createIcon("");
+
   readonly #header: HTMLElement = h(
     "header",
     { part: "header" },
+    this.#icon,
     h("div", { class: "titles" }, this.#heading, this.#description),
     h("slot", { name: "actions" }),
   );
@@ -206,10 +219,14 @@ export class GwCard extends GwElement {
 
   readonly #skeleton = h("gw-skeleton-lines");
 
+  readonly #bodySlot = h("slot");
+
+  #empty = true;
+
   readonly #body: HTMLDivElement = h(
     "div",
     { class: "body", part: "body" },
-    h("slot"),
+    this.#bodySlot,
   );
 
   #card: HTMLElement = h("section", { class: "card", part: "card" });
@@ -222,6 +239,7 @@ export class GwCard extends GwElement {
     super();
     this.heading = "";
     this.description = "";
+    this.icon = "";
     this.level = 2;
     this.href = "";
     this.flush = false;
@@ -274,6 +292,17 @@ export class GwCard extends GwElement {
       this.#footer.hidden =
         this.#footerSlot.assignedNodes({ flatten: true }).length === 0;
     });
+
+    // A card with only a header, such as a link to a section, has no body gap
+    this.#bodySlot.addEventListener("slotchange", () => {
+      this.#empty = this.#bodySlot
+        .assignedNodes({ flatten: true })
+        .every(
+          (node) =>
+            node.nodeType === Node.TEXT_NODE && !node.textContent?.trim(),
+        );
+      this.requestUpdate("loading");
+    });
   }
 
   /** The `<a>` in the heading slot, or holding it, when there is one. */
@@ -322,14 +351,20 @@ export class GwCard extends GwElement {
     this.#heading.setAttribute("aria-level", String(this.level || 2));
     this.#description.textContent = this.description;
     this.#description.hidden = !this.description;
+    setIconPath(this.#icon, this.icon);
+    this.#icon.toggleAttribute("hidden", !this.icon);
     this.#titleSkeleton.hidden =
       this.heading !== "" || slotted || !this.loading;
     this.#header.hidden =
-      !this.heading && !this.description && !slotted && !this.loading;
+      !this.heading &&
+      !this.description &&
+      !this.icon &&
+      !slotted &&
+      !this.loading;
     this.#heading.hidden = !this.heading && !slotted && !this.loading;
     this.#skeleton.lines = this.lines;
     this.#skeleton.hidden = !this.loading;
-    this.#body.hidden = this.loading;
+    this.#body.hidden = this.loading || this.#empty;
 
     if (animate) {
       animateHeight(this, before);

@@ -28,6 +28,15 @@ Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`,
 
 `description` adds a quieter line under the heading. Content in the `footer` slot sits under a divider that runs to the card's edges, for a control that acts on the whole card. The heading is level 2 for assistive tech; set `level="3"` on cards that sit under a section heading of their own.
 
+### Icon
+
+<Demo id="card-icon" layout="inline">
+  <gw-card heading="Processes" description="806 running" href="#card-icon" icon="M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11A0.5,0.5 0 0,0 9,11.5V13H15V11.5A0.5,0.5 0 0,0 14.5,11H9.5Z"></gw-card>
+  <gw-card heading="Disks" description="3 mounted" href="#card-icon" icon="M6,2H18A2,2 0 0,1 20,4V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2M12,4A6,6 0 0,0 6,10C6,13.31 8.69,16 12.1,16L11.22,13.77C10.95,13.29 11.11,12.68 11.59,12.4L12.45,11.9C12.93,11.63 13.54,11.79 13.82,12.27L15.74,14.69C17.12,13.59 18,11.9 18,10A6,6 0 0,0 12,4M12,9A1,1 0 0,1 13,10A1,1 0 0,1 12,11A1,1 0 0,1 11,10A1,1 0 0,1 12,9Z"></gw-card>
+</Demo>
+
+`icon` puts an icon in the accent color before the heading, such as on a grid of cards that each open a section of the app. It takes SVG path data, so the app picks its own icon set.
+
 ### Linking from the heading
 
 An `href` link lives in the card's shadow root, so it isn't in the page's HTML and can't take a `target` or `rel`. When it needs to be there, such as a project card opening its repository in a new tab, put an `<a>` in the `heading` slot instead. A click anywhere on the card follows it, except on another control inside, such as a button, and the card shows the link's hover and focus:

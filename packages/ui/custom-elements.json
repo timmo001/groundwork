@@ -3761,7 +3761,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, description: {}, level: { type: \"number\" }, href: {}, flush: { type: \"boolean\", reflect: true }, loading: { type: \"boolean\", reflect: true }, lines: { type: \"number\" }, }",
+              "default": "{ heading: {}, description: {}, icon: {}, level: { type: \"number\" }, href: {}, flush: { type: \"boolean\", reflect: true }, loading: { type: \"boolean\", reflect: true }, lines: { type: \"number\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -3774,7 +3774,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-space-3); height: 100%; padding: var(--gw-space-4); color: inherit; text-decoration: none; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-s); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover, .card.linked:hover { border-color: var(--gw-color-border-accent); } /* A card following a link in its heading slot */ .card.linked { cursor: pointer; transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } .card.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } ::slotted([slot=\"heading\"]) { font: inherit; color: inherit; } ::slotted(a[slot=\"heading\"]) { text-decoration: none; outline: none; } header { display: flex; gap: var(--gw-space-2); align-items: center; } .titles { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } .title { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The divider runs to the card's edges */ footer:not([hidden]) { display: flex; flex-direction: column; gap: inherit; margin-inline: calc(-1 * var(--gw-space-4)); padding: var(--gw-space-3) var(--gw-space-4) 0; border-top: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([flush]) footer:not([hidden]) { margin-inline: 0; padding-bottom: var(--gw-space-3); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
+              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-space-3); height: 100%; padding: var(--gw-space-4); color: inherit; text-decoration: none; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-s); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover, .card.linked:hover { border-color: var(--gw-color-border-accent); } /* A card following a link in its heading slot */ .card.linked { cursor: pointer; transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } .card.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } ::slotted([slot=\"heading\"]) { font: inherit; color: inherit; } ::slotted(a[slot=\"heading\"]) { text-decoration: none; outline: none; } header { display: flex; gap: var(--gw-space-2); align-items: center; } header > .icon { flex-shrink: 0; margin-inline-end: var(--gw-space-1); color: var(--gw-color-accent); } .titles { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } .title { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The divider runs to the card's edges */ footer:not([hidden]) { display: flex; flex-direction: column; gap: inherit; margin-inline: calc(-1 * var(--gw-space-4)); padding: var(--gw-space-3) var(--gw-space-4) 0; border-top: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([flush]) footer:not([hidden]) { margin-inline: 0; padding-bottom: var(--gw-space-3); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -3794,6 +3794,15 @@
               "type": {
                 "text": "string"
               },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for an icon before the heading.",
               "default": "\"\""
             },
             {
@@ -3870,6 +3879,12 @@
             },
             {
               "kind": "field",
+              "name": "#icon",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#header",
               "privacy": "private",
               "type": {
@@ -3897,6 +3912,21 @@
               "name": "#skeleton",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#bodySlot",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#empty",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
             },
             {
               "kind": "field",
@@ -4270,6 +4300,13 @@
               },
               "description": "A line under the heading.",
               "name": "description"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for an icon before the heading, such as on a card that links to a section.",
+              "name": "icon"
             },
             {
               "type": {
