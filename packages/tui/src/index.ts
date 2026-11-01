@@ -9,7 +9,16 @@ export { AppHeader, type AppHeaderOptions } from "./app-header.ts";
 
 export { formatBreadcrumb } from "./breadcrumb.ts";
 
+export { formatFilterBar } from "./filter-bar.ts";
+
 export { formatHelpBar, GLOBAL_HELP, type HelpEntry } from "./help-bar.ts";
+
+export {
+  MenuGrid,
+  type MenuGridItem,
+  type MenuGridOptions,
+  type MenuGridSection,
+} from "./menu-grid.ts";
 
 export {
   MenuList,
@@ -22,6 +31,11 @@ export { PaneHeader } from "./pane-header.ts";
 export { ScrollSurface, type ScrollSurfaceOptions } from "./scroll-surface.ts";
 
 export {
+  SectionHeading,
+  type SectionHeadingOptions,
+} from "./section-heading.ts";
+
+export {
   StatusList,
   type StatusListItem,
   type StatusListOptions,
@@ -30,3 +44,5 @@ export {
 export { surfaceBackground } from "./styles.ts";
 
 export { DEFAULT_THEME, loadTheme, themeFor, type Theme } from "./theme.ts";
+
+export { Tile, type TileOptions } from "./tile.ts";
