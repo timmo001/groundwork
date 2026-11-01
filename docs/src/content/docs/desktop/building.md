@@ -1,29 +1,7 @@
 ---
-title: Desktop
-description: Groundwork's desktop apps, built with Electrobun around the same web components as the web apps.
+title: Building apps
+description: Starting a desktop app from the Electrobun template, and how it handles the system's mode and scale.
 ---
-
-Desktop apps are built with [Electrobun](https://github.com/blackboardsh/electrobun). A Bun main process opens the window and owns anything native, such as the tray, menus and the connection to a backend. The window shows a view built from the same [web components](/components) and theme CSS as every web app, so there's one set of components for the browser and the desktop.
-
-![The desktop demo on Base, dark, in WebKitGTK on Linux](/screenshots/desktop/demo-base-dark.png)
-
-![The same demo on Base, light](/screenshots/desktop/demo-base-light.png)
-
-## Why Electrobun
-
-It runs on Linux, macOS and Windows, keeps apps in TypeScript on Bun, and uses each system's own webview rather than shipping a browser:
-
-| System | Webview |
-| --- | --- |
-| Linux | WebKitGTK 4.1 |
-| macOS 14 or later | WKWebView |
-| Windows | WebView2 |
-
-That keeps an app small and light on memory. The cost is three engines to test against, and WebKitGTK lags the other two. An app that needs one engine everywhere can set `bundleCEF` for its platforms and ship Chromium instead, at the memory cost that comes with it.
-
-Qt Quick, Wails, Slint, Tauri and Electron were compared against it in [#41](https://github.com/timmo001/groundwork/issues/41). Omarchy panels stay on QML, with `Themes.qml` and the [shared panel components](/sync).
-
-## Building one
 
 `templates/desktop-app` is the desktop demo and a starting point. Its layout:
 
@@ -59,16 +37,4 @@ GTK 3 only takes whole numbers in `GDK_SCALE`, so on Linux a fractional scale su
 
 Set `GROUNDWORK_DESKTOP_ZOOM` to scale on top of that, such as `0.8` to match a browser started with `--force-device-scale-factor=0.8`. It defaults to 1.
 
-## Demo
-
-The desktop demo runs `gw-demo-app` from `@timmo001/groundwork-demo/web`, the same element as the [web demo](/demo), on the shared `Items` service:
-
-```sh
-mise run demo:desktop
-```
-
-## References
-
-- Electrobun: [Docs](https://docs.electrobun.dev) · [Code](https://github.com/blackboardsh/electrobun)
-- Wails: [Docs](https://wails.io) · [Code](https://github.com/wailsapp/wails)
-- Qt Quick: [Docs](https://doc.qt.io/qt-6/qtquick-index.html)
+Both are read when the app starts, from its own environment, so they reach a built app the same way as a dev build. A desktop session sets them once for every app, such as with Hyprland's `env`.
