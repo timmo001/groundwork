@@ -224,7 +224,7 @@ export class GwDemoFrame extends GwElement {
     });
   }
 
-  readonly #select = h("gw-select", { label: "Theme", "label-hidden": "" });
+  readonly #select = h("gw-select", { label: "Theme", "inline-label": "" });
 
   readonly #segmented = h("gw-segmented", { label: "Mode", labels: "auto" });
 

@@ -55,6 +55,25 @@ Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SV
 | `placeholder` | Shown before anything's picked |
 | `search` | `auto` (from seven options), `always` or `never` |
 | `options` | The options, instead of `<option>` children |
+| `inline-label` | Shows the label inside the trigger, before the value |
+| `label-hidden` | Hides the label but keeps it for assistive technology |
+
+### Inline label
+
+In a toolbar or a row of filters, a label above each select takes more room than the controls. `inline-label` puts the label inside the trigger, in a quieter color before the value, so it reads as "Theme Glazing". The label still names the select for assistive technology. Use it where a select sits beside other controls; in a form, keep the label above, so every field lines up.
+
+<Demo id="select-inline">
+  <gw-select label="Theme" inline-label value="glazing">
+    <option value="base">Base</option>
+    <option value="glazing">Glazing</option>
+    <option value="survey">Survey</option>
+  </gw-select>
+  <gw-select label="Sort" inline-label value="updated">
+    <option value="updated">Updated</option>
+    <option value="created">Created</option>
+    <option value="name">Name</option>
+  </gw-select>
+</Demo>
 
 ## Checkbox and switch
 

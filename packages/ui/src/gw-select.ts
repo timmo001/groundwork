@@ -53,7 +53,8 @@ const chevronIcon =
  * @attr {boolean} disabled - Disables the field.
  * @attr {boolean} open - Whether the list shows.
  * @attr {OptionItem[]} options - The options, as JSON.
- * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology, such as in a toolbar.
+ * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
+ * @attr {boolean} inline-label - Shows the label inside the trigger, before the value, for toolbars and filters.
  *
  * @fires change - When the value changes.
  */
@@ -70,6 +71,7 @@ export class GwSelect extends LightElement {
     open: { type: "boolean", reflect: true },
     options: { type: "json" },
     labelHidden: { type: "boolean", attribute: "label-hidden" },
+    inlineLabel: { type: "boolean", attribute: "inline-label", reflect: true },
   } as const;
 
   declare label: string;
@@ -85,6 +87,7 @@ export class GwSelect extends LightElement {
   declare open: boolean;
   declare options: readonly OptionItem[];
   declare labelHidden: boolean;
+  declare inlineLabel: boolean;
 
   readonly #id = fieldId();
 
@@ -93,6 +96,13 @@ export class GwSelect extends LightElement {
   readonly #info = new FieldInfo(this.#label);
 
   readonly #icon = createIcon("");
+
+  // The trigger is already labelled by the real label, so this copy is hidden
+  // from assistive technology
+  readonly #inline = h("span", {
+    class: "gw-select-inline-label",
+    "aria-hidden": "true",
+  });
 
   readonly #text = h("span", { class: "gw-select-value" });
 
@@ -106,6 +116,7 @@ export class GwSelect extends LightElement {
       "aria-labelledby": `${this.#id}-label ${this.#id}`,
     },
     this.#icon,
+    this.#inline,
     this.#text,
     createIcon(chevronIcon),
   );
@@ -135,6 +146,7 @@ export class GwSelect extends LightElement {
     this.open = false;
     this.options = [];
     this.labelHidden = false;
+    this.inlineLabel = false;
   }
 
   /** Opens the list, such as from a keyboard shortcut. */
@@ -303,7 +315,12 @@ export class GwSelect extends LightElement {
 
     this.#label.textContent = this.label;
     this.#info.update(this.label, this.info);
-    this.#info.heading.classList.toggle("gw-visually-hidden", this.labelHidden);
+    this.#info.heading.classList.toggle(
+      "gw-visually-hidden",
+      this.labelHidden || this.inlineLabel,
+    );
+    this.#inline.textContent = this.label;
+    this.#inline.hidden = !this.inlineLabel;
     this.#text.textContent = selected?.label ?? this.placeholder;
     this.#text.toggleAttribute("data-placeholder", selected === undefined);
     setIconPath(this.#icon, selected?.icon ?? "");

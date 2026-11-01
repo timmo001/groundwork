@@ -102,6 +102,16 @@ export const fieldStyles = css`
     white-space: nowrap;
   }
 
+  /* An inline label reads as a quiet prefix to the value */
+  gw-select .gw-select-inline-label {
+    flex: none;
+    color: var(--gw-color-text-secondary);
+  }
+
+  gw-select .gw-select-inline-label[hidden] {
+    display: none;
+  }
+
   gw-select .gw-select-value[data-placeholder] {
     color: var(--gw-color-text-secondary);
   }
