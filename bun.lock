@@ -167,7 +167,7 @@
       "version": "0.3.1",
       "dependencies": {
         "@opentui/core": "0.8.0",
-        "@timmo001/groundwork-tokens": "workspace:*",
+        "@timmo001/groundwork-tokens": "0.3.1",
         "effect": "4.1.1",
         "fuse.js": "7.5.0",
       },

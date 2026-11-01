@@ -3,7 +3,6 @@
   "version": "0.3.1",
   "description": "Groundwork's terminal components: OpenTUI renderables on the terminal tokens",
   "license": "Apache-2.0",
-  "private": true,
   "type": "module",
   "exports": {
     ".": "./src/index.ts"
@@ -13,6 +12,10 @@
     "README.md",
     "LICENSE"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/timmo001/groundwork.git",
@@ -26,7 +29,7 @@
   },
   "dependencies": {
     "@opentui/core": "0.8.0",
-    "@timmo001/groundwork-tokens": "workspace:*",
+    "@timmo001/groundwork-tokens": "0.3.1",
     "effect": "4.1.1",
     "fuse.js": "7.5.0"
   },

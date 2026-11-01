@@ -33,7 +33,7 @@ jobs:
 
       - name: Pack
         run: |
-          for package in tokens ui docs-kit; do
+          for package in tokens ui tui docs-kit; do
             (cd "packages/$package" && npm pack --dry-run)
           done
 
