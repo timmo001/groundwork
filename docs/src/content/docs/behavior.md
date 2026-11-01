@@ -41,5 +41,15 @@ Long commands run as jobs only, so an agent starts them and comes back for the r
 
 - One status source per system, as `dot updates status --json` is for updates. The bar widget, the OpenCode footer, the CLI and the panel all read it, so each shows the same counts.
 - The bar counts what needs you, and hides in quiet hours.
-- Avoid toasts. Show an outcome where it happened (the button, a popover from it, or the page), app-wide state in a bar, and anything that needs you in the notification center. Nothing for green runs.
+- Avoid toasts. Show an outcome where it happened (the button, a popover from it, or the page), app-wide state in a slim bar, and anything that needs you as a notification. A toast never has an action. Nothing for green runs.
+
+## Notifications
+
+The notification center is the one place an app tells you it needs you. A notification is a pointer to a page: clicking it goes there, and the page has the details.
+
+- **It's yours if** you caused it, you need to decide something, or it's about something you own: a restart after your update, an update to install, a device found, a failed sign-in. How the system works (startup steps, logs, background jobs) stays out.
+- **The app decides how loud it is.** An alert shows by the notifications entry until you act on it or hide it; a passive one only goes to the center. Both are the same card in both places, with the same actions.
+- **Hiding isn't dismissing.** A hidden alert moves to the center and comes back only when its state changes.
+- **System notifications clear themselves.** A pending restart goes when you restart; you dismiss your own.
+- **Like ones stack.** One restart notification lists everything that asked; "3 devices discovered" is one card.
 - Decisions go to the Plannotator Inbox; reviews go through Plannotator, not GitHub.

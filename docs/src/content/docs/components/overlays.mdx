@@ -42,15 +42,15 @@ It's on the Popover API, in the top layer, so a scrolling parent never clips it.
 ## Dialog
 
 <Demo id="dialog">
-  <gw-button variant="neutral" appearance="plain" data-opens="connection-lost">Lose the connection</gw-button>
-  <gw-dialog id="connection-lost" heading="Connection lost">
-    <p>Can't reach the server. Changes made since will be lost if this page is closed.</p>
-    <gw-button slot="actions" variant="neutral" appearance="plain" value="wait">Keep waiting</gw-button>
-    <gw-button slot="actions" value="retry">Try again</gw-button>
+  <gw-button variant="neutral" appearance="outlined" data-opens="signed-out" icon="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z">Expire the sign-in</gw-button>
+  <gw-dialog id="signed-out" heading="Signed out">
+    <p>Your sign-in expired. Sign in again to keep working; nothing you've done is lost.</p>
+    <gw-button slot="actions" variant="neutral" appearance="plain" value="close">Close</gw-button>
+    <gw-button slot="actions" value="sign-in">Sign in</gw-button>
   </gw-dialog>
 </Demo>
 
-Only for something nothing on screen started, that needs the whole screen's attention: a lost connection, an expired sign-in or an update that's ready. Anything a button starts is a [popover](#popover) instead. The button in the demo stands in for the app losing its connection.
+Only for something nothing on screen started that blocks the whole app until it's answered, such as an expired sign-in. App-wide state you can work through, such as a lost connection, a needed restart or a new version, is a slim bar instead, and anything a button starts is a [popover](#popover). The button in the demo stands in for the sign-in expiring.
 
 It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, Esc closes it, and the page behind can't be reached. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
 

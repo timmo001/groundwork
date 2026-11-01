@@ -137,7 +137,11 @@ export class GwDialog extends LitElement {
 
     if (dialog === undefined) return;
 
-    if (this.open && !dialog.open) dialog.showModal();
+    if (this.open && !dialog.open) {
+      dialog.showModal();
+      // Toasts rise back above it
+      document.dispatchEvent(new Event("gw-dialog-open"));
+    }
 
     if (!this.open && dialog.open) dialog.close(this.returnValue);
   }
