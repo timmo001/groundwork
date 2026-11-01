@@ -5,7 +5,7 @@
 @import "@timmo001/docs-kit/blume/theme.css";
 @import "@timmo001/docs-kit/blume/themes/base.css";
 @import "@timmo001/docs-kit/blume/themes/all.css";
-@import "@groundwork/tokens/themes.css";
+@import "@timmo001/groundwork-tokens/themes.css";
 
 @import "@fontsource-variable/mona-sans";
 @import "@fontsource-variable/inter";

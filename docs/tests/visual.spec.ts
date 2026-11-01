@@ -8,7 +8,7 @@
  */
 import { globSync } from "node:fs";
 import { join } from "node:path";
-import tokens from "@groundwork/tokens/themes.json" with { type: "json" };
+import tokens from "@timmo001/groundwork-tokens/themes.json" with { type: "json" };
 import { expect, test, type Page } from "@playwright/test";
 
 const content = join(import.meta.dirname, "../src/content/docs");

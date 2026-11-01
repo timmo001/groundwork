@@ -2,11 +2,11 @@
  * `gw-anatomy`: a component's measured anatomy on its docs page. It wraps a
  * live component, draws redlines for its height, width, padding, gap and
  * radius, and names the token each value comes from. It's docs-only, not part
- * of `@groundwork/ui`.
+ * of `@timmo001/groundwork-ui`.
  *
  * @module
  */
-import { GwElement, css, h } from "@groundwork/ui";
+import { GwElement, css, h } from "@timmo001/groundwork-ui";
 
 const scales = {
   space: ["0-5", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "14", "16", "18", "20"],

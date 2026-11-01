@@ -1,5 +1,5 @@
 {
-  "name": "@groundwork/conventions",
+  "name": "@timmo001/groundwork-conventions",
   "private": true,
   "type": "module",
   "exports": {
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@effect/platform-node": "4.1.1",
-    "@groundwork/tokens": "workspace:*",
+    "@timmo001/groundwork-tokens": "workspace:*",
     "effect": "4.1.1"
   },
   "devDependencies": {

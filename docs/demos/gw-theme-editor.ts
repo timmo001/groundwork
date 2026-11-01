@@ -6,8 +6,8 @@
  *
  * @module
  */
-import { Font, MonoFont, type SolvedTheme } from "@groundwork/tokens";
-import { parseTheme, runtimeTheme } from "@groundwork/tokens/runtime";
+import { Font, MonoFont, type SolvedTheme } from "@timmo001/groundwork-tokens";
+import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
 import {
   GwElement,
   h,
@@ -16,7 +16,7 @@ import {
   type GwInput,
   type GwSegmented,
   type GwSelect,
-} from "@groundwork/ui";
+} from "@timmo001/groundwork-ui";
 
 const storageKey = "groundwork:custom-theme";
 

@@ -45,6 +45,16 @@ import { GwElement, css, h, setAttribute } from "./element.js";
 
 In Groundwork, the `groundwork/element-docs` Oxlint rule checks each element's docstring against its code, so a new attribute, slot, part or event fails the check until it's documented.
 
+## Package names
+
+First-party packages publish under the `@timmo001` scope. A project's own scope becomes the start of the name: `@<scope>/<name>` becomes `@timmo001/<scope>-<name>`. The name in the repository is the one that's published, so imports read the same inside and outside it.
+
+| In a project | Published as |
+| --- | --- |
+| `@groundwork/ui` | `@timmo001/groundwork-ui` |
+| `@groundwork/tokens` | `@timmo001/groundwork-tokens` |
+| `@groundwork/sync` | `@timmo001/groundwork-sync` |
+
 ## The manifest
 
 The conventions are data in [`conventions/`](https://github.com/timmo001/groundwork/tree/main/conventions):

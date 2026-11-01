@@ -4,7 +4,7 @@
  *
  * @module
  */
-import { distance } from "@groundwork/tokens";
+import { distance } from "@timmo001/groundwork-tokens";
 import type { Kind, Label, LabelSet, Repo } from "./schema.ts";
 
 export interface Manifest {

@@ -31,10 +31,10 @@ Leave `data-gw-mode` off to follow the system's light or dark setting. Darker is
 
 Themes aren't only the built-in set. A user can upload a theme file, or an agent can write one, and the app applies it at runtime. The document is the same one the core themes use, checked against the same [Schema](/themes/writing-a-theme), so an agent can write a valid one from that page alone.
 
-The app decodes it, solves it into light, dark and Darker, and checks every role against its contrast target, all in the browser with `@groundwork/tokens/runtime`. A theme that misses a target is still applied, with the misses shown, as optional themes are.
+The app decodes it, solves it into light, dark and Darker, and checks every role against its contrast target, all in the browser with `@timmo001/groundwork-tokens/runtime`. A theme that misses a target is still applied, with the misses shown, as optional themes are.
 
 ```ts
-import { parseTheme, runtimeTheme } from "@groundwork/tokens/runtime";
+import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
 
 const parsed = parseTheme(text);
 

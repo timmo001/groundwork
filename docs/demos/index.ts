@@ -3,6 +3,6 @@
  *
  * @module
  */
-import "@groundwork/ui";
+import "@timmo001/groundwork-ui";
 import "./gw-anatomy.ts";
 import "./gw-demo-frame.ts";

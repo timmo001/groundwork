@@ -1,5 +1,5 @@
 {
-  "name": "@groundwork/sync",
+  "name": "@timmo001/groundwork-sync",
   "private": true,
   "type": "module",
   "bin": {
