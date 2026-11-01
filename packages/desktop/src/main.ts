@@ -174,6 +174,50 @@ const toolkitZoom = (): number => {
     : 1;
 };
 
+// Electrobun runs GTK on X11, where nothing hands GTK the system's color
+// scheme, so WebKitGTK reports light to `prefers-color-scheme`. WebKitGTK also
+// takes a `:dark` GTK_THEME as dark, so set one from the desktop portal's
+// scheme, unless the user set GTK_THEME themselves. It goes through libc's
+// setenv, since Bun's `process.env` doesn't reach the native side
+const followSystemScheme = async () => {
+  if (process.platform !== "linux" || process.env.GTK_THEME !== undefined)
+    return;
+
+  try {
+    const result = Bun.spawnSync([
+      "gdbus",
+      "call",
+      "--session",
+      "--dest=org.freedesktop.portal.Desktop",
+      "--object-path=/org/freedesktop/portal/desktop",
+      "--method=org.freedesktop.portal.Settings.ReadOne",
+      "org.freedesktop.appearance",
+      "color-scheme",
+    ]);
+
+    // 1 is prefer dark; 0 (no preference) and 2 (prefer light) stay light
+    if (!(result.success && /\buint32 1\b/.test(result.stdout.toString())))
+      return;
+
+    const { dlopen, FFIType } = await import("bun:ffi");
+
+    const { symbols } = dlopen("libc.so.6", {
+      setenv: {
+        args: [FFIType.cstring, FFIType.cstring, FFIType.i32],
+        returns: FFIType.i32,
+      },
+    });
+
+    symbols.setenv(
+      Buffer.from("GTK_THEME\0"),
+      Buffer.from("Adwaita:dark\0"),
+      0,
+    );
+  } catch {
+    // No gdbus or no portal: the webview keeps GTK's own scheme
+  }
+};
+
 const toFrame = (frame: Partial<Frame> = {}): Frame | undefined => {
   const { x, y, width, height } = frame;
 
@@ -348,6 +392,7 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
 
   const rpc = options.createRPC(desktopRequests);
 
+  await followSystemScheme();
   window = new electrobun.BrowserWindow({
     title: options.title,
     url: options.url,
