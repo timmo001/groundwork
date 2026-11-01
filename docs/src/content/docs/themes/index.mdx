@@ -97,6 +97,45 @@ Try it: design a theme with the controls, upload a theme document or an Omarchy 
 
 <ThemeEditor />
 
+## App tones
+
+An app often has states of its own, past the built-in tones, such as an issue that's new, regressed or resolved. `appTones` takes those colors and solves each one against every theme's surfaces in every mode, the same way the status colors are solved. A color that already reads well stays as it is, and one that doesn't is moved lighter or darker until it does. For each name it writes `--app-tone-<name>`, `-fill` and `-border`, under the same selectors as the themes' CSS.
+
+```ts
+import { appTones, parseTheme } from "@timmo001/groundwork-tokens/runtime";
+
+// The documents of the themes the app offers, such as from
+// @timmo001/groundwork-tokens/themes/snag.json, decoded with parseTheme
+const css = appTones(
+  { new: "#2663eb", regressed: "#dc2627", resolved: "#18a349" },
+  themes,
+);
+// Write css beside the themes' CSS, such as at build time
+```
+
+Components take a tone of their own through `--gw-tone`, `--gw-tone-fill` and `--gw-tone-border`, which each element lists under its CSS properties. The `tone` attribute sets the same three for the built-in tones.
+
+```css
+.regressed {
+  --gw-tone: var(--app-tone-regressed);
+  --gw-tone-fill: var(--app-tone-regressed-fill);
+  --gw-tone-border: var(--app-tone-regressed-border);
+}
+```
+
+Pass the same colors to `pageTheme` as `tones`, and a theme a visitor imports gets them too. These are Triage's issue states, in any theme and mode you pick:
+
+<AppTones />
+
+<Demo id="app-tones">
+  <gw-chip style="--gw-tone: var(--app-tone-new); --gw-tone-fill: var(--app-tone-new-fill); --gw-tone-border: var(--app-tone-new-border)"><gw-dot slot="icon"></gw-dot>New</gw-chip>
+  <gw-chip style="--gw-tone: var(--app-tone-regressed); --gw-tone-fill: var(--app-tone-regressed-fill); --gw-tone-border: var(--app-tone-regressed-border)"><gw-dot slot="icon"></gw-dot>Regressed</gw-chip>
+  <gw-chip style="--gw-tone: var(--app-tone-ongoing); --gw-tone-fill: var(--app-tone-ongoing-fill); --gw-tone-border: var(--app-tone-ongoing-border)"><gw-dot slot="icon"></gw-dot>Ongoing</gw-chip>
+  <gw-chip style="--gw-tone: var(--app-tone-resolved); --gw-tone-fill: var(--app-tone-resolved-fill); --gw-tone-border: var(--app-tone-resolved-border)"><gw-dot slot="icon"></gw-dot>Resolved</gw-chip>
+  <gw-chip style="--gw-tone: var(--app-tone-muted); --gw-tone-fill: var(--app-tone-muted-fill); --gw-tone-border: var(--app-tone-muted-border)"><gw-dot slot="icon"></gw-dot>Muted</gw-chip>
+  <gw-alert style="--gw-tone: var(--app-tone-regressed); --gw-tone-fill: var(--app-tone-regressed-fill); --gw-tone-border: var(--app-tone-regressed-border)">This issue came back after it was resolved.</gw-alert>
+</Demo>
+
 ## More
 
 - [Optional themes](/themes/optional): Catppuccin and Tokyo Night.

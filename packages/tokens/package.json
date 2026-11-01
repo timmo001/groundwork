@@ -11,7 +11,8 @@
     "./webmcp": "./src/webmcp.ts",
     "./opentui": "./generated/opentui.ts",
     "./themes.css": "./generated/themes.css",
-    "./themes.json": "./generated/themes.json"
+    "./themes.json": "./generated/themes.json",
+    "./themes/*.json": "./themes/*.json"
   },
   "files": [
     "src",

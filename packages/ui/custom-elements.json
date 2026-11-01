@@ -1021,6 +1021,20 @@
           "kind": "class",
           "description": "A message in the flow of the page. `urgent` announces it at once, for\nerrors that need attention; otherwise it's announced politely.",
           "name": "GwAlert",
+          "cssProperties": [
+            {
+              "description": "The icon color, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone"
+            },
+            {
+              "description": "The background. `tone` sets it.",
+              "name": "--gw-tone-fill"
+            },
+            {
+              "description": "The border. `tone` sets it.",
+              "name": "--gw-tone-border"
+            }
+          ],
           "cssParts": [
             {
               "description": "The alert.",
@@ -2071,6 +2085,12 @@
           "kind": "class",
           "description": "A pill with an icon, a value and an optional small label above it. The\nicon takes the `tone`'s color. While `loading`, a skeleton stands in for\nthe value, and for the icon if it has none yet, and the value fades in\nonce it's loaded.",
           "name": "GwBadge",
+          "cssProperties": [
+            {
+              "description": "The icon's color, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone"
+            }
+          ],
           "cssParts": [
             {
               "description": "The badge.",
@@ -2563,6 +2583,20 @@
           "kind": "class",
           "description": "A slim bar across the top of the app for app-wide state the person can\nwork through: a restart is needed, the connection is lost, or a new\nversion is ready. Put it above the app's content, not over it. Its height\nopens and closes smoothly, so the page below moves with it rather than\njumping. Put one action in the `actions` slot, which opens what it's\nabout. `urgent` announces it at once.",
           "name": "GwBanner",
+          "cssProperties": [
+            {
+              "description": "The text and icon color, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone"
+            },
+            {
+              "description": "The background. `tone` sets it.",
+              "name": "--gw-tone-fill"
+            },
+            {
+              "description": "The border. `tone` sets it.",
+              "name": "--gw-tone-border"
+            }
+          ],
           "cssParts": [
             {
               "description": "The bar.",
@@ -5207,6 +5241,16 @@
           "kind": "class",
           "description": "A short status or category, tinted by its `tone`. While `loading`, a\nskeleton stands in for its text, and the text fades in once it's loaded.",
           "name": "GwChip",
+          "cssProperties": [
+            {
+              "description": "The tint, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone-fill"
+            },
+            {
+              "description": "The border. `tone` sets it.",
+              "name": "--gw-tone-border"
+            }
+          ],
           "cssParts": [
             {
               "description": "The chip.",
@@ -6643,6 +6687,12 @@
           "kind": "class",
           "description": "A small status dot. Give it a `label`, such as \"Online\", unless text\nbeside it already says the same.",
           "name": "GwDot",
+          "cssProperties": [
+            {
+              "description": "The color, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -11599,6 +11649,12 @@
           "kind": "class",
           "description": "Something new the person needs to decide or know, kept in a\n`gw-notification-center` until it's dealt with. It has an icon, a heading,\na line of text, when it happened and up to two actions. Its close button\ndismisses it: it fires `dismiss`, then folds away and removes itself,\nunless the event is cancelled.",
           "name": "GwNotification",
+          "cssProperties": [
+            {
+              "description": "The icon's color, for a tone of your own. `tone` sets it.",
+              "name": "--gw-tone"
+            }
+          ],
           "cssParts": [
             {
               "description": "The card.",

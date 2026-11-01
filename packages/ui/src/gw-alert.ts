@@ -23,6 +23,10 @@ import { base, type Tone } from "./styles.js";
  * @slot actions - Buttons beside the message.
  *
  * @csspart alert - The alert.
+ *
+ * @cssprop --gw-tone - The icon color, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-tone-fill - The background. `tone` sets it.
+ * @cssprop --gw-tone-border - The border. `tone` sets it.
  */
 export class GwAlert extends GwElement {
   static override properties = {

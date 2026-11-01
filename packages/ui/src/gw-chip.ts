@@ -24,6 +24,9 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * @slot icon - An icon before the text, in place of `icon`.
  *
  * @csspart chip - The chip.
+ *
+ * @cssprop --gw-tone-fill - The tint, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-tone-border - The border. `tone` sets it.
  */
 export class GwChip extends GwElement {
   static override properties = {

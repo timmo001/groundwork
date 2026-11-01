@@ -1,0 +1,32 @@
+---
+/**
+ * `<AppTones>`: puts the example app tones on the page, solved for every
+ * theme, for the App tones demo on the Themes page.
+ */
+import { appTones, parseTheme } from "@timmo001/groundwork-tokens/runtime";
+
+/** Triage's issue states, as an app would pass them. */
+const tones = {
+  new: "#2663eb",
+  regressed: "#dc2627",
+  ongoing: "#d9770a",
+  resolved: "#18a349",
+  muted: "#71717a",
+};
+
+const documents = Object.values(
+  import.meta.glob<string>("../../packages/tokens/themes/*.json", {
+    eager: true,
+    import: "default",
+    query: "?raw",
+  }),
+).flatMap((text) => {
+  const parsed = parseTheme(text);
+
+  return parsed._tag === "Success" ? [parsed.success] : [];
+});
+
+const css = appTones(tones, documents);
+---
+
+<Fragment set:html={`<style>${css}</style>`} />

@@ -34,6 +34,8 @@ const closeIcon =
  *
  * @csspart card - The card.
  *
+ * @cssprop --gw-tone - The icon's color, for a tone of your own. `tone` sets it.
+ *
  * @fires {Event} dismiss - When the close button is pressed. Cancel it to keep the card.
  */
 export class GwNotification extends GwElement {

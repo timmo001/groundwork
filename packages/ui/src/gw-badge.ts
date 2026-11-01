@@ -27,6 +27,8 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * @slot - The value.
  *
  * @csspart badge - The badge.
+ *
+ * @cssprop --gw-tone - The icon's color, for a tone of your own. `tone` sets it.
  */
 export class GwBadge extends GwElement {
   static override properties = {

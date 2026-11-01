@@ -17,6 +17,8 @@ import { base, type Tone } from "./styles.js";
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The color. Defaults to `neutral`.
  * @attr {string} label - What it means, for assistive technology.
  * @attr {boolean} pulse - Pulses, for something live.
+ *
+ * @cssprop --gw-tone - The color, for a tone of your own. `tone` sets it.
  */
 export class GwDot extends GwElement {
   static override properties = {

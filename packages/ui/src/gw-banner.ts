@@ -27,6 +27,10 @@ import { base, type Tone } from "./styles.js";
  * @slot actions - One button, opening what it's about.
  *
  * @csspart bar - The bar.
+ *
+ * @cssprop --gw-tone - The text and icon color, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-tone-fill - The background. `tone` sets it.
+ * @cssprop --gw-tone-border - The border. `tone` sets it.
  */
 export class GwBanner extends GwElement {
   static override properties = {

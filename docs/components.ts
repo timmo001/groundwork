@@ -6,6 +6,7 @@
  */
 import HomeBanner from "@timmo001/docs-kit/blume/home-banner.astro";
 import { defineComponents } from "blume";
+import AppTones from "./components/app-tones.astro";
 import Demo from "./components/demo.astro";
 import FontSpecimen from "./components/font-specimen.astro";
 import HeaderSearch from "./components/header-search.astro";
@@ -23,6 +24,7 @@ export default defineComponents({
     Search: HeaderSearch,
   },
   mdx: {
+    AppTones,
     Demo,
     FontSpecimen,
     LabelSet,

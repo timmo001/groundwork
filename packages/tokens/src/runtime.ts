@@ -10,8 +10,11 @@ import baseDocument from "../themes/base.json" with { type: "json" };
 import { themeCss } from "./generate.ts";
 import { SolvedTheme, Theme } from "./schema.ts";
 import { check, resolve, type Check, type ResolvedTheme } from "./solve.ts";
+import { appTonesCss, type AppTones } from "./tones.ts";
 
 export { omarchyTheme } from "./omarchy.ts";
+
+export { appTonesCss, type AppTones } from "./tones.ts";
 
 const base = Schema.decodeUnknownSync(SolvedTheme)(baseDocument);
 
@@ -36,6 +39,21 @@ export const runtimeTheme = (theme: Theme, id = theme.id): RuntimeTheme => {
 
   return { theme: resolved, css: themeCss(resolved), checks: check(resolved) };
 };
+
+/**
+ * An app's own tones as CSS for each of `themes`: `--app-tone-<name>`,
+ * `-fill` and `-border`, solved against each theme's surfaces in every mode
+ * so they meet the status colors' contrast. Put it beside the themes' CSS,
+ * such as at build time, then point a component's tone at one:
+ *
+ * ```css
+ * .regressed { --gw-tone: var(--app-tone-regressed); }
+ * ```
+ */
+export const appTones = (tones: AppTones, themes: readonly Theme[]) =>
+  themes
+    .map((theme) => appTonesCss(tones, resolve(theme, base.style)))
+    .join("\n\n");
 
 /**
  * Where an app keeps a user's theme document. The document is stored, not

@@ -79,6 +79,12 @@ export interface PageThemeOptions {
   readonly defaultMode?: ThemeMode;
   /** The element the attributes go on. Defaults to `<html>`. */
   readonly root?: HTMLElement;
+  /**
+   * The app's own tones, solved into an imported theme's CSS beside its
+   * roles. The built-in themes' tones come from `appTones` in the runtime
+   * entry, on the page with their CSS.
+   */
+  readonly tones?: Readonly<Record<string, string>>;
 }
 
 export interface PageTheme {
@@ -210,12 +216,17 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
 
   /** Solves a document under the custom id, applies it and keeps it. */
   const applyCustom = async (document: Theme, text: string) => {
-    const { runtimeTheme } = await import("./runtime.ts");
+    const { appTonesCss, runtimeTheme } = await import("./runtime.ts");
     const runtime = runtimeTheme(document, customThemeId);
 
-    setStyle(runtime.css);
+    const css =
+      options.tones === undefined
+        ? runtime.css
+        : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
+
+    setStyle(css);
     write(stored.document, text);
-    write(stored.css, runtime.css);
+    write(stored.css, css);
     write(stored.name, document.name);
     write(stored.theme, customThemeId);
     commit({ ...state, theme: customThemeId, custom: document.name });

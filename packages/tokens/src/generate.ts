@@ -151,39 +151,52 @@ const modeBlock = (roles: Roles, dark: boolean, indent = "  ") =>
     declarations({ ...colorProperties(roles), ...shadows(dark) }, indent),
   ].join("\n");
 
-/** One theme's `--gw-*` rules under `[data-gw-theme]`, in each of its modes. */
-export const themeCss = (theme: ResolvedTheme) => {
+/**
+ * A rule under `theme`'s selector for each of its modes, matching how
+ * `data-gw-mode` and the system's scheme pick one. `block` writes a mode's
+ * declarations at the indent it's given.
+ */
+export const modeRules = (
+  theme: ResolvedTheme,
+  block: (roles: Roles, dark: boolean, indent: string) => string,
+) => {
   const selector = `[data-gw-theme="${theme.id}"]`;
-  const style = `${selector} {\n${declarations(styleProperties(theme.style))}\n}`;
   const { light, dark, darker } = theme.modes;
-  const blocks = [style];
+  const rules: string[] = [];
 
   if (light !== undefined) {
-    blocks.push(`${selector} {\n${modeBlock(light, false)}\n}`);
+    rules.push(`${selector} {\n${block(light, false, "  ")}\n}`);
   } else if (dark !== undefined) {
-    blocks.push(`${selector} {\n${modeBlock(dark, true)}\n}`);
+    rules.push(`${selector} {\n${block(dark, true, "  ")}\n}`);
   }
 
   if (dark !== undefined) {
-    blocks.push(
-      `${selector}[data-gw-mode="dark"] {\n${modeBlock(dark, true)}\n}`,
+    rules.push(
+      `${selector}[data-gw-mode="dark"] {\n${block(dark, true, "  ")}\n}`,
     );
 
     if (light !== undefined) {
-      blocks.push(
-        `@media (prefers-color-scheme: dark) {\n  ${selector}:not([data-gw-mode]) {\n${modeBlock(dark, true, "    ")}\n  }\n}`,
+      rules.push(
+        `@media (prefers-color-scheme: dark) {\n  ${selector}:not([data-gw-mode]) {\n${block(dark, true, "    ")}\n  }\n}`,
       );
     }
   }
 
   if (darker !== undefined) {
-    blocks.push(
-      `${selector}[data-gw-mode="darker"] {\n${modeBlock(darker, true)}\n}`,
+    rules.push(
+      `${selector}[data-gw-mode="darker"] {\n${block(darker, true, "  ")}\n}`,
     );
   }
 
-  return blocks.join("\n\n");
+  return rules;
 };
+
+/** One theme's `--gw-*` rules under `[data-gw-theme]`, in each of its modes. */
+export const themeCss = (theme: ResolvedTheme) =>
+  [
+    `[data-gw-theme="${theme.id}"] {\n${declarations(styleProperties(theme.style))}\n}`,
+    ...modeRules(theme, modeBlock),
+  ].join("\n\n");
 
 /**
  * What each `gw-` element looks like before its script defines it: the
