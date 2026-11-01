@@ -27,7 +27,8 @@
   "dependencies": {
     "@opentui/core": "0.8.0",
     "@timmo001/groundwork-tokens": "workspace:*",
-    "effect": "4.1.1"
+    "effect": "4.1.1",
+    "fuse.js": "7.5.0"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.90.0",

@@ -15,11 +15,11 @@ import type { MenuItem } from "../types.js";
 import {
   formatHelpBar,
   GLOBAL_HELP,
+  MenuList,
   type HelpEntry,
   type Theme,
 } from "@timmo001/groundwork-tui";
 import { mainMenuItems } from "../menu.js";
-import { MenuList } from "./menu-list.js";
 
 /** Help entries for the main menu */
 const HELP: readonly HelpEntry[] = [
@@ -46,7 +46,7 @@ export class MainMenu {
   private renderer: CliRenderer;
   private theme: Theme;
   private root: BoxRenderable;
-  private menuList: MenuList;
+  private menuList: MenuList<MenuItem>;
   private filterBar: TextRenderable;
   private helpBar: TextRenderable;
   private callbacks: MainMenuOptions;

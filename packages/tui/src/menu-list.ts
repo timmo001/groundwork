@@ -14,14 +14,25 @@ import {
   fg,
 } from "@opentui/core";
 import Fuse from "fuse.js";
-import type { MenuItem } from "../types.js";
-import type { Theme } from "@timmo001/groundwork-tui";
+import type { Theme } from "./theme.ts";
+
+/** What a menu row shows; apps extend it with their own action fields. */
+export interface MenuListItem {
+  /** Primary display text */
+  readonly title: string;
+  /** Secondary text shown below the title */
+  readonly description: string;
+  /** Nerd Font icon character */
+  readonly icon: string;
+  /** Extra words the filter matches */
+  readonly keywords?: readonly string[];
+}
 
 /** Width of the left icon column in characters */
 const ICON_COLUMN_WIDTH = 4;
 
 /** Internal state for a single rendered menu row */
-interface MenuRow {
+interface MenuRow<MenuItem extends MenuListItem> {
   readonly container: BoxRenderable;
   readonly iconCol: BoxRenderable;
   readonly iconText: TextRenderable;
@@ -31,7 +42,7 @@ interface MenuRow {
 }
 
 /** Configuration for the {@link MenuList} component */
-export interface MenuListOptions {
+export interface MenuListOptions<MenuItem extends MenuListItem> {
   /** Unique renderable ID */
   readonly id: string;
   /** Menu items to display */
@@ -66,12 +77,14 @@ export interface MenuListOptions {
  * (powered by Fuse.js with weighted keys). Escape clears the filter;
  * Backspace removes the last character.
  */
-export class MenuList extends ScrollBoxRenderable {
+export class MenuList<
+  MenuItem extends MenuListItem = MenuListItem,
+> extends ScrollBoxRenderable {
   private _allItems: readonly MenuItem[];
   private _items: readonly MenuItem[];
   private _selectedIndex: number;
   private readonly _wrapSelection: boolean;
-  private _rows: MenuRow[] = [];
+  private _rows: MenuRow<MenuItem>[] = [];
   private readonly _selectCb: (item: MenuItem) => void;
   private readonly _selectionChangedCb: ((item: MenuItem) => void) | undefined;
   private readonly _onFilterChange: ((filter: string) => void) | undefined;
@@ -83,7 +96,7 @@ export class MenuList extends ScrollBoxRenderable {
   private _filterText = "";
   private _fuse: Fuse<MenuItem>;
 
-  constructor(renderer: CliRenderer, options: MenuListOptions) {
+  constructor(renderer: CliRenderer, options: MenuListOptions<MenuItem>) {
     super(renderer, {
       id: options.id,
       flexGrow: 1,
@@ -319,7 +332,7 @@ export class MenuList extends ScrollBoxRenderable {
     item: MenuItem,
     index: number,
     isSelected: boolean,
-  ): MenuRow {
+  ): MenuRow<MenuItem> {
     const th = this._theme;
     const id = `${this.id}-row-${index}`;
     const bgColor = isSelected ? th.bgSelected : th.bgElevated;
@@ -374,7 +387,7 @@ export class MenuList extends ScrollBoxRenderable {
     return { container, iconCol, iconText, titleText, descText, item };
   }
 
-  private _styleRow(row: MenuRow, selected: boolean): void {
+  private _styleRow(row: MenuRow<MenuItem>, selected: boolean): void {
     const th = this._theme;
     const bg = selected ? th.bgSelected : th.bgElevated;
     const textColor = selected ? th.accent : th.fg;

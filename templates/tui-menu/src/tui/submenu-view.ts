@@ -16,11 +16,11 @@ import {
   formatBreadcrumb,
   formatHelpBar,
   GLOBAL_HELP,
+  MenuList,
   type HelpEntry,
   type Theme,
 } from "@timmo001/groundwork-tui";
 import { submenus, submenuTitles } from "../menu.js";
-import { MenuList } from "./menu-list.js";
 
 /** Help entries for submenu views */
 const HELP: readonly HelpEntry[] = [
@@ -59,7 +59,7 @@ export class SubmenuView {
   private root: BoxRenderable;
   private titleText: TextRenderable;
   private filterBar: TextRenderable;
-  private menuList: MenuList;
+  private menuList: MenuList<MenuItem>;
   private helpBar: TextRenderable;
 
   /** Stack of submenu IDs for nested navigation */
@@ -203,7 +203,7 @@ export class SubmenuView {
     this.menuList.focus();
   }
 
-  private createMenuList(items: readonly MenuItem[]): MenuList {
+  private createMenuList(items: readonly MenuItem[]): MenuList<MenuItem> {
     return new MenuList(this.renderer, {
       id: "submenu-list",
       items,

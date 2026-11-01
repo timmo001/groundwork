@@ -17,8 +17,7 @@
     "@opentui/core": "0.8.0",
     "@timmo001/groundwork-demo": "workspace:*",
     "@timmo001/groundwork-tui": "workspace:*",
-    "effect": "4.1.1",
-    "fuse.js": "7.5.0"
+    "effect": "4.1.1"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.90.0",
