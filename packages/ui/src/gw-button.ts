@@ -223,8 +223,8 @@ export class GwButton extends GwElement {
         background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent);
       }
 
-      .button:disabled,
-      .button[aria-disabled="true"] {
+      /* On the host, so it outranks every appearance's own border and fill */
+      :host([disabled]) .button {
         color: var(--gw-color-text-disabled);
         pointer-events: none;
         cursor: not-allowed;
@@ -232,9 +232,12 @@ export class GwButton extends GwElement {
         border-color: transparent;
       }
 
-      :host([appearance="plain"]) .button:disabled,
-      :host([appearance="plain"]) .button[aria-disabled="true"] {
+      :host([disabled][appearance="plain"]) .button {
         background: transparent;
+      }
+
+      :host([disabled]) {
+        cursor: not-allowed;
       }
 
       ::slotted([slot="icon"]),
@@ -427,7 +430,9 @@ export class GwButton extends GwElement {
 
     // Registered first, so it runs before any listener an app adds
     this.addEventListener("click", (event) => {
-      if (this.loading) {
+      // The inner button ignores pointers when disabled, but a click on the
+      // host itself still lands here
+      if (this.loading || this.disabled) {
         event.preventDefault();
         event.stopImmediatePropagation();
 
