@@ -233,7 +233,7 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
-  :where(gw-switch, gw-checkbox) .gw-visually-hidden {
+  :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;

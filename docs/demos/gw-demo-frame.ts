@@ -64,56 +64,8 @@ export class GwDemoFrame extends GwElement {
       border-bottom: 1px solid var(--gw-color-border-quiet);
     }
 
-    label {
-      display: inline-flex;
-      gap: var(--gw-space-3);
-      align-items: center;
-      color: var(--gw-color-text-secondary);
-    }
-
-    /* 40px, the same as the mode toggle beside it, with a drawn chevron */
-    .select {
-      position: relative;
-      display: inline-block;
-    }
-
-    .select::after {
-      position: absolute;
-      inset-block-start: 50%;
-      inset-inline-end: var(--gw-space-4);
-      width: 0.4rem;
-      height: 0.4rem;
-      pointer-events: none;
-      content: "";
-      border-block-end: 1.5px solid var(--gw-color-text-secondary);
-      border-inline-end: 1.5px solid var(--gw-color-text-secondary);
-      translate: 0 -70%;
-      rotate: 45deg;
-    }
-
-    select {
-      box-sizing: border-box;
-      height: 2.5rem;
-      min-width: 10rem;
-      padding: 0 calc(var(--gw-space-4) * 2 + 0.5rem) 0 var(--gw-space-4);
-      font: inherit;
-      font-size: var(--gw-font-size-s);
-      color: var(--gw-color-text-strong);
-      appearance: none;
-      cursor: pointer;
-      background: var(--gw-color-surface-raised);
-      border: 1px solid var(--gw-color-border-normal);
-      border-radius: var(--gw-radius-pill);
-      transition: background-color var(--gw-motion-fast) var(--gw-motion-easing);
-    }
-
-    select:hover {
-      background: var(--gw-color-fill-neutral-hovered);
-    }
-
-    select:focus-visible {
-      outline: var(--gw-focus-width) solid var(--gw-color-focus);
-      outline-offset: var(--gw-focus-offset);
+    gw-select {
+      width: 12rem;
     }
 
     .stage {
@@ -250,11 +202,10 @@ export class GwDemoFrame extends GwElement {
   }
 
   private pickTheme(event: Event) {
+    // The frame logs its demos' events, not its own toolbar's
     event.stopPropagation();
 
-    if (!(event.target instanceof HTMLSelectElement)) return;
-
-    const theme = event.target.value;
+    const theme = this.#select.value;
 
     // A theme change is a change to the whole view, so it crossfades
     void withViewTransition(async () => {
@@ -273,16 +224,18 @@ export class GwDemoFrame extends GwElement {
     });
   }
 
-  readonly #select = h("select");
+  readonly #select = h("gw-select", { label: "Theme", "label-hidden": "" });
 
   readonly #segmented = h("gw-segmented", { label: "Mode", labels: "auto" });
 
   readonly #event = h("span", { class: "event", "aria-live": "polite" });
 
   protected override create(root: ShadowRoot) {
-    this.#select.append(
-      ...tokens.themes.map((theme) => h("option", { value: theme.id }, theme.name)),
-    );
+    this.#select.options = tokens.themes.map((theme) => ({
+      value: theme.id,
+      label: theme.name,
+      group: theme.optional ? "More themes" : "Core themes",
+    }));
     this.#select.addEventListener("change", (event) => this.pickTheme(event));
     this.#segmented.addEventListener("change", (event) => {
       // The frame logs its demos' events, not its own toolbar's
@@ -293,7 +246,7 @@ export class GwDemoFrame extends GwElement {
       h(
         "div",
         { class: "toolbar" },
-        h("label", {}, "Theme", h("span", { class: "select" }, this.#select)),
+        this.#select,
         this.#segmented,
       ),
       h("div", { class: "stage" }, h("slot"), this.#event),

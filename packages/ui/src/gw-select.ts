@@ -53,6 +53,7 @@ const chevronIcon =
  * @attr {boolean} disabled - Disables the field.
  * @attr {boolean} open - Whether the list shows.
  * @attr {OptionItem[]} options - The options, as JSON.
+ * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology, such as in a toolbar.
  *
  * @fires change - When the value changes.
  */
@@ -68,6 +69,7 @@ export class GwSelect extends LightElement {
     disabled: { type: "boolean" },
     open: { type: "boolean", reflect: true },
     options: { type: "json" },
+    labelHidden: { type: "boolean", attribute: "label-hidden" },
   } as const;
 
   declare label: string;
@@ -82,6 +84,7 @@ export class GwSelect extends LightElement {
   declare disabled: boolean;
   declare open: boolean;
   declare options: readonly OptionItem[];
+  declare labelHidden: boolean;
 
   readonly #id = fieldId();
 
@@ -131,6 +134,7 @@ export class GwSelect extends LightElement {
     this.disabled = false;
     this.open = false;
     this.options = [];
+    this.labelHidden = false;
   }
 
   /** Opens the list, such as from a keyboard shortcut. */
@@ -299,6 +303,7 @@ export class GwSelect extends LightElement {
 
     this.#label.textContent = this.label;
     this.#info.update(this.label, this.info);
+    this.#info.heading.classList.toggle("gw-visually-hidden", this.labelHidden);
     this.#text.textContent = selected?.label ?? this.placeholder;
     this.#text.toggleAttribute("data-placeholder", selected === undefined);
     setIconPath(this.#icon, selected?.icon ?? "");
