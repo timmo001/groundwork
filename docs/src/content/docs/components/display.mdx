@@ -141,6 +141,17 @@ It's announced politely as a status, or at once with `urgent` for an error that 
 
 Label and value pairs as a description list. Set `items` to `[{ "label", "value" }]`.
 
+When a value needs markup, such as chips or code, put `<dt>` and `<dd>` pairs inside instead. They join the same grid:
+
+<Demo id="facts-slotted" layout="stack">
+  <gw-facts>
+    <dt>UUID</dt>
+    <dd><code>9ef69bc3-62f8-4d86-952d-5f498bbddf0f</code></dd>
+    <dt>Groups</dt>
+    <dd><gw-chip size="small">wheel</gw-chip> <gw-chip size="small">video</gw-chip></dd>
+  </gw-facts>
+</Demo>
+
 ## Meter
 
 <Demo id="meter" layout="stack">

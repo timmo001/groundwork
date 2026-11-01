@@ -29,6 +29,8 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
  * @attr {boolean} loading - Shows skeleton pairs, keeping any labels already known.
  * @attr {number} rows - How many skeleton pairs while loading. Defaults to 4.
  *
+ * @slot - `<dt>` and `<dd>` pairs, in place of `items`, for values with markup such as chips or code.
+ *
  * @csspart list - The description list.
  * @csspart label - Each label.
  * @csspart value - Each value.
@@ -55,11 +57,13 @@ export class GwFacts extends GwElement {
         font-size: var(--gw-font-size-s);
       }
 
-      dt {
+      dt,
+      ::slotted(dt) {
         color: var(--gw-color-text-secondary);
       }
 
-      dd {
+      dd,
+      ::slotted(dd) {
         min-width: 0;
         margin: 0;
         font-variant-numeric: var(--gw-font-figures);
@@ -117,6 +121,8 @@ export class GwFacts extends GwElement {
     } else {
       this.#list.removeAttribute("aria-busy");
       this.#list.replaceChildren(
+        // The slot is display: contents, so slotted pairs join the grid
+        h("slot"),
         ...items.flatMap((item) => [
           h("dt", { part: "label" }, item.label),
           h(

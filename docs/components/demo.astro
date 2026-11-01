@@ -60,4 +60,9 @@ const { theme = "base", layout = "row", id } = Astro.props;
     flex-wrap: nowrap;
     align-items: stretch;
   }
+
+  /* The page's prose spacing would push slotted list pairs apart */
+  .demo :global(:is(dt, dd)) {
+    margin: 0;
+  }
 </style>

@@ -8388,6 +8388,12 @@
               "name": "value"
             }
           ],
+          "slots": [
+            {
+              "description": "`<dt>` and `<dd>` pairs, in place of `items`, for values with markup such as chips or code.",
+              "name": ""
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -8409,7 +8415,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } dl { display: grid; grid-template-columns: minmax(7rem, max-content) 1fr; gap: var(--gw-space-1) var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); } dt { color: var(--gw-color-text-secondary); } dd { min-width: 0; margin: 0; font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); overflow-wrap: anywhere; } `, ]",
+              "default": "[ base, css` :host { display: block; } dl { display: grid; grid-template-columns: minmax(7rem, max-content) 1fr; gap: var(--gw-space-1) var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); } dt, ::slotted(dt) { color: var(--gw-color-text-secondary); } dd, ::slotted(dd) { min-width: 0; margin: 0; font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); overflow-wrap: anywhere; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
