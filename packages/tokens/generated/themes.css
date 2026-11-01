@@ -45,6 +45,7 @@
   --gw-motion-normal: 250ms;
   --gw-motion-slow: 350ms;
   --gw-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+  --gw-motion-delay: 500ms;
   --gw-focus-width: 2px;
   --gw-focus-offset: 2px;
   --gw-content-width: 72rem;

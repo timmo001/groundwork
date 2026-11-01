@@ -35,6 +35,13 @@ const { theme = "base", layout = "row", id } = Astro.props;
     margin-block: 1.5rem;
   }
 
+  /* The loading demos show their placeholders at once rather than after the
+     usual delay */
+  #demo-loading-components,
+  #demo-skeleton-shapes {
+    --gw-motion-delay: 0ms;
+  }
+
   /* Before the frame's script runs, keep the room its toolbar and stage
      will take, so the page doesn't move when it upgrades */
   .demo:not(:defined) {

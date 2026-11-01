@@ -101,6 +101,14 @@ export const base = css`
     --gw-tone-border: var(--gw-color-border-important);
   }
 
+  /* A loading placeholder's entrance: hidden for --gw-motion-delay, so a
+     quick load never flashes one, then a fade. Use it with appear below. */
+  @keyframes gw-appear {
+    from {
+      opacity: 0;
+    }
+  }
+
   /* :host too, since * in a shadow root doesn't match it, and the skeletons
      pulse on their host */
   @media (prefers-reduced-motion: reduce) {

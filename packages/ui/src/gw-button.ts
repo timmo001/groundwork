@@ -295,14 +295,18 @@ export class GwButton extends GwElement {
         cursor: progress;
       }
 
+      /* The icon stays for --gw-motion-delay, so a quick action never
+         flashes the ring, then they crossfade; ending is immediate */
       :host([loading]) .lead > .ring,
       :host([loading]) .button:not(.has-icon) > .ring.over {
         opacity: 1;
+        transition-delay: var(--gw-motion-delay, 500ms);
       }
 
       :host([loading]) .lead > :not(.ring),
       :host([loading]) .button:not(.has-icon) > .text {
         opacity: 0;
+        transition-delay: var(--gw-motion-delay, 500ms);
       }
 
       .button:not(.has-icon) > .lead {

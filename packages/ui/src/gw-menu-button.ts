@@ -139,17 +139,48 @@ export class GwMenuButton extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      /* While a chosen action runs, a ring takes the icon's place */
-      .ring {
-        display: none;
+      /* While a chosen action runs, a ring takes the icon's place: they share
+         one cell and crossfade after --gw-motion-delay, so a quick action
+         never flashes it and nothing moves. Without an icon, the ring sits
+         over the hidden text. */
+      .lead {
+        display: grid;
         flex: none;
+        place-items: center;
+      }
+
+      .trigger:not(.has-icon) > .lead {
+        display: contents;
+      }
+
+      .lead > * {
+        grid-area: 1 / 1;
+      }
+
+      .lead > *,
+      .label {
+        transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .ring {
         width: calc(var(--gw-icon-size) * 0.8);
         height: calc(var(--gw-icon-size) * 0.8);
         border: calc(2px * var(--gw-scale)) solid
           color-mix(in oklch, currentColor 25%, transparent);
         border-top-color: currentColor;
         border-radius: 50%;
+        opacity: 0;
         animation: spin 0.9s linear infinite;
+      }
+
+      .trigger:not(.has-icon) .ring {
+        position: absolute;
+        inset: 0;
+        margin: auto;
+      }
+
+      .trigger {
+        position: relative;
       }
 
       @keyframes spin {
@@ -163,11 +194,14 @@ export class GwMenuButton extends GwElement {
       }
 
       :host([loading]) .ring {
-        display: block;
+        opacity: 1;
+        transition-delay: var(--gw-motion-delay, 500ms);
       }
 
-      :host([loading]) .trigger > .icon {
-        display: none;
+      :host([loading]) .lead > .icon,
+      :host([loading]) .trigger:not(.has-icon) > .label {
+        opacity: 0;
+        transition-delay: var(--gw-motion-delay, 500ms);
       }
 
       /* The other appearances draw the trigger as gw-button draws a neutral
@@ -689,8 +723,12 @@ export class GwMenuButton extends GwElement {
 
   protected override create(root: ShadowRoot) {
     this.#trigger.append(
-      this.#triggerIcon,
-      h("span", { class: "ring", "aria-hidden": "true" }),
+      h(
+        "span",
+        { class: "lead" },
+        this.#triggerIcon,
+        h("span", { class: "ring", "aria-hidden": "true" }),
+      ),
       this.#triggerText,
       h("span", { class: "chevron", "aria-hidden": "true" }),
     );

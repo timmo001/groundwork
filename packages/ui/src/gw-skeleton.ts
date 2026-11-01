@@ -12,7 +12,9 @@ import { base } from "./styles.js";
  * A placeholder for what's loading, sized by its container or by `width`
  * and `height` in CSS. The shapes below extend it, and components with a
  * `loading` attribute draw their own from them, so a spinner is only needed
- * for an action in progress. It's hidden from assistive technology, so mark
+ * for an action in progress. It stays invisible for `--gw-motion-delay`, then
+ * fades in and pulses, so a quick load never flashes it; it keeps its size
+ * throughout, so nothing moves. It's hidden from assistive technology, so mark
  * the region it sits in `aria-busy`.
  *
  * @element gw-skeleton
@@ -20,6 +22,7 @@ import { base } from "./styles.js";
  *
  * @cssprop --gw-skeleton-color - The fill. Defaults to the neutral fill.
  * @cssprop --gw-skeleton-radius - The corners. Defaults to the control radius.
+ * @cssprop --gw-motion-delay - How long it waits before fading in. Defaults to `500ms`; set `0ms` to show it at once.
  */
 export class GwSkeleton extends GwElement {
   static override styles: readonly CSSStyleSheet[] = [
@@ -33,7 +36,13 @@ export class GwSkeleton extends GwElement {
           var(--gw-color-fill-neutral-resting)
         );
         border-radius: var(--gw-skeleton-radius, var(--gw-radius-control));
-        animation: pulse 2s ease-in-out infinite;
+        /* Waits, fades in, then pulses, so a quick load never flashes it */
+        animation:
+          gw-appear var(--gw-motion-slow, 350ms) cubic-bezier(0.4, 0, 0.2, 1)
+            var(--gw-motion-delay, 500ms) backwards,
+          pulse 2s ease-in-out
+            calc(var(--gw-motion-delay, 500ms) + var(--gw-motion-slow, 350ms))
+            infinite;
       }
 
       @keyframes pulse {

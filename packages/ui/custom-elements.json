@@ -3145,7 +3145,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"button\"), css` :host { --gw-button-tone: var(--gw-color-accent); display: inline-block; } :host([variant=\"neutral\"]) { --gw-button-tone: var(--gw-color-text-secondary); --gw-button-ink: var(--gw-color-text-strong); } :host([variant=\"info\"]) { --gw-button-tone: var(--gw-color-info); } :host([variant=\"success\"]) { --gw-button-tone: var(--gw-color-success); } :host([variant=\"warning\"]) { --gw-button-tone: var(--gw-color-warning); } :host([variant=\"danger\"]) { --gw-button-tone: var(--gw-color-danger); } .button { --gw-size: var(--gw-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.125rem * var(--gw-scale)); position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; justify-content: center; min-height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); line-height: 1; color: var(--gw-button-ink, var(--gw-button-tone)); text-decoration: none; text-transform: var(--gw-label-transform); letter-spacing: var(--gw-label-tracking); white-space: nowrap; cursor: pointer; background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-fast) var(--gw-motion-easing); } /* A slight press, so a click feels physical */ .button:active { scale: 0.97; } .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } .button:active { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } /* A solid fill, with text that flips between black and white by the fill's lightness so it reads on every theme's colors */ :host([appearance=\"accent\"]) .button { color: oklch( from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-button-tone); } :host([appearance=\"accent\"]) .button:hover { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.2) c h ); } :host([appearance=\"accent\"]) .button:active { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.35) c h ); } /* The tint lowers the tone's contrast, so the text leans toward the strongest text color to stay readable on it */ :host([appearance=\"filled\"]) .button { color: var( --gw-button-ink, color-mix( in oklch, var(--gw-button-tone) 70%, var(--gw-color-text-strong) ) ); background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } :host([appearance=\"filled\"]) .button:active { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } :host([appearance=\"outlined\"]) .button { border-color: var(--gw-button-tone); } /* A slotted link carries the text; the pill draws its focus ring */ ::slotted(a) { color: inherit; text-decoration: none; outline: none; } .button.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :host([appearance=\"plain\"]) .button.current, :host([appearance=\"outlined\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } .button:disabled, .button[aria-disabled=\"true\"] { color: var(--gw-color-text-disabled); pointer-events: none; cursor: not-allowed; background: var(--gw-color-fill-neutral-disabled); border-color: transparent; } :host([appearance=\"plain\"]) .button:disabled, :host([appearance=\"plain\"]) .button[aria-disabled=\"true\"] { background: transparent; } ::slotted([slot=\"icon\"]), .icon { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); fill: currentColor; } /* The icon and the ring share one cell and crossfade */ .lead { display: grid; place-items: center; } /* The icon slot is display: contents, so its slotted icon is a grid item of its own and needs the shared cell too */ .lead > *, ::slotted([slot=\"icon\"]) { grid-area: 1 / 1; } /* A color dot in the icon's place */ .swatch { width: calc(var(--gw-icon-size) * 0.6); height: calc(var(--gw-icon-size) * 0.6); border: 1px solid color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent); border-radius: 50%; } .lead > *, .text, .ring { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } /* Sized to the icon's drawn area, which is inset in its 24px box */ .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } /* Without an icon, the ring sits over the hidden text */ .ring.over { position: absolute; inset: 0; margin: auto; } :host([loading]) .button { cursor: progress; } :host([loading]) .lead > .ring, :host([loading]) .button:not(.has-icon) > .ring.over { opacity: 1; } :host([loading]) .lead > :not(.ring), :host([loading]) .button:not(.has-icon) > .text { opacity: 0; } .button:not(.has-icon) > .lead { display: none; } /* Icon only, to save space: square, with the text kept for assistive technology. auto does this on narrow screens */ :host([labels=\"hide\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"auto\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } `, ]",
+              "default": "[ base, controlSizes(\"button\"), css` :host { --gw-button-tone: var(--gw-color-accent); display: inline-block; } :host([variant=\"neutral\"]) { --gw-button-tone: var(--gw-color-text-secondary); --gw-button-ink: var(--gw-color-text-strong); } :host([variant=\"info\"]) { --gw-button-tone: var(--gw-color-info); } :host([variant=\"success\"]) { --gw-button-tone: var(--gw-color-success); } :host([variant=\"warning\"]) { --gw-button-tone: var(--gw-color-warning); } :host([variant=\"danger\"]) { --gw-button-tone: var(--gw-color-danger); } .button { --gw-size: var(--gw-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.125rem * var(--gw-scale)); position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; justify-content: center; min-height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); line-height: 1; color: var(--gw-button-ink, var(--gw-button-tone)); text-decoration: none; text-transform: var(--gw-label-transform); letter-spacing: var(--gw-label-tracking); white-space: nowrap; cursor: pointer; background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-fast) var(--gw-motion-easing); } /* A slight press, so a click feels physical */ .button:active { scale: 0.97; } .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } .button:active { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } /* A solid fill, with text that flips between black and white by the fill's lightness so it reads on every theme's colors */ :host([appearance=\"accent\"]) .button { color: oklch( from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-button-tone); } :host([appearance=\"accent\"]) .button:hover { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.2) c h ); } :host([appearance=\"accent\"]) .button:active { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.35) c h ); } /* The tint lowers the tone's contrast, so the text leans toward the strongest text color to stay readable on it */ :host([appearance=\"filled\"]) .button { color: var( --gw-button-ink, color-mix( in oklch, var(--gw-button-tone) 70%, var(--gw-color-text-strong) ) ); background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } :host([appearance=\"filled\"]) .button:active { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } :host([appearance=\"outlined\"]) .button { border-color: var(--gw-button-tone); } /* A slotted link carries the text; the pill draws its focus ring */ ::slotted(a) { color: inherit; text-decoration: none; outline: none; } .button.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :host([appearance=\"plain\"]) .button.current, :host([appearance=\"outlined\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } .button:disabled, .button[aria-disabled=\"true\"] { color: var(--gw-color-text-disabled); pointer-events: none; cursor: not-allowed; background: var(--gw-color-fill-neutral-disabled); border-color: transparent; } :host([appearance=\"plain\"]) .button:disabled, :host([appearance=\"plain\"]) .button[aria-disabled=\"true\"] { background: transparent; } ::slotted([slot=\"icon\"]), .icon { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); fill: currentColor; } /* The icon and the ring share one cell and crossfade */ .lead { display: grid; place-items: center; } /* The icon slot is display: contents, so its slotted icon is a grid item of its own and needs the shared cell too */ .lead > *, ::slotted([slot=\"icon\"]) { grid-area: 1 / 1; } /* A color dot in the icon's place */ .swatch { width: calc(var(--gw-icon-size) * 0.6); height: calc(var(--gw-icon-size) * 0.6); border: 1px solid color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent); border-radius: 50%; } .lead > *, .text, .ring { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } /* Sized to the icon's drawn area, which is inset in its 24px box */ .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } /* Without an icon, the ring sits over the hidden text */ .ring.over { position: absolute; inset: 0; margin: auto; } :host([loading]) .button { cursor: progress; } /* The icon stays for --gw-motion-delay, so a quick action never flashes the ring, then they crossfade; ending is immediate */ :host([loading]) .lead > .ring, :host([loading]) .button:not(.has-icon) > .ring.over { opacity: 1; transition-delay: var(--gw-motion-delay, 500ms); } :host([loading]) .lead > :not(.ring), :host([loading]) .button:not(.has-icon) > .text { opacity: 0; transition-delay: var(--gw-motion-delay, 500ms); } .button:not(.has-icon) > .lead { display: none; } /* Icon only, to save space: square, with the text kept for assistive technology. auto does this on narrow screens */ :host([labels=\"hide\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"auto\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10441,7 +10441,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* While a chosen action runs, a ring takes the icon's place */ .ring { display: none; flex: none; width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } :host([loading]) .trigger { cursor: progress; } :host([loading]) .ring { display: block; } :host([loading]) .trigger > .icon { display: none; } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } :host([labels=\"hide\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"auto\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: 15rem; max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min(24rem, calc(100% - 2 * var(--gw-space-2))); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .item[role=\"menuitemcheckbox\"] .box { flex: none; color: var(--gw-color-text-secondary); } .item[role=\"menuitemcheckbox\"][aria-checked=\"true\"] .box { color: var(--gw-color-accent); } .group { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .group:not(:first-child) { padding-block-start: var(--gw-space-1); margin-block-start: var(--gw-space-0-5); border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .group-heading { padding: var(--gw-space-1) var(--gw-space-3) 0; margin: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* While a chosen action runs, a ring takes the icon's place: they share one cell and crossfade after --gw-motion-delay, so a quick action never flashes it and nothing moves. Without an icon, the ring sits over the hidden text. */ .lead { display: grid; flex: none; place-items: center; } .trigger:not(.has-icon) > .lead { display: contents; } .lead > * { grid-area: 1 / 1; } .lead > *, .label { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } .trigger:not(.has-icon) .ring { position: absolute; inset: 0; margin: auto; } .trigger { position: relative; } @keyframes spin { to { transform: rotate(360deg); } } :host([loading]) .trigger { cursor: progress; } :host([loading]) .ring { opacity: 1; transition-delay: var(--gw-motion-delay, 500ms); } :host([loading]) .lead > .icon, :host([loading]) .trigger:not(.has-icon) > .label { opacity: 0; transition-delay: var(--gw-motion-delay, 500ms); } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } :host([labels=\"hide\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"auto\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: 15rem; max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min(24rem, calc(100% - 2 * var(--gw-space-2))); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .item[role=\"menuitemcheckbox\"] .box { flex: none; color: var(--gw-color-text-secondary); } .item[role=\"menuitemcheckbox\"][aria-checked=\"true\"] .box { color: var(--gw-color-accent); } .group { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .group:not(:first-child) { padding-block-start: var(--gw-space-1); margin-block-start: var(--gw-space-0-5); border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .group-heading { padding: var(--gw-space-1) var(--gw-space-3) 0; margin: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11121,6 +11121,12 @@
           "kind": "class",
           "description": "A labeled bar for a value in a range, such as disk use. Past `high` it\nturns warning, and past `critical` danger, unless a `tone` is set. While\n`loading`, the track pulses and a skeleton stands in for the value.",
           "name": "GwMeter",
+          "cssProperties": [
+            {
+              "description": "The bar's height. Defaults to `0.5rem`.",
+              "name": "--gw-meter-height"
+            }
+          ],
           "cssParts": [
             {
               "description": "The row with the label and value.",
@@ -11137,6 +11143,10 @@
             {
               "description": "The filled part of the bar.",
               "name": "fill"
+            },
+            {
+              "description": "The line under the bar.",
+              "name": "caption"
             }
           ],
           "members": [
@@ -11147,7 +11157,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, high: { type: \"number\" }, critical: { type: \"number\" }, display: {}, tone: { reflect: true }, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ label: {}, value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, high: { type: \"number\" }, critical: { type: \"number\" }, inverted: { type: \"boolean\" }, display: {}, caption: {}, tone: { reflect: true }, loading: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11160,7 +11170,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .top { display: flex; gap: var(--gw-space-2); justify-content: space-between; margin-block-end: var(--gw-space-1); font-size: var(--gw-font-size-s); } .value { font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); } .track { height: 0.5rem; overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-pill); } .fill { height: 100%; background: var(--gw-meter-color, var(--gw-color-fill-accent-resting)); border-radius: inherit; transition: width var(--gw-motion-slow) var(--gw-motion-easing); } .bar { min-height: 0; height: 0.5rem; --gw-skeleton-radius: var(--gw-radius-pill); } `, ]",
+              "default": "[ base, css` :host { display: block; } .top { display: flex; gap: var(--gw-space-2); justify-content: space-between; margin-block-end: var(--gw-space-1); font-size: var(--gw-font-size-s); } .value { font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); } .track { height: var(--gw-meter-height, 0.5rem); overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-pill); } .fill { height: 100%; background: var(--gw-meter-color, var(--gw-color-fill-accent-resting)); border-radius: inherit; transition: width var(--gw-motion-slow) var(--gw-motion-easing); } .bar { min-height: 0; height: var(--gw-meter-height, 0.5rem); --gw-skeleton-radius: var(--gw-radius-pill); } .caption { display: block; margin-block-start: var(--gw-space-1); overflow: hidden; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); text-overflow: ellipsis; white-space: nowrap; } .caption[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11178,7 +11188,7 @@
               "kind": "field",
               "name": "value",
               "type": {
-                "text": "number"
+                "text": "number | undefined"
               },
               "default": "0"
             },
@@ -11216,7 +11226,23 @@
             },
             {
               "kind": "field",
+              "name": "inverted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "display",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "caption",
               "type": {
                 "text": "string"
               },
@@ -11288,12 +11314,37 @@
             },
             {
               "kind": "field",
+              "name": "#caption",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#rendered",
               "privacy": "private",
               "type": {
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#known",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#worse",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "limit",
+                  "type": {
+                    "text": "number | undefined"
+                  }
+                }
+              ]
             },
             {
               "kind": "field",
@@ -11625,7 +11676,7 @@
               "type": {
                 "text": "number"
               },
-              "description": "The value. Defaults to 0.",
+              "description": "The value. Defaults to 0. Leave it unset or `NaN` for an unknown value, shown as `-` with an empty bar.",
               "name": "value"
             },
             {
@@ -11658,10 +11709,24 @@
             },
             {
               "type": {
+                "text": "boolean"
+              },
+              "description": "Lower is worse, such as for a battery: at or below `high` it turns warning, and at or below `critical` danger.",
+              "name": "inverted"
+            },
+            {
+              "type": {
                 "text": "string"
               },
               "description": "The value as shown, such as `42 GB`. Defaults to a percentage.",
               "name": "display"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "A quiet line under the bar.",
+              "name": "caption"
             },
             {
               "type": {
@@ -17216,7 +17281,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A placeholder for what's loading, sized by its container or by `width`\nand `height` in CSS. The shapes below extend it, and components with a\n`loading` attribute draw their own from them, so a spinner is only needed\nfor an action in progress. It's hidden from assistive technology, so mark\nthe region it sits in `aria-busy`.",
+          "description": "A placeholder for what's loading, sized by its container or by `width`\nand `height` in CSS. The shapes below extend it, and components with a\n`loading` attribute draw their own from them, so a spinner is only needed\nfor an action in progress. It stays invisible for `--gw-motion-delay`, then\nfades in and pulses, so a quick load never flashes it; it keeps its size\nthroughout, so nothing moves. It's hidden from assistive technology, so mark\nthe region it sits in `aria-busy`.",
           "name": "GwSkeleton",
           "cssProperties": [
             {
@@ -17226,6 +17291,10 @@
             {
               "description": "The corners. Defaults to the control radius.",
               "name": "--gw-skeleton-radius"
+            },
+            {
+              "description": "How long it waits before fading in. Defaults to `500ms`; set `0ms` to show it at once.",
+              "name": "--gw-motion-delay"
             }
           ],
           "members": [
@@ -17236,7 +17305,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; min-height: 1rem; background: var( --gw-skeleton-color, var(--gw-color-fill-neutral-resting) ); border-radius: var(--gw-skeleton-radius, var(--gw-radius-control)); animation: pulse 2s ease-in-out infinite; } @keyframes pulse { 50% { opacity: 0.45; } } @media (forced-colors: active) { :host { background: GrayText; } } `, ]",
+              "default": "[ base, css` :host { display: block; min-height: 1rem; background: var( --gw-skeleton-color, var(--gw-color-fill-neutral-resting) ); border-radius: var(--gw-skeleton-radius, var(--gw-radius-control)); /* Waits, fades in, then pulses, so a quick load never flashes it */ animation: gw-appear var(--gw-motion-slow, 350ms) cubic-bezier(0.4, 0, 0.2, 1) var(--gw-motion-delay, 500ms) backwards, pulse 2s ease-in-out calc(var(--gw-motion-delay, 500ms) + var(--gw-motion-slow, 350ms)) infinite; } @keyframes pulse { 50% { opacity: 0.45; } } @media (forced-colors: active) { :host { background: GrayText; } } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17595,6 +17664,14 @@
             {
               "description": "The corners. Defaults to the control radius.",
               "name": "--gw-skeleton-radius",
+              "inheritedFrom": {
+                "name": "GwSkeleton",
+                "module": "src/gw-skeleton.ts"
+              }
+            },
+            {
+              "description": "How long it waits before fading in. Defaults to `500ms`; set `0ms` to show it at once.",
+              "name": "--gw-motion-delay",
               "inheritedFrom": {
                 "name": "GwSkeleton",
                 "module": "src/gw-skeleton.ts"
@@ -18346,6 +18423,14 @@
                 "name": "GwSkeleton",
                 "module": "src/gw-skeleton.ts"
               }
+            },
+            {
+              "description": "How long it waits before fading in. Defaults to `500ms`; set `0ms` to show it at once.",
+              "name": "--gw-motion-delay",
+              "inheritedFrom": {
+                "name": "GwSkeleton",
+                "module": "src/gw-skeleton.ts"
+              }
             }
           ],
           "members": [
@@ -18737,12 +18822,16 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A spinning ring while something loads, announced by its `label`.",
+          "description": "A spinning ring while something loads, announced by its `label`. It keeps\nits space but stays invisible for `--gw-motion-delay`, then fades in, so a\nquick wait never flashes it.",
           "name": "GwSpinner",
           "cssProperties": [
             {
               "description": "The ring's size. Defaults to `1.25rem`.",
               "name": "--gw-spinner-size"
+            },
+            {
+              "description": "How long it waits before fading in. Defaults to `500ms`.",
+              "name": "--gw-motion-delay"
             }
           ],
           "cssParts": [
@@ -18772,7 +18861,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-flex; width: var(--gw-spinner-size, 1.25rem); height: var(--gw-spinner-size, 1.25rem); color: var(--gw-color-accent); } .ring { width: 100%; height: 100%; border: 2px solid var(--gw-color-border-quiet); border-top-color: currentColor; border-radius: 50%; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } `, ]",
+              "default": "[ base, css` :host { display: inline-flex; width: var(--gw-spinner-size, 1.25rem); height: var(--gw-spinner-size, 1.25rem); color: var(--gw-color-accent); animation: gw-appear var(--gw-motion-slow, 350ms) cubic-bezier(0.4, 0, 0.2, 1) var(--gw-motion-delay, 500ms) backwards; } .ring { width: 100%; height: 100%; border: 2px solid var(--gw-color-border-quiet); border-top-color: currentColor; border-radius: 50%; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22959,7 +23048,7 @@
         {
           "kind": "variable",
           "name": "base",
-          "default": "css` :host { font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } *, *::before, *::after { box-sizing: border-box; } :host([hidden]), [hidden] { display: none !important; } :focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :host([tone=\"accent\"]) { --gw-tone: var(--gw-color-accent); --gw-tone-fill: var(--gw-color-fill-accent-quiet); --gw-tone-border: var(--gw-color-border-accent); } :host([tone=\"info\"]) { --gw-tone: var(--gw-color-info); --gw-tone-fill: var(--gw-color-fill-info-quiet); --gw-tone-border: var(--gw-color-border-info); } :host([tone=\"success\"]) { --gw-tone: var(--gw-color-success); --gw-tone-fill: var(--gw-color-fill-success-quiet); --gw-tone-border: var(--gw-color-border-success); } :host([tone=\"warning\"]) { --gw-tone: var(--gw-color-warning); --gw-tone-fill: var(--gw-color-fill-warning-quiet); --gw-tone-border: var(--gw-color-border-warning); } :host([tone=\"danger\"]) { --gw-tone: var(--gw-color-danger); --gw-tone-fill: var(--gw-color-fill-danger-quiet); --gw-tone-border: var(--gw-color-border-danger); } :host([tone=\"important\"]) { --gw-tone: var(--gw-color-important); --gw-tone-fill: var(--gw-color-fill-important-quiet); --gw-tone-border: var(--gw-color-border-important); } /* :host too, since * in a shadow root doesn't match it, and the skeletons pulse on their host */ @media (prefers-reduced-motion: reduce) { :host, *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; } } `",
+          "default": "css` :host { font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } *, *::before, *::after { box-sizing: border-box; } :host([hidden]), [hidden] { display: none !important; } :focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :host([tone=\"accent\"]) { --gw-tone: var(--gw-color-accent); --gw-tone-fill: var(--gw-color-fill-accent-quiet); --gw-tone-border: var(--gw-color-border-accent); } :host([tone=\"info\"]) { --gw-tone: var(--gw-color-info); --gw-tone-fill: var(--gw-color-fill-info-quiet); --gw-tone-border: var(--gw-color-border-info); } :host([tone=\"success\"]) { --gw-tone: var(--gw-color-success); --gw-tone-fill: var(--gw-color-fill-success-quiet); --gw-tone-border: var(--gw-color-border-success); } :host([tone=\"warning\"]) { --gw-tone: var(--gw-color-warning); --gw-tone-fill: var(--gw-color-fill-warning-quiet); --gw-tone-border: var(--gw-color-border-warning); } :host([tone=\"danger\"]) { --gw-tone: var(--gw-color-danger); --gw-tone-fill: var(--gw-color-fill-danger-quiet); --gw-tone-border: var(--gw-color-border-danger); } :host([tone=\"important\"]) { --gw-tone: var(--gw-color-important); --gw-tone-fill: var(--gw-color-fill-important-quiet); --gw-tone-border: var(--gw-color-border-important); } /* A loading placeholder's entrance: hidden for --gw-motion-delay, so a quick load never flashes one, then a fade. Use it with appear below. */ @keyframes gw-appear { from { opacity: 0; } } /* :host too, since * in a shadow root doesn't match it, and the skeletons pulse on their host */ @media (prefers-reduced-motion: reduce) { :host, *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; } } `",
           "description": "What every component shares: box sizing, the focus ring, icons and the\ntones that set `--gw-tone` from a `tone` attribute."
         },
         {

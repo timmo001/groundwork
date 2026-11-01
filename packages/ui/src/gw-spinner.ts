@@ -8,7 +8,9 @@ import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
- * A spinning ring while something loads, announced by its `label`.
+ * A spinning ring while something loads, announced by its `label`. It keeps
+ * its space but stays invisible for `--gw-motion-delay`, then fades in, so a
+ * quick wait never flashes it.
  *
  * @element gw-spinner
  * @summary A spinning ring for a wait a skeleton can't stand in for.
@@ -18,6 +20,7 @@ import { base } from "./styles.js";
  * @csspart ring - The spinning ring.
  *
  * @cssprop --gw-spinner-size - The ring's size. Defaults to `1.25rem`.
+ * @cssprop --gw-motion-delay - How long it waits before fading in. Defaults to `500ms`.
  */
 export class GwSpinner extends GwElement {
   static override properties = {
@@ -32,6 +35,8 @@ export class GwSpinner extends GwElement {
         width: var(--gw-spinner-size, 1.25rem);
         height: var(--gw-spinner-size, 1.25rem);
         color: var(--gw-color-accent);
+        animation: gw-appear var(--gw-motion-slow, 350ms)
+          cubic-bezier(0.4, 0, 0.2, 1) var(--gw-motion-delay, 500ms) backwards;
       }
 
       .ring {

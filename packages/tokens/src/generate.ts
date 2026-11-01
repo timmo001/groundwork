@@ -131,6 +131,9 @@ const foundations = {
   "motion-normal": "250ms",
   "motion-slow": "350ms",
   "motion-easing": "cubic-bezier(0.2, 0, 0, 1)",
+  // How long a loading placeholder waits before it fades in, so a quick load
+  // never flashes one
+  "motion-delay": "500ms",
   "focus-width": "2px",
   "focus-offset": "2px",
   "content-width": "72rem",
