@@ -1,7 +1,7 @@
 /**
  * The menu grid: sections of wrapping tiles, each under a section heading,
  * in a scroll box the app owns. The arrow keys move to the nearest tile in
- * that direction, across sections too.
+ * that direction, across sections too, and a click picks a tile.
  *
  * @module
  */
@@ -33,6 +33,8 @@ export interface MenuGridOptions {
   readonly scroll: ScrollBoxRenderable;
   /** 28 columns by default */
   readonly tileWidth?: number;
+  /** Called with a tile's id when it's clicked, after it's highlighted */
+  readonly onActivate?: (id: string) => void;
 }
 
 interface GridSection {
@@ -63,6 +65,7 @@ export class MenuGrid {
   private readonly theme: Theme;
   private readonly scroll: ScrollBoxRenderable;
   private readonly tileWidth: number;
+  private readonly onActivate: ((id: string) => void) | undefined;
   private sections: GridSection[] = [];
   private readonly tiles = new Map<string, Tile>();
   private sectionIndex = 0;
@@ -74,6 +77,7 @@ export class MenuGrid {
     this.theme = theme;
     this.scroll = options.scroll;
     this.tileWidth = options.tileWidth ?? 28;
+    this.onActivate = options.onActivate;
 
     renderer.on("resize", () => {
       if (this.focused) this.applySelection();
@@ -116,9 +120,11 @@ export class MenuGrid {
 
       if (heading) this.scroll.add(heading.box);
 
+      const sectionIndex = this.sections.length;
+
       this.sections.push({ items: section.items, heading });
 
-      for (const item of section.items) {
+      for (const [tileIndex, item] of section.items.entries()) {
         const tile = new Tile(this.renderer, this.theme, {
           id: `${this.scroll.id}-tile-${item.id}`,
           primary: item.primary,
@@ -126,6 +132,16 @@ export class MenuGrid {
           icon: item.icon,
           width: this.tileWidth,
         });
+
+        // A click highlights the tile and runs it, as Enter does in the app
+        tile.box.onMouseDown = (event) => {
+          if (event.button !== 0) return;
+
+          this.sectionIndex = sectionIndex;
+          this.tileIndex = tileIndex;
+          this.focus();
+          this.onActivate?.(item.id);
+        };
 
         this.tiles.set(item.id, tile);
         this.scroll.add(tile.box);

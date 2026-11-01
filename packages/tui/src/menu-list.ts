@@ -60,7 +60,7 @@ export interface MenuListOptions<Item extends MenuListItem> {
   readonly items: readonly Item[];
   /** Active color theme */
   readonly theme: Theme;
-  /** Called when the user presses Enter on an item */
+  /** Called when the user presses Enter on an item, or clicks it */
   readonly onSelect: (item: Item) => void;
   /** Called when the highlighted item changes */
   readonly onSelectionChanged?: (item: Item) => void;
@@ -99,8 +99,8 @@ const isPrintable = (key: KeyEvent): boolean =>
 
 /**
  * A scrolling menu of two-line rows: the icon and title, then the
- * description. Up and Down move, Enter selects, Escape clears the filter or
- * goes back, and Backspace removes a filter character or goes back.
+ * description. Up and Down move, Enter or a click selects, Escape clears the
+ * filter or goes back, and Backspace removes a filter character or goes back.
  */
 export class MenuList<
   Item extends MenuListItem = MenuListItem,
@@ -346,11 +346,7 @@ export class MenuList<
     }
 
     if (key.name === "return") {
-      const entry = this.rows[this.selectedIndex]?.entry;
-
-      if (entry?.kind === "item") this.options.onSelect(entry.item);
-      else if (entry?.kind === "next") this.turnPage(1);
-      else if (entry?.kind === "previous") this.turnPage(-1);
+      this.activate(this.selectedIndex);
 
       return true;
     }
@@ -364,6 +360,15 @@ export class MenuList<
     }
 
     return super.handleKeyPress(key);
+  }
+
+  /** Runs a row: selects its item, or turns the page. */
+  private activate(index: number): void {
+    const entry = this.rows[index]?.entry;
+
+    if (entry?.kind === "item") this.options.onSelect(entry.item);
+    else if (entry?.kind === "next") this.turnPage(1);
+    else if (entry?.kind === "previous") this.turnPage(-1);
   }
 
   /** `/` opens the filter, which then takes every key until Escape or Enter. */
@@ -646,7 +651,29 @@ export class MenuList<
     container.add(iconCol);
     container.add(textCol);
 
-    return { container, iconText, titleText, descText, entry };
+    const row: MenuRow<Item> = {
+      container,
+      iconText,
+      titleText,
+      descText,
+      entry,
+    };
+
+    // A click selects the row and runs it, as Enter does
+    container.onMouseDown = (event) => {
+      const rowIndex = this.rows.indexOf(row);
+
+      if (event.button !== 0 || rowIndex < 0 || row.entry.kind === "group")
+        return;
+
+      this.focus();
+
+      if (rowIndex !== this.selectedIndex) this.applySelection(rowIndex);
+
+      this.activate(rowIndex);
+    };
+
+    return row;
   }
 
   private paintRow(row: MenuRow<Item>, selected: boolean): void {

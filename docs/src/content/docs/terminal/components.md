@@ -18,11 +18,11 @@ Each component takes the `Theme` from [`loadTheme`](/terminal#themes). The demo 
 
 ## Lists
 
-`MenuList` is a filterable list of two-line rows: an icon, a title and a description. Typing filters it, and the filter shows above it through `formatFilterBar`, always in place so the list doesn't move. Long lists page, and rows can sit under group headings. `StatusList` is a plain list of labeled values.
+`MenuList` is a filterable list of two-line rows: an icon, a title and a description. Typing filters it, and the filter shows above it through `formatFilterBar`, always in place so the list doesn't move. Long lists page, and rows can sit under group headings. Enter or a click runs a row. `StatusList` is a plain list of labeled values.
 
 ## Grid
 
-`MenuGrid` lays out `Tile` cards in sections, each under a `SectionHeading`. Tiles wrap to the terminal's width, and the arrow keys move to the nearest tile in that direction, across sections too.
+`MenuGrid` lays out `Tile` cards in sections, each under a `SectionHeading`. Tiles wrap to the terminal's width, and the arrow keys move to the nearest tile in that direction, across sections too. A click highlights a tile and calls `onActivate` with its id.
 
 ![The grid on Slate, light, with pending and up to date sections](/screenshots/terminal/grid-slate-light.png)
 

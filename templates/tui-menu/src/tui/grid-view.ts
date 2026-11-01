@@ -1,6 +1,6 @@
 /**
  * The grid view: the demo's items as tiles, in Pending and Up to date
- * sections. The arrow keys move between tiles and Enter applies one.
+ * sections. The arrow keys move between tiles and Enter or a click applies one.
  *
  * @module
  */
@@ -64,7 +64,10 @@ export class GridView {
       contentOptions: { flexDirection: "row", flexWrap: "wrap" },
     });
 
-    this.grid = new MenuGrid(renderer, theme, { scroll });
+    this.grid = new MenuGrid(renderer, theme, {
+      scroll,
+      onActivate: (id) => this.apply(id),
+    });
     this.root.add(scroll);
 
     this.root.add(
@@ -141,13 +144,15 @@ export class GridView {
     if (key.name === "return") {
       const id = this.grid.getSelectedId();
 
-      if (id === undefined) return;
-
-      void this.options.onApply(id).then(() => this.refresh());
+      if (id !== undefined) this.apply(id);
 
       return;
     }
 
     this.grid.handleKeyPress(key);
+  }
+
+  private apply(id: string): void {
+    void this.options.onApply(id).then(() => this.refresh());
   }
 }
