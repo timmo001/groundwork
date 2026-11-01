@@ -42,7 +42,7 @@ const modes = [
  *
  * @attr {"auto"|"light"|"dark"|"darker"} mode - The mode in use. Defaults to `auto`.
  * @attr {string} theme - The theme in use, by id.
- * @attr {OptionItem[]} themes - The themes to offer, as JSON. With `gallery`, a `group` gathers a family's themes.
+ * @attr {OptionItem[]} themes - The themes to offer, as JSON. The select hides with fewer than two. With `gallery`, a `group` gathers a family's themes.
  * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
  * @attr {string} status - A line under the controls, such as an import's result.
  * @attr {string} label - The button's accessible name and the popover's heading. Defaults to `Theme`.
@@ -228,7 +228,7 @@ export class GwThemePicker extends GwElement {
     this.#mode.value = this.mode;
     this.#theme.options = Array.isArray(this.themes) ? this.themes : [];
     this.#theme.value = this.theme;
-    this.#theme.hidden = this.gallery;
+    this.#theme.hidden = this.gallery || this.#theme.options.length < 2;
     this.#gallery.hidden = !this.gallery;
     this.#gallery.themes = Array.isArray(this.themes) ? this.themes : [];
     this.#gallery.theme = this.theme;
