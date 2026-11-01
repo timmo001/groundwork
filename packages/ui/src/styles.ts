@@ -101,7 +101,10 @@ export const base = css`
     --gw-tone-border: var(--gw-color-border-important);
   }
 
+  /* :host too, since * in a shadow root doesn't match it, and the skeletons
+     pulse on their host */
   @media (prefers-reduced-motion: reduce) {
+    :host,
     *,
     *::before,
     *::after {
