@@ -55,6 +55,16 @@ First-party packages publish under the `@timmo001` scope. A project's own scope 
 | `@groundwork/tokens` | `@timmo001/groundwork-tokens` |
 | `@groundwork/sync` | `@timmo001/groundwork-sync` |
 
+## Demos
+
+Every app with a UI ships a demo of each target it has, and hosts the web one in its docs.
+
+- **Web, in the docs:** the app's real UI, built from the same code that ships, running in the browser on fixture data with no server behind it. People can click through it without installing anything, and it can't drift from the app.
+- **Every other target the same way:** the CLI, TUI, desktop and panel demos run the same fixture data, and each runs from a mise task such as `mise run demo:tui`.
+- **One service between the UI and the data:** the app's data and actions sit behind one service, with a fixture implementation beside the real one. A demo swaps in the fixture in one place, and a change to the service reaches every target.
+
+Groundwork's own [Demo](/demo) is the reference.
+
 ## The manifest
 
 The conventions are data in [`conventions/`](https://github.com/timmo001/groundwork/tree/main/conventions):

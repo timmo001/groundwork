@@ -89,6 +89,17 @@ run = "bun run preview"
 description = "Start the docs dev server in the background through Pitchfork"
 run = "pitchfork start docs"
 
+[tasks."demo:web"]
+description = "Run the web demo: the docs dev server, with the demo at /demo"
+depends = ["serve:docs"]
+run = "echo 'The web demo is at https://docs.groundwork.localhost/demo'"
+
+[tasks."demo:cli"]
+description = "Run the CLI demo; pass a command after --, such as status"
+depends = ["install"]
+dir = "templates/cli-tool"
+run = "bun run src/cli.ts"
+
 [tasks."serve:docs:status"]
 description = "Show the background docs dev server status"
 run = "pitchfork status docs"

@@ -27,10 +27,12 @@
     "@fontsource-variable/noto-sans": "5.3.0",
     "@fontsource/ibm-plex-sans": "5.3.0",
     "@timmo001/groundwork-conventions": "workspace:*",
+    "@timmo001/groundwork-demo": "workspace:*",
     "@timmo001/groundwork-tokens": "workspace:*",
     "@timmo001/groundwork-ui": "workspace:*",
     "@timmo001/docs-kit": "workspace:*",
     "blume": "2.2.6",
+    "effect": "4.1.1",
     "lit": "3.3.3",
     "sharp": "0.35.5"
   },

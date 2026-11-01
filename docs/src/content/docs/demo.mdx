@@ -1,0 +1,24 @@
+---
+title: Demo
+description: The demo app every target shows, running here as the web demo on fixture data.
+---
+
+import DemoApp from "../../../components/demo-app.astro";
+
+Groundwork has one small demo app, an update tool, built for every target it supports from Groundwork's own parts. This is the web target, running in your browser on fixture data with nothing behind it. Apply an item or all of them, or restart. A reload starts it over. Switch the theme and mode above it to see the same app in each.
+
+<DemoApp />
+
+## How it's built
+
+The demo's data and actions sit behind one service, `Items` in `@timmo001/groundwork-demo`, with a fixture implementation. Each target runs on that service, so each one shows the same items and does the same things. A real app swaps the fixture layer for its own backend, in one place.
+
+| Target | Where | Run it |
+| --- | --- | --- |
+| Web | This page | `mise run demo:web` |
+| CLI | `templates/cli-tool`, moving onto the shared service | `mise run demo:cli -- status` |
+| TUI | Moving in from starter-tui-menu | Coming |
+| Desktop | After the shell is decided | Coming |
+| Omarchy panel | The panel components in `qml/` | Coming |
+
+Apps follow the same standard: see [Demos](/conventions#demos) in the conventions.

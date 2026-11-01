@@ -11,6 +11,7 @@ export default defineConfig(
     navigation: {
       sidebar: [
         "/",
+        "/demo",
         "/principles",
         "/agents",
         "/targets",
