@@ -191,11 +191,14 @@ const discoverIn = Effect.fn("discoverIn")(function* (repo: string) {
 
   const manifests: string[] = [];
 
-  for (const entry of tree) {
-    if (entry.type !== "blob") continue;
-    if (!/(^|\/)package\.json$/.test(entry.path)) continue;
-    if (entry.path.includes("node_modules/")) continue;
+  const candidates = tree.filter(
+    (entry) =>
+      entry.type === "blob" &&
+      /(^|\/)package\.json$/.test(entry.path) &&
+      !entry.path.includes("node_modules/"),
+  );
 
+  for (const entry of candidates) {
     const { content } = yield* Api.json(
       { endpoint: `repos/${repo}/contents/${entry.path}`, method: "GET" },
       Contents,
