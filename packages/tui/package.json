@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-tui",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Groundwork's terminal components: OpenTUI renderables on the terminal tokens",
   "license": "Apache-2.0",
   "type": "module",
@@ -22,6 +22,7 @@
     "directory": "packages/tui"
   },
   "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "lint": "oxlint .",
     "typecheck": "tsc",
     "format": "prettier --write .",
@@ -29,7 +30,7 @@
   },
   "dependencies": {
     "@opentui/core": "0.8.0",
-    "@timmo001/groundwork-tokens": "0.4.0",
+    "@timmo001/groundwork-tokens": "0.4.1",
     "effect": "4.1.1",
     "fuse.js": "7.5.0"
   },
