@@ -1,12 +1,13 @@
 {
   "name": "@timmo001/groundwork-tokens",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Groundwork's design tokens: the theme schema, the OKLCH solver and every theme as CSS and JSON",
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./runtime": "./src/runtime.ts",
+    "./page": "./src/page.ts",
     "./webmcp": "./src/webmcp.ts",
     "./opentui": "./generated/opentui.ts",
     "./themes.css": "./generated/themes.css",
