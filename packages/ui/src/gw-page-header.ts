@@ -94,6 +94,11 @@ export class GwPageHeader extends GwElement {
         align-items: center;
         margin-inline-start: auto;
       }
+
+      /* Centered on the tile when there is one */
+      .tile:not([hidden]) ~ .actions {
+        min-height: 3rem;
+      }
     `,
   ];
 
