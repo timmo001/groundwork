@@ -12,6 +12,8 @@ export * from "./gw-alert.js";
 
 export * from "./gw-badge.js";
 
+export * from "./gw-banner.js";
+
 export * from "./gw-button.js";
 
 export * from "./gw-card.js";

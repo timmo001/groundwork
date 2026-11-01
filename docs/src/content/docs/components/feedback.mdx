@@ -98,6 +98,32 @@ For an action in progress, never for content loading. It's announced by its `lab
 
 What a list or page shows when it's empty or there's nothing to do. Say so in one line, the same as a CLI does.
 
+## Banner
+
+<Demo id="banner" layout="stack">
+  <gw-stack>
+    <gw-banner id="restart-banner" tone="warning" open>
+      <p>Restart to finish applying your changes.</p>
+      <gw-button slot="actions" size="small" variant="neutral" appearance="outlined">Restart</gw-button>
+    </gw-banner>
+    <gw-banner id="offline-banner" tone="danger" urgent>
+      <p>Connection lost. Trying again…</p>
+    </gw-banner>
+    <gw-row>
+      <gw-button variant="neutral" appearance="outlined" data-toggles="restart-banner" icon="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z">Toggle restart</gw-button>
+      <gw-button variant="neutral" appearance="outlined" data-toggles="offline-banner" icon="M2.28,3L1,4.27L2.47,5.74C2.04,6 1.61,6.29 1.2,6.6L3,9C3.53,8.6 4.08,8.25 4.66,7.93L6.89,10.16C6.15,10.5 5.44,10.91 4.8,11.4L6.6,13.8C7.38,13.22 8.26,12.77 9.2,12.47L11.53,14.8C10.5,15 9.5,15.4 8.6,16.2L12,20.8L13.89,18.28L19.73,24L21,22.72L2.28,3M12,3C9.85,3 7.8,3.38 5.9,4.07L8.29,6.47C9.5,6.16 10.72,6 12,6C15.38,6 18.5,7.11 21,9L22.8,6.6C19.79,4.34 16.06,3 12,3M12,9C11.62,9 11.25,9 10.88,9.05L14.07,12.25C15.29,12.53 16.43,13.07 17.4,13.8L19.2,11.4C17.2,9.89 14.7,9 12,9Z">Toggle connection lost</gw-button>
+    </gw-row>
+  </gw-stack>
+</Demo>
+
+A slim bar across the top of the app, above its content rather than over it, for app-wide state the person can keep working through: a restart is needed, the connection is lost, or a new version is ready. Set `open` to show it; its height opens and closes smoothly, so the page below glides rather than jumps. Give it one action in the `actions` slot that opens what it's about, and leave it off when there's nothing to do, as with a lost connection that retries by itself. `urgent` announces it at once.
+
+| Attribute | What it does |
+| --- | --- |
+| `tone` | `info`, `warning`, `danger` and the other tones |
+| `open` | Shows it |
+| `urgent` | Announces it at once, for a lost connection |
+
 ## Toast
 
 Avoid toasts. A toast shows up away from what caused it, covers content and leaves before it's read, which also makes it hard to use with a screen reader or magnifier. Show the outcome where it happened instead:
@@ -105,7 +131,7 @@ Avoid toasts. A toast shows up away from what caused it, covers content and leav
 - **The action's own button.** It shows [`loading`](/components/actions#button-loading) while the work runs, then the result. A save that worked needs nothing more.
 - **A [popover](/components/overlays#popover) from the button** for a question that follows the action, such as asking to restart after a save, or an undo after a cut.
 - **An [alert](/components/display#alert) in the page** for an error the person needs to read or fix.
-- **A slim bar across the top** for app-wide state: a restart is needed, the connection is lost, or a new version is ready. It's small and out of the way, and its action opens what it's about.
+- **A [slim bar](#banner) across the top** for app-wide state: a restart is needed, the connection is lost, or a new version is ready. It's small and out of the way, and its action opens what it's about.
 - **A notification** for something new the person needs to decide or know. It stays in the notification center until it's dealt with.
 
 A toast is the last resort, for something brief that nothing on screen can show, such as a link copied with a keyboard shortcut. It only tells: it has no buttons or links, and clicks go straight through it. Anything with an action, such as "Update now", is a notification or a bar instead, since a toast leaves before it can be used and may sit under a dialog.

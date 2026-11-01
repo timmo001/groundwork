@@ -92,6 +92,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-banner",
+      "kind": "element",
+      "description": "A slim bar across the top for app-wide state, such as a lost connection, a needed restart or a new version",
+      "files": ["packages/ui/src/gw-banner.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-badge",
       "kind": "element",
       "description": "A pill with an icon, a value and an optional label",

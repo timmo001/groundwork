@@ -22,7 +22,8 @@ const labels: Record<string, string> = {
  * `data-gw-mode` on itself, so everything slotted inside follows them.
  *
  * Demos are plain markup, so the frame wires up what would need script: a
- * button with `data-opens="id"` opens that dialog, one with `data-toast`
+ * button with `data-opens="id"` opens that dialog, one with `data-toggles="id"`
+ * opens or closes that banner, one with `data-toast`
  * shows a toast in the frame's `gw-toaster`, and the last `change`, `select`
  * or `close` event is shown in the toolbar.
  */
@@ -170,6 +171,7 @@ export class GwDemoFrame extends GwElement {
           (node) =>
             node instanceof HTMLElement &&
             (node.dataset.opens ||
+              node.dataset.toggles ||
               node.dataset.toast ||
               node.dataset.replays !== undefined ||
               node.dataset.loads !== undefined),
@@ -198,6 +200,12 @@ export class GwDemoFrame extends GwElement {
         if (dialog !== null && "show" in dialog && typeof dialog.show === "function") {
           dialog.show(target.dataset.centered === undefined ? target : undefined);
         }
+      }
+
+      if (target.dataset.toggles) {
+        const toggled = this.querySelector(`#${target.dataset.toggles}`);
+
+        toggled?.toggleAttribute("open");
       }
 
       if (target.dataset.toast) {
