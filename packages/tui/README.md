@@ -10,7 +10,9 @@ import { AppHeader, formatHelpBar, loadTheme } from "@timmo001/groundwork-tui";
 
 - `loadTheme` reads `GW_THEME` and `GW_MODE` (Base and dark by default), and
   `themeFor` picks a theme and mode directly.
-- `AppHeader` and `PaneHeader` are one-row titles.
+- `AppHeader` and `PaneHeader` are one-row titles. `HeaderBlock` is the
+  app's name as ASCII art over `formatHeaderBar`, a breadcrumb with a status
+  dot and details that drop off when the terminal is narrow.
 - `formatBreadcrumb`, `formatFilterBar` and `formatHelpBar` build the title
   trail, the filter line and the key hints along the bottom.
 - `MenuList` is a filterable list of two-line rows, with group headings and

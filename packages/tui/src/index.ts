@@ -11,6 +11,14 @@ export { formatBreadcrumb } from "./breadcrumb.ts";
 
 export { formatFilterBar } from "./filter-bar.ts";
 
+export {
+  formatHeaderBar,
+  type HeaderStatus,
+  type HeaderTone,
+} from "./header-bar.ts";
+
+export { HeaderBlock, type HeaderBlockOptions } from "./header-block.ts";
+
 export { formatHelpBar, GLOBAL_HELP, type HelpEntry } from "./help-bar.ts";
 
 export {

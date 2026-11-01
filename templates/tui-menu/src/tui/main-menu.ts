@@ -3,18 +3,13 @@
  *
  * @module
  */
-import {
-  type CliRenderer,
-  BoxRenderable,
-  TextRenderable,
-  t,
-  bold,
-  fg,
-} from "@opentui/core";
+import { type CliRenderer, BoxRenderable, TextRenderable } from "@opentui/core";
 import type { MenuItem } from "../types.js";
 import {
+  formatFilterBar,
   formatHelpBar,
   GLOBAL_HELP,
+  HeaderBlock,
   MenuList,
   type HelpEntry,
   type Theme,
@@ -64,25 +59,24 @@ export class MainMenu {
       padding: 1,
     });
 
-    // Title
+    // The name as ASCII art when there's room, then the header bar
     const title = options.title ?? "Menu";
 
-    const subtitle = options.subtitle
-      ? fg(theme.fgMuted)(`: ${options.subtitle}`)
-      : "";
-
-    const titleBar = new TextRenderable(renderer, {
-      id: "main-menu-title",
-      content: t`${bold(fg(theme.accent)(title))}${subtitle}`,
-      marginBottom: 1,
+    new HeaderBlock(renderer, theme, this.root, {
+      id: "main-menu-header",
+      name: title,
+      titleParts: [title],
+      status: {
+        tone: "ok",
+        label: "Ready",
+        details: options.subtitle === undefined ? [] : [options.subtitle],
+      },
     });
-
-    this.root.add(titleBar);
 
     // Filter bar: always visible to avoid layout shifts
     this.filterBar = new TextRenderable(renderer, {
       id: "main-menu-filter",
-      content: t`${fg(theme.fgSubtle)("/")}`,
+      content: formatFilterBar(theme, ""),
       marginBottom: 1,
     });
     this.root.add(this.filterBar);
@@ -156,10 +150,6 @@ export class MainMenu {
 
   /** Update the filter bar display based on current filter text */
   private updateFilterBar(filter: string): void {
-    if (filter.length === 0) {
-      this.filterBar.content = t`${fg(this.theme.fgSubtle)("/")}`;
-    } else {
-      this.filterBar.content = t`${fg(this.theme.accent)("/")} ${fg(this.theme.fg)(filter)}`;
-    }
+    this.filterBar.content = formatFilterBar(this.theme, filter);
   }
 }
