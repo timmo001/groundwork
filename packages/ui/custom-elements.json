@@ -13844,7 +13844,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, description: {}, icon: {}, }",
+              "default": "{ heading: {}, description: {}, icon: {}, level: { type: \"number\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13857,7 +13857,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: 3rem; height: 3rem; color: var(--gw-color-accent); background: var(--gw-color-fill-accent-quiet); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 0 1 auto; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } h1 { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* Takes the room the titles leave, and gives it up before them, down to its items' smallest */ .actions { display: flex; flex: 1 1000 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: 3rem; } `, ]",
+              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: 3rem; height: 3rem; color: var(--gw-color-accent); background: var(--gw-color-fill-accent-quiet); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 0 1 auto; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } :host(:not([level=\"1\"])) .tile { width: 2.5rem; height: 2.5rem; border-radius: var(--gw-radius-m); --gw-icon-size: 1.375rem; } :host(:not([level=\"1\"])) .heading { font-size: var(--gw-font-size-l); } :host(:not([level=\"1\"])) .tile:not([hidden]) ~ .actions { min-height: 2.5rem; } .heading { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* Takes the room the titles leave, and gives it up before them, down to its items' smallest */ .actions { display: flex; flex: 1 1000 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: 3rem; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13889,6 +13889,15 @@
             },
             {
               "kind": "field",
+              "name": "level",
+              "type": {
+                "text": "number"
+              },
+              "description": "The heading level, 1 to 6.",
+              "default": "1"
+            },
+            {
+              "kind": "field",
               "name": "#icon",
               "privacy": "private",
               "readonly": true
@@ -13915,7 +13924,9 @@
               "kind": "field",
               "name": "#heading",
               "privacy": "private",
-              "readonly": true
+              "type": {
+                "text": "HTMLHeadingElement"
+              }
             },
             {
               "kind": "field",
@@ -14256,6 +14267,13 @@
               },
               "description": "SVG path data for the icon tile.",
               "name": "icon"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The heading level, 1 to 6. Defaults to 1. From 2 the header is smaller, for a section of a page that reads like a page of its own.",
+              "name": "level"
             }
           ],
           "superclass": {

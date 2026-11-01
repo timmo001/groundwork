@@ -83,9 +83,10 @@ The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` 
     <gw-button slot="actions">Connect</gw-button>
   </gw-page-header>
   <gw-section-title>Sensors<gw-button slot="actions" size="small" variant="neutral" appearance="outlined" icon="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z">Refresh</gw-button></gw-section-title>
+  <gw-page-header level="2" heading="Hyprland" description="Windows, workspaces and options" icon="M4,1H20A1,1 0 0,1 21,2V6A1,1 0 0,1 20,7H4A1,1 0 0,1 3,6V2A1,1 0 0,1 4,1M4,9H20A1,1 0 0,1 21,10V14A1,1 0 0,1 20,15H4A1,1 0 0,1 3,14V10A1,1 0 0,1 4,9M4,17H20A1,1 0 0,1 21,18V22A1,1 0 0,1 20,23H4A1,1 0 0,1 3,22V18A1,1 0 0,1 4,17Z"></gw-page-header>
 </Demo>
 
-The page header holds the page's `<h1>`, with an optional `icon` tile and `description`, its controls at the top right in the `actions` slot, and a back button or similar before the tile in the `start` slot. A section title is an `<h2>` by default; set `level` for another.
+The page header holds the page's `<h1>`, with an optional `icon` tile and `description`, its controls at the top right in the `actions` slot, and a back button or similar before the tile in the `start` slot. Set `level` for a part of a page that reads like a page of its own, such as a section shown only on some systems: from 2 the heading is that level and the header is smaller. A section title is an `<h2>` by default; set `level` for another.
 
 ## Stack, row and grid
 

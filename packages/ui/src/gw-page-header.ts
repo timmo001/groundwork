@@ -7,6 +7,8 @@
 import { GwElement, css, h } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
+const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
+
 /**
  * A page's title, with an optional icon tile and description, a back button
  * or similar in the `start` slot, and its controls at the top right in the
@@ -18,6 +20,7 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} heading - The page's title.
  * @attr {string} description - A line under the title.
  * @attr {string} icon - SVG path data for the icon tile.
+ * @attr {number} level - The heading level, 1 to 6. Defaults to 1. From 2 the header is smaller, for a section of a page that reads like a page of its own.
  *
  * @slot start - Before the icon tile, such as a back button.
  * @slot actions - The page's controls.
@@ -31,6 +34,7 @@ export class GwPageHeader extends GwElement {
     heading: {},
     description: {},
     icon: {},
+    level: { type: "number", reflect: true },
   } as const;
 
   static override styles = [
@@ -73,7 +77,22 @@ export class GwPageHeader extends GwElement {
         min-width: 0;
       }
 
-      h1 {
+      :host(:not([level="1"])) .tile {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--gw-radius-m);
+        --gw-icon-size: 1.375rem;
+      }
+
+      :host(:not([level="1"])) .heading {
+        font-size: var(--gw-font-size-l);
+      }
+
+      :host(:not([level="1"])) .tile:not([hidden]) ~ .actions {
+        min-height: 2.5rem;
+      }
+
+      .heading {
         margin: 0;
         font-size: var(--gw-font-size-2xl);
         font-weight: var(--gw-font-weight-strong);
@@ -107,6 +126,8 @@ export class GwPageHeader extends GwElement {
   declare heading: string;
   declare description: string;
   declare icon: string;
+  /** The heading level, 1 to 6. */
+  declare level: number;
 
   readonly #icon = createIcon("");
 
@@ -117,7 +138,7 @@ export class GwPageHeader extends GwElement {
 
   readonly #tile = h("span", { class: "tile", part: "tile" }, this.#icon);
 
-  readonly #heading = h("h1", { part: "heading" });
+  #heading: HTMLHeadingElement = h("h1", { class: "heading", part: "heading" });
 
   readonly #description = h("p", { part: "description" });
 
@@ -126,6 +147,7 @@ export class GwPageHeader extends GwElement {
     this.heading = "";
     this.description = "";
     this.icon = "";
+    this.level = 1;
   }
 
   protected override create(root: ShadowRoot) {
@@ -141,6 +163,19 @@ export class GwPageHeader extends GwElement {
   }
 
   protected override update() {
+    const level = Math.min(6, Math.max(1, Math.round(this.level) || 1));
+    const tag = headingTags[level - 1] ?? "h1";
+
+    if (this.#heading.localName !== tag) {
+      const next = h(tag, {
+        class: "heading",
+        part: "heading",
+      });
+
+      this.#heading.replaceWith(next);
+      this.#heading = next;
+    }
+
     setIconPath(this.#icon, this.icon);
     this.#tile.hidden = !this.icon;
     this.#heading.textContent = this.heading;
