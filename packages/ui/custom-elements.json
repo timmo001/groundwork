@@ -9837,7 +9837,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A labeled native `<input>`, with an optional hint and error.",
+          "description": "A labeled native `<input>`, with an optional hint and error. Enter submits\nits form when the form's submit button is a `gw-button`, as it would with a\nnative one.",
           "name": "GwInput",
           "cssProperties": [
             {

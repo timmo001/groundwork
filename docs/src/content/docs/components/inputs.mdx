@@ -24,6 +24,18 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 | `icon` | SVG path data for an icon inside the field, before the text |
 | `hide-label` | Keeps the label as the accessible name without showing it |
 
+### In a form
+
+Put inputs in a `<form>` with a `gw-button type="submit"`. Enter in any input submits the form, as it would with a native submit button, unless that button is `disabled` or `loading`.
+
+<Demo id="input-form" layout="stack">
+  <form method="dialog" style="display: grid; gap: var(--gw-space-3)">
+    <gw-input label="Host" name="host" placeholder="192.168.1.20"></gw-input>
+    <gw-input label="Port" name="port" type="number" value="9170"></gw-input>
+    <gw-button type="submit" style="justify-self: start">Connect</gw-button>
+  </form>
+</Demo>
+
 ### In a toolbar
 
 A search in a toolbar says what it's for with its icon and placeholder, so `hide-label` keeps the label for assistive technology without showing it, and `icon` puts a magnifier in the field.

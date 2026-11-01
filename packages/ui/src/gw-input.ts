@@ -10,7 +10,9 @@ import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 
 /**
- * A labeled native `<input>`, with an optional hint and error.
+ * A labeled native `<input>`, with an optional hint and error. Enter submits
+ * its form when the form's submit button is a `gw-button`, as it would with a
+ * native one.
  *
  * @element gw-input
  * @summary A labeled text field in light DOM, so forms and autofill see it.
@@ -104,6 +106,30 @@ export class GwInput extends LightElement {
   protected override create(root: HTMLElement) {
     this.#input.addEventListener("input", () => {
       this.value = this.#input.value;
+    });
+    // A gw-button's native button is in its shadow root, out of the form's
+    // reach, so Enter only submits on its own with a single field. Submit
+    // here instead, as a native submit button would
+    this.#input.addEventListener("keydown", (event) => {
+      const form = this.#input.form;
+
+      if (
+        event.key !== "Enter" ||
+        event.isComposing ||
+        event.defaultPrevented ||
+        form === null ||
+        form.querySelector(
+          'button:not([type]), button[type="submit"], input[type="submit"]',
+        ) !== null ||
+        form.querySelector(
+          'gw-button[type="submit"]:not([disabled], [loading])',
+        ) === null
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      form.requestSubmit();
     });
     root.append(
       this.#info.heading,
