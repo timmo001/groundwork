@@ -1,5 +1,4 @@
-import { LitElement, css, html, nothing } from "lit";
-import { createRef, ref } from "lit/directives/ref.js";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import { base } from "./styles.js";
 
 const gap = 8;
@@ -18,12 +17,11 @@ const sheetBelow = 600;
  * click on one with a `value` closes it with that value, and fires `close`.
  * `confirm` makes it an `alertdialog`, for a question that needs an answer.
  */
-export class GwPopover extends LitElement {
+export class GwPopover extends GwElement {
   static override properties = {
     heading: {},
-    confirm: { type: Boolean },
-    placement: { state: true },
-  };
+    confirm: { type: "boolean" },
+  } as const;
 
   static override styles = [
     base,
@@ -145,12 +143,19 @@ export class GwPopover extends LitElement {
 
   declare heading: string;
   declare confirm: boolean;
-  declare placement: "below" | "above" | "center" | "sheet";
 
   /** The value of the action that closed it, or "" for Esc or a click outside. */
   returnValue = "";
 
-  readonly #popover = createRef<HTMLElement>();
+  readonly #heading = h("h2", { id: "heading" });
+
+  readonly #popover = h(
+    "div",
+    { popover: "auto", "data-placement": "center" },
+    this.#heading,
+    h("div", { class: "body", id: "body" }, h("slot")),
+    h("footer", {}, h("slot", { name: "actions" })),
+  );
 
   #anchor: Element | undefined;
 
@@ -158,20 +163,19 @@ export class GwPopover extends LitElement {
     super();
     this.heading = "";
     this.confirm = false;
-    this.placement = "center";
   }
 
   /** Opens next to `anchor`, or in the middle without one. */
   show(anchor?: Element) {
     this.#anchor = anchor;
     this.returnValue = "";
-    this.placement = this.#placementFor(anchor);
-    this.#popover.value?.showPopover();
+    this.#popover.dataset.placement = this.#placementFor(anchor);
+    this.#popover.showPopover();
   }
 
   close(value = "") {
     this.returnValue = value;
-    this.#popover.value?.hidePopover();
+    this.#popover.hidePopover();
   }
 
   #placementFor(anchor: Element | undefined) {
@@ -182,17 +186,14 @@ export class GwPopover extends LitElement {
 
   /** Under the button, lined up with its right edge, or above it when there's more room there. */
   readonly #position = () => {
-    const popover = this.#popover.value;
+    const popover = this.#popover;
     const anchor = this.#anchor;
-
-    if (popover === undefined) return;
-
     const placement = this.#placementFor(anchor);
 
     if (anchor === undefined || placement === "sheet") {
       popover.style.top = "";
       popover.style.left = "";
-      this.placement = placement;
+      popover.dataset.placement = placement;
 
       return;
     }
@@ -213,7 +214,7 @@ export class GwPopover extends LitElement {
 
     popover.dataset.side = fromStart ? "start" : "end";
 
-    this.placement = fitsBelow ? "below" : "above";
+    popover.dataset.placement = fitsBelow ? "below" : "above";
     popover.style.top = `${fitsBelow ? rect.bottom + gap : Math.max(gap, rect.top - gap - popover.offsetHeight)}px`;
     popover.style.left = `${left}px`;
   };
@@ -254,24 +255,26 @@ export class GwPopover extends LitElement {
     super.disconnectedCallback();
   }
 
-  override render() {
-    return html`<div
-      ${ref(this.#popover)}
-      popover
-      role=${this.confirm ? "alertdialog" : "dialog"}
-      aria-labelledby=${this.heading ? "heading" : "body"}
-      aria-describedby=${this.heading ? "body" : nothing}
-      data-placement=${this.placement}
-      @toggle=${this.#onToggle}
-    >
-      ${this.heading ? html`<h2 id="heading">${this.heading}</h2>` : nothing}
-      <div class="body" id="body"><slot></slot></div>
-      <footer @click=${this.#onAction}><slot name="actions"></slot></footer>
-    </div>`;
+  protected override create(root: ShadowRoot) {
+    this.#popover.addEventListener("toggle", this.#onToggle);
+    this.#popover
+      .querySelector("footer")
+      ?.addEventListener("click", this.#onAction);
+    root.append(this.#popover);
+  }
+
+  protected override update() {
+    const popover = this.#popover;
+
+    setAttribute(popover, "role", this.confirm ? "alertdialog" : "dialog");
+    setAttribute(popover, "aria-labelledby", this.heading ? "heading" : "body");
+    setAttribute(popover, "aria-describedby", this.heading ? "body" : null);
+    this.#heading.textContent = this.heading;
+    this.#heading.hidden = !this.heading;
   }
 }
 
-customElements.define("gw-popover", GwPopover);
+GwPopover.define("gw-popover");
 
 declare global {
   interface HTMLElementTagNameMap {

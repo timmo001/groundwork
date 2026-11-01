@@ -1,6 +1,5 @@
-import { LitElement, css, html, nothing } from "lit";
-import { createRef, ref } from "lit/directives/ref.js";
-import { base, icon } from "./styles.js";
+import { GwElement, css, h, setAttribute } from "./element.js";
+import { base, createIcon } from "./styles.js";
 
 export interface Segment {
   readonly value: string;
@@ -18,14 +17,14 @@ export interface Segment {
  * the text as a tooltip and accessible name) or `auto`, which shows the text
  * on wide screens and only the icons on narrow ones.
  */
-export class GwSegmented extends LitElement {
+export class GwSegmented extends GwElement {
   static override properties = {
     label: {},
     name: {},
     value: { reflect: true },
     labels: { reflect: true },
-    options: { type: Array },
-  };
+    options: { type: "json" },
+  } as const;
 
   static override styles = [
     base,
@@ -179,7 +178,17 @@ export class GwSegmented extends LitElement {
     this.options = [];
   }
 
-  readonly #indicator = createRef<HTMLSpanElement>();
+  readonly #legend = h("legend");
+
+  readonly #indicator = h("span", { class: "indicator", part: "indicator" });
+
+  readonly #fieldset = h("fieldset", {}, this.#legend, this.#indicator);
+
+  #segments: {
+    label: HTMLLabelElement;
+    input: HTMLInputElement;
+    option: Segment;
+  }[] = [];
 
   readonly #resize = new ResizeObserver(() => this.#place(false));
 
@@ -190,17 +199,11 @@ export class GwSegmented extends LitElement {
 
   /** Puts the pill under the picked option, sliding there unless it's the first placing. */
   #place(animate: boolean) {
-    const indicator = this.#indicator.value;
+    const indicator = this.#indicator;
 
-    if (indicator === undefined) return;
+    const picked = this.#segments.find(({ input }) => input.checked)?.label;
 
-    const picked = [...(indicator.parentElement?.children ?? [])].find(
-      (child) =>
-        child instanceof HTMLLabelElement &&
-        child.querySelector("input")?.checked === true,
-    );
-
-    if (!(picked instanceof HTMLLabelElement)) {
+    if (picked === undefined) {
       indicator.classList.remove("placed");
 
       return;
@@ -226,36 +229,51 @@ export class GwSegmented extends LitElement {
     this.#resize.disconnect();
   }
 
-  override updated() {
-    this.#place(true);
+  protected override create(root: ShadowRoot) {
+    root.append(this.#fieldset);
   }
 
-  override render() {
-    return html`<fieldset>
-      <legend>${this.label}</legend>
-      <span class="indicator" part="indicator" ${ref(this.#indicator)}></span>
-      ${this.options.map(
-        (option) =>
-          html`<label
-            class=${option.icon ? "has-icon" : ""}
-            title=${option.icon && this.labels !== "show" ? option.label : nothing}
-          >
-            <input
-              type="radio"
-              name=${this.name}
-              value=${option.value}
-              .checked=${option.value === this.value}
-              @change=${() => this.#pick(option.value)}
-            />
-            ${option.icon ? icon(option.icon) : nothing}
-            <span class="text">${option.label}</span>
-          </label>`,
-      )}
-    </fieldset>`;
+  protected override update(changed: ReadonlySet<string>) {
+    this.#legend.textContent = this.label;
+
+    if (changed.has("options")) {
+      const options = Array.isArray(this.options) ? this.options : [];
+
+      for (const { label } of this.#segments) label.remove();
+
+      this.#segments = options.map((option) => {
+        const input = h("input", { type: "radio", value: option.value });
+
+        input.addEventListener("change", () => this.#pick(option.value));
+
+        const label = h(
+          "label",
+          { class: option.icon ? "has-icon" : null },
+          input,
+          option.icon ? createIcon(option.icon) : null,
+          h("span", { class: "text" }, option.label),
+        );
+
+        return { label, input, option };
+      });
+      this.#fieldset.append(...this.#segments.map(({ label }) => label));
+    }
+
+    for (const { label, input, option } of this.#segments) {
+      input.name = this.name;
+      input.checked = option.value === this.value;
+      setAttribute(
+        label,
+        "title",
+        option.icon && this.labels !== "show" ? option.label : null,
+      );
+    }
+
+    this.#place(true);
   }
 }
 
-customElements.define("gw-segmented", GwSegmented);
+GwSegmented.define("gw-segmented");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,6 +1,5 @@
 import tokens from "@groundwork/tokens/themes.json";
-import { GwButton, withViewTransition } from "@groundwork/ui";
-import { LitElement, css, html } from "lit";
+import { GwButton, GwElement, css, h, withViewTransition } from "@groundwork/ui";
 
 const tones = ["neutral", "accent", "info", "success", "warning", "danger", "important"] as const;
 
@@ -27,15 +26,16 @@ const labels: Record<string, string> = {
  * shows a toast in the frame's `gw-toaster`, and the last `change`, `select`
  * or `close` event is shown in the toolbar.
  */
-export class GwDemoFrame extends LitElement {
+export class GwDemoFrame extends GwElement {
   static override properties = {
     theme: { attribute: "data-gw-theme", reflect: true },
     mode: { attribute: "data-gw-mode", reflect: true },
     layout: { reflect: true },
-    event: { state: true },
-  };
+    event: { attribute: false },
+  } as const;
 
-  static override styles = css`
+  static override styles = [
+    css`
     :host {
       display: block;
       overflow: hidden;
@@ -148,7 +148,8 @@ export class GwDemoFrame extends LitElement {
       opacity: 0;
       translate: 0 calc(var(--gw-space-1) * -1);
     }
-  `;
+  `,
+  ];
 
   declare theme: string;
   declare mode: string;
@@ -258,52 +259,51 @@ export class GwDemoFrame extends LitElement {
     });
   }
 
-  override render() {
-    return html`
-      <div class="toolbar">
-        <label>
-          Theme
-          <span class="select">
-            <select @change=${this.pickTheme} .value=${this.theme}>
-              ${tokens.themes.map(
-                (theme) =>
-                  html`<option value=${theme.id} ?selected=${theme.id === this.theme}>
-                    ${theme.name}
-                  </option>`,
-              )}
-            </select>
-          </span>
-        </label>
-        <gw-segmented
-          label="Mode"
-          labels="auto"
-          .value=${this.mode}
-          .options=${this.modes.map((mode) => ({
-            value: mode,
-            label: labels[mode] ?? mode,
-            icon: modeIcons[mode] ?? modeIcons.dark,
-          }))}
-          @change=${(event: Event) => {
-            // The frame logs its demos' events, not its own toolbar's
-            event.stopPropagation();
+  readonly #select = h("select");
 
-            if (event.target instanceof HTMLElement && "value" in event.target) {
-              this.pickMode(String(event.target.value));
-            }
-          }}
-        ></gw-segmented>
-      </div>
-      <div class="stage">
-        <slot></slot>
-        <span class="event" ?data-empty=${this.event === ""} aria-live="polite"
-          >${this.event}</span
-        >
-      </div>
-    `;
+  readonly #segmented = h("gw-segmented", { label: "Mode", labels: "auto" });
+
+  readonly #event = h("span", { class: "event", "aria-live": "polite" });
+
+  protected override create(root: ShadowRoot) {
+    this.#select.append(
+      ...tokens.themes.map((theme) => h("option", { value: theme.id }, theme.name)),
+    );
+    this.#select.addEventListener("change", (event) => this.pickTheme(event));
+    this.#segmented.addEventListener("change", (event) => {
+      // The frame logs its demos' events, not its own toolbar's
+      event.stopPropagation();
+      this.pickMode(this.#segmented.value);
+    });
+    root.append(
+      h(
+        "div",
+        { class: "toolbar" },
+        h("label", {}, "Theme", h("span", { class: "select" }, this.#select)),
+        this.#segmented,
+      ),
+      h("div", { class: "stage" }, h("slot"), this.#event),
+    );
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
+    this.#select.value = this.theme;
+
+    if (changed.has("theme")) {
+      this.#segmented.options = this.modes.map((mode) => ({
+        value: mode,
+        label: labels[mode] ?? mode,
+        icon: modeIcons[mode] ?? modeIcons.dark ?? "",
+      }));
+    }
+
+    this.#segmented.value = this.mode;
+    this.#event.textContent = this.event;
+    this.#event.toggleAttribute("data-empty", this.event === "");
   }
 }
 
-customElements.define("gw-demo-frame", GwDemoFrame);
+GwDemoFrame.define("gw-demo-frame");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,5 +1,4 @@
-import { LitElement, css, html } from "lit";
-import { createRef, ref } from "lit/directives/ref.js";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
@@ -8,11 +7,11 @@ import { base } from "./styles.js";
  * in the `actions` slot; a click on one with a `value` closes the dialog with
  * that value, and fires `close`.
  */
-export class GwDialog extends LitElement {
+export class GwDialog extends GwElement {
   static override properties = {
     heading: {},
-    open: { type: Boolean, reflect: true },
-  };
+    open: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -108,7 +107,17 @@ export class GwDialog extends LitElement {
     this.open = false;
   }
 
-  readonly #dialog = createRef<HTMLDialogElement>();
+  readonly #heading = h("h2", { id: "heading" });
+
+  readonly #footer = h("footer", {}, h("slot", { name: "actions" }));
+
+  readonly #dialog = h(
+    "dialog",
+    { "aria-labelledby": "heading" },
+    h("header", {}, this.#heading),
+    h("div", { class: "body" }, h("slot")),
+    this.#footer,
+  );
 
   show() {
     this.open = true;
@@ -132,10 +141,16 @@ export class GwDialog extends LitElement {
     this.dispatchEvent(new Event("close", { bubbles: true, composed: true }));
   };
 
-  override updated() {
-    const dialog = this.#dialog.value;
+  protected override create(root: ShadowRoot) {
+    this.#dialog.addEventListener("close", this.#onClose);
+    this.#footer.addEventListener("click", this.#onAction);
+    root.append(this.#dialog);
+  }
 
-    if (dialog === undefined) return;
+  protected override update() {
+    const dialog = this.#dialog;
+
+    this.#heading.textContent = this.heading;
 
     if (this.open && !dialog.open) {
       dialog.showModal();
@@ -145,21 +160,9 @@ export class GwDialog extends LitElement {
 
     if (!this.open && dialog.open) dialog.close(this.returnValue);
   }
-
-  override render() {
-    return html`<dialog
-      ${ref(this.#dialog)}
-      aria-labelledby="heading"
-      @close=${this.#onClose}
-    >
-      <header><h2 id="heading">${this.heading}</h2></header>
-      <div class="body"><slot></slot></div>
-      <footer @click=${this.#onAction}><slot name="actions"></slot></footer>
-    </dialog>`;
-  }
 }
 
-customElements.define("gw-dialog", GwDialog);
+GwDialog.define("gw-dialog");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,5 +1,6 @@
-import { html, svg } from "lit";
 import { css } from "./element.js";
+
+const svgNamespace = "http://www.w3.org/2000/svg";
 
 /**
  * What every component shares: box sizing, the focus ring, icons and the
@@ -92,24 +93,7 @@ export type Tone =
 /**
  * An icon from SVG path data, such as one of `@mdi/js`'s or Lucide's paths,
  * so each app picks its own set. Without a label it's hidden from assistive
- * technology.
- */
-export const icon = (path: string, label?: string) =>
-  html`<svg
-    class="icon"
-    viewBox="0 0 24 24"
-    role=${label === undefined ? "presentation" : "img"}
-    aria-hidden=${label === undefined ? "true" : "false"}
-    aria-label=${label ?? ""}
-  >
-    ${svg`<path d=${path}></path>`}
-  </svg>`;
-
-const svgNamespace = "http://www.w3.org/2000/svg";
-
-/**
- * The same icon as an element, for components built on `GwElement`. Change
- * its path later with `setIconPath`.
+ * technology. Change its path later with `setIconPath`.
  */
 export const createIcon = (path: string, label?: string) => {
   const element = document.createElementNS(svgNamespace, "svg");

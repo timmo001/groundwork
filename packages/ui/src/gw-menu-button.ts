@@ -1,6 +1,5 @@
-import { LitElement, css, html, nothing } from "lit";
-import { createRef, ref } from "lit/directives/ref.js";
-import { base, icon } from "./styles.js";
+import { GwElement, css, h } from "./element.js";
+import { base, createIcon } from "./styles.js";
 
 export interface MenuItem {
   readonly value: string;
@@ -25,14 +24,13 @@ export interface MenuItem {
  * Items render inside the component, so a page's own button styles can't
  * reach them.
  */
-export class GwMenuButton extends LitElement {
+export class GwMenuButton extends GwElement {
   static override properties = {
     label: {},
     empty: {},
-    items: { type: Array },
-    actions: { type: Array },
-    expanded: { state: true },
-  };
+    items: { type: "json" },
+    actions: { type: "json" },
+  } as const;
 
   static override styles = [
     base,
@@ -213,11 +211,27 @@ export class GwMenuButton extends LitElement {
   declare empty: string;
   declare items: readonly MenuItem[];
   declare actions: readonly MenuItem[];
-  declare expanded: boolean;
 
-  readonly #popover = createRef<HTMLElement>();
+  readonly #trigger = h("button", {
+    class: "trigger",
+    part: "trigger",
+    popovertarget: "menu",
+    "aria-haspopup": "menu",
+    "aria-expanded": "false",
+  });
 
-  readonly #trigger = createRef<HTMLButtonElement>();
+  readonly #triggerText = document.createTextNode("");
+
+  readonly #items = h("div", { class: "items", role: "none" });
+
+  readonly #actions = h("div", { class: "actions", role: "none" });
+
+  readonly #popover = h(
+    "div",
+    { id: "menu", popover: "auto", role: "menu" },
+    this.#items,
+    this.#actions,
+  );
 
   constructor() {
     super();
@@ -225,24 +239,21 @@ export class GwMenuButton extends LitElement {
     this.empty = "Nothing here yet";
     this.items = [];
     this.actions = [];
-    this.expanded = false;
   }
 
   /** The enabled items then actions, in the order arrow keys move through them. */
   get #buttons() {
-    const popover = this.#popover.value;
-
-    if (popover === undefined) return [];
-
-    return [...popover.querySelectorAll("button")].filter(
+    return [...this.#popover.querySelectorAll("button")].filter(
       (button) => !button.disabled,
     );
   }
 
   readonly #onToggle = (event: ToggleEvent) => {
-    this.expanded = event.newState === "open";
+    const expanded = event.newState === "open";
 
-    if (this.expanded) this.#buttons[0]?.focus();
+    this.#trigger.setAttribute("aria-expanded", String(expanded));
+
+    if (expanded) this.#buttons[0]?.focus();
   };
 
   readonly #onKeydown = (event: KeyboardEvent) => {
@@ -274,71 +285,71 @@ export class GwMenuButton extends LitElement {
       }),
     );
 
-    this.#popover.value?.hidePopover();
-    this.#trigger.value?.focus();
+    this.#popover.hidePopover();
+    this.#trigger.focus();
   }
 
   #renderItem(item: MenuItem, kind: "item" | "action") {
-    return html`<button
-      class="item ${kind === "action" ? "action" : ""}"
-      role="menuitem"
-      value=${item.value}
-      ?disabled=${item.disabled === true}
-      @click=${() => this.#choose(item.value)}
-    >
-      ${item.icon ? icon(item.icon) : nothing}
-      <span class="text">
-        <span>${item.label}</span>
-        ${
-          item.description
-            ? html`<span class="description">${item.description}</span>`
-            : nothing
-        }
-      </span>
-    </button>`;
+    const button = h(
+      "button",
+      {
+        class: kind === "action" ? "item action" : "item",
+        role: "menuitem",
+        value: item.value,
+        disabled: item.disabled === true,
+      },
+      item.icon ? createIcon(item.icon) : null,
+      h(
+        "span",
+        { class: "text" },
+        h("span", {}, item.label),
+        item.description
+          ? h("span", { class: "description" }, item.description)
+          : null,
+      ),
+    );
+
+    button.addEventListener("click", () => this.#choose(item.value));
+
+    return button;
   }
 
-  override render() {
-    return html`
-      <button
-        ${ref(this.#trigger)}
-        class="trigger"
-        part="trigger"
-        popovertarget="menu"
-        aria-haspopup="menu"
-        aria-expanded=${this.expanded ? "true" : "false"}
-      >
-        ${this.label}<span class="chevron" aria-hidden="true"></span>
-      </button>
-      <div
-        ${ref(this.#popover)}
-        id="menu"
-        popover
-        role="menu"
-        aria-label=${this.label}
-        @toggle=${this.#onToggle}
-        @keydown=${this.#onKeydown}
-      >
-        <div class="items" role="none">
-          ${
-            this.items.length === 0
-              ? html`<p class="empty" role="none">${this.empty}</p>`
-              : this.items.map((item) => this.#renderItem(item, "item"))
-          }
-        </div>
-        ${
-          this.actions.length === 0
-            ? nothing
-            : html`<div class="actions" role="none">
-                ${this.actions.map((item) => this.#renderItem(item, "action"))}
-              </div>`
-        }
-      </div>
-    `;
+  protected override create(root: ShadowRoot) {
+    this.#trigger.append(
+      this.#triggerText,
+      h("span", { class: "chevron", "aria-hidden": "true" }),
+    );
+    this.#popover.addEventListener("toggle", this.#onToggle);
+    this.#popover.addEventListener("keydown", this.#onKeydown);
+    root.append(this.#trigger, this.#popover);
+  }
+
+  protected override update(changed: ReadonlySet<string>) {
+    this.#triggerText.data = this.label;
+    this.#popover.setAttribute("aria-label", this.label);
+
+    if (changed.has("items") || changed.has("empty")) {
+      const items = Array.isArray(this.items) ? this.items : [];
+
+      this.#items.replaceChildren(
+        ...(items.length === 0
+          ? [h("p", { class: "empty", role: "none" }, this.empty)]
+          : items.map((item) => this.#renderItem(item, "item"))),
+      );
+    }
+
+    if (changed.has("actions")) {
+      const actions = Array.isArray(this.actions) ? this.actions : [];
+
+      this.#actions.replaceChildren(
+        ...actions.map((item) => this.#renderItem(item, "action")),
+      );
+      this.#actions.hidden = actions.length === 0;
+    }
   }
 }
 
-customElements.define("gw-menu-button", GwMenuButton);
+GwMenuButton.define("gw-menu-button");
 
 declare global {
   interface HTMLElementTagNameMap {

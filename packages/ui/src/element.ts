@@ -190,6 +190,8 @@ export class GwElement extends HTMLElement {
 
   #queued = false;
 
+  #pending: Promise<void> | undefined;
+
   #reflecting = false;
 
   #resolveUpdated: () => void = () => {};
@@ -221,9 +223,9 @@ export class GwElement extends HTMLElement {
     }
   }
 
-  /** Resolves once the first update has run. */
+  /** Resolves once the pending update has run, or the first one before it connects. */
   get updateComplete() {
-    return this.#updated;
+    return this.#pending ?? this.#updated;
   }
 
   connectedCallback() {
@@ -314,9 +316,13 @@ export class GwElement extends HTMLElement {
     if (!this.#created || this.#queued) return;
 
     this.#queued = true;
-    queueMicrotask(() => {
-      this.#queued = false;
-      this.#flush();
+    this.#pending = new Promise((resolve) => {
+      queueMicrotask(() => {
+        this.#queued = false;
+        this.#pending = undefined;
+        this.#flush();
+        resolve();
+      });
     });
   }
 
