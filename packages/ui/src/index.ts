@@ -54,6 +54,8 @@ export * from "./gw-section-title.js";
 
 export * from "./gw-segmented.js";
 
+export * from "./gw-option-list.js";
+
 export * from "./gw-select.js";
 
 export * from "./gw-setting-row.js";

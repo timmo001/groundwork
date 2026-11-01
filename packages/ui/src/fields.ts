@@ -21,7 +21,7 @@ export const fieldStyles = css`
     color: var(--gw-color-text-strong);
   }
 
-  :where(gw-input, gw-select) :where(input, select) {
+  :where(gw-input, gw-select) :where(input, .gw-select-trigger) {
     width: 100%;
     min-height: 2.5rem;
     padding: 0 var(--gw-space-3);
@@ -34,39 +34,123 @@ export const fieldStyles = css`
     transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
-  /* A drawn chevron with room around it, in the text color, instead of the
-     browser's arrow pressed against the edge. A select can't take
-     pseudo-elements, so its wrapper draws it */
-  gw-select select {
-    padding-inline-end: calc(var(--gw-space-4) * 2 + 0.5rem);
-    appearance: none;
+  /* The trigger shows the chosen option, with its icon, and a chevron with
+     room around it that turns over while the list is open */
+  gw-select .gw-select-trigger {
+    display: flex;
+    gap: var(--gw-space-2);
+    align-items: center;
+    padding-inline-end: var(--gw-space-3);
+    text-align: start;
+    cursor: pointer;
   }
 
-  gw-select .gw-select-control {
-    position: relative;
-    display: block;
+  gw-select .gw-select-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
-  gw-select .gw-select-control::after {
-    position: absolute;
-    inset-block-start: 50%;
-    inset-inline-end: var(--gw-space-4);
-    width: 0.4rem;
-    height: 0.4rem;
-    pointer-events: none;
-    content: "";
-    border-block-end: 1.5px solid var(--gw-color-text-secondary);
-    border-inline-end: 1.5px solid var(--gw-color-text-secondary);
-    translate: 0 -70%;
-    rotate: 45deg;
+  gw-select .gw-select-value[data-placeholder] {
+    color: var(--gw-color-text-secondary);
   }
 
-  :where(gw-input, gw-select) :where(input, select):hover {
+  gw-select .gw-select-trigger > .icon {
+    flex: none;
+    width: var(--gw-icon-size, 1.25rem);
+    height: var(--gw-icon-size, 1.25rem);
+    fill: currentColor;
+  }
+
+  gw-select .gw-select-trigger > .icon:last-child {
+    color: var(--gw-color-text-secondary);
+    transition: rotate var(--gw-motion-normal) var(--gw-motion-easing);
+  }
+
+  gw-select[open] .gw-select-trigger > .icon:last-child {
+    rotate: 180deg;
+  }
+
+  gw-select .gw-select-trigger > .icon[hidden] {
+    display: none;
+  }
+
+  /* The list opens under the trigger, growing from it, or as a bottom sheet
+     sliding up on phones */
+  gw-select .gw-select-popup {
+    position: fixed;
+    inset: unset;
+    box-sizing: border-box;
+    max-width: calc(100vw - 12px);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-overlay);
+    border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+    box-shadow: var(--gw-shadow-l);
+    opacity: 0;
+    scale: 1 0.96;
+    transform-origin: top;
+    transition:
+      opacity var(--gw-motion-fast) var(--gw-motion-easing),
+      scale var(--gw-motion-normal) var(--gw-motion-easing),
+      translate var(--gw-motion-normal) var(--gw-motion-easing),
+      display var(--gw-motion-normal) allow-discrete,
+      overlay var(--gw-motion-normal) allow-discrete;
+  }
+
+  gw-select .gw-select-popup[data-placement="above"] {
+    transform-origin: bottom;
+  }
+
+  gw-select .gw-select-popup:popover-open {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @starting-style {
+    gw-select .gw-select-popup:popover-open {
+      opacity: 0;
+      scale: 1 0.96;
+    }
+  }
+
+  gw-select .gw-select-popup[data-placement="sheet"] {
+    inset: auto 0 0;
+    width: 100%;
+    max-width: none;
+    padding-block-end: env(safe-area-inset-bottom);
+    border-end-start-radius: 0;
+    border-end-end-radius: 0;
+    scale: 1;
+    translate: 0 100%;
+    --gw-option-list-height: 60vh;
+  }
+
+  gw-select .gw-select-popup[data-placement="sheet"]:popover-open {
+    translate: 0 0;
+  }
+
+  @starting-style {
+    gw-select .gw-select-popup[data-placement="sheet"]:popover-open {
+      translate: 0 100%;
+    }
+  }
+
+  gw-select .gw-select-popup[data-placement="sheet"]::backdrop {
+    background: rgb(0 0 0 / 40%);
+  }
+
+  :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover {
     border-color: var(--gw-color-border-loud);
   }
 
   :where(gw-input, gw-select, gw-switch, gw-checkbox)
-    :where(input, select):focus-visible {
+    :where(input, .gw-select-trigger):focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
   }

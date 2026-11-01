@@ -1,9 +1,9 @@
 ---
 title: Inputs
-description: Inputs, selects, checkboxes, switches and setting rows, with their native controls kept in light DOM.
+description: Inputs, selects, checkboxes, switches and setting rows, kept in light DOM so forms work as on any page.
 ---
 
-These render their native control in light DOM, so password managers, `<label for>` and forms work as they do on any page.
+These render in light DOM, so password managers, `<label for>` and forms work as they do on any page. Inputs, checkboxes and switches use the native control; the select draws its own list and carries its value in a hidden input.
 
 ## Input
 
@@ -29,9 +29,31 @@ These render their native control in light DOM, so password managers, `<label fo
     <option value="glazing">Glazing</option>
     <option value="survey">Survey</option>
   </gw-select>
+  <gw-select label="Area" name="area" value="kitchen" hint="Where the device is">
+    <optgroup label="Ground floor">
+      <option value="living-room" data-icon="M21 9V7C21 5.35 19.65 4 18 4H6C4.35 4 3 5.350 3 7V9C1.35 9 0 10.35 0 12V17C0 18.65 1.35 20 3 20V22H5V20H19V22H21V20C22.65 20 24 18.65 24 17V12C24 10.35 22.65 9 21 9M5 7C5 6.45 5.45 6 6 6H18C18.55 6 19 6.45 19 7V9.78C18.39 10.33 18 11.12 18 12V14H6V12C6 11.12 5.61 10.33 5 9.78V7M22 17C22 17.55 21.55 18 21 18H3C2.45 18 2 17.55 2 17V12C2 11.45 2.45 11 3 11S4 11.45 4 12V16H20V12C20 11.45 20.45 11 21 11S22 11.45 22 12V17Z" data-description="3 devices">Living room</option>
+      <option value="kitchen" data-icon="M7,2H17A2,2 0 0,1 19,4V9H5V4A2,2 0 0,1 7,2M19,19A2,2 0 0,1 17,21V22H15V21H9V22H7V21A2,2 0 0,1 5,19V10H19V19M8,5V7H10V5H8M8,12V15H10V12H8Z" data-description="5 devices">Kitchen</option>
+      <option value="hall" data-icon="M12,3L2,12H5V20H19V12H22L12,3Z" data-description="1 device">Hall</option>
+      <option value="garage" data-icon="M19,20H17V11H7V20H5V9L12,5L19,9V20M8,12H16V14H8V12M8,15H16V17H8V15M16,18V20H8V18H16Z" data-description="2 devices">Garage</option>
+    </optgroup>
+    <optgroup label="First floor">
+      <option value="bedroom" data-icon="M19,7H11V14H3V5H1V20H3V17H21V20H23V11A4,4 0 0,0 19,7M7,13A3,3 0 0,0 10,10A3,3 0 0,0 7,7A3,3 0 0,0 4,10A3,3 0 0,0 7,13Z" data-description="4 devices">Bedroom</option>
+      <option value="office" data-icon="M21,16H3V4H21M21,2H3C1.89,2 1,2.89 1,4V16A2,2 0 0,0 3,18H10V20H8V22H16V20H14V18H21A2,2 0 0,0 23,16V4C23,2.89 22.1,2 21,2Z" data-description="6 devices">Office</option>
+      <option value="bathroom" data-icon="M7,7A2,2 0 0,1 9,9A2,2 0 0,1 7,11A2,2 0 0,1 5,9A2,2 0 0,1 7,7M20,13V4.83C20,3.27 18.73,2 17.17,2C16.42,2 15.7,2.3 15.17,2.83L13.92,4.08C13.76,4.03 13.59,4 13.41,4C13,4 12.64,4.12 12.33,4.32L15.09,7.08C15.29,6.77 15.41,6.4 15.41,6C15.41,5.82 15.38,5.66 15.34,5.5L16.59,4.25C16.74,4.1 16.95,4 17.17,4C17.63,4 18,4.37 18,4.83V13H11.15C10.85,12.79 10.58,12.55 10.33,12.28L8.93,10.73C8.74,10.5 8.5,10.35 8.26,10.24C7.96,10.09 7.63,10 7.29,10C6.04,10 5,11.04 5,12.33V13H2V19A2,2 0 0,0 4,21H5V23H7V21H17V23H19V21H20A2,2 0 0,0 22,19V13H20Z" data-description="2 devices">Bathroom</option>
+    </optgroup>
+  </gw-select>
 </Demo>
 
-Write `<option>` children, or set `options` to `[{ "value", "label" }]`. It fires the native `change`.
+The list opens under the select, growing from it, and is a bottom sheet below 600px wide. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
+
+Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SVG path data) and `data-description`. Or set `options` to `[{ "value", "label", "description", "icon", "group", "keywords" }]`. A hidden input carries the value in a form, and it fires `change`.
+
+| Attribute | What it does |
+| --- | --- |
+| `label`, `name`, `value`, `hint`, `disabled` | As on an input |
+| `placeholder` | Shown before anything's picked |
+| `search` | `auto` (from seven options), `always` or `never` |
+| `options` | The options, instead of `<option>` children |
 
 ## Checkbox and switch
 
