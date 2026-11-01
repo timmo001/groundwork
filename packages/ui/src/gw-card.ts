@@ -25,6 +25,8 @@ import { base } from "./styles.js";
  * @summary A surface for one group of content, or a link to more.
  *
  * @attr {string} heading - The card's heading.
+ * @attr {string} description - A line under the heading.
+ * @attr {number} level - The heading's level for assistive tech, 2 by default. Use 3 for a card under a section heading.
  * @attr {string} href - Makes the whole card a link to this address.
  * @attr {boolean} flush - Drops the padding, for content that runs to the edges.
  * @attr {boolean} loading - Shows skeleton lines for the content and any unknown heading.
@@ -33,15 +35,20 @@ import { base } from "./styles.js";
  * @slot - The content.
  * @slot heading - The heading, in place of `heading`. An `<a>` here makes the whole card follow it.
  * @slot actions - Buttons beside the heading.
+ * @slot footer - Content under a divider at the bottom, such as a control for the whole card.
  *
  * @csspart card - The card's surface.
  * @csspart header - The row with the heading and actions.
  * @csspart heading - The heading.
+ * @csspart description - The line under the heading.
  * @csspart body - The content.
+ * @csspart footer - The area under the divider.
  */
 export class GwCard extends GwElement {
   static override properties = {
     heading: {},
+    description: {},
+    level: { type: "number" },
     href: {},
     flush: { type: "boolean", reflect: true },
     loading: { type: "boolean", reflect: true },
@@ -110,12 +117,39 @@ export class GwCard extends GwElement {
         align-items: center;
       }
 
-      h2 {
+      .titles {
+        display: flex;
         flex: 1;
+        flex-direction: column;
+        gap: var(--gw-space-0-5);
+        min-width: 0;
+      }
+
+      .title {
         margin: 0;
         font-size: var(--gw-font-size-m);
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-strong);
+      }
+
+      .description {
+        font-size: var(--gw-font-size-xs);
+        color: var(--gw-color-text-secondary);
+      }
+
+      /* The divider runs to the card's edges */
+      footer:not([hidden]) {
+        display: flex;
+        flex-direction: column;
+        gap: inherit;
+        margin-inline: calc(-1 * var(--gw-space-4));
+        padding: var(--gw-space-3) var(--gw-space-4) 0;
+        border-top: var(--gw-border-width) solid var(--gw-color-border-normal);
+      }
+
+      :host([flush]) footer:not([hidden]) {
+        margin-inline: 0;
+        padding-bottom: var(--gw-space-3);
       }
 
       .body:not([hidden]) {
@@ -127,6 +161,9 @@ export class GwCard extends GwElement {
   ];
 
   declare heading: string;
+  declare description: string;
+  /** The heading's level for assistive tech. */
+  declare level: number;
   declare href: string;
   declare flush: boolean;
   declare loading: boolean;
@@ -139,17 +176,32 @@ export class GwCard extends GwElement {
 
   readonly #headingSlot = h("slot", { name: "heading" });
 
+  readonly #heading = h(
+    "div",
+    { class: "title", part: "heading", role: "heading", "aria-level": "2" },
+    this.#title,
+    this.#headingSlot,
+    this.#titleSkeleton,
+  );
+
+  readonly #description = h("span", {
+    class: "description",
+    part: "description",
+  });
+
   readonly #header: HTMLElement = h(
     "header",
     { part: "header" },
-    h(
-      "h2",
-      { part: "heading" },
-      this.#title,
-      this.#headingSlot,
-      this.#titleSkeleton,
-    ),
+    h("div", { class: "titles" }, this.#heading, this.#description),
     h("slot", { name: "actions" }),
+  );
+
+  readonly #footerSlot = h("slot", { name: "footer" });
+
+  readonly #footer: HTMLElement = h(
+    "footer",
+    { part: "footer", hidden: "" },
+    this.#footerSlot,
   );
 
   readonly #skeleton = h("gw-skeleton-lines");
@@ -169,6 +221,8 @@ export class GwCard extends GwElement {
   constructor() {
     super();
     this.heading = "";
+    this.description = "";
+    this.level = 2;
     this.href = "";
     this.flush = false;
     this.loading = false;
@@ -215,6 +269,11 @@ export class GwCard extends GwElement {
     this.#headingSlot.addEventListener("slotchange", () => {
       this.requestUpdate("heading");
     });
+
+    this.#footerSlot.addEventListener("slotchange", () => {
+      this.#footer.hidden =
+        this.#footerSlot.assignedNodes({ flatten: true }).length === 0;
+    });
   }
 
   /** The `<a>` in the heading slot, or holding it, when there is one. */
@@ -227,7 +286,7 @@ export class GwCard extends GwElement {
   }
 
   protected override create(root: ShadowRoot) {
-    this.#card.append(this.#header, this.#skeleton, this.#body);
+    this.#card.append(this.#header, this.#skeleton, this.#body, this.#footer);
     root.append(this.#card);
   }
 
@@ -260,9 +319,14 @@ export class GwCard extends GwElement {
 
     this.#card.classList.toggle("linked", this.#link() !== null && !this.href);
     this.#title.textContent = this.heading;
+    this.#heading.setAttribute("aria-level", String(this.level || 2));
+    this.#description.textContent = this.description;
+    this.#description.hidden = !this.description;
     this.#titleSkeleton.hidden =
       this.heading !== "" || slotted || !this.loading;
-    this.#header.hidden = !this.heading && !slotted && !this.loading;
+    this.#header.hidden =
+      !this.heading && !this.description && !slotted && !this.loading;
+    this.#heading.hidden = !this.heading && !slotted && !this.loading;
     this.#skeleton.lines = this.lines;
     this.#skeleton.hidden = !this.loading;
     this.#body.hidden = this.loading;

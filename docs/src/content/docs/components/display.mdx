@@ -17,6 +17,17 @@ Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`,
 
 `heading` adds a header, with an `actions` slot beside it. `href` makes the whole card a link, and `flush` drops the padding for a table or image that fills it.
 
+### Description and footer
+
+<Demo id="card-description" layout="stack">
+  <gw-card heading="Front camera" description="/dev/video0">
+    <gw-facts items='[{"label":"Resolution","value":"1920 × 1080"},{"label":"Format","value":"MJPEG"}]'></gw-facts>
+    <gw-row slot="footer"><gw-button size="small" variant="neutral" appearance="outlined">Take a snapshot</gw-button></gw-row>
+  </gw-card>
+</Demo>
+
+`description` adds a quieter line under the heading. Content in the `footer` slot sits under a divider that runs to the card's edges, for a control that acts on the whole card. The heading is level 2 for assistive tech; set `level="3"` on cards that sit under a section heading of their own.
+
 ### Linking from the heading
 
 An `href` link lives in the card's shadow root, so it isn't in the page's HTML and can't take a `target` or `rel`. When it needs to be there, such as a project card opening its repository in a new tab, put an `<a>` in the `heading` slot instead. A click anywhere on the card follows it, except on another control inside, such as a button, and the card shows the link's hover and focus:
