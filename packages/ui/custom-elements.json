@@ -3613,7 +3613,7 @@
               "type": {
                 "text": "\"button\"|\"submit\"|\"reset\""
               },
-              "description": "The native button type. Defaults to `button`.",
+              "description": "What a click does: nothing more, or submit or reset the form the button is in. Defaults to `button`.",
               "name": "type"
             },
             {

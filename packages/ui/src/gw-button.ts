@@ -32,7 +32,7 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @attr {"brand"|"neutral"|"info"|"success"|"warning"|"danger"} variant - The color. Defaults to `brand`.
  * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the color is applied. Defaults to `accent`.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, 24 to 56px tall. Defaults to `medium`.
- * @attr {"button"|"submit"|"reset"} type - The native button type. Defaults to `button`.
+ * @attr {"button"|"submit"|"reset"} type - What a click does: nothing more, or submit or reset the form the button is in. Defaults to `button`.
  * @attr {string} href - Renders a link to this address instead of a button.
  * @attr {string} label - The accessible name, when the text alone isn't enough.
  * @attr {boolean} disabled - Disables the button.
@@ -422,6 +422,25 @@ export class GwButton extends GwElement {
 
       if (link !== null && !event.composedPath().includes(link)) {
         link.click();
+      }
+
+      // The native button is in the shadow root, so it has no form of its
+      // own; submit and reset act on the form around the element instead
+      const form = this.closest("form");
+
+      if (
+        form === null ||
+        this.disabled ||
+        event.defaultPrevented ||
+        !(this.#control instanceof HTMLButtonElement)
+      ) {
+        return;
+      }
+
+      if (this.type === "submit") {
+        form.requestSubmit();
+      } else if (this.type === "reset") {
+        form.reset();
       }
     });
 
