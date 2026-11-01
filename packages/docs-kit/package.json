@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/docs-kit",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Shared branding, layout and config for timmo001 documentation sites",
   "license": "Apache-2.0",
   "type": "module",
@@ -39,8 +39,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "0.7.0",
-    "@timmo001/groundwork-ui": "0.7.0",
+    "@timmo001/groundwork-tokens": "0.8.0",
+    "@timmo001/groundwork-ui": "0.8.0",
     "sharp": "0.35.5"
   },
   "peerDependencies": {
