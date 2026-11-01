@@ -1,15 +1,15 @@
-import { LitElement, css, html, nothing } from "lit";
-import { base, icon } from "./styles.js";
+import { GwElement, css, h } from "./element.js";
+import { base, createIcon, setIconPath } from "./styles.js";
 
 /**
  * What a list or page shows when there's nothing in it, or nothing to do:
  * an icon, a heading, a line of text and an optional action.
  */
-export class GwEmptyState extends LitElement {
+export class GwEmptyState extends GwElement {
   static override properties = {
     icon: {},
     heading: {},
-  };
+  } as const;
 
   static override styles = [
     base,
@@ -50,23 +50,38 @@ export class GwEmptyState extends LitElement {
   declare icon: string;
   declare heading: string;
 
+  readonly #icon = createIcon("");
+
+  readonly #heading = h("h2");
+
   constructor() {
     super();
     this.icon = "";
     this.heading = "";
   }
 
-  override render() {
-    return html`<div class="empty" part="empty">
-      ${this.icon ? icon(this.icon) : nothing}
-      ${this.heading ? html`<h2>${this.heading}</h2>` : nothing}
-      <slot></slot>
-      <slot name="actions"></slot>
-    </div>`;
+  protected override create(root: ShadowRoot) {
+    root.append(
+      h(
+        "div",
+        { class: "empty", part: "empty" },
+        this.#icon,
+        this.#heading,
+        h("slot"),
+        h("slot", { name: "actions" }),
+      ),
+    );
+  }
+
+  protected override update() {
+    setIconPath(this.#icon, this.icon);
+    this.#icon.toggleAttribute("hidden", !this.icon);
+    this.#heading.textContent = this.heading;
+    this.#heading.hidden = !this.heading;
   }
 }
 
-customElements.define("gw-empty-state", GwEmptyState);
+GwEmptyState.define("gw-empty-state");
 
 declare global {
   interface HTMLElementTagNameMap {

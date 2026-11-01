@@ -1,11 +1,11 @@
-import { LitElement, css, html } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /** A small heading between groups on a page, as an `<h2>` unless `level` says otherwise. */
-export class GwSectionTitle extends LitElement {
+export class GwSectionTitle extends GwElement {
   static override properties = {
-    level: { type: Number },
-  };
+    level: { type: "number" },
+  } as const;
 
   static override styles = [
     base,
@@ -30,18 +30,23 @@ export class GwSectionTitle extends LitElement {
 
   declare level: number;
 
+  readonly #heading = h("div", { role: "heading" }, h("slot"));
+
   constructor() {
     super();
     this.level = 2;
   }
 
-  override render() {
-    return html`<div role="heading" aria-level=${this.level}><slot></slot></div>
-      <slot name="actions"></slot>`;
+  protected override create(root: ShadowRoot) {
+    root.append(this.#heading, h("slot", { name: "actions" }));
+  }
+
+  protected override update() {
+    this.#heading.setAttribute("aria-level", String(this.level));
   }
 }
 
-customElements.define("gw-section-title", GwSectionTitle);
+GwSectionTitle.define("gw-section-title");
 
 declare global {
   interface HTMLElementTagNameMap {

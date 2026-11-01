@@ -1,16 +1,16 @@
-import { LitElement, css, html, nothing } from "lit";
-import { base, icon } from "./styles.js";
+import { GwElement, css, h } from "./element.js";
+import { base, createIcon, setIconPath } from "./styles.js";
 
 /**
  * A page's title, with an optional icon tile and description, and its
  * controls at the top right in the `actions` slot.
  */
-export class GwPageHeader extends LitElement {
+export class GwPageHeader extends GwElement {
   static override properties = {
     heading: {},
     description: {},
     icon: {},
-  };
+  } as const;
 
   static override styles = [
     base,
@@ -69,6 +69,14 @@ export class GwPageHeader extends LitElement {
   declare description: string;
   declare icon: string;
 
+  readonly #icon = createIcon("");
+
+  readonly #tile = h("span", { class: "tile" }, this.#icon);
+
+  readonly #heading = h("h1");
+
+  readonly #description = h("p");
+
   constructor() {
     super();
     this.heading = "";
@@ -76,19 +84,24 @@ export class GwPageHeader extends LitElement {
     this.icon = "";
   }
 
-  override render() {
-    return html`
-      ${this.icon ? html`<span class="tile">${icon(this.icon)}</span>` : nothing}
-      <div class="titles">
-        <h1>${this.heading}</h1>
-        ${this.description ? html`<p>${this.description}</p>` : nothing}
-      </div>
-      <div class="actions"><slot name="actions"></slot></div>
-    `;
+  protected override create(root: ShadowRoot) {
+    root.append(
+      this.#tile,
+      h("div", { class: "titles" }, this.#heading, this.#description),
+      h("div", { class: "actions" }, h("slot", { name: "actions" })),
+    );
+  }
+
+  protected override update() {
+    setIconPath(this.#icon, this.icon);
+    this.#tile.hidden = !this.icon;
+    this.#heading.textContent = this.heading;
+    this.#description.textContent = this.description;
+    this.#description.hidden = !this.description;
   }
 }
 
-customElements.define("gw-page-header", GwPageHeader);
+GwPageHeader.define("gw-page-header");
 
 declare global {
   interface HTMLElementTagNameMap {

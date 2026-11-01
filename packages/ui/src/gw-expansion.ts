@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
@@ -7,12 +7,12 @@ import { base } from "./styles.js";
  * content glides open and shut rather than jumping, and the chevron turns
  * with it. `open` reflects its state and it fires `toggle`.
  */
-export class GwExpansion extends LitElement {
+export class GwExpansion extends GwElement {
   static override properties = {
     heading: {},
     description: {},
-    open: { type: Boolean, reflect: true },
-  };
+    open: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -147,6 +147,27 @@ export class GwExpansion extends LitElement {
   declare description: string;
   declare open: boolean;
 
+  readonly #heading = h("span", { class: "heading" });
+
+  readonly #description = h("span", { class: "description" });
+
+  readonly #details = h(
+    "details",
+    { part: "details" },
+    h(
+      "summary",
+      { part: "summary" },
+      h("slot", { name: "icon" }),
+      h("span", { class: "text" }, this.#heading, this.#description),
+      h(
+        "span",
+        { class: "toggle", "aria-hidden": "true" },
+        h("span", { class: "chevron" }),
+      ),
+    ),
+    h("div", { class: "content", part: "content" }, h("slot")),
+  );
+
   constructor() {
     super();
     this.heading = "";
@@ -154,40 +175,25 @@ export class GwExpansion extends LitElement {
     this.open = false;
   }
 
-  readonly #onToggle = (event: Event) => {
-    if (event.target instanceof HTMLDetailsElement) {
-      this.open = event.target.open;
-    }
-
+  readonly #onToggle = () => {
+    this.open = this.#details.open;
     this.dispatchEvent(new Event("toggle", { bubbles: true, composed: true }));
   };
 
-  override render() {
-    return html`<details
-      part="details"
-      ?open=${this.open}
-      @toggle=${this.#onToggle}
-    >
-      <summary part="summary">
-        <slot name="icon"></slot>
-        <span class="text">
-          <span class="heading">${this.heading}</span>
-          ${
-            this.description
-              ? html`<span class="description">${this.description}</span>`
-              : nothing
-          }
-        </span>
-        <span class="toggle" aria-hidden="true"
-          ><span class="chevron"></span
-        ></span>
-      </summary>
-      <div class="content" part="content"><slot></slot></div>
-    </details>`;
+  protected override create(root: ShadowRoot) {
+    this.#details.addEventListener("toggle", this.#onToggle);
+    root.append(this.#details);
+  }
+
+  protected override update() {
+    this.#details.open = this.open;
+    this.#heading.textContent = this.heading;
+    this.#description.textContent = this.description;
+    this.#description.hidden = !this.description;
   }
 }
 
-customElements.define("gw-expansion", GwExpansion);
+GwExpansion.define("gw-expansion");
 
 declare global {
   interface HTMLElementTagNameMap {
