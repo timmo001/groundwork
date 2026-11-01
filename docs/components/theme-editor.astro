@@ -1,0 +1,145 @@
+---
+/**
+ * `<ThemeEditor>`: the "Your own theme" editor on the Themes page, a
+ * `gw-theme-editor` beside a preview of components that take its theme.
+ */
+---
+
+<gw-theme-editor class="theme-editor" data-gw-theme="base" data-gw-mode="dark">
+  <div class="editor-preview" data-gw-theme="base" data-gw-mode="dark">
+    <div class="editor-surface">
+      <p class="editor-heading">Machine controls</p>
+      <p>Next boot is set to <a href="#top">Arch Linux</a>.</p>
+      <gw-input label="Hostname" value="workshop"></gw-input>
+      <div class="editor-row">
+        <gw-chip>Linux</gw-chip>
+        <gw-chip tone="accent">Windows</gw-chip>
+        <gw-chip tone="success">Passing</gw-chip>
+      </div>
+      <gw-alert tone="warning" heading="Warning">The token expires in 2 days.</gw-alert>
+      <div class="editor-row">
+        <gw-button appearance="filled">Plan boot</gw-button>
+        <gw-button>Reboot</gw-button>
+        <gw-button variant="neutral" appearance="outlined">Cancel</gw-button>
+      </div>
+    </div>
+  </div>
+</gw-theme-editor>
+
+<style is:global>
+  /* Global, since the editor builds its controls from script */
+  .theme-editor {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--gw-space-4);
+    margin-block: 1.5rem;
+    font-family: var(--gw-font-sans);
+    color: var(--gw-color-text-primary);
+    background: transparent;
+  }
+
+  .theme-editor .editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    gap: var(--gw-space-2);
+  }
+
+  .theme-editor .editor-panel {
+    grid-row: span 2;
+    padding: var(--gw-space-4);
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-default);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .theme-editor .editor-form {
+    display: grid;
+    gap: var(--gw-space-4);
+  }
+
+  .theme-editor .editor-pair,
+  .theme-editor .editor-trio {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gw-space-3);
+  }
+
+  .theme-editor .editor-trio {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .theme-editor .editor-field {
+    display: grid;
+    gap: var(--gw-space-1);
+  }
+
+  .theme-editor .editor-label {
+    font-size: var(--gw-font-size-s);
+    font-weight: var(--gw-font-weight-strong);
+  }
+
+  .theme-editor .editor-preview {
+    display: grid;
+    gap: var(--gw-space-3);
+    align-content: start;
+    padding: var(--gw-space-4);
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-lower);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .theme-editor .editor-surface {
+    display: grid;
+    gap: var(--gw-space-4);
+    padding: var(--gw-space-5);
+    font-family: var(--gw-font-sans);
+    background-color: var(--gw-color-surface-raised);
+    background-image: var(--gw-panel-sheen);
+    border: var(--gw-border-width) solid var(--gw-border-color);
+    border-top: max(var(--gw-border-width), var(--gw-panel-flange)) solid
+      var(--gw-panel-flange-color);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .theme-editor .editor-surface p {
+    margin: 0;
+  }
+
+  .theme-editor .editor-heading {
+    font-size: var(--gw-font-size-l);
+    font-weight: var(--gw-font-weight-strong);
+    color: var(--gw-color-text-strong);
+    text-transform: var(--gw-label-transform);
+    letter-spacing: var(--gw-label-tracking);
+  }
+
+  .theme-editor .editor-surface a {
+    color: var(--gw-link-color);
+    text-decoration-thickness: var(--gw-link-underline);
+  }
+
+  .theme-editor .editor-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gw-space-2);
+  }
+
+  @media (max-width: 48rem) {
+    .theme-editor {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .theme-editor .editor-panel {
+      grid-row: auto;
+    }
+  }
+</style>
+
+<script>
+  // Only this page solves themes in the browser, so it loads the solver alone.
+  import "../demos/index.ts";
+  import "../demos/gw-theme-editor.ts";
+</script>

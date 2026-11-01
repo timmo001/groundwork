@@ -14,7 +14,7 @@ import RepoKinds from "./components/repo-kinds.astro";
 import ThemeGrid from "./components/theme-grid.astro";
 import ThemePreview from "./components/theme-preview.astro";
 import ThemeSwatches from "./components/theme-swatches.astro";
-import ThemeUpload from "./components/theme-upload.astro";
+import ThemeEditor from "./components/theme-editor.astro";
 import TokenScale from "./components/token-scale.astro";
 
 export default defineComponents({
@@ -29,8 +29,8 @@ export default defineComponents({
     RepoKinds,
     ThemeGrid,
     ThemePreview,
+    ThemeEditor,
     ThemeSwatches,
-    ThemeUpload,
     TokenScale,
   },
 });
