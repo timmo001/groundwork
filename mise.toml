@@ -123,6 +123,7 @@ run = "bun run packages/sync/src/cli.ts status"
 
 [tasks.test]
 description = "Run the tests next to code that computes"
+depends = ["install"]
 run = "bun test packages"
 
 [tasks.check]
