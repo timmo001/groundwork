@@ -13,5 +13,7 @@
     "docs/test-results/**",
     "docs/playwright-report/**",
     ".agents/skills/**",
+    "templates/*/.hutch/**",
+    "templates/*/build/**",
   ],
 }
