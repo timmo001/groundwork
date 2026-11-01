@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-tokens",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Groundwork's design tokens: the theme schema, the OKLCH solver and every theme as CSS and JSON",
   "license": "Apache-2.0",
   "type": "module",
