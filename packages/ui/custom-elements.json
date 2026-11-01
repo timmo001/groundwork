@@ -1465,7 +1465,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A site or app header pinned to the top of the page, with a brand, nav\nlinks and actions, full width with its content kept to the content width.\nIt's transparent at first, then gets a blurred surface and a bottom border\nonce the page scrolls, or once the element\n`reveal-after` names scrolls out of view, such as a hero. With\n`reveal-after` the brand stays hidden until then, so a large logo in the\nhero hands over to the small one in the bar.\n\n`overlay` lays it over the top of the page rather than taking room, for a\npage that opens with a hero. Below 600px wide the nav moves into a menu\nopened from a button, which closes on Esc, a click outside or a link.",
+          "description": "A site or app header pinned to the top of the page, with a brand, nav\nlinks and actions, full width with its content kept to the content width.\nIt's transparent at first, then gets a blurred surface and a bottom border\nonce the page scrolls, or once the element\n`reveal-after` names scrolls out of view, such as a hero. With\n`reveal-after` the brand stays hidden, taking no room, until then, so a\nlarge logo in the hero hands over to the small one in the bar. The nav\nslides over as it opens.\n\n`overlay` lays it over the top of the page rather than taking room, for a\npage that opens with a hero. Below `menu-below`, 600px wide by default,\nthe nav moves into a menu opened from a button, which closes on Esc, a\nclick outside or a link. Raise it when the nav and actions need more room.",
           "name": "GwAppBar",
           "cssParts": [
             {
@@ -1499,7 +1499,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ revealAfter: { attribute: \"reveal-after\" }, overlay: { type: \"boolean\", reflect: true }, floating: { type: \"boolean\", reflect: true }, menuOpen: { type: \"boolean\", attribute: \"menu-open\", reflect: true }, menuLabel: { attribute: \"menu-label\" }, }",
+              "default": "{ revealAfter: { attribute: \"reveal-after\" }, overlay: { type: \"boolean\", reflect: true }, floating: { type: \"boolean\", reflect: true }, menuOpen: { type: \"boolean\", attribute: \"menu-open\", reflect: true }, menuLabel: { attribute: \"menu-label\" }, menuBelow: { type: \"number\", attribute: \"menu-below\" }, collapsed: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1512,7 +1512,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } .brand { display: flex; flex: none; align-items: center; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } :host([reveal-after]:not([floating])) .brand { pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } .nav { display: flex; flex: 1; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; margin-inline-start: auto; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } @media (max-width: ${menuBelow - 0.02}px) { .menu { display: inline-grid; } .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) var(--gw-space-3); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } } `, ]",
+              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } /* A one-column grid, so a hidden brand can fold its width to nothing and the nav slides over as it opens, rather than leaving a gap */ .brand { display: grid; flex: none; grid-template-columns: 1fr; align-items: center; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .brand > slot { display: flex; align-items: center; min-width: 0; overflow: clip; overflow-clip-margin: calc( var(--gw-focus-width) + var(--gw-focus-offset) ); } :host([reveal-after]:not([floating])) .brand { grid-template-columns: 0fr; margin-inline-end: calc(var(--gw-space-3) * -1); pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-slow) allow-discrete; } .nav { display: flex; flex: 1; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; margin-inline-start: auto; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } /* Below menu-below, which sets collapsed, the nav folds into a menu */ :host([collapsed]) .menu { display: inline-grid; } :host([collapsed]) .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([collapsed][menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1560,6 +1560,38 @@
             },
             {
               "kind": "field",
+              "name": "menuBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the nav moves into a menu.",
+              "default": "600"
+            },
+            {
+              "kind": "field",
+              "name": "collapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the nav is in the menu. Set by the bar from `menuBelow`.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#narrow",
+              "privacy": "private",
+              "type": {
+                "text": "MediaQueryList | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#onNarrow",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#menuIcon",
               "privacy": "private",
               "readonly": true
@@ -1592,6 +1624,12 @@
                 "text": "number"
               },
               "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "#watchWidth",
+              "privacy": "private",
+              "description": "Follows the viewport across `menuBelow`, setting `collapsed`."
             },
             {
               "kind": "method",
@@ -1975,6 +2013,20 @@
               },
               "description": "Whether it floats. Set by the bar as the page scrolls.",
               "name": "floating"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the nav moves into a menu. Defaults to `600`.",
+              "name": "menu-below"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the nav is in the menu. Set by the bar from `menu-below`.",
+              "name": "collapsed"
             },
             {
               "type": {

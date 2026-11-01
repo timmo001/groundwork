@@ -13,21 +13,20 @@ const menuIcon = "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z";
 const closeIcon =
   "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z";
 
-/** Below this width the nav moves into a menu. */
-const menuBelow = 600;
-
 /**
  * A site or app header pinned to the top of the page, with a brand, nav
  * links and actions, full width with its content kept to the content width.
  * It's transparent at first, then gets a blurred surface and a bottom border
  * once the page scrolls, or once the element
  * `reveal-after` names scrolls out of view, such as a hero. With
- * `reveal-after` the brand stays hidden until then, so a large logo in the
- * hero hands over to the small one in the bar.
+ * `reveal-after` the brand stays hidden, taking no room, until then, so a
+ * large logo in the hero hands over to the small one in the bar. The nav
+ * slides over as it opens.
  *
  * `overlay` lays it over the top of the page rather than taking room, for a
- * page that opens with a hero. Below 600px wide the nav moves into a menu
- * opened from a button, which closes on Esc, a click outside or a link.
+ * page that opens with a hero. Below `menu-below`, 600px wide by default,
+ * the nav moves into a menu opened from a button, which closes on Esc, a
+ * click outside or a link. Raise it when the nav and actions need more room.
  *
  * @element gw-app-bar
  * @summary A header pinned to the top, floating once the page scrolls.
@@ -35,6 +34,8 @@ const menuBelow = 600;
  * @attr {string} reveal-after - A CSS selector for the element, such as a hero, to scroll past before the bar floats and the brand shows.
  * @attr {boolean} overlay - Lays the bar over the top of the page instead of taking room.
  * @attr {boolean} floating - Whether it floats. Set by the bar as the page scrolls.
+ * @attr {number} menu-below - The viewport width in pixels below which the nav moves into a menu. Defaults to `600`.
+ * @attr {boolean} collapsed - Whether the nav is in the menu. Set by the bar from `menu-below`.
  * @attr {boolean} menu-open - Whether the nav menu is open on narrow screens.
  * @attr {string} menu-label - The menu button's accessible name. Defaults to `Menu`.
  *
@@ -54,6 +55,8 @@ export class GwAppBar extends GwElement {
     floating: { type: "boolean", reflect: true },
     menuOpen: { type: "boolean", attribute: "menu-open", reflect: true },
     menuLabel: { attribute: "menu-label" },
+    menuBelow: { type: "number", attribute: "menu-below" },
+    collapsed: { type: "boolean", reflect: true },
   } as const;
 
   static override styles = [
@@ -97,24 +100,43 @@ export class GwAppBar extends GwElement {
         backdrop-filter: blur(12px) saturate(1.4);
       }
 
+      /* A one-column grid, so a hidden brand can fold its width to nothing
+         and the nav slides over as it opens, rather than leaving a gap */
       .brand {
-        display: flex;
+        display: grid;
         flex: none;
+        grid-template-columns: 1fr;
         align-items: center;
         transition:
+          grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing),
+          margin var(--gw-motion-slow) var(--gw-motion-easing),
           opacity var(--gw-motion-normal) var(--gw-motion-easing),
           translate var(--gw-motion-normal) var(--gw-motion-easing);
       }
 
+      .brand > slot {
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        overflow: clip;
+        overflow-clip-margin: calc(
+          var(--gw-focus-width) + var(--gw-focus-offset)
+        );
+      }
+
       :host([reveal-after]:not([floating])) .brand {
+        grid-template-columns: 0fr;
+        margin-inline-end: calc(var(--gw-space-3) * -1);
         pointer-events: none;
         visibility: hidden;
         opacity: 0;
         translate: 0 -0.25rem;
         transition:
+          grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing),
+          margin var(--gw-motion-slow) var(--gw-motion-easing),
           opacity var(--gw-motion-normal) var(--gw-motion-easing),
           translate var(--gw-motion-normal) var(--gw-motion-easing),
-          visibility var(--gw-motion-normal) allow-discrete;
+          visibility var(--gw-motion-slow) allow-discrete;
       }
 
       .nav {
@@ -152,37 +174,37 @@ export class GwAppBar extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      @media (max-width: ${menuBelow - 0.02}px) {
-        .menu {
-          display: inline-grid;
-        }
+      /* Below menu-below, which sets collapsed, the nav folds into a menu */
+      :host([collapsed]) .menu {
+        display: inline-grid;
+      }
 
-        .nav {
-          position: absolute;
-          inset-block-start: 100%;
-          inset-inline: 0;
-          flex-direction: column;
-          gap: var(--gw-space-0-5);
-          align-items: stretch;
-          padding: var(--gw-space-2) var(--gw-space-3);
-          visibility: hidden;
-          background: var(--gw-color-surface-default);
-          border-block-end: max(var(--gw-border-width), 1px) solid
-            var(--gw-color-border-quiet);
-          box-shadow: var(--gw-shadow-m);
-          opacity: 0;
-          translate: 0 -0.5rem;
-          transition:
-            opacity var(--gw-motion-fast) var(--gw-motion-easing),
-            translate var(--gw-motion-normal) var(--gw-motion-easing),
-            visibility var(--gw-motion-normal) allow-discrete;
-        }
+      :host([collapsed]) .nav {
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline: 0;
+        flex-direction: column;
+        gap: var(--gw-space-0-5);
+        align-items: stretch;
+        padding: var(--gw-space-2)
+          max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2);
+        visibility: hidden;
+        background: var(--gw-color-surface-default);
+        border-block-end: max(var(--gw-border-width), 1px) solid
+          var(--gw-color-border-quiet);
+        box-shadow: var(--gw-shadow-m);
+        opacity: 0;
+        translate: 0 -0.5rem;
+        transition:
+          opacity var(--gw-motion-fast) var(--gw-motion-easing),
+          translate var(--gw-motion-normal) var(--gw-motion-easing),
+          visibility var(--gw-motion-normal) allow-discrete;
+      }
 
-        :host([menu-open]) .nav {
-          visibility: visible;
-          opacity: 1;
-          translate: 0 0;
-        }
+      :host([collapsed][menu-open]) .nav {
+        visibility: visible;
+        opacity: 1;
+        translate: 0 0;
       }
     `,
   ];
@@ -192,6 +214,18 @@ export class GwAppBar extends GwElement {
   declare floating: boolean;
   declare menuOpen: boolean;
   declare menuLabel: string;
+  /** The viewport width in pixels below which the nav moves into a menu. */
+  declare menuBelow: number;
+  /** Whether the nav is in the menu. Set by the bar from `menuBelow`. */
+  declare collapsed: boolean;
+
+  #narrow: MediaQueryList | undefined;
+
+  readonly #onNarrow = () => {
+    this.collapsed = this.#narrow?.matches === true;
+
+    if (!this.collapsed) this.toggleMenu(false);
+  };
 
   readonly #menuIcon = createIcon(menuIcon);
 
@@ -214,10 +248,23 @@ export class GwAppBar extends GwElement {
     this.floating = false;
     this.menuOpen = false;
     this.menuLabel = "Menu";
+    this.menuBelow = 600;
+    this.collapsed = false;
+  }
+
+  /** Follows the viewport across `menuBelow`, setting `collapsed`. */
+  #watchWidth() {
+    this.#narrow?.removeEventListener("change", this.#onNarrow);
+    this.#narrow = window.matchMedia(
+      `(max-width: ${(Number(this.menuBelow) || 600) - 0.02}px)`,
+    );
+    this.#narrow.addEventListener("change", this.#onNarrow);
+    this.#onNarrow();
   }
 
   override connectedCallback() {
     super.connectedCallback();
+    this.#watchWidth();
     document.addEventListener("keydown", this.#onKeydown);
     document.addEventListener("pointerdown", this.#onOutside, true);
 
@@ -232,6 +279,8 @@ export class GwAppBar extends GwElement {
 
   override disconnectedCallback() {
     this.#unwatch();
+    this.#narrow?.removeEventListener("change", this.#onNarrow);
+    this.#narrow = undefined;
     document.removeEventListener("keydown", this.#onKeydown);
     document.removeEventListener("pointerdown", this.#onOutside, true);
     super.disconnectedCallback();
@@ -317,8 +366,9 @@ export class GwAppBar extends GwElement {
       h(
         "div",
         { class: "bar", part: "bar" },
-        h("div", { class: "brand" }, h("slot", { name: "brand" })),
+        // The menu button leads, so a revealed brand opens beside it
         this.#menu,
+        h("div", { class: "brand" }, h("slot", { name: "brand" })),
         this.#nav,
         h("div", { class: "actions" }, h("slot", { name: "actions" })),
       ),
@@ -331,6 +381,10 @@ export class GwAppBar extends GwElement {
     setIconPath(this.#menuIcon, this.menuOpen ? closeIcon : menuIcon);
 
     if (changed.has("revealAfter") && this.isConnected) this.#watch();
+
+    if (changed.has("menuBelow") && this.#narrow !== undefined) {
+      this.#watchWidth();
+    }
   }
 }
 
