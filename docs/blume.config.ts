@@ -61,6 +61,11 @@ export default defineConfig(
           ],
         },
         {
+          label: "Terminal",
+          root: "/terminal",
+          items: ["/terminal/components"],
+        },
+        {
           label: "Effect",
           root: "/effect",
           items: [
