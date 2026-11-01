@@ -187,7 +187,7 @@ Options can carry an icon as path data. `labels="auto"` shows the text on wide s
   <gw-theme-picker theme="base" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"}]'></gw-theme-picker>
 </Demo>
 
-A palette button for the page's look, for an app bar's `actions` slot. It opens a popover with the mode (auto, light, dark or Darker), the theme, an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset.
+A palette button for the page's look, for an app bar's `actions` slot. It opens a popover with the mode (auto, light, dark or Darker), the theme, an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset. With fewer than two themes, such as a site with one theme of its own, the theme select hides until someone imports one.
 
 It only asks: it fires `mode`, `theme`, `import` (with the file's `text` and `name`) and `reset`, and the page applies them and sets `mode`, `theme` and `themes` back. Show an import's result, such as roles that miss their contrast target, in `status`. [`pageTheme`](/themes/#on-a-page) does the applying and keeping:
 
@@ -223,6 +223,28 @@ Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme
 <Demo id="theme-picker-gallery">
   <gw-theme-picker gallery theme="snag" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"},{"value":"slate","label":"Slate"},{"value":"bridge","label":"Bridge"},{"value":"snag","label":"Snag"}]'></gw-theme-picker>
 </Demo>
+
+### Mode button and inline controls
+
+`layout` sets how the picker shows. `cycle` is a single button showing the mode in use, which steps to the next mode on each press, with nothing popping up. It suits an app bar. `inline` lays the controls out in place, in one wrapping row with Reset and Import, for a footer or a settings page. The picker is the row's flex container, so set `justify-content` on it to align the row. `modes` picks which modes to offer and in what order, such as leaving Auto out:
+
+<Demo id="theme-picker-layouts" layout="stack">
+  <gw-theme-picker layout="cycle" modes="light dark darker" mode="dark" label="Mode"></gw-theme-picker>
+  <gw-theme-picker layout="inline" modes="light dark darker" mode="dark"></gw-theme-picker>
+</Demo>
+
+A site can use both, with a mode button in its app bar and the full controls in its footer. Wire each one to the same `pageTheme`, and set every picker's `mode` when its state changes so they stay in step:
+
+```html
+<gw-app-bar>
+  …
+  <gw-theme-picker slot="actions" layout="cycle" modes="light dark darker" label="Mode"></gw-theme-picker>
+</gw-app-bar>
+…
+<footer>
+  <gw-theme-picker layout="inline" modes="light dark darker" style="justify-content: center"></gw-theme-picker>
+</footer>
+```
 
 ## Theme gallery
 

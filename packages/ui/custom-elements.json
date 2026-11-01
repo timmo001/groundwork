@@ -18648,12 +18648,20 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.",
+          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `popover`, the default, is the palette button\nand its popover. `cycle` is one button showing the mode in use, which steps\nto the next mode on each press, for an app bar. `inline` lays the controls\nout in place, in one wrapping row with Reset and Import, for a footer or a\nsettings page; set `justify-content` on it to align the row. `modes` picks which modes it offers, such as `light dark` without\nAuto.",
           "name": "GwThemePicker",
           "cssParts": [
             {
               "description": "The theme gallery, with `gallery`.",
               "name": "gallery"
+            },
+            {
+              "description": "The mode, theme and status.",
+              "name": "controls"
+            },
+            {
+              "description": "Reset and Import, with `inline`.",
+              "name": "actions"
             }
           ],
           "members": [
@@ -18664,7 +18672,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -18677,7 +18685,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* One wrapping row: the controls, then Reset and Import. The host is the flex container, so a page can set its justify-content */ :host([layout=\"inline\"]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center; } :host([layout=\"inline\"]) .controls { flex-flow: row wrap; align-items: center; margin-block-start: 0; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -18733,6 +18741,24 @@
             },
             {
               "kind": "field",
+              "name": "layout",
+              "type": {
+                "text": "\"popover\" | \"cycle\" | \"inline\""
+              },
+              "description": "How it shows: a button and popover, a button cycling the modes, or the controls in place.",
+              "default": "\"popover\""
+            },
+            {
+              "kind": "field",
+              "name": "modes",
+              "type": {
+                "text": "string"
+              },
+              "description": "The modes to offer, in order and separated by spaces.",
+              "default": "\"auto light dark darker\""
+            },
+            {
+              "kind": "field",
               "name": "#button",
               "privacy": "private",
               "readonly": true
@@ -18769,14 +18795,58 @@
             },
             {
               "kind": "field",
+              "name": "#controls",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#reset",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#import",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#popover",
               "privacy": "private",
               "readonly": true
             },
             {
+              "kind": "field",
+              "name": "#actions",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#offered",
+              "privacy": "private",
+              "description": "The modes on offer, in the order `modes` gives them."
+            },
+            {
               "kind": "method",
               "name": "show",
-              "description": "Opens the popover under the button."
+              "description": "Opens the popover under the button, or with `cycle`, steps to the next mode."
+            },
+            {
+              "kind": "method",
+              "name": "#place",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Puts the controls and their buttons in the popover, or in place for `inline`."
             },
             {
               "kind": "method",
@@ -18821,7 +18891,7 @@
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "_changed",
+                  "name": "changed",
                   "type": {
                     "text": "ReadonlySet<string>"
                   }
@@ -19142,6 +19212,20 @@
           "attributes": [
             {
               "type": {
+                "text": "\"popover\"|\"cycle\"|\"inline\""
+              },
+              "description": "How it shows: a button and popover, a button cycling the modes, or the controls in place. Defaults to `popover`.",
+              "name": "layout"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The modes to offer, in order and separated by spaces. Defaults to `auto light dark darker`.",
+              "name": "modes"
+            },
+            {
+              "type": {
                 "text": "\"auto\"|\"light\"|\"dark\"|\"darker\""
               },
               "description": "The mode in use. Defaults to `auto`.",
@@ -19179,7 +19263,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "The button's accessible name and the popover's heading. Defaults to `Theme`.",
+              "description": "The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.",
               "name": "label"
             }
           ],
