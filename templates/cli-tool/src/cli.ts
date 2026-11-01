@@ -37,7 +37,9 @@ const status = Command.make(
 
     for (const item of items) {
       yield* Console.log(
-        `${item.pending ? "●" : "○"} ${item.name}${item.pending ? "  pending" : ""}`,
+        item.pending
+          ? `● ${item.name}  ${item.current} → ${item.available}`
+          : `○ ${item.name}  ${item.current}`,
       );
     }
   }),
@@ -193,6 +195,6 @@ const cli = Command.make("cli-tool").pipe(
 
 cli.pipe(
   Command.run({ version: "0.0.0" }),
-  Effect.provide(Layer.mergeAll(Items.layer, NodeServices.layer)),
+  Effect.provide(Layer.mergeAll(Items.fixture, NodeServices.layer)),
   NodeRuntime.runMain,
 );

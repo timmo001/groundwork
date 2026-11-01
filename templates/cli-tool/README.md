@@ -1,6 +1,8 @@
 # cli-tool template
 
-A starting point for a CLI built to the Groundwork [behavior conventions](https://groundwork.timmo.dev/behavior). Copy the folder, rename `cli-tool`, and replace the `Items` service in `src/operations.ts` with your system's SDK.
+A starting point for a CLI built to the Groundwork [behavior conventions](https://groundwork.timmo.dev/behavior). It's also the CLI target of Groundwork's [demo app](https://groundwork.timmo.dev/demo), running on the demo's shared `Items` service; `mise run demo:cli -- status` runs it from the repository root.
+
+Copy the folder, rename `cli-tool`, and in `src/operations.ts` replace the re-export of `@timmo001/groundwork-demo` with your own `Items` service, with your system's SDK behind it and a `fixture` layer for your tool's demo. Drop the `@timmo001/groundwork-demo` dependency from `package.json`.
 
 ```sh
 bun src/cli.ts status
