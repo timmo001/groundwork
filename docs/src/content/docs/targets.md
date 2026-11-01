@@ -7,8 +7,8 @@ Every target reads the same theme document and the same roles. What changes is t
 
 | Target | Examples | What it gets |
 | --- | --- | --- |
-| Web app | System Bridge, notes capture | CSS variables and Lit components |
-| Home Assistant ingress app | Triage | CSS variables and Lit components |
+| Web app | System Bridge, notes capture | CSS variables and web components |
+| Home Assistant ingress app | Triage | CSS variables and web components |
 | Astro site | timmo.dev | CSS variables |
 | Docs site | The Blume sites | docs-kit's bridge onto Blume's variables |
 | Browser extension | Site Defluffer | CSS variables |

@@ -68,9 +68,10 @@
     },
     {
       "name": "ui-base",
-      "kind": "lit",
-      "description": "Shared styles, tones and the icon helper every web component needs",
+      "kind": "element",
+      "description": "The GwElement base, shared styles, tones, icons and motion every web component needs",
       "files": [
+        "packages/ui/src/element.ts",
         "packages/ui/src/styles.ts",
         "packages/ui/src/fields.ts",
         "packages/ui/src/motion.ts"
@@ -78,84 +79,84 @@
     },
     {
       "name": "gw-layout",
-      "kind": "lit",
+      "kind": "element",
       "description": "gw-page, gw-stack, gw-row and gw-grid",
       "files": ["packages/ui/src/layout.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-alert",
-      "kind": "lit",
+      "kind": "element",
       "description": "A message in the flow of the page, by tone",
       "files": ["packages/ui/src/gw-alert.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-badge",
-      "kind": "lit",
+      "kind": "element",
       "description": "A pill with an icon, a value and an optional label",
       "files": ["packages/ui/src/gw-badge.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-button",
-      "kind": "lit",
+      "kind": "element",
       "description": "A native button or link, with a color variant and an accent, filled, outlined or plain appearance",
       "files": ["packages/ui/src/gw-button.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-card",
-      "kind": "lit",
+      "kind": "element",
       "description": "A surface for one group of content, optionally a link",
       "files": ["packages/ui/src/gw-card.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-checkbox",
-      "kind": "lit",
+      "kind": "element",
       "description": "A labeled native checkbox, and gw-switch, the same drawn as a switch",
       "files": ["packages/ui/src/gw-checkbox.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-chip",
-      "kind": "lit",
+      "kind": "element",
       "description": "A short status or category, by tone",
       "files": ["packages/ui/src/gw-chip.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-dialog",
-      "kind": "lit",
-      "description": "A modal on the native dialog element",
+      "kind": "element",
+      "description": "A modal on the native dialog element, with a close button, that asks before discarding edits",
       "files": ["packages/ui/src/gw-dialog.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "gw-button", "gw-popover"]
     },
     {
       "name": "gw-dot",
-      "kind": "lit",
+      "kind": "element",
       "description": "A small status dot",
       "files": ["packages/ui/src/gw-dot.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-empty-state",
-      "kind": "lit",
+      "kind": "element",
       "description": "What a list shows when there's nothing in it",
       "files": ["packages/ui/src/gw-empty-state.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-expansion",
-      "kind": "lit",
+      "kind": "element",
       "description": "A heading that glides its content open and shut, on native details",
       "files": ["packages/ui/src/gw-expansion.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-facts",
-      "kind": "lit",
+      "kind": "element",
       "description": "Label and value pairs",
       "files": ["packages/ui/src/gw-facts.ts"],
       "needs": ["ui-base", "gw-skeleton"]
@@ -169,92 +170,92 @@
     },
     {
       "name": "gw-gauge",
-      "kind": "lit",
+      "kind": "element",
       "description": "A reading on a dial, colored by warning and danger levels",
       "files": ["packages/ui/src/gw-gauge.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-input",
-      "kind": "lit",
+      "kind": "element",
       "description": "A labeled native input in light DOM",
       "files": ["packages/ui/src/gw-input.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-menu-button",
-      "kind": "lit",
+      "kind": "element",
       "description": "A button that opens a menu on the Popover API",
       "files": ["packages/ui/src/gw-menu-button.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-meter",
-      "kind": "lit",
+      "kind": "element",
       "description": "A labeled bar for a value in a range",
       "files": ["packages/ui/src/gw-meter.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-page-header",
-      "kind": "lit",
+      "kind": "element",
       "description": "A page's title, description and actions",
       "files": ["packages/ui/src/gw-page-header.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-popover",
-      "kind": "lit",
-      "description": "A confirmation, rename or small form beside the button that opened it, a bottom sheet on phones",
-      "files": ["packages/ui/src/gw-popover.ts"],
-      "needs": ["ui-base"]
+      "kind": "element",
+      "description": "A confirmation, rename or small form beside the button that opened it, a bottom sheet on phones, that asks before discarding edits",
+      "files": ["packages/ui/src/gw-popover.ts", "packages/ui/src/dismiss.ts"],
+      "needs": ["ui-base", "gw-button"]
     },
     {
       "name": "gw-section-title",
-      "kind": "lit",
+      "kind": "element",
       "description": "A small heading between groups",
       "files": ["packages/ui/src/gw-section-title.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-segmented",
-      "kind": "lit",
+      "kind": "element",
       "description": "One of a few options, as native radio buttons",
       "files": ["packages/ui/src/gw-segmented.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-select",
-      "kind": "lit",
+      "kind": "element",
       "description": "A labeled native select in light DOM",
       "files": ["packages/ui/src/gw-select.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-setting-row",
-      "kind": "lit",
+      "kind": "element",
       "description": "A setting's name and description beside its control",
       "files": ["packages/ui/src/gw-setting-row.ts"],
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
       "name": "gw-skeleton",
-      "kind": "lit",
+      "kind": "element",
       "description": "A placeholder while data loads, with text, lines and icon shapes built on it",
       "files": ["packages/ui/src/gw-skeleton.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-spinner",
-      "kind": "lit",
+      "kind": "element",
       "description": "A spinning ring while something loads",
       "files": ["packages/ui/src/gw-spinner.ts"],
       "needs": ["ui-base"]
     },
     {
       "name": "gw-toast",
-      "kind": "lit",
-      "description": "gw-toaster, which shows toasts at the bottom of the screen",
+      "kind": "element",
+      "description": "gw-toaster, which shows short notices in the bottom corner, above dialogs and never in the way of a click",
       "files": ["packages/ui/src/gw-toast.ts"],
       "needs": ["ui-base"]
     },

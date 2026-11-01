@@ -3,7 +3,7 @@ title: Components
 description: Web components on native elements, styled only through --gw-* variables, and shipped as a package.
 ---
 
-The web components are Lit elements built on native elements: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
+The web components are framework-free custom elements built on native elements, with no runtime dependency: a `gw-button` is a `<button>`, a `gw-dialog` is a `<dialog>`, a `gw-segmented` is a set of radio buttons. Keyboard use, focus and forms come from the browser. They're styled only through `--gw-*` variables, so each follows whichever theme and mode surrounds it.
 
 Every demo on these pages has a theme and mode picker. Pick one and the components follow it.
 
@@ -44,7 +44,7 @@ import "@timmo001/groundwork-ui";
 
 Set `data-gw-theme` and `data-gw-mode` on a container, and everything inside follows. Extend a component by wrapping it, or through its variables and `::part()`. A change every app needs goes into Groundwork instead.
 
-The packages publish once the components no longer need Lit. Until then, apps keep the copies the [sync](/sync) gave them.
+The packages aren't published yet. Until they are, apps keep the copies the [sync](/sync) gave them.
 
 ## Fields stay in light DOM
 

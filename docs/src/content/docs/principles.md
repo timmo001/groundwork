@@ -9,7 +9,7 @@ description: The rules every part of Groundwork follows, from data-first themes 
 4. **Native first.** The native button, input and dialog on the web; the terminal's own colors and keys in a TUI; Quickshell's types in a panel. Components only where those fall short.
 5. **Global variables on the web.** CSS custom properties the whole page reads. No Tailwind and no utility classes.
 6. **Behavior is designed too.** CLIs, agent tools, progress, status and notifications have conventions, the same as buttons do.
-7. **Small parts, no framework.** Lit for web UI, Astro can host it, OpenTUI for terminals, QML for panels.
+7. **Small parts, no framework.** Custom elements for web UI, with thin wrappers for any framework that hosts them, OpenTUI for terminals, QML for panels.
 8. **Effect everywhere, on the latest versions**: SDKs, CLIs, servers, MCP, and app state through Atoms.
 9. **Accessible by default.** Keyboard, focus, labels and contrast are part of every component, not added later.
 10. **Agents read and use it.** Every page is in llms.txt and the docs MCP, every job has a skill, and every system has an agent surface.
