@@ -18,7 +18,7 @@ Whatever a button asks or offers opens next to that button, not in the middle of
   <gw-popover id="rename-section" heading="Rename section">
     <gw-input label="Name" value="Living room"></gw-input>
     <gw-button slot="actions" size="small" variant="neutral" appearance="plain" value="cancel">Cancel</gw-button>
-    <gw-button slot="actions" size="small" value="save">Save</gw-button>
+    <gw-button slot="actions" size="small" value="save" data-needs-changes>Save</gw-button>
   </gw-popover>
   <gw-button data-opens="restart-after-save">Save settings</gw-button>
   <gw-popover id="restart-after-save" heading="Restart now?">
@@ -37,7 +37,23 @@ Keep a popover to one or two fields. A longer form is a view of its own, not a p
 | `confirm` | Makes it an `alertdialog`, for a question that needs an answer |
 | `close(value)` | Closes it; `returnValue` holds the value when it fires `close` |
 
-It's on the Popover API, in the top layer, so a scrolling parent never clips it. Esc or a click outside closes it, focus starts on the first action (put Cancel first, so Enter never confirms by accident) and goes back to the button afterward. It follows the button as the page scrolls, and it's a bottom sheet below 600px wide.
+It's on the Popover API, in the top layer, so a scrolling parent never clips it. Focus starts on the first action (put Cancel first, so Enter never confirms by accident) and goes back to the button afterward. It follows the button as the page scrolls, and it's a bottom sheet below 600px wide. Esc and a click outside close it the same way a [dialog](#closing) closes.
+
+## Closing
+
+Popovers and dialogs that hold edits close the same way, so a stray key or click never throws work away. Try it with Rename above: Save stays off until the name changes, and once it has, Esc asks first and a click outside does nothing.
+
+| While | Esc or the close button | A click outside or on the backdrop | Save |
+| --- | --- | --- | --- |
+| Nothing has changed | Closes at once | Closes at once | Disabled |
+| Something has changed | Asks "Discard your changes?" first | Does nothing | Enabled |
+
+An `input` or `change` event from the content marks it changed, and `show()` clears that. Set `dirty` to mark it yourself, such as after an edit made through script. Put `data-needs-changes` on the actions that only make sense after a change, such as Save, and they're disabled until then. Cancel and the other actions close it straight away, since pressing them is a choice. Nothing confirms a save with a toast: the popover closing, or the dialog closing, is the confirmation.
+
+| Attribute or property | What it does |
+| --- | --- |
+| `dirty` | Whether the content changed since it opened. Set by edits, cleared by `show()` |
+| `data-needs-changes` | On an action, keeps it disabled until something changes |
 
 ## Dialog
 
@@ -52,7 +68,7 @@ It's on the Popover API, in the top layer, so a scrolling parent never clips it.
 
 Only for something nothing on screen started that blocks the whole app until it's answered, such as an expired sign-in. App-wide state you can work through, such as a lost connection, a needed restart or a new version, is a slim bar instead, and anything a button starts is a [popover](#popover). The button in the demo stands in for the sign-in expiring.
 
-It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, Esc closes it, and the page behind can't be reached. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
+It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, and the page behind can't be reached. It has a close button in its header, and Esc, the close button and the backdrop follow the [closing rules](#closing). Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
 
 ## Menus
 

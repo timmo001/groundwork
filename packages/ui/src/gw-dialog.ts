@@ -1,5 +1,12 @@
+import { Dismissal } from "./dismiss.js";
 import { GwElement, css, h } from "./element.js";
+import "./gw-button.js";
+import "./gw-popover.js";
 import { base } from "./styles.js";
+
+// MDI's close
+const closeIcon =
+  "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z";
 
 /**
  * A modal on the native `<dialog>`, so focus is trapped and returned, Esc
@@ -70,10 +77,14 @@ export class GwDialog extends GwElement {
       }
 
       header {
-        padding: var(--gw-space-4) var(--gw-space-4) 0;
+        display: flex;
+        gap: var(--gw-space-2);
+        align-items: center;
+        padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4);
       }
 
       h2 {
+        flex: 1;
         margin: 0;
         font-size: var(--gw-font-size-l);
         font-weight: var(--gw-font-weight-strong);
@@ -111,15 +122,44 @@ export class GwDialog extends GwElement {
 
   readonly #footer = h("footer", {}, h("slot", { name: "actions" }));
 
+  readonly #closeButton = h(
+    "gw-button",
+    {
+      class: "close",
+      variant: "neutral",
+      appearance: "plain",
+      size: "small",
+      labels: "hide",
+      icon: closeIcon,
+    },
+    "Close",
+  );
+
   readonly #dialog = h(
     "dialog",
     { "aria-labelledby": "heading" },
-    h("header", {}, this.#heading),
+    h("header", {}, this.#heading, this.#closeButton),
     h("div", { class: "body" }, h("slot")),
     this.#footer,
   );
 
+  readonly #dismissal = new Dismissal(
+    this,
+    () => this.close(),
+    (prompt) => this.#dialog.append(prompt),
+  );
+
+  /** Whether its content has changed since it opened, so closing it asks first. */
+  get dirty() {
+    return this.#dismissal.dirty;
+  }
+
+  set dirty(dirty: boolean) {
+    this.#dismissal.mark(dirty);
+  }
+
   show() {
+    this.#dismissal.mark(false);
     this.open = true;
   }
 
@@ -141,8 +181,26 @@ export class GwDialog extends GwElement {
     this.dispatchEvent(new Event("close", { bubbles: true, composed: true }));
   };
 
+  // Esc and the close button close it at once while nothing has changed,
+  // and ask first once something has
+  readonly #onCancel = (event: Event) => {
+    event.preventDefault();
+    this.#dismissal.request();
+  };
+
+  // A click on the backdrop closes it too, but only while nothing has
+  // changed, so a stray click never throws work away
+  readonly #onBackdrop = (event: MouseEvent) => {
+    if (event.target === this.#dialog && !this.#dismissal.dirty) this.close();
+  };
+
   protected override create(root: ShadowRoot) {
     this.#dialog.addEventListener("close", this.#onClose);
+    this.#dialog.addEventListener("cancel", this.#onCancel);
+    this.#dialog.addEventListener("click", this.#onBackdrop);
+    this.#closeButton.addEventListener("click", () => {
+      this.#dismissal.request(this.#closeButton);
+    });
     this.#footer.addEventListener("click", this.#onAction);
     root.append(this.#dialog);
   }

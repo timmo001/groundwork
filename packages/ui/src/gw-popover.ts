@@ -1,3 +1,4 @@
+import { Dismissal } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base } from "./styles.js";
 
@@ -151,10 +152,16 @@ export class GwPopover extends GwElement {
 
   readonly #popover = h(
     "div",
-    { popover: "auto", "data-placement": "center" },
+    { popover: "manual", tabindex: "-1", "data-placement": "center" },
     this.#heading,
     h("div", { class: "body", id: "body" }, h("slot")),
     h("footer", {}, h("slot", { name: "actions" })),
+  );
+
+  readonly #dismissal = new Dismissal(
+    this,
+    () => this.close(),
+    (prompt) => this.#popover.append(prompt),
   );
 
   #anchor: Element | undefined;
@@ -165,18 +172,45 @@ export class GwPopover extends GwElement {
     this.confirm = false;
   }
 
+  /** Whether its content has changed since it opened, so closing it asks first. */
+  get dirty() {
+    return this.#dismissal.dirty;
+  }
+
+  set dirty(dirty: boolean) {
+    this.#dismissal.mark(dirty);
+  }
+
   /** Opens next to `anchor`, or in the middle without one. */
   show(anchor?: Element) {
     this.#anchor = anchor;
     this.returnValue = "";
+    this.#dismissal.mark(false);
     this.#popover.dataset.placement = this.#placementFor(anchor);
     this.#popover.showPopover();
   }
 
   close(value = "") {
     this.returnValue = value;
-    this.#popover.hidePopover();
+
+    if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
   }
+
+  // Esc and a click outside close it at once, unless there are changes:
+  // then Esc asks first and a click outside does nothing
+  readonly #onKeydown = (event: KeyboardEvent) => {
+    if (event.key !== "Escape") return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    this.#dismissal.request();
+  };
+
+  readonly #onPointerdown = (event: PointerEvent) => {
+    if (event.composedPath().includes(this)) return;
+
+    if (!this.#dismissal.dirty) this.close();
+  };
 
   #placementFor(anchor: Element | undefined) {
     if (window.innerWidth < sheetBelow) return "sheet";
@@ -224,6 +258,7 @@ export class GwPopover extends GwElement {
       this.#position();
       window.addEventListener("resize", this.#position);
       window.addEventListener("scroll", this.#position, true);
+      document.addEventListener("pointerdown", this.#onPointerdown, true);
 
       // The first action, usually Cancel, so Enter never confirms by accident
       const first = this.querySelector("[slot='actions']");
@@ -235,6 +270,7 @@ export class GwPopover extends GwElement {
 
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
+    document.removeEventListener("pointerdown", this.#onPointerdown, true);
 
     if (this.#anchor instanceof HTMLElement) this.#anchor.focus();
 
@@ -252,11 +288,13 @@ export class GwPopover extends GwElement {
   override disconnectedCallback() {
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
+    document.removeEventListener("pointerdown", this.#onPointerdown, true);
     super.disconnectedCallback();
   }
 
   protected override create(root: ShadowRoot) {
     this.#popover.addEventListener("toggle", this.#onToggle);
+    this.#popover.addEventListener("keydown", this.#onKeydown);
     this.#popover
       .querySelector("footer")
       ?.addEventListener("click", this.#onAction);
