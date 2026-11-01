@@ -45,14 +45,16 @@ depends = ["install"]
 run = [
   "bun run --cwd packages/tokens gen",
   "bun run --cwd packages/conventions gen",
+  "bun run --cwd packages/ui gen",
 ]
 
 [tasks."gen:check"]
-description = "Check generated files match the theme documents and conventions"
+description = "Check generated files match the theme documents, conventions and element docstrings"
 depends = ["install"]
 run = [
   "bun run --cwd packages/tokens gen:check",
   "bun run --cwd packages/conventions gen:check",
+  "bun run --cwd packages/ui gen:check",
 ]
 
 [tasks.conventions]

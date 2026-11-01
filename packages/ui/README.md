@@ -31,3 +31,12 @@ such as Vite, Astro or Bun.
 
 Every component, its attributes, slots, parts and events are documented at
 [groundwork.timmo.dev/components](https://groundwork.timmo.dev/components).
+
+## Custom Elements Manifest
+
+The package ships `custom-elements.json`, a
+[Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/)
+generated from each element's class docstring, and points to it from
+`customElements` in `package.json`. Editors, `lit-analyzer` and framework
+wrappers read it for the elements' attributes, properties, slots, parts and
+events. `mise run gen` writes it, and `mise run check` fails when it's stale.

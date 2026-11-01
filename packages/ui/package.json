@@ -10,9 +10,11 @@
   },
   "files": [
     "src",
+    "custom-elements.json",
     "README.md",
     "LICENSE"
   ],
+  "customElements": ".manifest-check/custom-elements.json",
   "sideEffects": true,
   "publishConfig": {
     "access": "public",
@@ -28,9 +30,12 @@
     "lint": "oxlint .",
     "typecheck": "tsc",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "gen": "bun run scripts/manifest.ts",
+    "gen:check": "bun run scripts/manifest.ts --check"
   },
   "devDependencies": {
+    "@custom-elements-manifest/analyzer": "0.11.0",
     "@oxlint/plugins": "1.90.0",
     "@timmo001/oxlint-rules": "0.6.3",
     "oxlint": "1.90.0",
