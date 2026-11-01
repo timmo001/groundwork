@@ -7,6 +7,8 @@ Effect ships services for most of what a system talks to. Use them before writin
 
 Modules under `effect/<name>` are still marked unstable in Effect 4, so pin the version and read the release notes before bumping.
 
+These tables are a starting point, not a full list. Effect has more modules than this, and their APIs change between releases, so check the [official Effect documentation](https://effect.website/docs) and the module's source before relying on one.
+
 ## The machine
 
 | Need | Service | Module |

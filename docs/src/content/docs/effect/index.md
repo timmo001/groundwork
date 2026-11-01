@@ -34,5 +34,7 @@ The [skills repository](https://github.com/timmo001/skills) shares them with eac
 
 ## References
 
+These pages show how Groundwork uses Effect, not everything Effect does. The official documentation is the source of truth for its APIs.
+
 - [Effect documentation](https://effect.website/docs)
 - [Effect 4 source](https://github.com/Effect-TS/effect-smol)
