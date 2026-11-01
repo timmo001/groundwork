@@ -3250,12 +3250,18 @@
               "kind": "field",
               "name": "#lead",
               "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
               "readonly": true
             },
             {
               "kind": "field",
               "name": "#text",
               "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
               "readonly": true
             },
             {

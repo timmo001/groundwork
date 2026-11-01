@@ -366,7 +366,9 @@ export class GwButton extends GwElement {
 
   readonly #swatch = h("span", { class: "swatch", "aria-hidden": "true" });
 
-  readonly #lead = h(
+  // Typed, since inferring through h() and the tag map that holds this
+  // element is circular for consumers that type-check the source
+  readonly #lead: HTMLSpanElement = h(
     "span",
     { class: "lead" },
     this.#icon,
@@ -375,7 +377,7 @@ export class GwButton extends GwElement {
     h("span", { class: "ring" }),
   );
 
-  readonly #text = h("span", { class: "text" }, h("slot"));
+  readonly #text: HTMLSpanElement = h("span", { class: "text" }, h("slot"));
 
   readonly #over = h("span", { class: "ring over" });
 
