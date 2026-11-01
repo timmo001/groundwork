@@ -1,3 +1,6 @@
+# Groundwork's pinned tools and tasks: install, lint, format, generate, check,
+# the docs server and build, the sync, and the docs-kit rollout. CI and the
+# hk pre-push hook run the same tasks, so local and CI checks match.
 min_version = "2025.1.0"
 
 [tools]
@@ -125,6 +128,12 @@ run = "bun run packages/sync/src/cli.ts status"
 description = "Run the tests next to code that computes"
 depends = ["install"]
 run = "bun test packages"
+
+[tasks.capture]
+description = "Screenshot every docs page on several themes, to look through after a large change"
+depends = ["install"]
+dir = "docs"
+run = "bun run capture"
 
 [tasks.check]
 description = "Lint, type-check, test, verify formatting, generated files, contrast and conventions"
