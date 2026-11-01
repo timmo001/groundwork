@@ -27,6 +27,8 @@ const closeIcon =
  * page that opens with a hero. Below `menu-below`, 600px wide by default,
  * the nav moves into a menu opened from a button, which closes on Esc, a
  * click outside or a link. Raise it when the nav and actions need more room.
+ * With no nav links there's no menu button, so a bar of only a brand and
+ * actions keeps its layout at every width.
  *
  * @element gw-app-bar
  * @summary A header pinned to the top, floating once the page scrolls.
@@ -178,9 +180,14 @@ export class GwAppBar extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      /* Below menu-below, which sets collapsed, the nav folds into a menu */
-      :host([collapsed]) .menu {
+      /* Below menu-below, which sets collapsed, the nav folds into a menu,
+         unless there's no nav to fold */
+      :host([collapsed]) .bar:not(.no-nav) .menu {
         display: inline-grid;
+      }
+
+      .no-nav .nav {
+        display: none;
       }
 
       :host([collapsed]) .nav {
@@ -239,11 +246,15 @@ export class GwAppBar extends GwElement {
     this.#menuIcon,
   );
 
+  readonly #navSlot = h("slot");
+
   readonly #nav: HTMLDivElement = h(
     "div",
     { class: "nav", part: "nav" },
-    h("slot"),
+    this.#navSlot,
   );
+
+  readonly #bar = h("div", { class: "bar no-nav", part: "bar" });
 
   #observer: IntersectionObserver | undefined;
 
@@ -263,8 +274,10 @@ export class GwAppBar extends GwElement {
   /** Follows the viewport across `menuBelow`, setting `collapsed`. */
   #watchWidth() {
     this.#narrow?.removeEventListener("change", this.#onNarrow);
+    const below = Number(this.menuBelow);
+
     this.#narrow = window.matchMedia(
-      `(max-width: ${(Number(this.menuBelow) || 600) - 0.02}px)`,
+      `(max-width: ${(Number.isFinite(below) ? below : 600) - 0.02}px)`,
     );
     this.#narrow.addEventListener("change", this.#onNarrow);
     this.#onNarrow();
@@ -370,25 +383,32 @@ export class GwAppBar extends GwElement {
       }
     });
 
-    root.append(
+    // Without nav links there's nothing to fold, so no menu button
+    this.#navSlot.addEventListener("slotchange", () => {
+      this.#bar.classList.toggle(
+        "no-nav",
+        this.#navSlot
+          .assignedNodes()
+          .every(
+            (node) =>
+              node.nodeType === Node.TEXT_NODE &&
+              node.textContent?.trim() === "",
+          ),
+      );
+    });
+
+    this.#bar.append(
+      // The menu button leads, so a revealed brand opens beside it
+      this.#menu,
+      h("div", { class: "brand", part: "brand" }, h("slot", { name: "brand" })),
+      this.#nav,
       h(
         "div",
-        { class: "bar", part: "bar" },
-        // The menu button leads, so a revealed brand opens beside it
-        this.#menu,
-        h(
-          "div",
-          { class: "brand", part: "brand" },
-          h("slot", { name: "brand" }),
-        ),
-        this.#nav,
-        h(
-          "div",
-          { class: "actions", part: "actions" },
-          h("slot", { name: "actions" }),
-        ),
+        { class: "actions", part: "actions" },
+        h("slot", { name: "actions" }),
       ),
     );
+    root.append(this.#bar);
   }
 
   protected override update(changed: ReadonlySet<string>) {
