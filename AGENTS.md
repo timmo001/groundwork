@@ -44,9 +44,9 @@ go-ahead needed. Before the session ends, once `mise run check` passes:
 
 1. Commit the session's own changes through `dot git commit`, leaving other
    sessions' work alone, and push.
-2. When `packages/docs-kit` changed, bump its version in `package.json` and
-   `jsr.json`, publish a GitHub release with that version as the tag, then
-   roll it out with `mise run bump-consumers -- --push` once npm serves it.
+2. When `packages/tokens`, `packages/ui`, `packages/tui` or `packages/docs-kit`
+   changed, release them together with the `groundwork-release` skill, which
+   bumps the shared version, publishes and rolls it out to consumers.
 3. When a registry item changed, run `mise run sync` and push each app.
 4. Report what landed and anything flagged.
 
@@ -93,7 +93,8 @@ go-ahead needed. Before the session ends, once `mise run check` passes:
 
 ## docs-kit
 
-The package lives in `packages/docs-kit/` and is the only one published.
+The package lives in `packages/docs-kit/`. It's published with tokens, ui and
+tui at one shared version; see the `groundwork-release` skill.
 
 - There is no build; the package ships source.
 - Keep `package.json` and `jsr.json` versions and exports in step.
