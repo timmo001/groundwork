@@ -55,7 +55,23 @@ const store: ThemeStore = localThemeStore("my-app:theme");
 const text = await store.load();
 ```
 
-Try it: design a theme with the controls, upload a theme document or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.
+### Following Omarchy
+
+An app can follow the desktop's theme by reading an [Omarchy](https://omarchy.org) theme's `colors.toml`, in `~/.config/omarchy/current/theme/` for the one in use. `omarchyTheme(text)` maps it onto a mapped theme in the mode it declares: its backgrounds become the lower, background and raised surfaces, its foregrounds the text and muted text, and its accent and named colors the accent and status roles. The result applies the same way as any other theme, and its contrast misses are shown.
+
+```ts
+import { omarchyTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
+
+const mapped = omarchyTheme(colorsToml, "Gruvbox");
+
+if (mapped._tag === "Success") {
+  const { css } = runtimeTheme(mapped.success, "custom");
+}
+```
+
+A browser can't open a file dialog in a chosen folder, so a web app asks for the file; a desktop app, a TUI or an agent reads the folder directly.
+
+Try it: design a theme with the controls, upload a theme document or an Omarchy `colors.toml`, or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.
 
 <ThemeEditor />
 

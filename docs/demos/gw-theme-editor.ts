@@ -9,6 +9,7 @@
 import { Font, MonoFont, type SolvedTheme } from "@timmo001/groundwork-tokens";
 import {
   localThemeStore,
+  omarchyTheme,
   parseTheme,
   runtimeTheme,
   type ThemeStore,
@@ -186,7 +187,7 @@ export class GwThemeEditor extends GwElement {
 
   readonly #file = h("input", {
     type: "file",
-    accept: ".json,application/json",
+    accept: ".json,.toml,application/json",
     hidden: true,
   });
 
@@ -236,7 +237,7 @@ export class GwThemeEditor extends GwElement {
 
       this.#file.value = "";
 
-      if (file !== undefined) void file.text().then((text) => this.#load(text));
+      if (file !== undefined) void file.text().then((text) => this.#upload(file.name, text));
     });
 
     this.#preview = this.querySelector(".editor-preview");
@@ -335,6 +336,25 @@ export class GwThemeEditor extends GwElement {
 
   #load(text: string) {
     this.#apply(text, true);
+  }
+
+  /** A theme document, or an Omarchy theme's `colors.toml`, mapped first. */
+  #upload(fileName: string, text: string) {
+    if (!fileName.endsWith(".toml")) {
+      this.#load(text);
+
+      return;
+    }
+
+    const mapped = omarchyTheme(text);
+
+    if (mapped._tag === "Success") {
+      this.#load(JSON.stringify(mapped.success, null, 2));
+    } else {
+      this.#status.setAttribute("tone", "danger");
+      this.#status.setAttribute("heading", "That isn't an Omarchy colors.toml");
+      this.#status.textContent = String(mapped.failure).slice(0, 400);
+    }
   }
 
   #download() {

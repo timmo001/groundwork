@@ -11,6 +11,8 @@ import { themeCss } from "./generate.ts";
 import { SolvedTheme, Theme } from "./schema.ts";
 import { check, resolve, type Check, type ResolvedTheme } from "./solve.ts";
 
+export { omarchyTheme } from "./omarchy.ts";
+
 const base = Schema.decodeUnknownSync(SolvedTheme)(baseDocument);
 
 /** A theme solved at runtime, with its CSS and every contrast check. */
