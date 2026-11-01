@@ -108,6 +108,10 @@ depends = ["install"]
 dir = "templates/tui-menu"
 run = "bun run src/index.ts"
 
+[tasks."demo:panel"]
+description = "Publish the Omarchy panel demo to the bar through Pitchfork; stop it with pitchfork stop panel"
+run = "pitchfork start panel"
+
 [tasks."serve:docs:status"]
 description = "Show the background docs dev server status"
 run = "pitchfork status docs"

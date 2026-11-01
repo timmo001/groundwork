@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "timmo.groundwork-demo",
+  "name": "Groundwork demo",
+  "version": "0.1.0",
+  "author": "Timmo",
+  "license": "Apache-2.0",
+  "description": "The Groundwork demo app as an Omarchy panel: items to apply and a system to restart",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Groundwork demo",
+    "description": "Opens the Groundwork demo panel",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {},
+    "schema": []
+  }
+}

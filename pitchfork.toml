@@ -7,3 +7,9 @@ port = { expect = [7350], bump = 10 }
 ready_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 health_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 retry = true
+
+# Publishes the Omarchy panel demo into the local plugins folder while it
+# runs, and restores the folder when it stops.
+[daemons.panel]
+run = 'exec scripts/omarchy-panel-dev.sh'
+ready_delay = 1
