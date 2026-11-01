@@ -168,7 +168,9 @@ export class GwSheet extends GwElement {
         gap: var(--gw-space-3);
         min-height: 0;
         padding: var(--gw-space-4);
-        overflow-y: auto;
+        /* It scrolls down only, so content reaching into its padding never
+           makes it scroll sideways */
+        overflow: hidden auto;
         overscroll-behavior: contain;
         scrollbar-width: thin;
       }
