@@ -16,6 +16,7 @@ export interface GwEventMap {
   };
   "gw-menu-button": {
     select: CustomEvent<{ value: string }>;
+    check: CustomEvent<{ value: string, checked: boolean }>;
   };
   "gw-notification": {
     dismiss: Event;

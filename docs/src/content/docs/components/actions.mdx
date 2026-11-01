@@ -158,7 +158,7 @@ The trigger is a neutral fill with a border by default (`filled`). `outlined`, `
   <gw-menu-button label="Power" items='[{"value":"sleep","label":"Sleep"}]'></gw-menu-button>
 </Demo>
 
-Set `items` to `[{ "value", "label", "description", "icon", "disabled", "checked", "separator" }]`, as JSON or as a property. They render inside the component, so a page's own button styles can't reach them.
+Set `items` to `[{ "value", "label", "description", "icon", "disabled", "checked", "checkbox", "separator", "group" }]`, as JSON or as a property. They render inside the component, so a page's own button styles can't reach them.
 
 ### Choices
 
@@ -168,6 +168,25 @@ For a menu that picks a setting, such as a sort order, give every item `checked`
   <gw-menu-button label="Last seen" heading="Sort by" labels="auto" icon="M19 17H22L18 21L14 17H17V3H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" items='[{"value":"last-seen","label":"Last seen","checked":true},{"value":"first-seen","label":"First seen","checked":false},{"value":"count","label":"Events","checked":false},{"value":"asc","label":"Ascending","checked":false,"separator":true},{"value":"desc","label":"Descending","checked":true}]'></gw-menu-button>
   <gw-menu-button label="Host" heading="Group by" active icon="M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11A0.5,0.5 0 0,0 9,11.5V13H15V11.5A0.5,0.5 0 0,0 14.5,11H9.5Z" items='[{"value":"","label":"Nothing","checked":false},{"value":"host","label":"Host","checked":true},{"value":"kind","label":"Kind","checked":false}]'></gw-menu-button>
 </Demo>
+
+### Checkboxes and groups
+
+For settings that each turn on or off, such as which columns to show, give items `checkbox` and `checked`. Choosing one fires `check` with its `value` and the state it should change to, and keeps the menu open so several can be changed in a row; set `items` again with the new `checked` to show it. `group` names the group an item is in: items in a row with the same group are listed under it as a heading, after a line.
+
+<Demo id="menu-checkboxes">
+  <gw-menu-button label="Export" icon="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" items='[{"value":"cpu","label":"CPU","checkbox":true,"checked":true,"group":"Modules"},{"value":"memory","label":"Memory","checkbox":true,"checked":true,"group":"Modules"},{"value":"disks","label":"Disks","checkbox":true,"checked":false,"group":"Modules"},{"value":"csv","label":"CSV","group":"Download as"},{"value":"json","label":"JSON","group":"Download as"}]'></gw-menu-button>
+</Demo>
+
+### Loading
+
+Set `loading` while a chosen action runs: a spinning ring takes the icon's place and the trigger is disabled until it's done.
+
+<Demo id="menu-loading">
+  <gw-menu-button loading labels="hide" label="Actions" icon="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" items='[{"value":"kill","label":"End process"}]'></gw-menu-button>
+  <gw-menu-button loading label="Export" icon="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" items='[{"value":"csv","label":"CSV"}]'></gw-menu-button>
+</Demo>
+
+### Actions
 
 Contextual actions, such as "Add", go in `actions`, in the same shape. They stay below the items as the list scrolls, rather than sitting at the end of it, so they're found straight away, and there can be several. With no items, the menu says so (`empty`) above them.
 

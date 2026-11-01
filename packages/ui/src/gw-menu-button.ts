@@ -20,12 +20,30 @@ export interface MenuItem {
    * order. Give it on every item in the group: the picked one shows a tick.
    */
   readonly checked?: boolean;
+  /**
+   * Makes the item a checkbox, such as a column to show: choosing it fires
+   * `check` with the state it should change to and keeps the menu open, so
+   * several can be changed in a row. `checked` is its current state.
+   */
+  readonly checkbox?: boolean;
   /** Draws a line above the item, starting a new group. */
   readonly separator?: boolean;
+  /**
+   * Names the group the item is in. Items in a row with the same group are
+   * listed together under it as a heading, after a line.
+   */
+  readonly group?: string;
 }
 
 // mdi's check, for the picked item in a menu of choices
 const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
+
+// mdi's checkbox-marked and checkbox-blank-outline, for checkbox items
+const boxChecked =
+  "M10,17L5,12L6.41,10.58L10,14.17L17.59,6.58L19,8M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z";
+
+const boxEmpty =
+  "M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3M19,5V19H5V5H19Z";
 
 /**
  * A button that opens a menu on the Popover API, so it shows in the top
@@ -39,6 +57,8 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  *
  * For a menu of choices, such as sort and order, give each item `checked`:
  * the picked one shows a tick, and `separator` starts the next group.
+ * Items with `checkbox` toggle instead, firing `check` and keeping the menu
+ * open, and `group` lists items under a heading.
  *
  * Items render inside the component, so a page's own button styles can't
  * reach them.
@@ -56,6 +76,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the trigger is drawn: `filled` is a neutral fill with a border, and the others match a neutral `gw-button` of that appearance, so it sits in a row of them. Defaults to `filled`.
  * @attr {boolean} active - Marks the trigger as set, such as a grouping that's on, with an accent border and text.
  * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not on narrow screens. Defaults to `show`.
+ * @attr {boolean} loading - Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.
  *
  * @csspart trigger - The button that opens the menu.
  *
@@ -63,6 +84,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
  *
  * @fires {CustomEvent<{ value: string }>} select - When an item or action is chosen, with its `value` in `detail`.
+ * @fires {CustomEvent<{ value: string, checked: boolean }>} check - When a checkbox item is toggled, with its `value` and the state it should change to in `detail`.
  */
 export class GwMenuButton extends GwElement {
   static override properties = {
@@ -76,6 +98,7 @@ export class GwMenuButton extends GwElement {
     appearance: { reflect: true },
     active: { type: "boolean", reflect: true },
     labels: { reflect: true },
+    loading: { type: "boolean", reflect: true },
   } as const;
 
   static override styles = [
@@ -114,6 +137,37 @@ export class GwMenuButton extends GwElement {
 
       .trigger:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      /* While a chosen action runs, a ring takes the icon's place */
+      .ring {
+        display: none;
+        flex: none;
+        width: calc(var(--gw-icon-size) * 0.8);
+        height: calc(var(--gw-icon-size) * 0.8);
+        border: calc(2px * var(--gw-scale)) solid
+          color-mix(in oklch, currentColor 25%, transparent);
+        border-top-color: currentColor;
+        border-radius: 50%;
+        animation: spin 0.9s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      :host([loading]) .trigger {
+        cursor: progress;
+      }
+
+      :host([loading]) .ring {
+        display: block;
+      }
+
+      :host([loading]) .trigger > .icon {
+        display: none;
       }
 
       /* The other appearances draw the trigger as gw-button draws a neutral
@@ -342,6 +396,36 @@ export class GwMenuButton extends GwElement {
         visibility: hidden;
       }
 
+      .item[role="menuitemcheckbox"] .box {
+        flex: none;
+        color: var(--gw-color-text-secondary);
+      }
+
+      .item[role="menuitemcheckbox"][aria-checked="true"] .box {
+        color: var(--gw-color-accent);
+      }
+
+      .group {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gw-space-0-5);
+      }
+
+      .group:not(:first-child) {
+        padding-block-start: var(--gw-space-1);
+        margin-block-start: var(--gw-space-0-5);
+        border-block-start: max(var(--gw-border-width), 1px) solid
+          var(--gw-color-border-normal);
+      }
+
+      .group-heading {
+        padding: var(--gw-space-1) var(--gw-space-3) 0;
+        margin: 0;
+        font-size: var(--gw-font-size-xs);
+        font-weight: var(--gw-font-weight-strong);
+        color: var(--gw-color-text-secondary);
+      }
+
       .separator {
         flex: none;
         height: 0;
@@ -380,6 +464,8 @@ export class GwMenuButton extends GwElement {
   declare active: boolean;
   /** Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. */
   declare labels: "show" | "hide" | "auto";
+  /** Shows a spinning ring in the icon's place and disables the trigger. */
+  declare loading: boolean;
 
   readonly #trigger = h("button", {
     class: "trigger",
@@ -425,6 +511,7 @@ export class GwMenuButton extends GwElement {
     this.appearance = "filled";
     this.active = false;
     this.labels = "show";
+    this.loading = false;
   }
 
   /** The enabled items then actions, in the order arrow keys move through them. */
@@ -493,18 +580,36 @@ export class GwMenuButton extends GwElement {
     this.#trigger.focus();
   }
 
+  // A checkbox keeps the menu open, so several can be changed in a row
+  #check(item: MenuItem) {
+    this.dispatchEvent(
+      new CustomEvent("check", {
+        detail: { value: item.value, checked: item.checked !== true },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
   #renderItem(item: MenuItem, kind: "item" | "action") {
-    const choice = item.checked !== undefined;
+    const checkbox = item.checkbox === true;
+    const choice = !checkbox && item.checked !== undefined;
 
     const button = h(
       "button",
       {
         class: kind === "action" ? "item action" : "item",
-        role: choice ? "menuitemradio" : "menuitem",
-        "aria-checked": choice ? String(item.checked) : null,
+        role: checkbox
+          ? "menuitemcheckbox"
+          : choice
+            ? "menuitemradio"
+            : "menuitem",
+        "aria-checked":
+          checkbox || choice ? String(item.checked === true) : null,
         value: item.value,
         disabled: item.disabled === true,
       },
+      checkbox ? this.#box(item.checked === true) : null,
       choice ? this.#tick() : null,
       item.icon ? createIcon(item.icon) : null,
       h(
@@ -517,11 +622,53 @@ export class GwMenuButton extends GwElement {
       ),
     );
 
-    button.addEventListener("click", () => this.#choose(item.value));
+    button.addEventListener("click", () => {
+      if (checkbox) {
+        this.#check(item);
+      } else {
+        this.#choose(item.value);
+      }
+    });
 
     return item.separator === true
       ? [h("hr", { class: "separator", role: "separator" }), button]
       : [button];
+  }
+
+  /** Items in runs that share a group, each run under its heading. */
+  #renderItems(items: readonly MenuItem[]) {
+    if (!items.some((item) => item.group !== undefined)) {
+      return items.flatMap((item) => this.#renderItem(item, "item"));
+    }
+
+    const runs: { group: string | undefined; items: MenuItem[] }[] = [];
+
+    for (const item of items) {
+      const run = runs.at(-1);
+
+      if (run !== undefined && run.group === item.group) {
+        run.items.push(item);
+      } else {
+        runs.push({ group: item.group, items: [item] });
+      }
+    }
+
+    return runs.map(({ group, items: grouped }, index) => {
+      const id = `group-${index}`;
+
+      return h(
+        "div",
+        {
+          class: "group",
+          role: "group",
+          "aria-labelledby": group === undefined ? null : id,
+        },
+        group === undefined
+          ? null
+          : h("p", { class: "group-heading", id, role: "none" }, group),
+        ...grouped.flatMap((item) => this.#renderItem(item, "item")),
+      );
+    });
   }
 
   #tick() {
@@ -532,9 +679,18 @@ export class GwMenuButton extends GwElement {
     return icon;
   }
 
+  #box(checked: boolean) {
+    const icon = createIcon(checked ? boxChecked : boxEmpty);
+
+    icon.classList.add("box");
+
+    return icon;
+  }
+
   protected override create(root: ShadowRoot) {
     this.#trigger.append(
       this.#triggerIcon,
+      h("span", { class: "ring", "aria-hidden": "true" }),
       this.#triggerText,
       h("span", { class: "chevron", "aria-hidden": "true" }),
     );
@@ -564,15 +720,30 @@ export class GwMenuButton extends GwElement {
           : null),
     );
     this.#popover.setAttribute("aria-label", this.heading || this.label);
+    this.#trigger.disabled = this.loading;
+    setAttribute(this.#trigger, "aria-busy", this.loading ? "true" : null);
 
     if (changed.has("items") || changed.has("empty")) {
       const items = Array.isArray(this.items) ? this.items : [];
 
+      // A checkbox's change re-renders the list with the menu open, so focus
+      // goes back to the item that had it
+      const focused = this.shadowRoot?.activeElement;
+
+      const value =
+        focused instanceof HTMLButtonElement && this.#items.contains(focused)
+          ? focused.value
+          : undefined;
+
       this.#items.replaceChildren(
         ...(items.length === 0
           ? [h("p", { class: "empty", role: "none" }, this.empty)]
-          : items.flatMap((item) => this.#renderItem(item, "item"))),
+          : this.#renderItems(items)),
       );
+
+      if (value !== undefined) {
+        this.#buttons.find((button) => button.value === value)?.focus();
+      }
     }
 
     if (changed.has("actions")) {

@@ -10402,7 +10402,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
+          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
           "name": "GwMenuButton",
           "cssProperties": [
             {
@@ -10428,7 +10428,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, heading: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, appearance: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, }",
+              "default": "{ label: {}, heading: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, appearance: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, loading: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10441,7 +10441,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } :host([labels=\"hide\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"auto\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: 15rem; max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min(24rem, calc(100% - 2 * var(--gw-space-2))); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* While a chosen action runs, a ring takes the icon's place */ .ring { display: none; flex: none; width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } :host([loading]) .trigger { cursor: progress; } :host([loading]) .ring { display: block; } :host([loading]) .trigger > .icon { display: none; } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } :host([labels=\"hide\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"auto\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: 15rem; max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min(24rem, calc(100% - 2 * var(--gw-space-2))); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .item[role=\"menuitemcheckbox\"] .box { flex: none; color: var(--gw-color-text-secondary); } .item[role=\"menuitemcheckbox\"][aria-checked=\"true\"] .box { color: var(--gw-color-accent); } .group { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .group:not(:first-child) { padding-block-start: var(--gw-space-1); margin-block-start: var(--gw-space-0-5); border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .group-heading { padding: var(--gw-space-1) var(--gw-space-3) 0; margin: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10535,6 +10535,15 @@
             },
             {
               "kind": "field",
+              "name": "loading",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows a spinning ring in the icon's place and disables the trigger.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
               "name": "#trigger",
               "privacy": "private",
               "readonly": true
@@ -10615,6 +10624,19 @@
             },
             {
               "kind": "method",
+              "name": "#check",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "MenuItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
               "name": "#renderItem",
               "privacy": "private",
               "parameters": [
@@ -10634,8 +10656,35 @@
             },
             {
               "kind": "method",
+              "name": "#renderItems",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "items",
+                  "type": {
+                    "text": "readonly MenuItem[]"
+                  }
+                }
+              ],
+              "description": "Items in runs that share a group, each run under its heading."
+            },
+            {
+              "kind": "method",
               "name": "#tick",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#box",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -10956,6 +11005,13 @@
                 "text": "CustomEvent<{ value: string }>"
               },
               "description": "When an item or action is chosen, with its `value` in `detail`."
+            },
+            {
+              "name": "check",
+              "type": {
+                "text": "CustomEvent<{ value: string, checked: boolean }>"
+              },
+              "description": "When a checkbox item is toggled, with its `value` and the state it should change to in `detail`."
             }
           ],
           "attributes": [
@@ -11028,6 +11084,13 @@
               },
               "description": "Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not on narrow screens. Defaults to `show`.",
               "name": "labels"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.",
+              "name": "loading"
             }
           ],
           "superclass": {
