@@ -16562,6 +16562,529 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-sheet.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes from the start edge, full height, and from the\nbottom on narrow screens.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. Open\nit with `show()`, or `toggle()` from the button that opens it. Its content\nscrolls under a header with the heading and an `actions` slot, such as a\nClear button.",
+          "name": "GwSheet",
+          "cssProperties": [
+            {
+              "description": "Its width from the start or end edge. Defaults to `20rem`.",
+              "name": "--gw-sheet-width"
+            },
+            {
+              "description": "Its greatest height from the bottom. Defaults to `85vh`.",
+              "name": "--gw-sheet-height"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The sheet's surface.",
+              "name": "surface"
+            },
+            {
+              "description": "The row with the close button, heading and actions.",
+              "name": "header"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The content.",
+              "name": "body"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The content, which scrolls.",
+              "name": ""
+            },
+            {
+              "description": "Buttons in the header, after the heading.",
+              "name": "actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ heading: {}, side: { reflect: true }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` [popover] { position: fixed; box-sizing: border-box; flex-direction: column; padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: 0 solid var(--gw-color-border-normal); box-shadow: var(--gw-shadow-l); transition: translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; translate: 0 0; } [popover]::backdrop { background: rgb(0 0 0 / 40%); } /* Full height from the start or end edge */ [data-side=\"start\"], [data-side=\"end\"] { inset: 0 auto; width: min(var(--gw-sheet-width, 20rem), 100vw); height: 100%; max-height: none; } [data-side=\"start\"] { inset-inline-start: 0; border-inline-end-width: max(var(--gw-border-width), 1px); translate: -100% 0; } [data-side=\"end\"] { inset-inline-end: 0; border-inline-start-width: max(var(--gw-border-width), 1px); translate: 100% 0; } :host(:dir(rtl)) [data-side=\"start\"] { translate: 100% 0; } :host(:dir(rtl)) [data-side=\"end\"] { translate: -100% 0; } /* Up from the bottom, with room for the phone's home bar */ [data-side=\"bottom\"] { inset: auto 0 0; width: 100%; max-width: none; max-height: var(--gw-sheet-height, 85vh); padding-block-end: env(safe-area-inset-bottom); border-block-start-width: max(var(--gw-border-width), 1px); border-start-start-radius: var(--gw-radius-panel); border-start-end-radius: var(--gw-radius-panel); translate: 0 100%; } @starting-style { [data-side=\"start\"]:popover-open { translate: -100% 0; } [data-side=\"end\"]:popover-open { translate: 100% 0; } [data-side=\"bottom\"]:popover-open { translate: 0 100%; } } header { display: flex; flex: none; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-2) var(--gw-space-3); border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-3); min-height: 0; padding: var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "heading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "side",
+              "type": {
+                "text": "\"auto\" | Side"
+              },
+              "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "#heading",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#closeButton",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#surface",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#narrow",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#returnFocus",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "description": "Whether it's open.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "toggle",
+              "description": "Opens it, or closes it if it's open, as the button that opens it would."
+            },
+            {
+              "kind": "method",
+              "name": "#edge",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Side"
+                }
+              },
+              "description": "The edge it comes from now, with `auto` settled by the screen's width."
+            },
+            {
+              "kind": "field",
+              "name": "#place",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "type": {
+                "text": "Event"
+              },
+              "description": "When it closes.",
+              "name": "close"
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The heading beside the close button.",
+              "name": "heading"
+            },
+            {
+              "type": {
+                "text": "\"auto\"|\"start\"|\"end\"|\"bottom\""
+              },
+              "description": "The edge it slides in from. `auto` is the start edge, or the bottom on narrow screens. Defaults to `auto`.",
+              "name": "side"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-sheet",
+          "customElement": true,
+          "summary": "A panel that slides in from an edge of the screen."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwSheet",
+          "declaration": {
+            "name": "GwSheet",
+            "module": "src/gw-sheet.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-skeleton.ts",
       "declarations": [
         {
@@ -20369,6 +20892,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-setting-row.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-sheet.js"
           }
         },
         {

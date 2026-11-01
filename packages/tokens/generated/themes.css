@@ -303,6 +303,7 @@ gw-grid:not(:defined) {
 
 gw-dialog:not(:defined),
 gw-popover:not(:defined),
+gw-sheet:not(:defined),
 gw-command-menu:not(:defined),
 gw-toaster:not(:defined),
 gw-option-list:not(:defined) {

@@ -35,6 +35,9 @@ export interface GwEventMap {
   "gw-select": {
     change: Event;
   };
+  "gw-sheet": {
+    close: Event;
+  };
   "gw-theme-gallery": {
     theme: CustomEvent<{ id: string }>;
   };

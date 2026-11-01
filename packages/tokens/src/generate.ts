@@ -338,9 +338,10 @@ const preUpgrade = {
       "repeat(auto-fill, minmax(min(100%, var(--gw-grid-min, 18rem)), 1fr))",
     gap: "var(--gw-space-3)",
   },
-  "gw-dialog, gw-popover, gw-command-menu, gw-toaster, gw-option-list": {
-    display: "none",
-  },
+  "gw-dialog, gw-popover, gw-sheet, gw-command-menu, gw-toaster, gw-option-list":
+    {
+      display: "none",
+    },
 };
 
 const preUpgradeCss = Object.entries(preUpgrade)

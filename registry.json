@@ -235,6 +235,13 @@
       "needs": ["ui-base", "gw-button"]
     },
     {
+      "name": "gw-sheet",
+      "kind": "element",
+      "description": "A panel of filters, settings or details that slides in from an edge of the screen, from the bottom on phones",
+      "files": ["packages/ui/src/gw-sheet.ts"],
+      "needs": ["ui-base", "gw-button"]
+    },
+    {
       "name": "gw-section-title",
       "kind": "element",
       "description": "A small heading between groups",

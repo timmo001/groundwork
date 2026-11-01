@@ -1,6 +1,6 @@
 ---
 title: Overlays
-description: Anchored popovers for confirmations, renames and small forms, dialogs, and menus on the Popover API.
+description: Anchored popovers for confirmations, renames and small forms, sheets from the edge, dialogs, and menus on the Popover API.
 ---
 
 ## Popover
@@ -56,6 +56,30 @@ An `input` or `change` event from the content marks it changed, and `show()` cle
 | `dirty` | Whether the content changed since it opened. Set by edits, cleared by `show()` |
 | `data-needs-changes` | On an action, keeps it disabled until something changes |
 
+## Sheet
+
+<Demo id="sheet">
+  <gw-button variant="neutral" appearance="outlined" data-opens="filters" icon="M6,13H18V11H6M3,6V8H21V6M10,18H14V16H10V18Z">Filters</gw-button>
+  <gw-sheet id="filters" heading="Filters">
+    <gw-button slot="actions" size="small" variant="neutral" appearance="plain">Clear</gw-button>
+    <gw-checkbox label="Regressed" checked></gw-checkbox>
+    <gw-checkbox label="New" checked></gw-checkbox>
+    <gw-checkbox label="Ongoing" checked></gw-checkbox>
+    <gw-checkbox label="Quiet"></gw-checkbox>
+  </gw-sheet>
+</Demo>
+
+A panel of filters, settings or details that slides in from an edge over the page, so the list it changes stays in view beside it. It comes from the start edge at full height, and up from the bottom below 40rem wide. Its content scrolls under a header with a close button, the heading and an `actions` slot, such as Clear. The close button's chevron points the way it leaves.
+
+| Attribute or method | What it does |
+| --- | --- |
+| `heading` | The heading, which names it |
+| `side` | `auto` (the default), `start`, `end` or `bottom` |
+| `show()`, `close()`, `toggle()` | Opens or closes it; `toggle()` suits the button that opens it |
+| `open` | Whether it's open |
+
+It's on the Popover API, in the top layer. Esc, a click outside or the close button closes it, focus starts on the close button and goes back to where it was, and it fires `close`. Set `--gw-sheet-width` for the side edges and `--gw-sheet-height` for the bottom.
+
 ## Dialog
 
 <Demo id="dialog">
@@ -92,5 +116,5 @@ In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that sho
 ## References
 
 - Home Assistant: [Adaptive dialog](https://contributors.home-assistant.io/design/components/adaptive-dialog/), [Dialog](https://contributors.home-assistant.io/design/components/dialog/) · Code: [adaptive dialog](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-adaptive-dialog.ts), [dialog](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-dialog.ts)
-- Web Awesome: [Popover](https://webawesome.com/docs/components/popover), [Dialog](https://webawesome.com/docs/components/dialog) · Code: [popover](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/popover), [dialog](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/dialog)
+- Web Awesome: [Popover](https://webawesome.com/docs/components/popover), [Dialog](https://webawesome.com/docs/components/dialog), [Drawer](https://webawesome.com/docs/components/drawer) · Code: [popover](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/popover), [dialog](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/dialog), [drawer](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/drawer)
 - Primer: [Dialog](https://primer.style/product/components/dialog/) · [Code](https://github.com/primer/react/tree/main/packages/react/src/Dialog)

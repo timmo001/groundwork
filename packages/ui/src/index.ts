@@ -73,6 +73,8 @@ export * from "./gw-select.js";
 
 export * from "./gw-setting-row.js";
 
+export * from "./gw-sheet.js";
+
 export * from "./gw-skeleton.js";
 
 export * from "./gw-spinner.js";
