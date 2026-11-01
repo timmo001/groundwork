@@ -28,7 +28,7 @@
   "scripts": {
     "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "lint": "oxlint .",
-    "typecheck": "tsc",
+    "typecheck": "tsc && bun run scripts/typecheck-alone.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen": "bun run scripts/manifest.ts",
