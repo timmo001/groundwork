@@ -28,6 +28,7 @@ const closeIcon =
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The icon's color. Defaults to `neutral`.
  * @attr {string} time - When it happened, as shown, such as `2 min ago`.
  * @attr {boolean} unread - Marks it with a stripe until it's seen.
+ * @attr {string} dismiss-label - The close button's name, for an app in another language. Defaults to `Dismiss`.
  *
  * @slot - A line of text.
  * @slot actions - Up to two buttons.
@@ -45,6 +46,7 @@ export class GwNotification extends GwElement {
     tone: { reflect: true },
     time: {},
     unread: { type: "boolean", reflect: true },
+    dismissLabel: { attribute: "dismiss-label" },
   } as const;
 
   static override styles = [
@@ -129,6 +131,7 @@ export class GwNotification extends GwElement {
   declare tone: Tone;
   declare time: string;
   declare unread: boolean;
+  declare dismissLabel: string;
 
   readonly #icon = createIcon("");
 
@@ -156,6 +159,7 @@ export class GwNotification extends GwElement {
     this.tone = "neutral";
     this.time = "";
     this.unread = false;
+    this.dismissLabel = "Dismiss";
   }
 
   /** Fires `dismiss`, then folds away and removes itself unless that's cancelled. */
@@ -212,6 +216,7 @@ export class GwNotification extends GwElement {
     this.#heading.textContent = this.heading;
     this.#heading.hidden = !this.heading;
     this.#time.textContent = this.time;
+    this.#close.textContent = this.dismissLabel;
   }
 }
 

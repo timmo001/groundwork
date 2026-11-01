@@ -63,6 +63,7 @@ const chevronIcon =
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
  * @attr {boolean} inline-label - Shows the label inside the trigger, before the value, for toolbars and filters.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
+ * @attr {string} clear-label - The button that clears a multiple choice, for an app in another language. Defaults to `Clear`.
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
@@ -86,6 +87,7 @@ export class GwSelect extends LightElement {
     labelHidden: { type: "boolean", attribute: "label-hidden" },
     inlineLabel: { type: "boolean", attribute: "inline-label", reflect: true },
     size: { reflect: true },
+    clearLabel: { attribute: "clear-label" },
   } as const;
 
   declare label: string;
@@ -105,6 +107,7 @@ export class GwSelect extends LightElement {
   declare labelHidden: boolean;
   declare inlineLabel: boolean;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
+  declare clearLabel: string;
 
   readonly #id = fieldId();
 
@@ -179,6 +182,7 @@ export class GwSelect extends LightElement {
     this.labelHidden = false;
     this.inlineLabel = false;
     this.size = "medium";
+    this.clearLabel = "Clear";
   }
 
   /** Opens the list, such as from a keyboard shortcut. */
@@ -439,6 +443,7 @@ export class GwSelect extends LightElement {
         : []),
     );
     this.#clear.hidden = !this.multiple || values.length === 0;
+    this.#clear.textContent = this.clearLabel;
 
     const list = this.#list;
 

@@ -74,10 +74,12 @@ export class Dismissal {
     "Discard",
   );
 
+  readonly #question = h("p", {}, "Discard your changes?");
+
   readonly #view = h(
     "div",
     { class: "discard", role: "alert" },
-    h("p", {}, "Discard your changes?"),
+    this.#question,
     h("footer", {}, this.#keep, this.#discard),
   );
 
@@ -105,6 +107,13 @@ export class Dismissal {
     this.#discard.addEventListener("click", () => {
       this.#close();
     });
+  }
+
+  /** Sets the question and its buttons' text, for an app in another language. */
+  text(question: string, keep: string, discard: string) {
+    this.#question.textContent = question;
+    this.#keep.textContent = keep;
+    this.#discard.textContent = discard;
   }
 
   /** Whether it's showing the question rather than the content. */

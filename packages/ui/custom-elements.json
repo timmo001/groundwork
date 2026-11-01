@@ -79,9 +79,40 @@
             },
             {
               "kind": "field",
+              "name": "#question",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#view",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "text",
+              "parameters": [
+                {
+                  "name": "question",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "keep",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "discard",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Sets the question and its buttons' text, for an app in another language."
             },
             {
               "kind": "field",
@@ -6552,7 +6583,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, closeLabel: { attribute: \"close-label\" }, }",
+              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6595,6 +6626,30 @@
               },
               "description": "The close button's name, for an app in another language.",
               "default": "\"Close\""
+            },
+            {
+              "kind": "field",
+              "name": "discardQuestion",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Discard your changes?\""
+            },
+            {
+              "kind": "field",
+              "name": "keepLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Keep editing\""
+            },
+            {
+              "kind": "field",
+              "name": "discardLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Discard\""
             },
             {
               "kind": "field",
@@ -7021,6 +7076,27 @@
               },
               "description": "The close button's name, for an app in another language. Defaults to `Close`.",
               "name": "close-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.",
+              "name": "discard-question"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button that goes back to editing. Defaults to `Keep editing`.",
+              "name": "keep-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button that throws the edits away. Defaults to `Discard`.",
+              "name": "discard-label"
             }
           ],
           "superclass": {
@@ -12609,7 +12685,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, icon: {}, tone: { reflect: true }, time: {}, unread: { type: \"boolean\", reflect: true }, }",
+              "default": "{ heading: {}, icon: {}, tone: { reflect: true }, time: {}, unread: { type: \"boolean\", reflect: true }, dismissLabel: { attribute: \"dismiss-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -12667,6 +12743,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "dismissLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Dismiss\""
             },
             {
               "kind": "field",
@@ -13053,6 +13137,13 @@
               },
               "description": "Marks it with a stripe until it's seen.",
               "name": "unread"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The close button's name, for an app in another language. Defaults to `Dismiss`.",
+              "name": "dismiss-label"
             }
           ],
           "superclass": {
@@ -14358,7 +14449,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, confirm: { type: \"boolean\" }, closeLabel: { attribute: \"close-label\" }, }",
+              "default": "{ heading: {}, confirm: { type: \"boolean\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14401,6 +14492,30 @@
               },
               "description": "The close button's name, for an app in another language.",
               "default": "\"Close\""
+            },
+            {
+              "kind": "field",
+              "name": "discardQuestion",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Discard your changes?\""
+            },
+            {
+              "kind": "field",
+              "name": "keepLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Keep editing\""
+            },
+            {
+              "kind": "field",
+              "name": "discardLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Discard\""
             },
             {
               "kind": "field",
@@ -14859,6 +14974,27 @@
               },
               "description": "The close button's name, for an app in another language. Defaults to `Close`.",
               "name": "close-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.",
+              "name": "discard-question"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button that goes back to editing. Defaults to `Keep editing`.",
+              "name": "keep-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button that throws the edits away. Defaults to `Discard`.",
+              "name": "discard-label"
             }
           ],
           "superclass": {
@@ -16473,7 +16609,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, }",
+              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, clearLabel: { attribute: \"clear-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16600,6 +16736,14 @@
                 "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
               },
               "default": "\"medium\""
+            },
+            {
+              "kind": "field",
+              "name": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Clear\""
             },
             {
               "kind": "field",
@@ -17170,6 +17314,13 @@
               },
               "description": "The field's size, 40px tall at medium. Defaults to `medium`.",
               "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button that clears a multiple choice, for an app in another language. Defaults to `Clear`.",
+              "name": "clear-label"
             }
           ],
           "superclass": {

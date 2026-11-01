@@ -25,6 +25,9 @@ const closeIcon =
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} open - Whether it shows.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
+ * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
+ * @attr {string} keep-label - The button that goes back to editing. Defaults to `Keep editing`.
+ * @attr {string} discard-label - The button that throws the edits away. Defaults to `Discard`.
  *
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
@@ -42,6 +45,9 @@ export class GwDialog extends GwElement {
     heading: {},
     open: { type: "boolean", reflect: true },
     closeLabel: { attribute: "close-label" },
+    discardQuestion: { attribute: "discard-question" },
+    keepLabel: { attribute: "keep-label" },
+    discardLabel: { attribute: "discard-label" },
   } as const;
 
   static override styles = [
@@ -148,6 +154,9 @@ export class GwDialog extends GwElement {
   declare open: boolean;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
+  declare discardQuestion: string;
+  declare keepLabel: string;
+  declare discardLabel: string;
 
   /** The value of the action that closed the dialog, or "" for Esc. */
   returnValue = "";
@@ -157,6 +166,9 @@ export class GwDialog extends GwElement {
     this.heading = "";
     this.open = false;
     this.closeLabel = "Close";
+    this.discardQuestion = "Discard your changes?";
+    this.keepLabel = "Keep editing";
+    this.discardLabel = "Discard";
   }
 
   readonly #heading = h("h2", { id: "heading", part: "heading" });
@@ -251,6 +263,11 @@ export class GwDialog extends GwElement {
 
     this.#heading.textContent = this.heading;
     this.#closeButton.textContent = this.closeLabel;
+    this.#dismissal.text(
+      this.discardQuestion,
+      this.keepLabel,
+      this.discardLabel,
+    );
 
     if (this.open && !dialog.open) {
       dialog.showModal();

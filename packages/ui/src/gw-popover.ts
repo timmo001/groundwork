@@ -35,6 +35,9 @@ const sheetBelow = 600;
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
+ * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
+ * @attr {string} keep-label - The button that goes back to editing. Defaults to `Keep editing`.
+ * @attr {string} discard-label - The button that throws the edits away. Defaults to `Discard`.
  *
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
@@ -53,6 +56,9 @@ export class GwPopover extends GwElement {
     heading: {},
     confirm: { type: "boolean" },
     closeLabel: { attribute: "close-label" },
+    discardQuestion: { attribute: "discard-question" },
+    keepLabel: { attribute: "keep-label" },
+    discardLabel: { attribute: "discard-label" },
   } as const;
 
   static override styles = [
@@ -197,6 +203,9 @@ export class GwPopover extends GwElement {
   declare confirm: boolean;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
+  declare discardQuestion: string;
+  declare keepLabel: string;
+  declare discardLabel: string;
 
   /** The value of the action that closed it, or "" for Esc or a click outside. */
   returnValue = "";
@@ -252,6 +261,9 @@ export class GwPopover extends GwElement {
     this.heading = "";
     this.confirm = false;
     this.closeLabel = "Close";
+    this.discardQuestion = "Discard your changes?";
+    this.keepLabel = "Keep editing";
+    this.discardLabel = "Discard";
   }
 
   /** Whether its content has changed since it opened, so closing it asks first. */
@@ -399,6 +411,11 @@ export class GwPopover extends GwElement {
     this.#heading.textContent = this.heading;
     this.#heading.hidden = !this.heading;
     this.#closeButton.textContent = this.closeLabel;
+    this.#dismissal.text(
+      this.discardQuestion,
+      this.keepLabel,
+      this.discardLabel,
+    );
   }
 }
 
