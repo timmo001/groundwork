@@ -40,9 +40,6 @@ export interface NotifyAction {
   readonly notify: NotifyConfig;
 }
 
-/** Toast variant controlling display color */
-export type ToastVariant = "info" | "success" | "error";
-
 /** Action that navigates to a sub-view within the TUI */
 export interface ViewAction {
   readonly type: "view";

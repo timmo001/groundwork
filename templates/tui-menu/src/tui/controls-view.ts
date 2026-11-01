@@ -10,6 +10,7 @@ import type { CliRenderer, KeyEvent, Renderable } from "@opentui/core";
 import {
   Button,
   Collapsible,
+  ConfirmDialog,
   GLOBAL_HELP,
   HeaderBlock,
   Input,
@@ -120,16 +121,26 @@ export class ControlsView {
       onPress: () => this.report(`Saved ${mode.value}`),
     });
 
+    const confirmReset = new ConfirmDialog(renderer, {
+      id: "controls-confirm-reset",
+      theme,
+      destructive: true,
+      confirmLabel: "Reset",
+      onConfirm: () => {
+        name.value = "";
+        mode.value = "dark";
+        this.report("Reset");
+      },
+      onCancel: () => this.report("Kept"),
+    });
+
     const reset = new Button(renderer, {
       id: "controls-reset",
       theme,
       label: "Reset",
       variant: "destructive",
-      onPress: () => {
-        name.value = "";
-        mode.value = "dark";
-        this.report("Reset");
-      },
+      onPress: () =>
+        confirmReset.show("Reset the form?", "This clears the name and mode."),
     });
 
     buttons.add(save);

@@ -6,7 +6,7 @@
  */
 import type { CliRenderer } from "@opentui/core";
 import type { NotifyConfig } from "../types.js";
-import type { Toast } from "../tui/toast.js";
+import type { Toast } from "@timmo001/groundwork-tui";
 
 const log = (msg: string) => console.error(`[tui-menu:CommandRunner] ${msg}`);
 
@@ -32,8 +32,7 @@ export function createCommandRunner(
   return {
     runSuspended: async (cmd, wait) => {
       log(`Suspending for: ${cmd}`);
-      void renderer.suspend();
-      renderer.currentRenderBuffer.clear();
+      await renderer.suspend();
 
       try {
         const cols = process.stdout.columns || 80;
@@ -51,7 +50,7 @@ export function createCommandRunner(
           "─".repeat(right) +
           "\x1b[0m";
 
-        process.stdout.write(`\n\n${header}\n\n`);
+        process.stdout.write(`\x1b[2J\x1b[H\n${header}\n\n`);
 
         const proc = Bun.spawn(["bash", "-c", cmd], {
           stdin: "inherit",
@@ -61,23 +60,22 @@ export function createCommandRunner(
 
         await proc.exited;
 
+        // The prompt reads its key in a child shell, so the renderer's own
+        // stdin reader is the only one in this process
         if (wait) {
-          process.stdout.write("\n\x1b[90mPress any key to continue...\x1b[0m");
-          await new Promise<void>((resolve) => {
-            const wasRaw = process.stdin.isRaw;
+          const prompt = Bun.spawn(
+            [
+              "bash",
+              "-c",
+              `printf '\\n\\033[90mPress any key to continue...\\033[0m'; read -rsn1`,
+            ],
+            { stdin: "inherit", stdout: "inherit", stderr: "inherit" },
+          );
 
-            if (process.stdin.isTTY) process.stdin.setRawMode(true);
-            process.stdin.resume();
-            process.stdin.once("data", () => {
-              if (process.stdin.isTTY) process.stdin.setRawMode(wasRaw);
-              process.stdin.pause();
-              resolve();
-            });
-          });
+          await prompt.exited;
         }
       } finally {
-        renderer.currentRenderBuffer.clear();
-        void renderer.resume();
+        await renderer.resume();
         renderer.requestRender();
         log("Resumed after command");
       }

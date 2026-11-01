@@ -8,7 +8,7 @@
  */
 import { Items, type Item, type ItemsError } from "@timmo001/groundwork-demo";
 import { Effect, ManagedRuntime } from "effect";
-import type { Toast } from "../tui/toast.js";
+import type { Toast } from "@timmo001/groundwork-tui";
 
 /** The `Items` operations, as promises the views can call */
 export interface ItemsRunnerService {

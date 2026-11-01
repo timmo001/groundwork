@@ -240,7 +240,7 @@ const displayItems: readonly MenuItem[] = [
     "󰩨",
     "Terminal Size",
     "Print current terminal dimensions",
-    cmd('echo "${COLUMNS:-?}x${LINES:-?}"'),
+    cmd('echo "$(tput cols)x$(tput lines)"'),
     undefined,
     ["columns", "rows", "dimensions", "cols", "size", ":size", "resize"],
   ),

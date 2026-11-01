@@ -5,14 +5,13 @@
  */
 import type { CliRenderer } from "@opentui/core";
 import type { ViewId, MenuItem, MenuAction } from "../types.js";
-import type { Theme } from "@timmo001/groundwork-tui";
+import { ChoiceDialog, type Theme } from "@timmo001/groundwork-tui";
 import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
 import type { ItemsRunnerService } from "../services/items.js";
 import { ControlsView } from "./controls-view.js";
 import { MainMenu } from "./main-menu.js";
 import { SubmenuView } from "./submenu-view.js";
-import { VariantPopup } from "./variant-popup.js";
 
 const log = (msg: string) => console.error(`[tui-menu:App] ${msg}`);
 
@@ -52,7 +51,7 @@ export class App {
   private mainMenu: MainMenu;
   private submenuView: SubmenuView;
   private controlsView: ControlsView;
-  private variantPopup: VariantPopup;
+  private variants: ChoiceDialog<MenuAction>;
   private activeView: ViewId = "main";
   private viewStack: ViewId[] = [];
   private appTitle: string;
@@ -87,34 +86,16 @@ export class App {
       onBack: () => this.popView(),
     });
 
-    this.variantPopup = new VariantPopup(deps.renderer, deps.theme, {
-      onSelect: (action) => {
-        // Defer refocus to avoid the same keypress event hitting the MenuList
-        queueMicrotask(() => this.focusActiveView());
-        this.dispatchAction(action);
-      },
-      onDismiss: () => {
-        // Defer refocus to avoid the same Escape event hitting the MenuList
-        queueMicrotask(() => this.focusActiveView());
-      },
+    this.variants = new ChoiceDialog<MenuAction>(deps.renderer, {
+      id: "variants",
+      theme: deps.theme,
+      onChoose: (action) => this.dispatchAction(action),
     });
 
     // --- Hide all views initially ---
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
     this.controlsView.setVisible(false);
-
-    // --- Global keyboard ---
-    // Ctrl+C is handled by OpenTUI's exitOnCtrlC option which ensures
-    // terminal state is fully restored before exiting.
-    deps.renderer.keyInput.on("keypress", (key) => {
-      // Route keys to the variant popup when it is visible
-      if (this.variantPopup.visible) {
-        this.variantPopup.handleKeyPress(key);
-
-        return;
-      }
-    });
 
     // --- Determine initial view ---
     const startView = options.initialView ?? "main";
@@ -208,11 +189,17 @@ export class App {
   }
 
   private handleMenuAction(item: MenuItem): void {
-    // If the item has variants, open the popup instead of dispatching directly
+    // If the item has variants, ask which one instead of dispatching directly
     if (item.variants && item.variants.length > 0) {
-      log(`Opening variant popup for item ${item.id}`);
-      this.blurActiveView();
-      this.variantPopup.show(item);
+      log(`Opening variants for item ${item.id}`);
+      this.variants.show(
+        item.title,
+        item.variants.map((variant) => ({
+          label: variant.label,
+          description: variant.description,
+          value: variant.action,
+        })),
+      );
 
       return;
     }

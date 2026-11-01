@@ -96,6 +96,8 @@ export class Button extends BoxRenderable {
   }
 
   private refresh(): void {
+    if (this.isDestroyed || this.text.isDestroyed) return;
+
     this.backgroundColor = this.focused
       ? this.theme.bgSelected
       : this.theme.bgInput;

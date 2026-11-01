@@ -11,7 +11,17 @@ export { formatBreadcrumb } from "./breadcrumb.ts";
 
 export { Button, type ButtonOptions, type ButtonVariant } from "./button.ts";
 
+export {
+  ChoiceDialog,
+  type Choice,
+  type ChoiceDialogOptions,
+} from "./choice-dialog.ts";
+
 export { Collapsible, type CollapsibleOptions } from "./collapsible.ts";
+
+export { ConfirmDialog, type ConfirmDialogOptions } from "./confirm-dialog.ts";
+
+export { Dialog, type DialogOptions } from "./dialog.ts";
 
 export { formatFilterBar } from "./filter-bar.ts";
 
@@ -66,3 +76,5 @@ export { surfaceBackground } from "./styles.ts";
 export { DEFAULT_THEME, loadTheme, themeFor, type Theme } from "./theme.ts";
 
 export { Tile, type TileOptions } from "./tile.ts";
+
+export { Toast, type ToastVariant } from "./toast.ts";

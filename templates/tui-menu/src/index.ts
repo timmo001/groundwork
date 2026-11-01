@@ -13,7 +13,7 @@ import { createCommandRunner } from "./services/command-runner.js";
 import { createItemsRunner } from "./services/items.js";
 import { loadTheme } from "@timmo001/groundwork-tui";
 import { App } from "./tui/app.js";
-import { Toast } from "./tui/toast.js";
+import { Toast } from "@timmo001/groundwork-tui";
 
 const flags = parseFlags(process.argv.slice(2));
 

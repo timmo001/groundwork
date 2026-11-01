@@ -109,6 +109,8 @@ export class Collapsible extends BoxRenderable {
   }
 
   private refresh(): void {
+    if (this.isDestroyed || this.trigger.isDestroyed) return;
+
     const color = this.focused ? this.theme.accent : this.theme.fgMuted;
 
     this.trigger.content = t`${fg(color)(`${this.isOpen ? "▾" : "▸"} ${this.label}`)}`;
