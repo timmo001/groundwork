@@ -12,6 +12,18 @@ description: Buttons, menu buttons and segmented controls, on native buttons and
   <gw-button disabled>Unavailable</gw-button>
 </Demo>
 
+### Anatomy
+
+Measured from the live button below, in the demo's theme: the height, width, padding, gap between icon and label, and radius, each with the token it comes from.
+
+<Demo id="button-anatomy" layout="stack">
+  <gw-anatomy>
+    <gw-button icon="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z">Restart</gw-button>
+  </gw-anatomy>
+</Demo>
+
+### Variants and appearances
+
 `variant` picks the color and `appearance` how it's applied, from most to least important: accent (a solid fill, the default), filled (a soft tint), outlined (a stroke) or plain (text only). Every button is a pill. The six colors match the alert colors.
 
 <Demo id="button-appearance" layout="stack">
@@ -114,6 +126,12 @@ It renders a native `<button>`, or an `<a>` with `href`. Put an icon in the `ico
 
 The menu opens on the Popover API, in the top layer, and closes on Esc or a click outside. Arrow keys, Home and End move between items and actions. Choosing one fires `select` with its `value`, closes the menu and puts focus back on the button.
 
+<Demo id="menu-button-anatomy" layout="stack">
+  <gw-anatomy target="[part=trigger]">
+    <gw-menu-button label="Power" items='[{"value":"sleep","label":"Sleep"}]'></gw-menu-button>
+  </gw-anatomy>
+</Demo>
+
 `icon` takes SVG path data for an icon before the trigger's label.
 
 Set `items` to `[{ "value", "label", "description", "icon", "disabled" }]`, as JSON or as a property. They render inside the component, so a page's own button styles can't reach them.
@@ -137,6 +155,12 @@ Contextual actions, such as "Add", go in `actions`, in the same shape. They stay
 | `value` | The picked option |
 | `options` | JSON: `[{ "value", "label" }]`, or set the property |
 | `name` | The form field name; one is made up if left out |
+
+<Demo id="segmented-anatomy" layout="stack">
+  <gw-anatomy target="fieldset" scale="1.5">
+    <gw-segmented label="View" value="dashboard" options='[{"value":"dashboard","label":"Dashboard"},{"value":"json","label":"JSON"}]'></gw-segmented>
+  </gw-anatomy>
+</Demo>
 
 It's a `<fieldset>` of native radio buttons, so arrow keys move the choice and a form submits it. It fires `change`.
 

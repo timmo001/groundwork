@@ -4,4 +4,5 @@
  * @module
  */
 import "@groundwork/ui";
+import "./gw-anatomy.ts";
 import "./gw-demo-frame.ts";

@@ -98,6 +98,14 @@ For an action in progress, never for content loading. It's announced by its `lab
 
 What a list or page shows when it's empty or there's nothing to do. Say so in one line, the same as a CLI does.
 
+<Demo id="empty-state-anatomy" layout="stack">
+  <gw-anatomy scale="1">
+    <gw-empty-state heading="Nothing to apply">
+      <p>Every item is up to date.</p>
+    </gw-empty-state>
+  </gw-anatomy>
+</Demo>
+
 ## Banner
 
 <Demo id="banner" layout="stack">
@@ -123,6 +131,14 @@ A slim bar across the top of the app, above its content rather than over it, for
 | `tone` | `info`, `warning`, `danger` and the other tones |
 | `open` | Shows it |
 | `urgent` | Announces it at once, for a lost connection |
+
+<Demo id="banner-anatomy" layout="stack">
+  <gw-anatomy scale="1">
+    <gw-banner tone="warning" open>
+      <p>Restart to finish applying your changes.</p>
+    </gw-banner>
+  </gw-anatomy>
+</Demo>
 
 ## Notifications
 
@@ -153,6 +169,14 @@ Each `gw-notification` has a heading, a line of text, when it happened and up to
 | `tone`    | Colors the icon and the unread stripe  |
 | `time`    | When it happened, as the app words it  |
 | `unread`  | Marks it as new                        |
+
+<Demo id="notification-anatomy" layout="stack">
+  <gw-anatomy scale="1">
+    <gw-notification heading="Backup finished" time="Yesterday">
+      <p>Everything up to today is saved.</p>
+    </gw-notification>
+  </gw-anatomy>
+</Demo>
 
 ## Toast
 

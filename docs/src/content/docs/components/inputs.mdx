@@ -22,6 +22,14 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 | `error` | An error under it; marks the input invalid |
 | `required`, `disabled` | Passed to the `<input>` |
 
+### Anatomy
+
+<Demo id="input-anatomy" layout="stack">
+  <gw-anatomy target="input" scale="1.5">
+    <gw-input label="Host" placeholder="192.168.1.20"></gw-input>
+  </gw-anatomy>
+</Demo>
+
 ## Select
 
 <Demo id="select" layout="stack">
@@ -57,6 +65,17 @@ Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SV
 | `options` | The options, instead of `<option>` children |
 | `inline-label` | Shows the label inside the trigger, before the value |
 | `label-hidden` | Hides the label but keeps it for assistive technology |
+
+### Anatomy
+
+<Demo id="select-anatomy" layout="stack">
+  <gw-anatomy target=".gw-select-trigger" scale="1.5">
+    <gw-select label="Theme" value="glazing">
+      <option value="base">Base</option>
+      <option value="glazing">Glazing</option>
+    </gw-select>
+  </gw-anatomy>
+</Demo>
 
 ### Inline label
 

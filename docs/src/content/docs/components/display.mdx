@@ -17,6 +17,12 @@ Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`,
 
 `heading` adds a header, with an `actions` slot beside it. `href` makes the whole card a link, and `flush` drops the padding for a table or image that fills it.
 
+<Demo id="card-anatomy" layout="stack">
+  <gw-anatomy scale="1">
+    <gw-card heading="Desktop">Arch Linux, last seen just now</gw-card>
+  </gw-anatomy>
+</Demo>
+
 ## Expansion panel
 
 <Demo id="expansion" layout="stack">
@@ -29,6 +35,12 @@ Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`,
 </Demo>
 
 A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`.
+
+<Demo id="expansion-anatomy" layout="stack">
+  <gw-anatomy scale="1" target="[part=summary]">
+    <gw-expansion heading="Network" description="Wake on LAN, interfaces and ports"></gw-expansion>
+  </gw-anatomy>
+</Demo>
 
 ## Chip and dot
 
@@ -44,6 +56,12 @@ A heading that glides its content open and shut, on a native `<details>`, so fin
 
 A chip's `icon` takes SVG path data for an icon before its text; for anything else, such as a dot, use the `icon` slot.
 
+<Demo id="chip-anatomy" layout="stack">
+  <gw-anatomy>
+    <gw-chip tone="success"><gw-dot tone="success" slot="icon"></gw-dot>Online</gw-chip>
+  </gw-anatomy>
+</Demo>
+
 A dot on its own needs a `label`, such as "Online"; beside text that says the same, leave it out. `pulse` makes it breathe while something is live.
 
 ## Badge
@@ -55,6 +73,12 @@ A dot on its own needs a `label`, such as "Online"; beside text that says the sa
 </Demo>
 
 A pill with an icon, a value and an optional small label. The icon takes the tone's color. `size="small"` fits it in a table row.
+
+<Demo id="badge-anatomy" layout="stack">
+  <gw-anatomy>
+    <gw-badge label="CPU" icon="M15 13V5A3 3 0 0 0 9 5V13A5 5 0 1 0 15 13M12 4A1 1 0 0 1 13 5V8H11V5A1 1 0 0 1 12 4Z" tone="warning">71 °C</gw-badge>
+  </gw-anatomy>
+</Demo>
 
 ## Alert
 
@@ -69,6 +93,12 @@ A pill with an icon, a value and an optional small label. The icon takes the ton
 </Demo>
 
 It's announced politely as a status, or at once with `urgent` for an error that needs attention. Slot an icon in `icon` and buttons in `actions`.
+
+<Demo id="alert-anatomy" layout="stack">
+  <gw-anatomy scale="1">
+    <gw-alert heading="Update available">System Bridge 5.3.0 is ready to install.</gw-alert>
+  </gw-anatomy>
+</Demo>
 
 ## Facts
 
