@@ -122,6 +122,16 @@ const mainItems: readonly MenuItem[] = [
   ),
 
   item(
+    "controls",
+    "󰔡",
+    "Controls",
+    "Buttons, inputs, choices and collapsibles",
+    { type: "view", viewId: "controls" },
+    undefined,
+    ["button", "input", "radio", "collapsible", "form", ":ctl"],
+  ),
+
+  item(
     "notify-example",
     "󰍡",
     "Notify Example",

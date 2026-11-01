@@ -9,6 +9,7 @@ import type { Theme } from "@timmo001/groundwork-tui";
 import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
 import type { ItemsRunnerService } from "../services/items.js";
+import { ControlsView } from "./controls-view.js";
 import { MainMenu } from "./main-menu.js";
 import { SubmenuView } from "./submenu-view.js";
 import { VariantPopup } from "./variant-popup.js";
@@ -50,6 +51,7 @@ export class App {
   private itemsRunner: ItemsRunnerService;
   private mainMenu: MainMenu;
   private submenuView: SubmenuView;
+  private controlsView: ControlsView;
   private variantPopup: VariantPopup;
   private activeView: ViewId = "main";
   private viewStack: ViewId[] = [];
@@ -80,6 +82,11 @@ export class App {
       },
     });
 
+    this.controlsView = new ControlsView(deps.renderer, deps.theme, {
+      title: this.appTitle,
+      onBack: () => this.popView(),
+    });
+
     this.variantPopup = new VariantPopup(deps.renderer, deps.theme, {
       onSelect: (action) => {
         // Defer refocus to avoid the same keypress event hitting the MenuList
@@ -95,6 +102,7 @@ export class App {
     // --- Hide all views initially ---
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
+    this.controlsView.setVisible(false);
 
     // --- Global keyboard ---
     // Ctrl+C is handled by OpenTUI's exitOnCtrlC option which ensures
@@ -175,6 +183,7 @@ export class App {
     // Hide all
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
+    this.controlsView.setVisible(false);
 
     this.activeView = viewId;
 
@@ -189,6 +198,11 @@ export class App {
         this.submenuView.setVisible(true);
         this.submenuView.resetAndFocus();
         // SubmenuView updates the terminal title itself via onTitleChange
+        break;
+      case "controls":
+        setTerminalTitle(`${this.appTitle} \u203A Controls`);
+        this.controlsView.setVisible(true);
+        this.controlsView.resetAndFocus();
         break;
     }
   }
@@ -280,6 +294,9 @@ export class App {
       case "submenu":
         this.submenuView.focus();
         break;
+      case "controls":
+        this.controlsView.focus();
+        break;
     }
   }
 
@@ -291,6 +308,9 @@ export class App {
         break;
       case "submenu":
         this.submenuView.blur();
+        break;
+      case "controls":
+        this.controlsView.blur();
         break;
     }
   }

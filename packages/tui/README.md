@@ -20,5 +20,7 @@ import { AppHeader, formatHelpBar, loadTheme } from "@timmo001/groundwork-tui";
 - `MenuGrid` lays out `Tile` cards under `SectionHeading` rows, with arrow
   keys moving to the nearest tile.
 - `ScrollSurface` is a themed scroll box, and `surfaceBackground` its color.
+- `Button`, `Input`, `RadioGroup` and `Collapsible` are the focusable
+  controls: Enter or Space (or a click) presses, picks or toggles.
 
 `templates/tui-menu` shows the components, and runs with `mise run demo:tui`.

@@ -7,7 +7,7 @@
 // --- Menu types ---
 
 /** Identifies a top-level TUI view for navigation */
-export type ViewId = "main" | "submenu";
+export type ViewId = "main" | "submenu" | "controls";
 
 /** Action that suspends the TUI and runs a command with inherited stdio */
 export interface CommandAction {

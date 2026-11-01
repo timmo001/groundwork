@@ -9,6 +9,10 @@ export { AppHeader, type AppHeaderOptions } from "./app-header.ts";
 
 export { formatBreadcrumb } from "./breadcrumb.ts";
 
+export { Button, type ButtonOptions, type ButtonVariant } from "./button.ts";
+
+export { Collapsible, type CollapsibleOptions } from "./collapsible.ts";
+
 export { formatFilterBar } from "./filter-bar.ts";
 
 export {
@@ -20,6 +24,8 @@ export {
 export { HeaderBlock, type HeaderBlockOptions } from "./header-block.ts";
 
 export { formatHelpBar, GLOBAL_HELP, type HelpEntry } from "./help-bar.ts";
+
+export { Input, type InputOptions } from "./input.ts";
 
 export {
   MenuGrid,
@@ -35,6 +41,12 @@ export {
 } from "./menu-list.ts";
 
 export { PaneHeader } from "./pane-header.ts";
+
+export {
+  RadioGroup,
+  type RadioChoice,
+  type RadioGroupOptions,
+} from "./radio-group.ts";
 
 export { ScrollSurface, type ScrollSurfaceOptions } from "./scroll-surface.ts";
 
