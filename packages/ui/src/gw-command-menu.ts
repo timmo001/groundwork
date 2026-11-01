@@ -1,3 +1,9 @@
+/**
+ * `gw-command-menu`: a searchable list of commands on Cmd+K or Ctrl+K.
+ * Docs: https://groundwork.timmo.dev/components/overlays/#command-menu
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";

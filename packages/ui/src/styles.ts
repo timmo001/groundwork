@@ -1,3 +1,8 @@
+/**
+ * Styles and helpers every component shares: the base sheet, tones and icons.
+ *
+ * @module
+ */
 import { css } from "./element.js";
 
 const svgNamespace = "http://www.w3.org/2000/svg";

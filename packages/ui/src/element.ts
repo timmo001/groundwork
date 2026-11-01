@@ -1,3 +1,11 @@
+/**
+ * `GwElement`, the small base every `gw-` element builds on, with the `css`
+ * and `h` helpers. It stands in for a framework: reflected properties,
+ * batched updates and adopted stylesheets, and nothing else.
+ *
+ * @module
+ */
+
 /** How a property reads its attribute and writes it back. */
 export interface PropertyOptions {
   /** How the attribute's text becomes the value. Defaults to `string`. */

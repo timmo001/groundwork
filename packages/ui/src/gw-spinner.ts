@@ -1,3 +1,9 @@
+/**
+ * `gw-spinner`: a spinning ring, for waits a skeleton can't stand in for.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#spinner
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 

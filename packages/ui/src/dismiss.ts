@@ -1,3 +1,9 @@
+/**
+ * How overlays close: at once when clean, and through an in-place "Discard
+ * your changes?" view when they hold edits, so no overlay opens over another.
+ *
+ * @module
+ */
 import { css, h } from "./element.js";
 import "./gw-button.js";
 import { animateHeight } from "./motion.js";

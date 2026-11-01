@@ -1,3 +1,9 @@
+/**
+ * `gw-facts`: label and value pairs, as a description list.
+ * Docs: https://groundwork.timmo.dev/components/display/#facts
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import "./gw-skeleton.js";
 import { animateHeight, fadeIn } from "./motion.js";

@@ -1,3 +1,9 @@
+/**
+ * `gw-notification`: one notification card, in the center or by its entry.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#notifications
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import "./gw-button.js";
 import { fadeEasing, motionDuration, reducedMotion } from "./motion.js";

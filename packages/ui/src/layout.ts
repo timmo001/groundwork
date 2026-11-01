@@ -1,3 +1,9 @@
+/**
+ * `gw-page`, `gw-stack`, `gw-row` and `gw-grid`: page width and spacing.
+ * Docs: https://groundwork.timmo.dev/components/layout/#stack-row-and-grid
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 

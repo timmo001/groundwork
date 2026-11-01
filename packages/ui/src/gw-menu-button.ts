@@ -1,3 +1,9 @@
+/**
+ * `gw-menu-button`: a button that opens a menu of items and actions.
+ * Docs: https://groundwork.timmo.dev/components/actions/#menu-button
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 

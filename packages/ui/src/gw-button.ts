@@ -1,3 +1,9 @@
+/**
+ * `gw-button`: the button, in every variant, appearance and size.
+ * Docs: https://groundwork.timmo.dev/components/actions/#button
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 

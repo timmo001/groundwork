@@ -1,3 +1,9 @@
+/**
+ * The (i) button by a field's label that opens its longer help, shared by
+ * `gw-input` and `gw-select`.
+ *
+ * @module
+ */
 import { h, setAttribute } from "./element.js";
 import "./gw-popover.js";
 import { createIcon } from "./styles.js";

@@ -1,3 +1,10 @@
+/**
+ * Motion helpers: fades that never pop, heights that glide instead of jump,
+ * and View Transitions for whole-view changes. All respect reduced motion.
+ *
+ * @module
+ */
+
 /** Whether the person asked for reduced motion. */
 export const reducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;

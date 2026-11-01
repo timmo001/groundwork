@@ -1,3 +1,10 @@
+/**
+ * `gw-option-list`: the searchable, windowed list behind the select and the
+ * command menu.
+ * Docs: https://groundwork.timmo.dev/components/inputs/#select
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, createIcon } from "./styles.js";
 

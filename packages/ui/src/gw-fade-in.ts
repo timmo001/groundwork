@@ -1,3 +1,9 @@
+/**
+ * `gw-fade-in`: fades its content in after a delay.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#fading-in
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { fadeEasing, fadeIn, motionDuration, reducedMotion } from "./motion.js";
 

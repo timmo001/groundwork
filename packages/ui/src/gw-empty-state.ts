@@ -1,3 +1,9 @@
+/**
+ * `gw-empty-state`: what a list or page shows when there's nothing in it.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#empty-state
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 

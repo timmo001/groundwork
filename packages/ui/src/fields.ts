@@ -1,3 +1,9 @@
+/**
+ * What the form fields share: the light DOM base and the styles for labels,
+ * hints, errors and the select's trigger and list.
+ *
+ * @module
+ */
 import { GwElement, css } from "./element.js";
 
 /**

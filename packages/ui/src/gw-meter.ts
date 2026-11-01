@@ -1,3 +1,9 @@
+/**
+ * `gw-meter`: a labeled bar for a value in a range.
+ * Docs: https://groundwork.timmo.dev/components/display/#meter
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";

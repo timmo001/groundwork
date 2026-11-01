@@ -1,3 +1,10 @@
+/**
+ * `gw-skeleton` and its text, lines and icon shapes: placeholders for what's
+ * loading.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#loading
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 

@@ -1,3 +1,9 @@
+/**
+ * `gw-expansion`: a heading that opens and closes the content under it.
+ * Docs: https://groundwork.timmo.dev/components/display/#expansion-panel
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 

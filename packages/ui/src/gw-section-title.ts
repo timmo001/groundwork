@@ -1,3 +1,9 @@
+/**
+ * `gw-section-title`: a heading for a section of a page.
+ * Docs: https://groundwork.timmo.dev/components/layout/#page-header-and-section-title
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 

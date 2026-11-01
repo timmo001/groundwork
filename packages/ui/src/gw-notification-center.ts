@@ -1,3 +1,9 @@
+/**
+ * `gw-notification-center`: where notifications wait until they're dealt with.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#notifications
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import "./gw-button.js";
 import "./gw-empty-state.js";

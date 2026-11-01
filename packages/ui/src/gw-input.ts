@@ -1,3 +1,9 @@
+/**
+ * `gw-input`: a labeled native input in light DOM.
+ * Docs: https://groundwork.timmo.dev/components/inputs/#input
+ *
+ * @module
+ */
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";

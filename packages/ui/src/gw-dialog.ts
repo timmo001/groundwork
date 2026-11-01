@@ -1,3 +1,9 @@
+/**
+ * `gw-dialog`: a modal on the native `<dialog>`, for what blocks the whole app.
+ * Docs: https://groundwork.timmo.dev/components/overlays/#dialog
+ *
+ * @module
+ */
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h } from "./element.js";
 import "./gw-button.js";

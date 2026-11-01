@@ -1,3 +1,9 @@
+/**
+ * `gw-gauge`: a reading on a dial.
+ * Docs: https://groundwork.timmo.dev/components/display/#gauge
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";

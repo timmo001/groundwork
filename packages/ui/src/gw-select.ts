@@ -1,3 +1,9 @@
+/**
+ * `gw-select`: a labeled picker with search, a bottom sheet on phones.
+ * Docs: https://groundwork.timmo.dev/components/inputs/#select
+ *
+ * @module
+ */
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";

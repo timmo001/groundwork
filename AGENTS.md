@@ -15,6 +15,14 @@ document usage and development.
 - Use `mise run format` and `mise run check` for validation.
 - Put each package under `packages/<name>/`.
 - Use lowercase filenames, with kebab-case for multiword names.
+- Open each hand-written source file with a short header comment saying what
+  it is and, where it isn't obvious, why it's there: a `/** */` block before
+  the imports (after any shebang) in TypeScript, the file's own comment syntax
+  elsewhere. Component files name their element and docs page. Skip generated
+  files, data files and one-line configs.
+- Each element's class docstring documents its whole API for editor hovers and
+  the Custom Elements Manifest: `@element`, `@summary`, then `@attr` (with its
+  type), `@slot`, `@csspart`, `@cssprop` and `@fires` for each it has.
 - Docs, comments and user-facing text use US English (color, behavior,
   center), matching CSS and the token names.
 - Docs pages describe Groundwork on its own terms, never as taken from

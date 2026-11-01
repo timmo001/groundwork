@@ -1,3 +1,9 @@
+/**
+ * `gw-alert`: a message in the flow of the page.
+ * Docs: https://groundwork.timmo.dev/components/display/#alert
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base, type Tone } from "./styles.js";
 

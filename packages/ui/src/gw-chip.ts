@@ -1,3 +1,9 @@
+/**
+ * `gw-chip`: a short status or category, tinted by its tone.
+ * Docs: https://groundwork.timmo.dev/components/display/#chip-and-dot
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";

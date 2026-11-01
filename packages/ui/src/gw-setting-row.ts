@@ -1,3 +1,9 @@
+/**
+ * `gw-setting-row`: a setting's name and description beside its control.
+ * Docs: https://groundwork.timmo.dev/components/inputs/#setting-row
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";

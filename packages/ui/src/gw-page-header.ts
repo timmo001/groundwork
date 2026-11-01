@@ -1,3 +1,9 @@
+/**
+ * `gw-page-header`: a page's title, icon, description and actions.
+ * Docs: https://groundwork.timmo.dev/components/layout/#page-header-and-section-title
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 

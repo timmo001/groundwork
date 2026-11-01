@@ -1,3 +1,9 @@
+/**
+ * `gw-segmented`: picks one of a few options, as a row of radio buttons.
+ * Docs: https://groundwork.timmo.dev/components/actions/#segmented-control
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, createIcon } from "./styles.js";
 

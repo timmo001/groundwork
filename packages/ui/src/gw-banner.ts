@@ -1,3 +1,9 @@
+/**
+ * `gw-banner`: a slim bar for app-wide state, such as a lost connection.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#banner
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, type Tone } from "./styles.js";
 

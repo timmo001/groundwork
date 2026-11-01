@@ -1,3 +1,9 @@
+/**
+ * `gw-dot`: a small status dot.
+ * Docs: https://groundwork.timmo.dev/components/display/#chip-and-dot
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { base, type Tone } from "./styles.js";
 

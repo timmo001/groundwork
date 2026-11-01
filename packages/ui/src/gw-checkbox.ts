@@ -1,3 +1,9 @@
+/**
+ * `gw-checkbox` and `gw-switch`: labeled native checkboxes in light DOM.
+ * Docs: https://groundwork.timmo.dev/components/inputs/#checkbox-and-switch
+ *
+ * @module
+ */
 import { h, setAttribute } from "./element.js";
 import { LightElement, fieldId } from "./fields.js";
 

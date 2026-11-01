@@ -1,3 +1,9 @@
+/**
+ * `gw-card`: a surface for one group of content.
+ * Docs: https://groundwork.timmo.dev/components/display/#card
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { animateHeight, fadeIn } from "./motion.js";

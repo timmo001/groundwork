@@ -1,3 +1,9 @@
+/**
+ * `gw-toaster`: brief, non-interactive toasts in the bottom end corner.
+ * Docs: https://groundwork.timmo.dev/components/feedback/#toast
+ *
+ * @module
+ */
 import { GwElement, css, h } from "./element.js";
 import { fadeEasing, motionDuration, reducedMotion } from "./motion.js";
 import { base, type Tone } from "./styles.js";

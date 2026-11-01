@@ -1,3 +1,9 @@
+/**
+ * `gw-popover`: a small surface anchored to the button that opened it.
+ * Docs: https://groundwork.timmo.dev/components/overlays/#popover
+ *
+ * @module
+ */
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-button.js";

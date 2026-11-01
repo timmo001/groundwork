@@ -1,3 +1,9 @@
+/**
+ * `gw-badge`: a pill with an icon, a value and an optional label.
+ * Docs: https://groundwork.timmo.dev/components/display/#badge
+ *
+ * @module
+ */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
