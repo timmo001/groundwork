@@ -10,7 +10,7 @@ import {
   GwElement,
   h,
   type GwButton,
-  type GwDialog,
+  type GwPopover,
 } from "@timmo001/groundwork-ui";
 import { Effect, Exit, ManagedRuntime } from "effect";
 
@@ -67,41 +67,31 @@ export class GwDemoApp extends GwElement {
     "Apply all",
   );
 
-  readonly #dialog: GwDialog = h(
-    "gw-dialog",
-    { heading: "Restart now?" },
-    "The machine restarts to finish applying. Anything unsaved is lost.",
+  // Opens from Restart, as a confirmation tied to the button pressed
+  readonly #confirm: GwPopover = h(
+    "gw-popover",
+    { confirm: true },
     h(
-      "gw-button",
-      {
-        slot: "actions",
-        value: "cancel",
-        variant: "neutral",
-        appearance: "outlined",
-      },
-      "Cancel",
+      "p",
+      {},
+      "Restart now? The machine restarts to finish applying. Anything unsaved is lost.",
     ),
     h(
       "gw-button",
-      {
-        slot: "actions",
-        value: "restart",
-        variant: "danger",
-        appearance: "filled",
-      },
+      { slot: "actions", size: "small", value: "restart", variant: "danger" },
       "Restart",
     ),
   );
 
   protected override create(root: HTMLElement) {
     this.#restart.addEventListener("click", () => {
-      this.#dialog.open = true;
+      this.#confirm.show(this.#restart);
     });
 
     this.#applyAll.addEventListener("click", () => void this.#applyPending());
 
-    this.#dialog.addEventListener("close", () => {
-      if (this.#dialog.returnValue === "restart") void this.#restartNow();
+    this.#confirm.addEventListener("close", () => {
+      if (this.#confirm.returnValue === "restart") void this.#restartNow();
     });
 
     root.append(
@@ -121,7 +111,7 @@ export class GwDemoApp extends GwElement {
         h("div", { slot: "actions" }, this.#applyAll),
         this.#list,
       ),
-      this.#dialog,
+      this.#confirm,
     );
 
     void this.#refresh();
