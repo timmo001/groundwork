@@ -1076,7 +1076,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .alert { display: flex; gap: var(--gw-space-2); align-items: flex-start; padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); background: var(--gw-tone-fill, var(--gw-color-fill-info-quiet)); border: var(--gw-border-width) solid var(--gw-tone-border, var(--gw-color-border-info)); border-inline-start-width: calc(var(--gw-border-width) * 4); border-radius: var(--gw-radius-control); } ::slotted(p) { margin: 0; } ::slotted([slot=\"actions\"]) { align-self: center; } ::slotted([slot=\"icon\"]) { color: var(--gw-tone, var(--gw-color-info)); } .body { flex: 1; min-width: 0; } strong { display: block; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } `, ]",
+              "default": "[ base, css` :host { display: block; } .alert { display: flex; gap: var(--gw-space-2); align-items: flex-start; padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); background: var(--gw-tone-fill, var(--gw-color-fill-info-quiet)); border: var(--gw-border-width) solid var(--gw-tone-border, var(--gw-color-border-info)); border-inline-start-width: calc(var(--gw-border-width) * 4); border-radius: var(--gw-radius-control); } ::slotted(p) { margin: 0; } ::slotted([slot=\"actions\"]) { align-self: center; } ::slotted([slot=\"icon\"]), .icon { flex: none; color: var(--gw-tone, var(--gw-color-info)); } .body { flex: 1; min-width: 0; } strong { display: block; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1115,6 +1115,12 @@
             {
               "kind": "field",
               "name": "#heading",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#icon",
               "privacy": "private",
               "readonly": true
             },
