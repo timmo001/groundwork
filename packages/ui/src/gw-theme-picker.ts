@@ -228,8 +228,8 @@ export class GwThemePicker extends GwElement {
   readonly #controls = h(
     "div",
     { class: "controls", part: "controls" },
-    this.#mode,
     this.#theme,
+    this.#mode,
     this.#gallery,
     this.#status,
   );
@@ -310,8 +310,8 @@ export class GwThemePicker extends GwElement {
 
     if (inline) {
       this.#controls.replaceChildren(
-        this.#mode,
         this.#theme,
+        this.#mode,
         this.#gallery,
         this.#status,
       );
@@ -344,16 +344,17 @@ export class GwThemePicker extends GwElement {
     const mode = auto && this.#fits.mode;
     const theme = mode && this.#fits.theme;
 
+    // The theme comes before the mode, in place and in the popover
     if (mode && this.#mode.parentNode !== root) {
       root.insertBefore(this.#mode, this.#button);
     } else if (!mode && this.#mode.parentNode !== this.#controls) {
-      this.#controls.prepend(this.#mode);
+      this.#controls.insertBefore(this.#mode, this.#gallery);
     }
 
     if (theme && this.#theme.parentNode !== root) {
-      root.insertBefore(this.#theme, this.#button);
+      root.insertBefore(this.#theme, this.#mode);
     } else if (!theme && this.#theme.parentNode !== this.#controls) {
-      this.#controls.insertBefore(this.#theme, this.#gallery);
+      this.#controls.prepend(this.#theme);
     }
 
     this.#mode.labels = mode ? "hide" : "show";
@@ -402,7 +403,7 @@ export class GwThemePicker extends GwElement {
     if (theme && this.#theme.parentNode !== root) {
       this.#theme.inlineLabel = true;
       this.#theme.labelHidden = false;
-      root.insertBefore(this.#theme, this.#button);
+      root.insertBefore(this.#theme, this.#mode);
     }
 
     // Drawn in place before measuring, still before the next paint

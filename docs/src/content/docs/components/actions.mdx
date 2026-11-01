@@ -241,7 +241,7 @@ Options can carry an icon as path data. `labels="auto"` shows the text on wide s
   <gw-theme-picker theme="base" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"}]'></gw-theme-picker>
 </Demo>
 
-The page's look, for an app bar's `actions` slot: the mode (auto, light, dark or Darker), the theme, an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset. With fewer than two themes, such as a site with one theme of its own, the theme select hides until someone imports one.
+The page's look, for an app bar's `actions` slot: the theme, the mode (auto, light, dark or Darker), an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset. With fewer than two themes, such as a site with one theme of its own, the theme select hides until someone imports one.
 
 While there's room, the mode shows in place as icons and the theme as a select, with Import and Reset behind a more button. As the room runs out, the theme moves into that button's popover first, then the mode, until only a palette button is left. Narrow the window to watch it in the [page header](/components/layout/#page-header-and-section-title), which keeps room for the title before the actions. `layout="popover"` keeps everything behind the palette button from the start.
 

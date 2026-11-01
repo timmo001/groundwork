@@ -10,15 +10,14 @@
   </head>
   <body>
     <gw-app-bar>
-      <a slot="brand" class="brand" href="https://groundwork.timmo.dev/">
+      <span slot="brand" class="brand">
         <svg viewBox="0 0 64 64" aria-hidden="true">
           <rect x="20" y="13" width="24" height="9" rx="2" opacity="0.5" />
           <rect x="12" y="27.5" width="40" height="9" rx="2" opacity="0.75" />
           <rect x="4" y="42" width="56" height="9" rx="2" />
         </svg>
         Groundwork
-      </a>
-      <gw-theme-picker slot="actions"></gw-theme-picker>
+      </span>
       <gw-button
         slot="actions"
         appearance="plain"
@@ -37,6 +36,7 @@
         href="https://github.com/timmo001/groundwork"
         >GitHub</gw-button
       >
+      <gw-theme-picker slot="actions"></gw-theme-picker>
     </gw-app-bar>
     <main>
       <gw-demo-app></gw-demo-app>

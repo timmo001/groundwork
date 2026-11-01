@@ -139,6 +139,15 @@ export class GwDemoApp extends GwElement {
 
     this.#applyAll.disabled = pending === 0;
 
+    // The status always holds one alert, so a result replaces it in place
+    if (this.#status.childElementCount === 0) {
+      this.#show(
+        "info",
+        pending === 0 ? "Up to date" : `${pending} waiting`,
+        `${items.length} items checked.`,
+      );
+    }
+
     this.#list.replaceChildren(
       ...items.map((item) => {
         const control = item.pending
