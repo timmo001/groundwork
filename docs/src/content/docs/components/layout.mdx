@@ -16,19 +16,66 @@ description: App bars, pages, page headers, section titles, stacks, rows and gri
 
 A site or app header pinned to the top of the page: a brand in the `brand` slot, nav links in the default slot and icon buttons in `actions`. It runs the full width of the page with its content kept to `--gw-content-width`, and stays transparent until the page scrolls; then it gets a blurred surface and a bottom border, and sets `floating`.
 
-For a page that opens with a hero, set `reveal-after` to a selector for it, such as `[data-hero]`. The bar then stays transparent and hides its brand until the hero scrolls out from under it, so the hero's large logo hands over to the bar's small one. `overlay` lays the bar over the top of the page instead of taking room, so the hero starts at the very top.
+For a page that opens with a hero, set `reveal-after` to a selector for it, such as `[data-hero]`. The bar then stays transparent and hides its brand until the hero scrolls out from under it, so the hero's large logo hands over to the bar's small one. A hidden brand takes no room: the nav starts at the edge, then slides over as the brand opens. `overlay` lays the bar over the top of the page instead of taking room, so the hero starts at the very top.
 
-Below 600px wide the nav moves into a menu opened from a button, which closes on Esc, a click outside or picking a link. `menu-label` names that button.
+Below `menu-below`, 600px wide by default, the nav moves into a menu opened from a button, which closes on Esc, a click outside or picking a link. The bar sets `collapsed` while it does. The button leads, with the brand beside it. `menu-label` names that button. Raise `menu-below` when the nav and the actions need more room than a row has, so the actions stay in the bar while the nav folds away.
+
+### Nav and icon links
+
+Nav links and icon links in `actions` are `gw-button`s with a plain `<a>` inside, so the links are in the page's HTML, for crawlers and `rel="me"`. `aria-current="page"` marks the page you're on:
+
+<Demo id="app-bar-links" layout="stack">
+  <gw-app-bar style="position: relative" menu-label="Main navigation">
+    <strong slot="brand">Timmo</strong>
+    <gw-button variant="neutral" appearance="plain"><a href="#app-bar-links" aria-current="page">About</a></gw-button>
+    <gw-button variant="neutral" appearance="plain"><a href="#app-bar-links">Projects</a></gw-button>
+    <gw-button variant="neutral" appearance="plain"><a href="#app-bar-links">Stats</a></gw-button>
+    <gw-button slot="actions" variant="neutral" appearance="plain" labels="hide" icon="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"><a href="https://github.com/timmo001" rel="me" target="_blank">GitHub profile</a></gw-button>
+    <gw-button slot="actions" variant="neutral" appearance="plain" labels="hide" icon="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"><a href="mailto:hello@example.com">Email</a></gw-button>
+    <gw-theme-picker slot="actions"></gw-theme-picker>
+  </gw-app-bar>
+</Demo>
+
+### With a hero
+
+A site whose pages open with a hero, with a nav too long to share a row with its icon links below 1024px:
 
 ```html
-<gw-app-bar reveal-after="[data-hero]" overlay>
+<gw-app-bar reveal-after="[data-hero]" overlay menu-below="1024">
   <a slot="brand" href="/"><img src="/logo.svg" alt="Home" /></a>
-  <a href="/projects">Projects</a>
-  <a href="/stats">Stats</a>
+  <gw-button variant="neutral" appearance="plain">
+    <a href="/" aria-current="page">About</a>
+  </gw-button>
+  <gw-button variant="neutral" appearance="plain">
+    <a href="/projects">Projects</a>
+  </gw-button>
+  <div slot="actions">
+    <gw-button variant="neutral" appearance="plain" labels="hide" icon="…">
+      <a href="https://github.com/you" rel="me" target="_blank">GitHub</a>
+    </gw-button>
+  </div>
   <gw-theme-picker slot="actions"></gw-theme-picker>
 </gw-app-bar>
-<section data-hero>…</section>
+<header data-hero>…</header>
 ```
+
+### Lining up with the page
+
+The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` either side. Give the page's own content the same box and the two line up at every width. Set `--gw-content-width` to change the width for both:
+
+```css
+:root {
+  --gw-content-width: min(87.5rem, 100vw - 6rem);
+}
+
+.content {
+  box-sizing: border-box;
+  width: min(100% - 2 * var(--gw-space-3), var(--gw-content-width));
+  margin-inline: auto;
+}
+```
+
+The `.content` element's parent must span the page, as the bar does.
 
 ## Page header and section title
 
