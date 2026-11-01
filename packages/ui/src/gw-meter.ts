@@ -18,12 +18,14 @@ import { base, type Tone } from "./styles.js";
  * @summary A labeled bar for a value in a range.
  *
  * @attr {string} label - What it measures.
- * @attr {number} value - The value. Defaults to 0.
+ * @attr {number} value - The value. Defaults to 0. Leave it unset or `NaN` for an unknown value, shown as `-` with an empty bar.
  * @attr {number} min - The bottom of the range. Defaults to 0.
  * @attr {number} max - The top of the range. Defaults to 100.
  * @attr {number} high - Past this it turns warning.
  * @attr {number} critical - Past this it turns danger.
+ * @attr {boolean} inverted - Lower is worse, such as for a battery: at or below `high` it turns warning, and at or below `critical` danger.
  * @attr {string} display - The value as shown, such as `42 GB`. Defaults to a percentage.
+ * @attr {string} caption - A quiet line under the bar.
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - A fixed color, overriding `high` and `critical`.
  * @attr {boolean} loading - Pulses the track and shows a skeleton for the value.
  *
@@ -31,6 +33,9 @@ import { base, type Tone } from "./styles.js";
  * @csspart value - The value as shown.
  * @csspart track - The bar's track.
  * @csspart fill - The filled part of the bar.
+ * @csspart caption - The line under the bar.
+ *
+ * @cssprop --gw-meter-height - The bar's height. Defaults to `0.5rem`.
  */
 export class GwMeter extends GwElement {
   static override properties = {
@@ -40,7 +45,9 @@ export class GwMeter extends GwElement {
     max: { type: "number" },
     high: { type: "number" },
     critical: { type: "number" },
+    inverted: { type: "boolean" },
     display: {},
+    caption: {},
     tone: { reflect: true },
     loading: { type: "boolean", reflect: true },
   } as const;
@@ -66,7 +73,7 @@ export class GwMeter extends GwElement {
       }
 
       .track {
-        height: 0.5rem;
+        height: var(--gw-meter-height, 0.5rem);
         overflow: hidden;
         background: var(--gw-color-surface-lower);
         border: var(--gw-border-width) solid var(--gw-color-border-quiet);
@@ -82,19 +89,35 @@ export class GwMeter extends GwElement {
 
       .bar {
         min-height: 0;
-        height: 0.5rem;
+        height: var(--gw-meter-height, 0.5rem);
         --gw-skeleton-radius: var(--gw-radius-pill);
+      }
+
+      .caption {
+        display: block;
+        margin-block-start: var(--gw-space-1);
+        overflow: hidden;
+        font-size: var(--gw-font-size-xs);
+        color: var(--gw-color-text-secondary);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .caption[hidden] {
+        display: none;
       }
     `,
   ];
 
   declare label: string;
-  declare value: number;
+  declare value: number | undefined;
   declare min: number;
   declare max: number;
   declare high: number | undefined;
   declare critical: number | undefined;
+  declare inverted: boolean;
   declare display: string;
+  declare caption: string;
   declare tone: Tone | undefined;
   declare loading: boolean;
 
@@ -126,6 +149,8 @@ export class GwMeter extends GwElement {
 
   readonly #bar = h("gw-skeleton", { class: "bar" });
 
+  readonly #caption = h("span", { class: "caption", part: "caption" });
+
   #rendered = false;
 
   constructor() {
@@ -136,21 +161,33 @@ export class GwMeter extends GwElement {
     this.max = 100;
     this.high = undefined;
     this.critical = undefined;
+    this.inverted = false;
     this.display = "";
+    this.caption = "";
     this.tone = undefined;
     this.loading = false;
+  }
+
+  get #known() {
+    return this.value !== undefined && Number.isFinite(this.value)
+      ? this.value
+      : undefined;
+  }
+
+  #worse(limit: number | undefined) {
+    const value = this.#known;
+
+    if (limit === undefined || value === undefined) return false;
+
+    return this.inverted ? value <= limit : value >= limit;
   }
 
   get #color() {
     if (this.tone !== undefined) return "var(--gw-tone)";
 
-    if (this.critical !== undefined && this.value >= this.critical) {
-      return "var(--gw-color-danger)";
-    }
+    if (this.#worse(this.critical)) return "var(--gw-color-danger)";
 
-    if (this.high !== undefined && this.value >= this.high) {
-      return "var(--gw-color-warning)";
-    }
+    if (this.#worse(this.high)) return "var(--gw-color-warning)";
 
     return "var(--gw-color-fill-accent-resting)";
   }
@@ -161,18 +198,21 @@ export class GwMeter extends GwElement {
       this.#value,
       this.#valueSkeleton,
     );
-    root.append(this.#top, this.#track, this.#bar);
+    root.append(this.#top, this.#track, this.#bar, this.#caption);
   }
 
   protected override update(changed: ReadonlySet<string>) {
+    const value = this.#known;
+
     const span = this.max - this.min || 1;
 
-    const percent = Math.min(
-      100,
-      Math.max(0, ((this.value - this.min) / span) * 100),
-    );
+    const percent =
+      value === undefined
+        ? 0
+        : Math.min(100, Math.max(0, ((value - this.min) / span) * 100));
 
-    const text = this.display || `${Math.round(percent)}%`;
+    const text =
+      this.display || (value === undefined ? "-" : `${Math.round(percent)}%`);
 
     setAttribute(this.#top, "aria-busy", this.loading ? "true" : null);
     this.#label.textContent = this.label;
@@ -182,16 +222,24 @@ export class GwMeter extends GwElement {
     this.#valueSkeleton.hidden = !this.loading;
     this.#track.hidden = this.loading;
     this.#bar.hidden = !this.loading;
+    this.#caption.textContent = this.caption;
+    this.#caption.hidden = this.loading || this.caption === "";
     setAttribute(this.#track, "aria-label", this.label || null);
     setAttribute(this.#track, "aria-valuemin", this.min);
     setAttribute(this.#track, "aria-valuemax", this.max);
-    setAttribute(this.#track, "aria-valuenow", this.value);
-    setAttribute(this.#track, "aria-valuetext", text);
+    // A meter needs a value; when it's unknown, the text says so
+    setAttribute(this.#track, "aria-valuenow", value ?? this.min);
+    setAttribute(
+      this.#track,
+      "aria-valuetext",
+      value !== undefined || this.display !== "" ? text : "Unknown",
+    );
     this.#fill.style.width = `${percent}%`;
     this.#fill.style.setProperty("--gw-meter-color", this.#color);
 
     if (this.#rendered && changed.has("loading") && !this.loading) {
       fadeIn(this.#value);
+      fadeIn(this.#caption);
     }
 
     this.#rendered = true;

@@ -131,6 +131,14 @@ Label and value pairs as a description list. Set `items` to `[{ "label", "value"
 
 A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it turns warning and past `critical` danger, unless a `tone` is set. `display` replaces the percentage shown beside the label.
 
+<Demo id="meter-caption" layout="stack">
+  <gw-meter label="/" value="64" high="80" critical="95" display="410 of 640 GB" caption="/dev/nvme0n1p2 · ext4"></gw-meter>
+  <gw-meter label="Battery" value="18" inverted high="20" critical="10" display="18%" caption="Discharging"></gw-meter>
+  <gw-meter label="Swap" display="-" caption="Not reported"></gw-meter>
+</Demo>
+
+`caption` adds a quiet line under the bar. With `inverted`, lower is worse: at or below `high` it turns warning, and at or below `critical` danger, for a battery. Leave `value` unset (or `NaN` from a property) for an unknown reading, shown as `-` with an empty bar. Set the bar's height with `--gw-meter-height`.
+
 ## Gauge
 
 <Demo id="gauge">
