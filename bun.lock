@@ -141,9 +141,6 @@
     },
     "packages/ui": {
       "name": "@groundwork/ui",
-      "dependencies": {
-        "lit": "3.3.3",
-      },
       "devDependencies": {
         "@oxlint/plugins": "1.90.0",
         "@timmo001/oxlint-rules": "0.6.3",
