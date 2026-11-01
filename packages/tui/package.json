@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-tui",
-  "version": "0.9.22",
+  "version": "0.9.23",
   "description": "Groundwork's terminal components: OpenTUI renderables on the terminal tokens",
   "license": "Apache-2.0",
   "type": "module",
