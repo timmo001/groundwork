@@ -134,6 +134,20 @@ export class SubmenuView {
     this.root.visible = visible;
   }
 
+  /** Reload the current menu's items in place, keeping the selected row */
+  refresh(): void {
+    const items = submenus.get(this.currentMenuId);
+
+    if (!items) return;
+
+    const selectedId = this.menuList.getSelectedItem()?.id;
+
+    this.menuList.setItems(items);
+    this.menuList.setSelectedIndex(
+      items.findIndex((entry) => entry.id === selectedId),
+    );
+  }
+
   /** Give keyboard focus to the menu list */
   focus(): void {
     this.menuList.focus();

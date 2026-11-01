@@ -8,8 +8,9 @@
 import { createCliRenderer } from "@opentui/core";
 import { Cause, Effect, Exit } from "effect";
 import { parseFlags, printHelp, resolveSubcommand } from "./flags.js";
-import { menuItemsById } from "./menu.js";
+import { menuItemsById, registerUpdates } from "./menu.js";
 import { createCommandRunner } from "./services/command-runner.js";
+import { createItemsRunner } from "./services/items.js";
 import { loadTheme } from "./theme.js";
 import { App } from "./tui/app.js";
 import { Toast } from "./tui/toast.js";
@@ -60,12 +61,15 @@ const program = Effect.gen(function* () {
 
   const toast = new Toast(renderer, theme);
   const commandRunner = createCommandRunner(renderer, toast);
+  const itemsRunner = createItemsRunner(toast);
+
+  registerUpdates(yield* Effect.promise(() => itemsRunner.list()));
 
   // The app builds its views on the renderer, which keeps them alive
   yield* Effect.sync(
     () =>
       new App(
-        { renderer, theme, commandRunner },
+        { renderer, theme, commandRunner, itemsRunner },
         { title: "TUI menu", subtitle: "Groundwork template", executeItemId },
       ),
   );

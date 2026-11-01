@@ -4,6 +4,7 @@
  *
  * @module
  */
+import type { Item } from "@timmo001/groundwork-demo";
 import type { MenuItem, MenuVariant, NotifyConfig } from "./types.js";
 
 // --- Helpers ---
@@ -43,6 +44,16 @@ function submenu(menuId: string): MenuItem["action"] {
 // --- Main menu ---
 
 const mainItems: readonly MenuItem[] = [
+  item(
+    "updates",
+    "󰚰",
+    "Updates",
+    "Apply the demo's pending items, or restart",
+    submenu("updates"),
+    undefined,
+    ["apply", "status", "restart", "items", ":up"],
+  ),
+
   item(
     "greet",
     "󰱫",
@@ -265,6 +276,7 @@ export const submenus: Map<string, readonly MenuItem[]> = new Map([
 
 /** Display titles for submenu breadcrumbs */
 export const submenuTitles: Map<string, string> = new Map([
+  ["updates", "Updates"],
   ["settings", "Settings"],
   ["settings.display", "Display"],
 ]);
@@ -276,6 +288,51 @@ function registerItems(items: readonly MenuItem[]): void {
   for (const m of items) {
     menuItemsById.set(m.id, m);
   }
+}
+
+/**
+ * Builds the Updates submenu from the `Items` service's list: one row per
+ * item, then apply all and restart. Call it again after each change.
+ */
+export function registerUpdates(items: readonly Item[]): void {
+  const pending = items.filter((entry) => entry.pending).length;
+
+  const updateItems: readonly MenuItem[] = [
+    ...items.map((entry) =>
+      item(
+        `updates.${entry.id}`,
+        entry.pending ? "󰚰" : "󰄬",
+        entry.name,
+        entry.pending
+          ? `${entry.current} → ${entry.available}: ${entry.description}`
+          : `${entry.current}, up to date: ${entry.description}`,
+        { type: "apply", itemId: entry.id },
+        undefined,
+        [entry.id],
+      ),
+    ),
+    item(
+      "updates.all",
+      "󰇚",
+      "Apply all",
+      pending === 0 ? "Nothing to apply" : `Apply ${pending} pending updates`,
+      { type: "apply", itemId: undefined },
+      undefined,
+      ["all", ":all"],
+    ),
+    item(
+      "updates.restart",
+      "󰜉",
+      "Restart",
+      "Restart the system the items belong to",
+      { type: "restart" },
+      undefined,
+      ["reboot", ":restart"],
+    ),
+  ];
+
+  submenus.set("updates", updateItems);
+  registerItems(updateItems);
 }
 
 registerItems(mainItems);

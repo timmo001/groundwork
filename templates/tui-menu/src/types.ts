@@ -60,6 +60,17 @@ export interface QuitAction {
   readonly type: "quit";
 }
 
+/** Action that applies one item, or every pending item without an id */
+export interface ApplyAction {
+  readonly type: "apply";
+  readonly itemId: string | undefined;
+}
+
+/** Action that restarts the system the items belong to */
+export interface RestartAction {
+  readonly type: "restart";
+}
+
 /** Discriminated union of all possible menu item actions */
 export type MenuAction =
   | CommandAction
@@ -67,7 +78,9 @@ export type MenuAction =
   | NotifyAction
   | ViewAction
   | SubmenuAction
-  | QuitAction;
+  | QuitAction
+  | ApplyAction
+  | RestartAction;
 
 /** A selectable variant for a menu item offering an alternative action */
 export interface MenuVariant {

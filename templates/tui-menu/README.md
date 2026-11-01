@@ -12,6 +12,7 @@ From the repository root, `mise run demo:tui` runs it.
 
 What it shows:
 
+- The demo app's Updates menu on the shared `Items` service (`@timmo001/groundwork-demo`), with fixture data: apply one item or all of them, or restart, with a toast for each result. Swap `Items.fixture` in `src/services/items.ts` for the real system's layer.
 - Fuzzy type-to-filter search, with weighted keys and keyword aliases.
 - Nested submenus with a breadcrumb trail, and a popup for items with variants.
 - Commands run suspended (with the terminal handed over), silently in the background, or with toasts for progress and result.

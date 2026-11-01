@@ -6,8 +6,9 @@
 import type { CliRenderer } from "@opentui/core";
 import type { ViewId, MenuItem, MenuAction } from "../types.js";
 import type { Theme } from "../theme.js";
-import { menuItemsById } from "../menu.js";
+import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
+import type { ItemsRunnerService } from "../services/items.js";
 import { MainMenu } from "./main-menu.js";
 import { SubmenuView } from "./submenu-view.js";
 import { VariantPopup } from "./variant-popup.js";
@@ -38,12 +39,15 @@ export interface AppDeps {
   readonly theme: Theme;
   /** Service for running shell commands with suspend/resume */
   readonly commandRunner: CommandRunnerService;
+  /** Service for the demo's `Items` operations */
+  readonly itemsRunner: ItemsRunnerService;
 }
 
 /** Top-level TUI application shell managing a view stack and global keyboard */
 export class App {
   private renderer: CliRenderer;
   private commandRunner: CommandRunnerService;
+  private itemsRunner: ItemsRunnerService;
   private mainMenu: MainMenu;
   private submenuView: SubmenuView;
   private variantPopup: VariantPopup;
@@ -54,6 +58,7 @@ export class App {
   constructor(deps: AppDeps, options: AppOptions = {}) {
     this.renderer = deps.renderer;
     this.commandRunner = deps.commandRunner;
+    this.itemsRunner = deps.itemsRunner;
     this.appTitle = options.title ?? "TUI menu";
 
     // --- Create views ---
@@ -246,7 +251,24 @@ export class App {
       case "quit":
         this.renderer.destroy();
         break;
+
+      case "apply":
+        void this.itemsRunner
+          .apply(action.itemId)
+          .then(() => this.refreshUpdates());
+        break;
+
+      case "restart":
+        void this.itemsRunner.restart();
+        break;
     }
+  }
+
+  /** Rebuild the Updates submenu from the latest list */
+  private async refreshUpdates(): Promise<void> {
+    registerUpdates(await this.itemsRunner.list());
+
+    if (this.activeView === "submenu") this.submenuView.refresh();
   }
 
   /** Restore keyboard focus to the currently active view */
