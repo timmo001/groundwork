@@ -50,7 +50,9 @@ export class GwDialog extends GwElement {
     css`
       dialog {
         width: min(32rem, calc(100vw - 2 * var(--gw-space-3)));
+        max-height: calc(100dvh - 2 * var(--gw-space-3));
         padding: 0;
+        overflow: hidden;
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-overlay);
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
@@ -87,6 +89,9 @@ export class GwDialog extends GwElement {
       }
 
       dialog[open] {
+        /* The heading and actions stay put while a long body scrolls */
+        display: flex;
+        flex-direction: column;
         scale: 1;
       }
 
@@ -117,7 +122,11 @@ export class GwDialog extends GwElement {
       }
 
       .body {
+        flex: 1 1 auto;
+        min-height: 0;
         padding: var(--gw-space-3) var(--gw-space-4);
+        overflow-y: auto;
+        overscroll-behavior: contain;
         font-size: var(--gw-font-size-s);
       }
 

@@ -252,9 +252,26 @@ export class GwSelect extends LightElement {
     const width = Math.max(rect.width, 224);
 
     popup.style.width = `${Math.min(width, window.innerWidth - 2 * gap)}px`;
+    this.#list.style.removeProperty("--gw-option-list-height");
 
     const below = window.innerHeight - rect.bottom - gap;
     const fitsBelow = below >= popup.offsetHeight || below >= rect.top;
+    const room = fitsBelow ? below - gap : rect.top - 2 * gap;
+
+    // A window that can't grow past the page, such as an extension's popup,
+    // would crop the list, so it scrolls within the room there is
+    if (popup.offsetHeight > room) {
+      const listbox = this.#list.shadowRoot?.querySelector('[role="listbox"]');
+
+      const rest =
+        popup.offsetHeight -
+        (listbox instanceof HTMLElement ? listbox.offsetHeight : 0);
+
+      this.#list.style.setProperty(
+        "--gw-option-list-height",
+        `${Math.max(room - rest, 96)}px`,
+      );
+    }
 
     popup.dataset.placement = fitsBelow ? "below" : "above";
     popup.style.top = `${fitsBelow ? rect.bottom + gap : Math.max(gap, rect.top - gap - popup.offsetHeight)}px`;

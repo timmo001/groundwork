@@ -64,6 +64,11 @@ export class GwPopover extends GwElement {
         inset: unset;
         box-sizing: border-box;
         width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px));
+        /* Never past the window, scrolling within it; placed popovers get
+           the room on their side of the button */
+        max-height: calc(100dvh - 2 * ${gap}px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
         padding: var(--gw-space-4);
         margin: 0;
         color: var(--gw-color-text-primary);
@@ -304,14 +309,20 @@ export class GwPopover extends GwElement {
     if (anchor === undefined || placement === "sheet") {
       popover.style.top = "";
       popover.style.left = "";
+      popover.style.maxHeight = "";
       popover.dataset.placement = placement;
 
       return;
     }
 
+    popover.style.maxHeight = "";
+
     const rect = anchor.getBoundingClientRect();
     const below = window.innerHeight - rect.bottom - gap;
     const fitsBelow = below >= popover.offsetHeight || below >= rect.top;
+    const room = fitsBelow ? below - gap : rect.top - 2 * gap;
+
+    if (popover.offsetHeight > room) popover.style.maxHeight = `${room}px`;
 
     // Lined up with the button's edge on its side of the screen, so the
     // popover opens toward the space rather than across the content

@@ -55,7 +55,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The trigger's size, 24 to 56px tall. Defaults to `medium`.
  * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the trigger is drawn: `filled` is a neutral fill with a border, and the others match a neutral `gw-button` of that appearance, so it sits in a row of them. Defaults to `filled`.
  * @attr {boolean} active - Marks the trigger as set, such as a grouping that's on, with an accent border and text.
- * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. Defaults to `show`.
+ * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not on narrow screens. Defaults to `show`.
  *
  * @csspart trigger - The button that opens the menu.
  *
@@ -163,9 +163,16 @@ export class GwMenuButton extends GwElement {
         border-color: var(--gw-color-accent);
       }
 
-      /* Icon only, square, with the text kept for assistive technology */
+      /* Icon only, square like an icon-only gw-button, such as a ⋮ for more
+         actions, with the text kept for assistive technology */
       :host([labels="hide"]) .trigger.has-icon {
-        padding: 0 calc(var(--gw-space-2) * var(--gw-size));
+        justify-content: center;
+        min-width: calc(2.5rem * var(--gw-scale));
+        padding: 0;
+      }
+
+      :host([labels="hide"]) .has-icon .chevron {
+        display: none;
       }
 
       :host([labels="hide"]) .has-icon .label {
@@ -210,17 +217,20 @@ export class GwMenuButton extends GwElement {
         translate: 0 0.125rem;
       }
 
+      /* Below the button down to the window's edge, or above it when there's
+         more room there, growing to its content and scrolling past that */
       [popover] {
         position-anchor: --gw-menu;
-        position-try-fallbacks: flip-block, flip-inline;
+        position-try-fallbacks: flip-inline;
+        /* The area is the room on that side, so 100% is all of it */
+        position-area: block-end span-inline-end;
         inset: auto;
-        top: anchor(bottom);
-        left: anchor(left);
         box-sizing: border-box;
         min-width: 15rem;
-        max-height: min(24rem, 60vh);
+        max-width: calc(100vw - 2 * var(--gw-space-2));
+        max-height: min(24rem, calc(100% - 2 * var(--gw-space-2)));
         padding: 0;
-        margin: var(--gw-space-1) 0 0;
+        margin: var(--gw-space-1) 0;
         overflow: hidden;
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-overlay);
@@ -429,7 +439,25 @@ export class GwMenuButton extends GwElement {
 
     this.#trigger.setAttribute("aria-expanded", String(expanded));
 
-    if (expanded) this.#buttons[0]?.focus();
+    if (!expanded) return;
+
+    // Below the button while the menu fits there or there's more room than
+    // above it; the area's height then caps the menu, which scrolls
+    const popover = this.#popover;
+    const rect = this.#trigger.getBoundingClientRect();
+    const below = window.innerHeight - rect.bottom;
+
+    popover.style.positionArea = "";
+
+    const items = this.#items;
+
+    const height =
+      popover.offsetHeight - items.clientHeight + items.scrollHeight;
+
+    const fitsBelow = below >= height + 16 || below >= rect.top;
+
+    popover.style.positionArea = fitsBelow ? "" : "block-start span-inline-end";
+    this.#buttons[0]?.focus({ preventScroll: true });
   };
 
   readonly #onKeydown = (event: KeyboardEvent) => {
