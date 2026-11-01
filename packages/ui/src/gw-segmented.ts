@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import { base, createIcon } from "./styles.js";
+import { base, controlSizes, createIcon } from "./styles.js";
 
 export interface Segment {
   readonly value: string;
@@ -31,9 +31,13 @@ export interface Segment {
  * @attr {string} value - The chosen option's value.
  * @attr {"show"|"hide"|"auto"} labels - Whether option text shows beside icons. Defaults to `show`.
  * @attr {Segment[]} options - The options, as JSON.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, 40px tall at medium. Defaults to `medium`.
  *
  * @csspart option - Each option.
  * @csspart indicator - The pill that slides to the chosen option.
+ *
+ * @cssprop --gw-segmented-scale - Scales the control, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height and icons with the theme's density. The theme sets it.
  *
  * @fires {Event} change - When the chosen option changes.
  */
@@ -44,12 +48,17 @@ export class GwSegmented extends GwElement {
     value: { reflect: true },
     labels: { reflect: true },
     options: { type: "json" },
+    size: { reflect: true },
   } as const;
 
   static override styles = [
     base,
+    controlSizes("segmented"),
     css`
       :host {
+        --gw-size: var(--gw-segmented-scale, 1);
+        --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1));
+
         display: inline-block;
       }
 
@@ -78,20 +87,21 @@ export class GwSegmented extends GwElement {
       label {
         position: relative;
         display: inline-flex;
-        gap: var(--gw-space-2);
+        gap: calc(var(--gw-space-2) * var(--gw-size));
         align-items: center;
         box-sizing: border-box;
-        /* 32px options in a 40px track, matching fields and buttons */
-        height: 2rem;
-        padding: 0 var(--gw-space-3);
-        font-size: var(--gw-font-size-s);
+        /* 32px options in a 40px track at medium, matching fields and
+           buttons */
+        height: calc(2rem * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-3) * var(--gw-size));
+        font-size: calc(var(--gw-font-size-s) * var(--gw-size));
         color: var(--gw-color-text-primary);
         cursor: pointer;
         background: transparent;
         border-radius: var(--gw-radius-pill);
         transition: background-color var(--gw-motion-fast)
           var(--gw-motion-easing);
-        --gw-icon-size: 1.125rem;
+        --gw-icon-size: calc(1.125rem * var(--gw-scale));
       }
 
       :host([labels="hide"]) label.has-icon {
@@ -188,6 +198,7 @@ export class GwSegmented extends GwElement {
   declare value: string;
   declare labels: "show" | "hide" | "auto";
   declare options: readonly Segment[];
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   constructor() {
     super();
@@ -196,6 +207,7 @@ export class GwSegmented extends GwElement {
     this.value = "";
     this.labels = "show";
     this.options = [];
+    this.size = "medium";
   }
 
   readonly #legend = h("legend");

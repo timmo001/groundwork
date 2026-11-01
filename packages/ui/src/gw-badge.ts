@@ -7,7 +7,13 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
-import { base, createIcon, setIconPath, type Tone } from "./styles.js";
+import {
+  base,
+  controlSizes,
+  createIcon,
+  setIconPath,
+  type Tone,
+} from "./styles.js";
 
 /**
  * A pill with an icon, a value and an optional small label above it. The
@@ -21,7 +27,7 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * @attr {string} icon - SVG path data for the icon.
  * @attr {string} label - A small label above the value.
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The icon's color. Defaults to `accent`.
- * @attr {"small"|"medium"} size - The size. Defaults to `medium`.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, around 36px tall at medium. Defaults to `medium`.
  * @attr {boolean} loading - Shows a skeleton for the value, and the icon if it has none.
  *
  * @slot - The value.
@@ -31,6 +37,8 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * @csspart value - The value.
  *
  * @cssprop --gw-tone - The icon's color, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-badge-scale - Scales the badge, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
  */
 export class GwBadge extends GwElement {
   static override properties = {
@@ -43,6 +51,7 @@ export class GwBadge extends GwElement {
 
   static override styles = [
     base,
+    controlSizes("badge"),
     css`
       :host {
         display: inline-flex;
@@ -50,30 +59,26 @@ export class GwBadge extends GwElement {
         vertical-align: middle;
       }
 
-      /* 36px tall, 12px padding, 8px between the 18px icon and the text */
+      /* 36px tall at medium, 12px padding, 8px between the 18px icon and
+         the text */
       .badge {
-        --gw-icon-size: 1.125rem;
+        --gw-size: var(--gw-badge-scale, 1);
+        --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1));
+        --gw-icon-size: calc(1.125rem * var(--gw-scale));
 
         display: inline-flex;
-        gap: var(--gw-space-2);
+        gap: calc(var(--gw-space-2) * var(--gw-size));
         align-items: center;
         box-sizing: border-box;
         max-width: 100%;
-        height: 2.25rem;
-        padding: 0 var(--gw-space-4) 0 var(--gw-space-3);
+        height: calc(2.25rem * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-4) * var(--gw-size)) 0
+          calc(var(--gw-space-3) * var(--gw-size));
         vertical-align: middle;
         color: var(--gw-color-text-strong);
         background: var(--gw-color-surface-raised);
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
         border-radius: var(--gw-radius-pill);
-      }
-
-      :host([size="small"]) .badge {
-        --gw-icon-size: 1rem;
-
-        gap: var(--gw-space-1);
-        height: 1.75rem;
-        padding: 0 var(--gw-space-3) 0 var(--gw-space-2);
       }
 
       .icon {
@@ -87,13 +92,19 @@ export class GwBadge extends GwElement {
       }
 
       .label {
-        font-size: var(--gw-font-size-2xs);
+        font-size: max(
+          var(--gw-font-size-2xs),
+          calc(var(--gw-font-size-2xs) * var(--gw-size))
+        );
         line-height: 1.1;
         color: var(--gw-color-text-secondary);
       }
 
       .content {
-        font-size: var(--gw-font-size-xs);
+        font-size: max(
+          var(--gw-font-size-2xs),
+          calc(var(--gw-font-size-xs) * var(--gw-size))
+        );
         font-weight: var(--gw-font-weight-strong);
         line-height: 1.2;
         white-space: nowrap;
@@ -108,7 +119,7 @@ export class GwBadge extends GwElement {
   declare icon: string;
   declare label: string;
   declare tone: Tone;
-  declare size: "small" | "medium";
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
   declare loading: boolean;
 
   readonly #badge = h("span", { class: "badge", part: "badge" });

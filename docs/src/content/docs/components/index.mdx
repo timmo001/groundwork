@@ -81,6 +81,28 @@ The same badge, as it comes and with an app's own shape: square corners, a tone 
 }
 ```
 
+## Sizes and density
+
+Controls share one set of sizes, `xs`, `small`, `medium`, `large` and `xl`, set with `size` on buttons, menu buttons, inputs, selects, segmented controls, chips, badges and setting rows. Each also has a `--gw-<element>-scale` property for any size in between, such as `--gw-badge-scale: 0.7`.
+
+Heights and icons also follow the theme's density through `--gw-control-scale`: 0.85 in compact themes, 1 in normal ones and 1.1 in roomy ones. Text and padding keep to the size alone, so a compact theme gets shorter controls without smaller words. Pick a compact or roomy theme to see these change:
+
+<Demo id="sizes">
+  <gw-badge size="xs" tone="success" icon="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z">xs</gw-badge>
+  <gw-badge size="small" tone="success" icon="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z">Small</gw-badge>
+  <gw-badge tone="success" icon="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z">Medium</gw-badge>
+  <gw-badge size="large" tone="success" icon="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z">Large</gw-badge>
+  <gw-badge size="xl" tone="success" icon="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z">xl</gw-badge>
+</Demo>
+
+<Demo id="sizes-fields">
+  <gw-row style="align-items: start">
+    <gw-input size="small" label="Small" placeholder="Search"></gw-input>
+    <gw-input label="Medium" placeholder="Search"></gw-input>
+    <gw-input size="large" label="Large" placeholder="Search"></gw-input>
+  </gw-row>
+</Demo>
+
 ## Using with Lit
 
 The elements work in Lit templates as they are. The package ships a Custom Elements Manifest, `custom-elements.json`, generated from each element's docs, so editors and `lit-analyzer` know every tag, attribute and its values:

@@ -8,6 +8,31 @@ import { css } from "./element.js";
 const svgNamespace = "http://www.w3.org/2000/svg";
 
 /**
+ * The `xs` to `xl` presets on a `size` attribute, as `--gw-<name>-scale`
+ * around 1 for medium, so an app can also set any size between or beyond
+ * them. A control multiplies its height and icon by `--gw-control-scale`
+ * too, which follows the theme's density, and its text only by its own
+ * scale, since spacing and type already follow density on their own.
+ */
+export const controlSizes = (name: string) => css`
+  :host([size="xs"]) {
+    --gw-${name}-scale: 0.6;
+  }
+
+  :host([size="small"]) {
+    --gw-${name}-scale: 0.8;
+  }
+
+  :host([size="large"]) {
+    --gw-${name}-scale: 1.2;
+  }
+
+  :host([size="xl"]) {
+    --gw-${name}-scale: 1.4;
+  }
+`;
+
+/**
  * What every component shares: box sizing, the focus ring, icons and the
  * tones that set `--gw-tone` from a `tone` attribute.
  */

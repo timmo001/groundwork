@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import { base, createIcon, setIconPath } from "./styles.js";
+import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
 /**
  * A native button styled through `--gw-*` variables, so it follows the
@@ -46,6 +46,7 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @csspart button - The native button or link, or the pill around a slotted link.
  *
  * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
  * @cssprop --gw-button-tone - The color, set by `variant`.
  * @cssprop --gw-button-ink - The text color, when it differs from the tone.
  */
@@ -71,30 +72,12 @@ export class GwButton extends GwElement {
 
   static override styles = [
     base,
+    controlSizes("button"),
     css`
       :host {
         --gw-button-tone: var(--gw-color-accent);
 
         display: inline-block;
-      }
-
-      /* Everything scales from --gw-button-scale, around a 40px medium
-         button: the presets give 24, 32, 48 and 56px, and an app can set any
-         value for a size between or beyond them */
-      :host([size="xs"]) {
-        --gw-button-scale: 0.6;
-      }
-
-      :host([size="small"]) {
-        --gw-button-scale: 0.8;
-      }
-
-      :host([size="large"]) {
-        --gw-button-scale: 1.2;
-      }
-
-      :host([size="xl"]) {
-        --gw-button-scale: 1.4;
       }
 
       :host([variant="neutral"]) {
@@ -119,18 +102,19 @@ export class GwButton extends GwElement {
       }
 
       .button {
-        --gw-scale: var(--gw-button-scale, 1);
+        --gw-size: var(--gw-button-scale, 1);
+        --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1));
         --gw-icon-size: calc(1.125rem * var(--gw-scale));
 
         position: relative;
         display: inline-flex;
-        gap: calc(var(--gw-space-2) * var(--gw-scale));
+        gap: calc(var(--gw-space-2) * var(--gw-size));
         align-items: center;
         justify-content: center;
         min-height: calc(2.5rem * var(--gw-scale));
-        padding: 0 calc(var(--gw-space-4) * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-4) * var(--gw-size));
         font: inherit;
-        font-size: calc(var(--gw-font-size-s) * var(--gw-scale));
+        font-size: calc(var(--gw-font-size-s) * var(--gw-size));
         font-weight: var(--gw-font-weight-strong);
         line-height: 1;
         color: var(--gw-button-ink, var(--gw-button-tone));

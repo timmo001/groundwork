@@ -2,6 +2,7 @@
 
 :root {
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -67,7 +68,7 @@ gw-button:not(:defined),
 gw-menu-button:not(:defined),
 gw-segmented:not(:defined) {
   display: inline-block;
-  min-block-size: 2.5rem;
+  min-block-size: calc(2.5rem * var(--gw-control-scale, 1));
   vertical-align: middle;
 }
 
@@ -75,30 +76,46 @@ gw-button:not(:defined) {
   padding-inline: calc(var(--gw-space-4) + 1px);
   font-size: var(--gw-font-size-s);
   font-weight: var(--gw-font-weight-strong);
-  line-height: 2.5rem;
+  line-height: calc(2.5rem * var(--gw-control-scale, 1));
   white-space: nowrap;
   text-transform: var(--gw-label-transform);
   letter-spacing: var(--gw-label-tracking);
 }
 
 gw-button[size="xs"]:not(:defined) {
-  min-block-size: 1.5rem;
-  line-height: 1.5rem;
+  min-block-size: calc(1.5rem * var(--gw-control-scale, 1));
+  line-height: calc(1.5rem * var(--gw-control-scale, 1));
 }
 
 gw-button[size="small"]:not(:defined) {
-  min-block-size: 2rem;
-  line-height: 2rem;
+  min-block-size: calc(2rem * var(--gw-control-scale, 1));
+  line-height: calc(2rem * var(--gw-control-scale, 1));
 }
 
 gw-button[size="large"]:not(:defined) {
-  min-block-size: 3rem;
-  line-height: 3rem;
+  min-block-size: calc(3rem * var(--gw-control-scale, 1));
+  line-height: calc(3rem * var(--gw-control-scale, 1));
 }
 
 gw-button[size="xl"]:not(:defined) {
-  min-block-size: 3.5rem;
-  line-height: 3.5rem;
+  min-block-size: calc(3.5rem * var(--gw-control-scale, 1));
+  line-height: calc(3.5rem * var(--gw-control-scale, 1));
+}
+
+gw-menu-button[size="xs"]:not(:defined) {
+  min-block-size: calc(1.5rem * var(--gw-control-scale, 1));
+}
+
+gw-menu-button[size="small"]:not(:defined) {
+  min-block-size: calc(2rem * var(--gw-control-scale, 1));
+}
+
+gw-menu-button[size="large"]:not(:defined) {
+  min-block-size: calc(3rem * var(--gw-control-scale, 1));
+}
+
+gw-menu-button[size="xl"]:not(:defined) {
+  min-block-size: calc(3.5rem * var(--gw-control-scale, 1));
 }
 
 gw-card:not(:defined) {
@@ -168,16 +185,44 @@ gw-button:not(:defined) > [slot="icon"] {
 
 gw-chip:not(:defined) {
   display: inline-flex;
-  min-block-size: 2rem;
+  min-block-size: calc(2rem * var(--gw-control-scale, 1));
+}
+
+gw-chip[size="xs"]:not(:defined) {
+  min-block-size: calc(1.2rem * var(--gw-control-scale, 1));
+}
+
+gw-chip[size="small"]:not(:defined) {
+  min-block-size: calc(1.6rem * var(--gw-control-scale, 1));
+}
+
+gw-chip[size="large"]:not(:defined) {
+  min-block-size: calc(2.4rem * var(--gw-control-scale, 1));
+}
+
+gw-chip[size="xl"]:not(:defined) {
+  min-block-size: calc(2.8rem * var(--gw-control-scale, 1));
 }
 
 gw-badge:not(:defined) {
   display: inline-flex;
-  min-block-size: 2.25rem;
+  min-block-size: calc(2.25rem * var(--gw-control-scale, 1));
+}
+
+gw-badge[size="xs"]:not(:defined) {
+  min-block-size: calc(1.35rem * var(--gw-control-scale, 1));
 }
 
 gw-badge[size="small"]:not(:defined) {
-  min-block-size: 1.75rem;
+  min-block-size: calc(1.8rem * var(--gw-control-scale, 1));
+}
+
+gw-badge[size="large"]:not(:defined) {
+  min-block-size: calc(2.7rem * var(--gw-control-scale, 1));
+}
+
+gw-badge[size="xl"]:not(:defined) {
+  min-block-size: calc(3.15rem * var(--gw-control-scale, 1));
 }
 
 gw-dot:not(:defined) {
@@ -211,19 +256,19 @@ gw-skeleton-icon:not(:defined) {
 gw-input:not(:defined),
 gw-select:not(:defined) {
   display: flex;
-  min-block-size: 4.5rem;
+  min-block-size: calc(2rem + calc(2.5rem * var(--gw-control-scale, 1)));
 }
 
 gw-input:is([hint]:not(:defined),
 [error]):not(:defined),
 gw-select:is([hint]:not(:defined),
 [error]):not(:defined) {
-  min-block-size: 6.25rem;
+  min-block-size: calc(3.75rem + calc(2.5rem * var(--gw-control-scale, 1)));
 }
 
 gw-select:is([label-hidden]:not(:defined),
 [inline-label]):not(:defined) {
-  min-block-size: 2.5rem;
+  min-block-size: calc(2.5rem * var(--gw-control-scale, 1));
 }
 
 gw-select[inline-label]:not(:defined) {
@@ -270,6 +315,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -524,6 +570,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1.2;
+  --gw-control-scale: 1.1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -778,6 +825,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 500;
   --gw-font-weight-strong: 700;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -1032,6 +1080,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -1286,6 +1335,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -1540,6 +1590,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 0.85;
+  --gw-control-scale: 0.85;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -1794,6 +1845,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -1994,6 +2046,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2090,6 +2143,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2290,6 +2344,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2490,6 +2545,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2690,6 +2746,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2786,6 +2843,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));
@@ -2986,6 +3044,7 @@ gw-option-list:not(:defined) {
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;
   --gw-density: 1;
+  --gw-control-scale: 1;
   --gw-space-0-5: calc(0.125rem * var(--gw-density));
   --gw-space-1: calc(0.25rem * var(--gw-density));
   --gw-space-2: calc(0.5rem * var(--gw-density));

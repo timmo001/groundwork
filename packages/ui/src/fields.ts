@@ -70,12 +70,37 @@ export const fieldStyles = css`
     fill: currentColor;
   }
 
+  /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and
+     the control's height follows the theme's density too */
+  :where(gw-input, gw-select)[size="xs"] {
+    --gw-field-scale: 0.6;
+  }
+
+  :where(gw-input, gw-select)[size="small"] {
+    --gw-field-scale: 0.8;
+  }
+
+  :where(gw-input, gw-select)[size="large"] {
+    --gw-field-scale: 1.2;
+  }
+
+  :where(gw-input, gw-select)[size="xl"] {
+    --gw-field-scale: 1.4;
+  }
+
   :where(gw-input, gw-select) :where(input, .gw-select-trigger) {
+    --gw-field-size: var(--gw-field-scale, 1);
+    --gw-icon-size: calc(
+      1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1)
+    );
+
     width: 100%;
-    min-height: 2.5rem;
-    padding: 0 var(--gw-space-3);
+    min-height: calc(
+      2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1)
+    );
+    padding: 0 calc(var(--gw-space-3) * var(--gw-field-size));
     font: inherit;
-    font-size: var(--gw-font-size-s);
+    font-size: calc(var(--gw-font-size-s) * var(--gw-field-size));
     color: var(--gw-color-text-strong);
     background: var(--gw-color-surface-lower);
     border: var(--gw-border-width) solid var(--gw-color-border-normal);
@@ -87,9 +112,9 @@ export const fieldStyles = css`
      room around it that turns over while the list is open */
   gw-select .gw-select-trigger {
     display: flex;
-    gap: var(--gw-space-2);
+    gap: calc(var(--gw-space-2) * var(--gw-field-size));
     align-items: center;
-    padding-inline-end: var(--gw-space-3);
+    padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size));
     text-align: start;
     cursor: pointer;
   }
@@ -110,7 +135,8 @@ export const fieldStyles = css`
 
   gw-select[inline-label] .gw-select-trigger {
     width: auto;
-    padding-inline: var(--gw-space-4) var(--gw-space-3);
+    padding-inline: calc(var(--gw-space-4) * var(--gw-field-size))
+      calc(var(--gw-space-3) * var(--gw-field-size));
     border-radius: var(--gw-radius-pill);
   }
 

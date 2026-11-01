@@ -62,6 +62,10 @@ const chevronIcon =
  * @attr {OptionItem[]} options - The options, as JSON.
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
  * @attr {boolean} inline-label - Shows the label inside the trigger, before the value, for toolbars and filters.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
+ *
+ * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
  *
  * @fires {Event} change - When the value, or `values` with `multiple`, changes.
  */
@@ -81,6 +85,7 @@ export class GwSelect extends LightElement {
     options: { type: "json" },
     labelHidden: { type: "boolean", attribute: "label-hidden" },
     inlineLabel: { type: "boolean", attribute: "inline-label", reflect: true },
+    size: { reflect: true },
   } as const;
 
   declare label: string;
@@ -99,6 +104,7 @@ export class GwSelect extends LightElement {
   declare options: readonly OptionItem[];
   declare labelHidden: boolean;
   declare inlineLabel: boolean;
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #id = fieldId();
 
@@ -172,6 +178,7 @@ export class GwSelect extends LightElement {
     this.options = [];
     this.labelHidden = false;
     this.inlineLabel = false;
+    this.size = "medium";
   }
 
   /** Opens the list, such as from a keyboard shortcut. */

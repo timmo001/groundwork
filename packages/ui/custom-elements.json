@@ -629,7 +629,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: var(--gw-space-2); align-items: center; padding-inline-end: var(--gw-space-3); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: var(--gw-space-4) var(--gw-space-3); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ gw-select .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } gw-select .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } gw-select .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } gw-select .gw-select-clear[hidden] { display: none; } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } `",
+          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ gw-select .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } gw-select .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } gw-select .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } gw-select .gw-select-clear[hidden] { display: none; } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -2097,6 +2097,14 @@
             {
               "description": "The icon's color, for a tone of your own. `tone` sets it.",
               "name": "--gw-tone"
+            },
+            {
+              "description": "Scales the badge, around 1 for medium.",
+              "name": "--gw-badge-scale"
+            },
+            {
+              "description": "Scales its height and icon with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
             }
           ],
           "cssParts": [
@@ -2140,7 +2148,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-flex; max-width: 100%; vertical-align: middle; } /* 36px tall, 12px padding, 8px between the 18px icon and the text */ .badge { --gw-icon-size: 1.125rem; display: inline-flex; gap: var(--gw-space-2); align-items: center; box-sizing: border-box; max-width: 100%; height: 2.25rem; padding: 0 var(--gw-space-4) 0 var(--gw-space-3); vertical-align: middle; color: var(--gw-color-text-strong); background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } :host([size=\"small\"]) .badge { --gw-icon-size: 1rem; gap: var(--gw-space-1); height: 1.75rem; padding: 0 var(--gw-space-3) 0 var(--gw-space-2); } .icon { color: var(--gw-tone, var(--gw-color-accent)); } .info { display: flex; flex-direction: column; min-width: 0; } .label { font-size: var(--gw-font-size-2xs); line-height: 1.1; color: var(--gw-color-text-secondary); } .content { font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); line-height: 1.2; white-space: nowrap; } .value { display: inline-block; } `, ]",
+              "default": "[ base, controlSizes(\"badge\"), css` :host { display: inline-flex; max-width: 100%; vertical-align: middle; } /* 36px tall at medium, 12px padding, 8px between the 18px icon and the text */ .badge { --gw-size: var(--gw-badge-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.125rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; max-width: 100%; height: calc(2.25rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)) 0 calc(var(--gw-space-3) * var(--gw-size)); vertical-align: middle; color: var(--gw-color-text-strong); background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } .icon { color: var(--gw-tone, var(--gw-color-accent)); } .info { display: flex; flex-direction: column; min-width: 0; } .label { font-size: max( var(--gw-font-size-2xs), calc(var(--gw-font-size-2xs) * var(--gw-size)) ); line-height: 1.1; color: var(--gw-color-text-secondary); } .content { font-size: max( var(--gw-font-size-2xs), calc(var(--gw-font-size-xs) * var(--gw-size)) ); font-weight: var(--gw-font-weight-strong); line-height: 1.2; white-space: nowrap; } .value { display: inline-block; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -2174,7 +2182,7 @@
               "kind": "field",
               "name": "size",
               "type": {
-                "text": "\"small\" | \"medium\""
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
               },
               "default": "\"medium\""
             },
@@ -2558,9 +2566,9 @@
             },
             {
               "type": {
-                "text": "\"small\"|\"medium\""
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
               },
-              "description": "The size. Defaults to `medium`.",
+              "description": "The size, around 36px tall at medium. Defaults to `medium`.",
               "name": "size"
             },
             {
@@ -3059,6 +3067,10 @@
               "name": "--gw-button-scale"
             },
             {
+              "description": "Scales its height and icon with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            },
+            {
               "description": "The color, set by `variant`.",
               "name": "--gw-button-tone"
             },
@@ -3118,7 +3130,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { --gw-button-tone: var(--gw-color-accent); display: inline-block; } /* Everything scales from --gw-button-scale, around a 40px medium button: the presets give 24, 32, 48 and 56px, and an app can set any value for a size between or beyond them */ :host([size=\"xs\"]) { --gw-button-scale: 0.6; } :host([size=\"small\"]) { --gw-button-scale: 0.8; } :host([size=\"large\"]) { --gw-button-scale: 1.2; } :host([size=\"xl\"]) { --gw-button-scale: 1.4; } :host([variant=\"neutral\"]) { --gw-button-tone: var(--gw-color-text-secondary); --gw-button-ink: var(--gw-color-text-strong); } :host([variant=\"info\"]) { --gw-button-tone: var(--gw-color-info); } :host([variant=\"success\"]) { --gw-button-tone: var(--gw-color-success); } :host([variant=\"warning\"]) { --gw-button-tone: var(--gw-color-warning); } :host([variant=\"danger\"]) { --gw-button-tone: var(--gw-color-danger); } .button { --gw-scale: var(--gw-button-scale, 1); --gw-icon-size: calc(1.125rem * var(--gw-scale)); position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-scale)); align-items: center; justify-content: center; min-height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-scale)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-scale)); font-weight: var(--gw-font-weight-strong); line-height: 1; color: var(--gw-button-ink, var(--gw-button-tone)); text-decoration: none; text-transform: var(--gw-label-transform); letter-spacing: var(--gw-label-tracking); white-space: nowrap; cursor: pointer; background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-fast) var(--gw-motion-easing); } /* A slight press, so a click feels physical */ .button:active { scale: 0.97; } .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } .button:active { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } /* A solid fill, with text that flips between black and white by the fill's lightness so it reads on every theme's colors */ :host([appearance=\"accent\"]) .button { color: oklch( from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-button-tone); } :host([appearance=\"accent\"]) .button:hover { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.2) c h ); } :host([appearance=\"accent\"]) .button:active { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.35) c h ); } /* The tint lowers the tone's contrast, so the text leans toward the strongest text color to stay readable on it */ :host([appearance=\"filled\"]) .button { color: var( --gw-button-ink, color-mix( in oklch, var(--gw-button-tone) 70%, var(--gw-color-text-strong) ) ); background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } :host([appearance=\"filled\"]) .button:active { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } :host([appearance=\"outlined\"]) .button { border-color: var(--gw-button-tone); } /* A slotted link carries the text; the pill draws its focus ring */ ::slotted(a) { color: inherit; text-decoration: none; outline: none; } .button.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :host([appearance=\"plain\"]) .button.current, :host([appearance=\"outlined\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } .button:disabled, .button[aria-disabled=\"true\"] { color: var(--gw-color-text-disabled); pointer-events: none; cursor: not-allowed; background: var(--gw-color-fill-neutral-disabled); border-color: transparent; } :host([appearance=\"plain\"]) .button:disabled, :host([appearance=\"plain\"]) .button[aria-disabled=\"true\"] { background: transparent; } ::slotted([slot=\"icon\"]), .icon { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); fill: currentColor; } /* The icon and the ring share one cell and crossfade */ .lead { display: grid; place-items: center; } .lead > * { grid-area: 1 / 1; } .lead > *, .text, .ring { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } /* Sized to the icon's drawn area, which is inset in its 24px box */ .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } /* Without an icon, the ring sits over the hidden text */ .ring.over { position: absolute; inset: 0; margin: auto; } :host([loading]) .button { cursor: progress; } :host([loading]) .lead > .ring, :host([loading]) .button:not(.has-icon) > .ring.over { opacity: 1; } :host([loading]) .lead > :not(.ring), :host([loading]) .button:not(.has-icon) > .text { opacity: 0; } .button:not(.has-icon) > .lead { display: none; } /* Icon only, to save space: square, with the text kept for assistive technology. auto does this on narrow screens */ :host([labels=\"hide\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"auto\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } `, ]",
+              "default": "[ base, controlSizes(\"button\"), css` :host { --gw-button-tone: var(--gw-color-accent); display: inline-block; } :host([variant=\"neutral\"]) { --gw-button-tone: var(--gw-color-text-secondary); --gw-button-ink: var(--gw-color-text-strong); } :host([variant=\"info\"]) { --gw-button-tone: var(--gw-color-info); } :host([variant=\"success\"]) { --gw-button-tone: var(--gw-color-success); } :host([variant=\"warning\"]) { --gw-button-tone: var(--gw-color-warning); } :host([variant=\"danger\"]) { --gw-button-tone: var(--gw-color-danger); } .button { --gw-size: var(--gw-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.125rem * var(--gw-scale)); position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; justify-content: center; min-height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); line-height: 1; color: var(--gw-button-ink, var(--gw-button-tone)); text-decoration: none; text-transform: var(--gw-label-transform); letter-spacing: var(--gw-label-tracking); white-space: nowrap; cursor: pointer; background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-fast) var(--gw-motion-easing); } /* A slight press, so a click feels physical */ .button:active { scale: 0.97; } .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } .button:active { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } /* A solid fill, with text that flips between black and white by the fill's lightness so it reads on every theme's colors */ :host([appearance=\"accent\"]) .button { color: oklch( from var(--gw-button-tone) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-button-tone); } :host([appearance=\"accent\"]) .button:hover { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.2) c h ); } :host([appearance=\"accent\"]) .button:active { background: oklch( from var(--gw-button-tone) calc(l + (0.6 - l) * 0.35) c h ); } /* The tint lowers the tone's contrast, so the text leans toward the strongest text color to stay readable on it */ :host([appearance=\"filled\"]) .button { color: var( --gw-button-ink, color-mix( in oklch, var(--gw-button-tone) 70%, var(--gw-color-text-strong) ) ); background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button:hover { background: color-mix(in oklch, var(--gw-button-tone) 24%, transparent); } :host([appearance=\"filled\"]) .button:active { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } :host([appearance=\"outlined\"]) .button { border-color: var(--gw-button-tone); } /* A slotted link carries the text; the pill draws its focus ring */ ::slotted(a) { color: inherit; text-decoration: none; outline: none; } .button.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :host([appearance=\"plain\"]) .button.current, :host([appearance=\"outlined\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent); } :host([appearance=\"filled\"]) .button.current { background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent); } .button:disabled, .button[aria-disabled=\"true\"] { color: var(--gw-color-text-disabled); pointer-events: none; cursor: not-allowed; background: var(--gw-color-fill-neutral-disabled); border-color: transparent; } :host([appearance=\"plain\"]) .button:disabled, :host([appearance=\"plain\"]) .button[aria-disabled=\"true\"] { background: transparent; } ::slotted([slot=\"icon\"]), .icon { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); fill: currentColor; } /* The icon and the ring share one cell and crossfade */ .lead { display: grid; place-items: center; } .lead > * { grid-area: 1 / 1; } .lead > *, .text, .ring { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } /* Sized to the icon's drawn area, which is inset in its 24px box */ .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } } /* Without an icon, the ring sits over the hidden text */ .ring.over { position: absolute; inset: 0; margin: auto; } :host([loading]) .button { cursor: progress; } :host([loading]) .lead > .ring, :host([loading]) .button:not(.has-icon) > .ring.over { opacity: 1; } :host([loading]) .lead > :not(.ring), :host([loading]) .button:not(.has-icon) > .text { opacity: 0; } .button:not(.has-icon) > .lead { display: none; } /* Icon only, to save space: square, with the text kept for assistive technology. auto does this on narrow screens */ :host([labels=\"hide\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .button.has-icon { min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"auto\"]) .has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -5298,6 +5310,14 @@
             {
               "description": "The border. `tone` sets it.",
               "name": "--gw-tone-border"
+            },
+            {
+              "description": "Scales the chip, around 1 for medium.",
+              "name": "--gw-chip-scale"
+            },
+            {
+              "description": "Scales its height and icon with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
             }
           ],
           "cssParts": [
@@ -5324,7 +5344,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ tone: { reflect: true }, icon: {}, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ tone: { reflect: true }, icon: {}, loading: { type: \"boolean\", reflect: true }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -5337,7 +5357,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-flex; } /* 32px, with 12px padding */ .chip { display: inline-flex; gap: var(--gw-space-2); align-items: center; box-sizing: border-box; height: 2rem; padding: 0 var(--gw-space-3); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-tone-fill, var(--gw-color-fill-neutral-resting)); border: var(--gw-border-width) solid var(--gw-tone-border, var(--gw-color-border-quiet)); border-radius: var(--gw-radius-chip); --gw-icon-size: 1rem; } .content { display: inline-flex; gap: inherit; align-items: center; } `, ]",
+              "default": "[ base, controlSizes(\"chip\"), css` :host { display: inline-flex; } /* 32px at medium, with 12px padding */ .chip { --gw-size: var(--gw-chip-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: max( var(--gw-font-size-2xs), calc(var(--gw-font-size-xs) * var(--gw-size)) ); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-tone-fill, var(--gw-color-fill-neutral-resting)); border: var(--gw-border-width) solid var(--gw-tone-border, var(--gw-color-border-quiet)); border-radius: var(--gw-radius-chip); } .content { display: inline-flex; gap: inherit; align-items: center; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -5367,6 +5387,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -5725,6 +5753,13 @@
               },
               "description": "Shows a skeleton for the text.",
               "name": "loading"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The size, around 32px tall at medium. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -9638,6 +9673,16 @@
           "kind": "class",
           "description": "A labeled native `<input>`, with an optional hint and error.",
           "name": "GwInput",
+          "cssProperties": [
+            {
+              "description": "Scales the field, around 1 for medium.",
+              "name": "--gw-field-scale"
+            },
+            {
+              "description": "Scales its height with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -9646,7 +9691,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, disabled: { type: \"boolean\" }, }",
+              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, disabled: { type: \"boolean\" }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -9740,6 +9785,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -10180,6 +10233,13 @@
               },
               "description": "Disables the field.",
               "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The field's size, 40px tall at medium. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -10210,6 +10270,16 @@
           "kind": "class",
           "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
           "name": "GwMenuButton",
+          "cssProperties": [
+            {
+              "description": "Scales the trigger, around 1 for medium.",
+              "name": "--gw-menu-button-scale"
+            },
+            {
+              "description": "Scales its height and icon with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            }
+          ],
           "cssParts": [
             {
               "description": "The button that opens the menu.",
@@ -10224,7 +10294,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, }",
+              "default": "{ label: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10237,7 +10307,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { display: inline-flex; gap: var(--gw-space-2); align-items: center; box-sizing: border-box; height: 2.5rem; padding: 0 var(--gw-space-4); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-block, flip-inline; inset: auto; top: anchor(bottom); left: anchor(left); box-sizing: border-box; min-width: 15rem; max-height: min(24rem, 60vh); padding: 0; margin: var(--gw-space-1) 0 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-block, flip-inline; inset: auto; top: anchor(bottom); left: anchor(left); box-sizing: border-box; min-width: 15rem; max-height: min(24rem, 60vh); padding: 0; margin: var(--gw-space-1) 0 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10284,6 +10354,14 @@
                 "text": "readonly MenuItem[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -10728,6 +10806,13 @@
               },
               "description": "Actions pinned under the items, as JSON.",
               "name": "actions"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The trigger's size, 24 to 56px tall. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -14476,6 +14561,16 @@
           "kind": "class",
           "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons, as Home Assistant's toggles do. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons on narrow ones.",
           "name": "GwSegmented",
+          "cssProperties": [
+            {
+              "description": "Scales the control, around 1 for medium.",
+              "name": "--gw-segmented-scale"
+            },
+            {
+              "description": "Scales its height and icons with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            }
+          ],
           "cssParts": [
             {
               "description": "Each option.",
@@ -14494,7 +14589,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: { reflect: true }, labels: { reflect: true }, options: { type: \"json\" }, }",
+              "default": "{ label: {}, name: {}, value: { reflect: true }, labels: { reflect: true }, options: { type: \"json\" }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14507,7 +14602,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: var(--gw-space-2); align-items: center; box-sizing: border-box; /* 32px options in a 40px track, matching fields and buttons */ height: 2rem; padding: 0 var(--gw-space-3); font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } :host([labels=\"hide\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"hide\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"auto\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } label:hover { background: var(--gw-color-fill-neutral-hovered); } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } `, ]",
+              "default": "[ base, controlSizes(\"segmented\"), css` :host { --gw-size: var(--gw-segmented-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; /* 32px options in a 40px track at medium, matching fields and buttons */ height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: calc(var(--gw-font-size-s) * var(--gw-size)); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: calc(1.125rem * var(--gw-scale)); } :host([labels=\"hide\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"hide\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"auto\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } label:hover { background: var(--gw-color-fill-neutral-hovered); } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14552,6 +14647,14 @@
                 "text": "readonly Segment[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -14970,6 +15073,13 @@
               },
               "description": "The options, as JSON.",
               "name": "options"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The size, 40px tall at medium. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -15000,6 +15110,16 @@
           "kind": "class",
           "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below 600px wide the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
           "name": "GwSelect",
+          "cssProperties": [
+            {
+              "description": "Scales the field, around 1 for medium.",
+              "name": "--gw-field-scale"
+            },
+            {
+              "description": "Scales its height with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -15008,7 +15128,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, }",
+              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15127,6 +15247,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -15690,6 +15818,13 @@
               },
               "description": "Shows the label inside the trigger, before the value, for toolbars and filters.",
               "name": "inline-label"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The field's size, 40px tall at medium. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -15724,6 +15859,10 @@
             {
               "description": "The padding above and below. Defaults to `--gw-space-2`.",
               "name": "--gw-row-padding"
+            },
+            {
+              "description": "Scales the text and spacing, around 1 for medium.",
+              "name": "--gw-setting-row-scale"
             }
           ],
           "cssParts": [
@@ -15746,7 +15885,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, description: {}, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ heading: {}, description: {}, loading: { type: \"boolean\", reflect: true }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15759,7 +15898,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .row { display: flex; flex-wrap: wrap; gap: var(--gw-space-1) var(--gw-space-3); align-items: center; justify-content: space-between; padding: var(--gw-row-padding, var(--gw-space-2)) 0; } /* A full line even in themes without borders, since it separates rows */ :host(:not(:first-of-type)) .row { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); } .text { flex: 1 1 12rem; min-width: 0; } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .control { max-width: 100%; } .control-skeleton { width: 3.25rem; min-height: 0; height: 2rem; --gw-skeleton-radius: var(--gw-radius-pill); } `, ]",
+              "default": "[ base, controlSizes(\"setting-row\"), css` :host { --gw-size: var(--gw-setting-row-scale, 1); display: block; } .row { display: flex; flex-wrap: wrap; gap: calc(var(--gw-space-1) * var(--gw-size)) calc(var(--gw-space-3) * var(--gw-size)); align-items: center; justify-content: space-between; padding: var(--gw-row-padding, calc(var(--gw-space-2) * var(--gw-size))) 0; } /* A full line even in themes without borders, since it separates rows */ :host(:not(:first-of-type)) .row { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); } .text { flex: 1 1 12rem; min-width: 0; } .heading { font-size: max( var(--gw-font-size-xs), calc(var(--gw-font-size-s) * var(--gw-size)) ); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: max( var(--gw-font-size-2xs), calc(var(--gw-font-size-xs) * var(--gw-size)) ); color: var(--gw-color-text-secondary); } .control { max-width: 100%; } .control-skeleton { width: 3.25rem; min-height: 0; height: 2rem; --gw-skeleton-radius: var(--gw-radius-pill); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15788,6 +15927,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
             },
             {
               "kind": "field",
@@ -16179,6 +16326,13 @@
               },
               "description": "Shows skeletons for the control and any unknown text.",
               "name": "loading"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The text and spacing size. Defaults to `medium`.",
+              "name": "size"
             }
           ],
           "superclass": {
@@ -21819,6 +21973,19 @@
       "path": "src/styles.ts",
       "declarations": [
         {
+          "kind": "function",
+          "name": "controlSizes",
+          "parameters": [
+            {
+              "name": "name",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The `xs` to `xl` presets on a `size` attribute, as `--gw-<name>-scale`\naround 1 for medium, so an app can also set any size between or beyond\nthem. A control multiplies its height and icon by `--gw-control-scale`\ntoo, which follows the theme's density, and its text only by its own\nscale, since spacing and type already follow density on their own."
+        },
+        {
           "kind": "variable",
           "name": "base",
           "default": "css` :host { font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } *, *::before, *::after { box-sizing: border-box; } [hidden] { display: none !important; } :focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :host([tone=\"accent\"]) { --gw-tone: var(--gw-color-accent); --gw-tone-fill: var(--gw-color-fill-accent-quiet); --gw-tone-border: var(--gw-color-border-accent); } :host([tone=\"info\"]) { --gw-tone: var(--gw-color-info); --gw-tone-fill: var(--gw-color-fill-info-quiet); --gw-tone-border: var(--gw-color-border-info); } :host([tone=\"success\"]) { --gw-tone: var(--gw-color-success); --gw-tone-fill: var(--gw-color-fill-success-quiet); --gw-tone-border: var(--gw-color-border-success); } :host([tone=\"warning\"]) { --gw-tone: var(--gw-color-warning); --gw-tone-fill: var(--gw-color-fill-warning-quiet); --gw-tone-border: var(--gw-color-border-warning); } :host([tone=\"danger\"]) { --gw-tone: var(--gw-color-danger); --gw-tone-fill: var(--gw-color-fill-danger-quiet); --gw-tone-border: var(--gw-color-border-danger); } :host([tone=\"important\"]) { --gw-tone: var(--gw-color-important); --gw-tone-fill: var(--gw-color-fill-important-quiet); --gw-tone-border: var(--gw-color-border-important); } @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; } } `",
@@ -21865,6 +22032,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "controlSizes",
+          "declaration": {
+            "name": "controlSizes",
+            "module": "src/styles.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "base",

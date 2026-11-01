@@ -32,6 +32,9 @@ const fontStack = (font: Font | MonoFont) => {
 
 const density = { compact: 0.85, normal: 1, roomy: 1.2 } as const;
 
+/** How much controls grow or shrink with density, less than spacing does. */
+const controlScale = { compact: 0.85, normal: 1, roomy: 1.1 } as const;
+
 const borderColor = {
   none: "transparent",
   hairline: "var(--gw-color-border-quiet)",
@@ -47,6 +50,7 @@ const styleProperties = (style: Style) => ({
   "font-weight-regular": String(style.weights.regular),
   "font-weight-strong": String(style.weights.strong),
   density: String(density[style.density]),
+  "control-scale": String(controlScale[style.density]),
   ...spacing,
   "radius-panel": `${style.radius.panel}px`,
   "radius-control": `${style.radius.control}px`,
@@ -103,6 +107,7 @@ const spacing = {
 
 const foundations = {
   density: "1",
+  "control-scale": "1",
   ...spacing,
   "font-size-multiplier": "1",
   "font-size-2xs": "calc(0.6875rem * var(--gw-font-size-multiplier))",
@@ -198,6 +203,27 @@ export const themeCss = (theme: ResolvedTheme) =>
     ...modeRules(theme, modeBlock),
   ].join("\n\n");
 
+/** A control height that follows the theme's density, as the elements do. */
+const dense = (rem: number) =>
+  `calc(${Number(rem.toFixed(4))}rem * var(--gw-control-scale, 1))`;
+
+/** Pre-upgrade heights for each size preset, matching `controlSizes`. */
+const sized = (
+  tag: string,
+  rem: number,
+  properties: readonly string[] = ["min-block-size"],
+) =>
+  Object.fromEntries(
+    Object.entries({ xs: 0.6, small: 0.8, large: 1.2, xl: 1.4 }).map(
+      ([size, scale]) => [
+        `${tag}[size="${size}"]`,
+        Object.fromEntries(
+          properties.map((property) => [property, dense(rem * scale)]),
+        ),
+      ],
+    ),
+  );
+
 /**
  * What each `gw-` element looks like before its script defines it: the
  * display and block size it will have, so nothing moves when it upgrades.
@@ -206,34 +232,20 @@ const preUpgrade = {
   "gw-fade-in": { opacity: "0" },
   "gw-button, gw-menu-button, gw-segmented": {
     display: "inline-block",
-    "min-block-size": "2.5rem",
+    "min-block-size": dense(2.5),
     "vertical-align": "middle",
   },
   "gw-button": {
     "padding-inline": "calc(var(--gw-space-4) + 1px)",
     "font-size": "var(--gw-font-size-s)",
     "font-weight": "var(--gw-font-weight-strong)",
-    "line-height": "2.5rem",
+    "line-height": dense(2.5),
     "white-space": "nowrap",
     "text-transform": "var(--gw-label-transform)",
     "letter-spacing": "var(--gw-label-tracking)",
   },
-  'gw-button[size="xs"]': {
-    "min-block-size": "1.5rem",
-    "line-height": "1.5rem",
-  },
-  'gw-button[size="small"]': {
-    "min-block-size": "2rem",
-    "line-height": "2rem",
-  },
-  'gw-button[size="large"]': {
-    "min-block-size": "3rem",
-    "line-height": "3rem",
-  },
-  'gw-button[size="xl"]': {
-    "min-block-size": "3.5rem",
-    "line-height": "3.5rem",
-  },
+  ...sized("gw-button", 2.5, ["min-block-size", "line-height"]),
+  ...sized("gw-menu-button", 2.5),
   "gw-card": {
     display: "block",
     padding: "var(--gw-space-4)",
@@ -277,9 +289,10 @@ const preUpgrade = {
     "margin-inline-end": "var(--gw-space-2)",
     "vertical-align": "middle",
   },
-  "gw-chip": { display: "inline-flex", "min-block-size": "2rem" },
-  "gw-badge": { display: "inline-flex", "min-block-size": "2.25rem" },
-  'gw-badge[size="small"]': { "min-block-size": "1.75rem" },
+  "gw-chip": { display: "inline-flex", "min-block-size": dense(2) },
+  ...sized("gw-chip", 2),
+  "gw-badge": { display: "inline-flex", "min-block-size": dense(2.25) },
+  ...sized("gw-badge", 2.25),
   "gw-dot": {
     display: "inline-block",
     "inline-size": "0.5rem",
@@ -296,12 +309,15 @@ const preUpgrade = {
     display: "inline-flex",
     "min-block-size": "1.25rem",
   },
-  "gw-input, gw-select": { display: "flex", "min-block-size": "4.5rem" },
+  "gw-input, gw-select": {
+    display: "flex",
+    "min-block-size": `calc(2rem + ${dense(2.5)})`,
+  },
   "gw-input:is([hint], [error]), gw-select:is([hint], [error])": {
-    "min-block-size": "6.25rem",
+    "min-block-size": `calc(3.75rem + ${dense(2.5)})`,
   },
   "gw-select:is([label-hidden], [inline-label])": {
-    "min-block-size": "2.5rem",
+    "min-block-size": dense(2.5),
   },
   "gw-select[inline-label]": { display: "inline-flex" },
   "gw-checkbox, gw-switch": { display: "flex", "min-block-size": "1.5rem" },

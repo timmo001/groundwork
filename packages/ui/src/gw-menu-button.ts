@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import { base, createIcon, setIconPath } from "./styles.js";
+import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
 export interface MenuItem {
   readonly value: string;
@@ -38,8 +38,12 @@ export interface MenuItem {
  * @attr {string} empty - What the menu says with no items. Defaults to `Nothing here yet`.
  * @attr {MenuItem[]} items - The items, as JSON.
  * @attr {MenuItem[]} actions - Actions pinned under the items, as JSON.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The trigger's size, 24 to 56px tall. Defaults to `medium`.
  *
  * @csspart trigger - The button that opens the menu.
+ *
+ * @cssprop --gw-menu-button-scale - Scales the trigger, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
  *
  * @fires {CustomEvent<{ value: string }>} select - When an item or action is chosen, with its `value` in `detail`.
  */
@@ -50,10 +54,12 @@ export class GwMenuButton extends GwElement {
     empty: {},
     items: { type: "json" },
     actions: { type: "json" },
+    size: { reflect: true },
   } as const;
 
   static override styles = [
     base,
+    controlSizes("menu-button"),
     css`
       :host {
         position: relative;
@@ -62,14 +68,18 @@ export class GwMenuButton extends GwElement {
       }
 
       .trigger {
+        --gw-size: var(--gw-menu-button-scale, 1);
+        --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1));
+        --gw-icon-size: calc(1.25rem * var(--gw-scale));
+
         display: inline-flex;
-        gap: var(--gw-space-2);
+        gap: calc(var(--gw-space-2) * var(--gw-size));
         align-items: center;
         box-sizing: border-box;
-        height: 2.5rem;
-        padding: 0 var(--gw-space-4);
+        height: calc(2.5rem * var(--gw-scale));
+        padding: 0 calc(var(--gw-space-4) * var(--gw-size));
         font: inherit;
-        font-size: var(--gw-font-size-s);
+        font-size: calc(var(--gw-font-size-s) * var(--gw-size));
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-strong);
         cursor: pointer;
@@ -233,6 +243,7 @@ export class GwMenuButton extends GwElement {
   declare empty: string;
   declare items: readonly MenuItem[];
   declare actions: readonly MenuItem[];
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #trigger = h("button", {
     class: "trigger",
@@ -264,6 +275,7 @@ export class GwMenuButton extends GwElement {
     this.empty = "Nothing here yet";
     this.items = [];
     this.actions = [];
+    this.size = "medium";
   }
 
   /** The enabled items then actions, in the order arrow keys move through them. */

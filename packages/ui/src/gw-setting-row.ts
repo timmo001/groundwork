@@ -7,7 +7,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
-import { base } from "./styles.js";
+import { base, controlSizes } from "./styles.js";
 
 /**
  * A setting: its name and description on one side, its control on the
@@ -21,34 +21,42 @@ import { base } from "./styles.js";
  * @attr {string} heading - The setting's name.
  * @attr {string} description - What it does.
  * @attr {boolean} loading - Shows skeletons for the control and any unknown text.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The text and spacing size. Defaults to `medium`.
  *
  * @slot - The control.
  *
  * @csspart row - The row.
  *
  * @cssprop --gw-row-padding - The padding above and below. Defaults to `--gw-space-2`.
+ * @cssprop --gw-setting-row-scale - Scales the text and spacing, around 1 for medium.
  */
 export class GwSettingRow extends GwElement {
   static override properties = {
     heading: {},
     description: {},
     loading: { type: "boolean", reflect: true },
+    size: { reflect: true },
   } as const;
 
   static override styles = [
     base,
+    controlSizes("setting-row"),
     css`
       :host {
+        --gw-size: var(--gw-setting-row-scale, 1);
+
         display: block;
       }
 
       .row {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gw-space-1) var(--gw-space-3);
+        gap: calc(var(--gw-space-1) * var(--gw-size))
+          calc(var(--gw-space-3) * var(--gw-size));
         align-items: center;
         justify-content: space-between;
-        padding: var(--gw-row-padding, var(--gw-space-2)) 0;
+        padding: var(--gw-row-padding, calc(var(--gw-space-2) * var(--gw-size)))
+          0;
       }
 
       /* A full line even in themes without borders, since it separates rows */
@@ -63,13 +71,19 @@ export class GwSettingRow extends GwElement {
       }
 
       .heading {
-        font-size: var(--gw-font-size-s);
+        font-size: max(
+          var(--gw-font-size-xs),
+          calc(var(--gw-font-size-s) * var(--gw-size))
+        );
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-strong);
       }
 
       .description {
-        font-size: var(--gw-font-size-xs);
+        font-size: max(
+          var(--gw-font-size-2xs),
+          calc(var(--gw-font-size-xs) * var(--gw-size))
+        );
         color: var(--gw-color-text-secondary);
       }
 
@@ -89,6 +103,7 @@ export class GwSettingRow extends GwElement {
   declare heading: string;
   declare description: string;
   declare loading: boolean;
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #row = h("div", { class: "row", part: "row" });
 
@@ -124,6 +139,7 @@ export class GwSettingRow extends GwElement {
     this.heading = "";
     this.description = "";
     this.loading = false;
+    this.size = "medium";
   }
 
   protected override create(root: ShadowRoot) {

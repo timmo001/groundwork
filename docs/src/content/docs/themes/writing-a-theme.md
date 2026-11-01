@@ -37,7 +37,7 @@ Themes live in `packages/tokens/themes/`, one JSON file each, checked against th
 | `style.font`, `figures`, `mono` | The text font, an optional font for figures, and the code font. |
 | `style.radius` | Panels, controls and chips, in pixels. 999 is a pill. |
 | `style.border` | Width and strength: `none`, `hairline`, `soft` or `strong`. |
-| `style.density` | `compact`, `normal` or `roomy`, scaling every space. |
+| `style.density` | `compact`, `normal` or `roomy`, scaling every space and control height. |
 | `style.capitals` | Labels and headings in capitals. |
 | `style.link` | Accent or strong text, with a thin or thick underline. |
 | `style.surfaceAccent` | `none`, `sheen` (a faint accent gradient), `marker` (an accent bar on the left) or `flange` (an accent edge on top). |

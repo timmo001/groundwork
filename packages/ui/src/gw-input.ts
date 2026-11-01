@@ -25,6 +25,10 @@ import { LightElement, fieldId } from "./fields.js";
  * @attr {string} error - An error under the field, which marks it invalid.
  * @attr {boolean} required - Requires a value.
  * @attr {boolean} disabled - Disables the field.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
+ *
+ * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
+ * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
  */
 export class GwInput extends LightElement {
   static override properties = {
@@ -39,6 +43,7 @@ export class GwInput extends LightElement {
     error: {},
     required: { type: "boolean" },
     disabled: { type: "boolean" },
+    size: { reflect: true },
   } as const;
 
   declare label: string;
@@ -53,6 +58,7 @@ export class GwInput extends LightElement {
   declare error: string;
   declare required: boolean;
   declare disabled: boolean;
+  declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #id = fieldId();
 
@@ -79,6 +85,7 @@ export class GwInput extends LightElement {
     this.error = "";
     this.required = false;
     this.disabled = false;
+    this.size = "medium";
   }
 
   protected override create(root: HTMLElement) {
