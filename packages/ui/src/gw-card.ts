@@ -29,6 +29,7 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} icon - SVG path data for an icon before the heading, such as on a card that links to a section.
  * @attr {number} level - The heading's level for assistive tech, 2 by default. Use 3 for a card under a section heading.
  * @attr {string} href - Makes the whole card a link to this address.
+ * @attr {boolean} title-link - Makes only the heading the link, from `href` or an `<a>` in the `heading` slot, so the rest of the card stays plain.
  * @attr {boolean} flush - Drops the padding, for content that runs to the edges.
  * @attr {boolean} loading - Shows skeleton lines for the content and any unknown heading.
  * @attr {number} lines - How many skeleton lines while loading. Defaults to 3.
@@ -52,6 +53,7 @@ export class GwCard extends GwElement {
     icon: {},
     level: { type: "number" },
     href: {},
+    titleLink: { attribute: "title-link", type: "boolean", reflect: true },
     flush: { type: "boolean", reflect: true },
     loading: { type: "boolean", reflect: true },
     lines: { type: "number" },
@@ -111,6 +113,25 @@ export class GwCard extends GwElement {
       ::slotted(a[slot="heading"]) {
         text-decoration: none;
         outline: none;
+      }
+
+      /* With title-link, only the heading is the link */
+      .title a {
+        color: inherit;
+        text-decoration: none;
+        border-radius: var(--gw-radius-chip);
+      }
+
+      .title a[href]:hover,
+      :host([title-link]) ::slotted(a[slot="heading"]:hover) {
+        color: var(--gw-color-accent);
+        text-decoration: underline;
+      }
+
+      .title a[href]:focus-visible,
+      :host([title-link]) ::slotted(a[slot="heading"]:focus-visible) {
+        outline: var(--gw-focus-width) solid var(--gw-color-focus);
+        outline-offset: var(--gw-focus-offset);
       }
 
       header {
@@ -175,12 +196,17 @@ export class GwCard extends GwElement {
   /** The heading's level for assistive tech. */
   declare level: number;
   declare href: string;
+  /** Makes only the heading the link, rather than the whole card. */
+  declare titleLink: boolean;
   declare flush: boolean;
   declare loading: boolean;
   /** How many lines of skeleton stand in for the content while loading. */
   declare lines: number;
 
   readonly #title = h("span");
+
+  // A link only with title-link and href; without an href it's plain text
+  readonly #titleAnchor = h("a", {}, this.#title);
 
   readonly #titleSkeleton = h("gw-skeleton-text");
 
@@ -189,7 +215,7 @@ export class GwCard extends GwElement {
   readonly #heading = h(
     "div",
     { class: "title", part: "heading", role: "heading", "aria-level": "2" },
-    this.#title,
+    this.#titleAnchor,
     this.#headingSlot,
     this.#titleSkeleton,
   );
@@ -242,6 +268,7 @@ export class GwCard extends GwElement {
     this.icon = "";
     this.level = 2;
     this.href = "";
+    this.titleLink = false;
     this.flush = false;
     this.loading = false;
     this.lines = 3;
@@ -251,7 +278,7 @@ export class GwCard extends GwElement {
     this.addEventListener("click", (event) => {
       const link = this.#link();
 
-      if (link === null || this.loading) return;
+      if (link === null || this.loading || this.titleLink) return;
 
       const path = event.composedPath();
       const own = path.slice(0, path.indexOf(this));
@@ -277,7 +304,7 @@ export class GwCard extends GwElement {
     const focus = () => {
       this.#card.classList.toggle(
         "focused",
-        this.#link()?.matches(":focus-visible") === true,
+        !this.titleLink && this.#link()?.matches(":focus-visible") === true,
       );
     };
 
@@ -327,11 +354,13 @@ export class GwCard extends GwElement {
 
     const before = animate ? this.offsetHeight : 0;
 
+    const cardLink = Boolean(this.href) && !this.titleLink;
+
     if (
-      changed.has("href") &&
-      (this.#card.tagName === "A") !== Boolean(this.href)
+      (changed.has("href") || changed.has("titleLink")) &&
+      (this.#card.tagName === "A") !== cardLink
     ) {
-      const next = this.href
+      const next = cardLink
         ? h("a", { class: "card", part: "card" })
         : h("section", { class: "card", part: "card" });
 
@@ -342,11 +371,20 @@ export class GwCard extends GwElement {
 
     if (this.#card instanceof HTMLAnchorElement) this.#card.href = this.href;
 
+    setAttribute(
+      this.#titleAnchor,
+      "href",
+      this.titleLink && this.href ? this.href : null,
+    );
+
     setAttribute(this.#card, "aria-busy", this.loading ? "true" : null);
 
     const slotted = this.querySelector(":scope > [slot='heading']") !== null;
 
-    this.#card.classList.toggle("linked", this.#link() !== null && !this.href);
+    this.#card.classList.toggle(
+      "linked",
+      this.#link() !== null && !this.href && !this.titleLink,
+    );
     this.#title.textContent = this.heading;
     this.#heading.setAttribute("aria-level", String(this.level || 2));
     this.#description.textContent = this.description;

@@ -49,6 +49,16 @@ An `href` link lives in the card's shadow root, so it isn't in the page's HTML a
   </gw-card>
 </Demo>
 
+### Linking only the title
+
+<Demo id="card-title-link" layout="inline">
+  <gw-card title-link heading="Processes" description="806 running" href="#card-title-link">
+    <gw-facts items='[{"label":"Top","value":"firefox"},{"label":"CPU","value":"12%"}]'></gw-facts>
+  </gw-card>
+</Demo>
+
+`title-link` makes only the heading the link, from `href` or an `<a>` in the `heading` slot. Use it on a card whose content people read, select or act on, such as a dashboard tile, so a click on its numbers doesn't leave the page.
+
 <Demo id="card-anatomy" layout="stack">
   <gw-anatomy scale="1">
     <gw-card heading="Desktop">Arch Linux, last seen just now</gw-card>
