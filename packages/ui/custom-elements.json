@@ -10020,7 +10020,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, size: { reflect: true }, icon: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\", reflect: true }, }",
+              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, maxlength: { type: \"number\" }, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, size: { reflect: true }, icon: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10109,6 +10109,15 @@
               },
               "description": "The step between values of a number, date or time field.",
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "maxlength",
+              "type": {
+                "text": "number"
+              },
+              "description": "The most characters it takes, or 0 for no limit.",
+              "default": "0"
             },
             {
               "kind": "field",
@@ -10700,6 +10709,13 @@
               },
               "description": "The step between values of a `number`, date or time field, or `any`.",
               "name": "step"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The most characters it takes.",
+              "name": "maxlength"
             },
             {
               "type": {

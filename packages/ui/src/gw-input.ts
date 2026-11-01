@@ -34,6 +34,7 @@ const hideIcon =
  * @attr {string} min - The lowest value of a `number`, date or time field.
  * @attr {string} max - The highest value of a `number`, date or time field.
  * @attr {string} step - The step between values of a `number`, date or time field, or `any`.
+ * @attr {number} maxlength - The most characters it takes.
  * @attr {string} hint - One line of help under the field.
  * @attr {string} info - Longer help, opened from an (i) button by the label.
  * @attr {string} error - An error under the field, which marks it invalid and is announced.
@@ -63,6 +64,7 @@ export class GwInput extends LightElement {
     min: {},
     max: {},
     step: {},
+    maxlength: { type: "number" },
     hint: {},
     info: {},
     error: {},
@@ -92,6 +94,8 @@ export class GwInput extends LightElement {
   declare max: string;
   /** The step between values of a number, date or time field. */
   declare step: string;
+  /** The most characters it takes, or 0 for no limit. */
+  declare maxlength: number;
   declare hint: string;
   /** Longer help, opened from an (i) button by the label. */
   declare info: string;
@@ -172,6 +176,7 @@ export class GwInput extends LightElement {
     this.min = "";
     this.max = "";
     this.step = "";
+    this.maxlength = 0;
     this.hint = "";
     this.info = "";
     this.error = "";
@@ -271,6 +276,11 @@ export class GwInput extends LightElement {
     setAttribute(this.#input, "min", this.min || null);
     setAttribute(this.#input, "max", this.max || null);
     setAttribute(this.#input, "step", this.step || null);
+    setAttribute(
+      control,
+      "maxlength",
+      this.maxlength > 0 ? String(this.maxlength) : null,
+    );
     setAttribute(control, "spellcheck", this.monospace ? "false" : null);
     setAttribute(control, "aria-invalid", this.error ? "true" : null);
     setAttribute(control, "aria-describedby", described || null);
