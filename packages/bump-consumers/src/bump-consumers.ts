@@ -148,7 +148,8 @@ const resolveRelease = Effect.fn("resolveRelease")(function* (
 /** Every package.json that depends on docs-kit, grouped by repository. */
 const discover = Effect.fn("discover")(function* (owner: string) {
   const results = yield* Search.code({
-    query: `"${packageName}"`,
+    // Quoted, code search matches only this repository
+    query: packageName,
     owner,
     filename: "package.json",
     limit: 1000,
