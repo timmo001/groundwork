@@ -3,7 +3,11 @@
  * Picks the color mode, Darker included, and optionally the Groundwork
  * theme. Blume's own toggle still switches light and dark; this keeps in step
  * with it. Theme choices need `@timmo001/docs-kit/blume/themes/all.css`.
+ * The controls are Groundwork's `gw-select` and `gw-segmented`, styled by the
+ * Groundwork theme tokens imported here.
  */
+import "@groundwork/tokens/themes.css";
+
 interface Props {
   /** Themes to offer, in order. Leave out to offer the mode only. */
   themes?: readonly { id: string; name: string }[];
@@ -63,38 +67,34 @@ const modes = [
   })();
 </script>
 
-<div class="gw-theme-picker" data-gw-theme-picker data-default-theme={defaultTheme}>
+<div
+  class="gw-theme-picker"
+  data-gw-theme-picker
+  data-default-theme={defaultTheme}
+  data-gw-theme={defaultTheme}
+>
   {
     themes.length > 0 && (
-      <label>
-        <span class="gw-visually-hidden">Theme</span>
-        <span class="gw-select">
-          <select data-gw-theme-select>
-            {themes.map((theme) => (
-              <option value={theme.id}>{theme.name}</option>
-            ))}
-          </select>
-        </span>
-      </label>
+      <gw-select
+        data-gw-theme-select
+        label="Theme"
+        inline-label
+        search="never"
+        options={JSON.stringify(themes.map((theme) => ({ value: theme.id, label: theme.name })))}
+      />
     )
   }
-  <fieldset class="gw-mode" data-gw-mode-select>
-    <legend class="gw-visually-hidden">Color mode</legend>
-    {
-      modes.map((mode) => (
-        <label title={mode.label}>
-          <input type="radio" name="gw-mode" value={mode.value} />
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d={mode.icon} />
-          </svg>
-          <span class="gw-mode-text">{mode.label}</span>
-        </label>
-      ))
-    }
-  </fieldset>
+  <gw-segmented
+    data-gw-mode-select
+    label="Color mode"
+    labels="hide"
+    options={JSON.stringify(modes)}></gw-segmented>
 </div>
 
 <script>
+  import { GwSegmented } from "@groundwork/ui/gw-segmented.ts";
+  import { GwSelect } from "@groundwork/ui/gw-select.ts";
+
   const root = document.documentElement;
 
   const save = (key: string, value: string | null) => {
@@ -117,20 +117,25 @@ const modes = [
     for (const picker of document.querySelectorAll("div[data-gw-theme-picker]")) {
       if (!(picker instanceof HTMLElement)) continue;
 
-      const theme = picker.querySelector("select[data-gw-theme-select]");
+      const theme = root.dataset.gwDocsTheme ?? picker.dataset.defaultTheme ?? "";
+      const mode = currentMode();
 
-      for (const radio of picker.querySelectorAll("[data-gw-mode-select] input")) {
-        if (radio instanceof HTMLInputElement) radio.checked = radio.value === currentMode();
+      // The controls are Groundwork components, so the picker carries the
+      // page's theme and mode for them to follow
+      picker.dataset.gwTheme = theme;
+      picker.dataset.gwMode = mode;
+
+      for (const control of picker.querySelectorAll("gw-select, gw-segmented")) {
+        if (control instanceof GwSegmented) control.value = mode;
+        else if (control instanceof GwSelect) control.value = theme;
       }
-
-      if (theme) theme.value = root.dataset.gwDocsTheme ?? picker.dataset.defaultTheme ?? "";
     }
   };
 
   document.addEventListener("change", (event) => {
     const target = event.target;
 
-    if (!(target instanceof HTMLSelectElement || target instanceof HTMLInputElement)) return;
+    if (!(target instanceof GwSelect || target instanceof GwSegmented)) return;
 
     // Theme and mode change the whole page, so they crossfade where the
     // browser has View Transitions and motion isn't reduced.
@@ -141,7 +146,7 @@ const modes = [
       else document.startViewTransition(change).ready.catch(() => undefined);
     };
 
-    if (target.matches("[data-gw-mode-select] input")) {
+    if (target.matches("[data-gw-mode-select]")) {
       const dark = target.value !== "light";
       const value = target.value;
 
@@ -193,134 +198,22 @@ const modes = [
     margin-inline: 0.25rem;
   }
 
-  .gw-theme-picker select {
-    height: 2.25rem;
-    padding: 0 2.25rem 0 1rem;
-    border: 1px solid var(--blume-border);
-    border-radius: 999px;
-    background-color: var(--blume-background);
-    color: var(--blume-foreground);
-    font: inherit;
-    font-size: 0.875rem;
-    cursor: pointer;
-    appearance: none;
-  }
-
   /* The picker's mode toggle replaces Blume's own light and dark button */
   :global([data-blume-header]:has(.gw-theme-picker) [data-blume-theme-toggle]) {
     display: none;
   }
 
-  /* A select can't take pseudo-elements, so its wrapper draws the chevron */
-  .gw-select {
-    position: relative;
-    display: inline-block;
+  /* The components draw on Groundwork's surface, so the header's own
+     background shows through instead */
+  .gw-theme-picker {
+    background: transparent;
+    color: inherit;
   }
 
-  .gw-select::after {
-    position: absolute;
-    top: 50%;
-    right: 1rem;
-    width: 0.4rem;
-    height: 0.4rem;
-    pointer-events: none;
-    content: "";
-    border-right: 1.5px solid var(--blume-muted-foreground);
-    border-bottom: 1.5px solid var(--blume-muted-foreground);
-    translate: 0 -70%;
-    rotate: 45deg;
-  }
-
-  .gw-mode label {
-    transition:
-      background-color 250ms cubic-bezier(0.2, 0, 0, 1),
-      color 250ms cubic-bezier(0.2, 0, 0, 1),
-      box-shadow 250ms cubic-bezier(0.2, 0, 0, 1);
-  }
-
-  .gw-theme-picker select:hover {
-    background-color: var(--blume-muted);
-  }
-
-  .gw-theme-picker select:focus-visible {
-    outline: 2px solid var(--blume-accent);
-    outline-offset: 2px;
-  }
-
-  /* The mode as a pill toggle with icons, as Home Assistant's are. Its text
-     shows only when the header has room */
-  .gw-mode {
-    display: inline-flex;
-    gap: 2px;
-    padding: 3px;
-    margin: 0;
-    border: 1px solid var(--blume-border);
-    border-radius: 999px;
-    background: var(--blume-muted);
-  }
-
-  .gw-mode label {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    /* Square icon buttons in a track as tall as the theme select */
-    width: 1.75rem;
-    height: 1.75rem;
-    padding: 0;
-    border-radius: 999px;
-    color: var(--blume-muted-foreground);
-    font-size: 0.8125rem;
-    cursor: pointer;
-  }
-
-  .gw-mode label:hover {
-    color: var(--blume-foreground);
-  }
-
-  .gw-mode input {
-    position: absolute;
-    inset: 0;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .gw-mode label:has(input:checked) {
-    background: var(--blume-background);
-    color: var(--blume-foreground);
-    box-shadow: 0 0 0 1px var(--blume-border);
-  }
-
-  /* Inset, so the ring sits inside the track rather than on its border */
-  .gw-mode label:has(input:focus-visible) {
-    outline: 2px solid var(--blume-accent);
-    outline-offset: -2px;
-  }
-
-  .gw-mode svg {
-    width: 1.05rem;
-    height: 1.05rem;
-    fill: currentColor;
-  }
-
-  .gw-mode-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-
-
-
-  .gw-visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
+  /* Phones keep the header to one row, so the select shows only its value */
+  @media (max-width: 40rem) {
+    .gw-theme-picker :global(.gw-select-inline-label) {
+      display: none;
+    }
   }
 </style>
