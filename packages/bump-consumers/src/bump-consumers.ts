@@ -56,6 +56,14 @@ const RepositoryInfo = Schema.Struct({
   default_branch: Schema.String,
 });
 
+const Tree = Schema.Struct({
+  tree: Schema.Array(
+    Schema.Struct({ path: Schema.String, type: Schema.String }),
+  ),
+});
+
+const Contents = Schema.Struct({ content: Schema.String });
+
 const cacheRoot = Config.String("XDG_CACHE_HOME").pipe(
   Config.orElse(() =>
     Config.String("HOME").pipe(Config.map((home) => `${home}/.cache`)),
@@ -166,6 +174,38 @@ const discover = Effect.fn("discover")(function* (owner: string) {
   }
 
   return consumers;
+});
+
+/**
+ * The package.json files in one repository that depend on docs-kit, read from
+ * its tree, for repositories code search has dropped from its index.
+ */
+const discoverIn = Effect.fn("discoverIn")(function* (repo: string) {
+  const { tree } = yield* Api.json(
+    {
+      endpoint: `repos/${repo}/git/trees/HEAD?recursive=1`,
+      method: "GET",
+    },
+    Tree,
+  );
+
+  const manifests: string[] = [];
+
+  for (const entry of tree) {
+    if (entry.type !== "blob") continue;
+    if (!/(^|\/)package\.json$/.test(entry.path)) continue;
+    if (entry.path.includes("node_modules/")) continue;
+
+    const { content } = yield* Api.json(
+      { endpoint: `repos/${repo}/contents/${entry.path}`, method: "GET" },
+      Contents,
+    );
+
+    if (Buffer.from(content, "base64").toString().includes(`"${packageName}"`))
+      manifests.push(entry.path);
+  }
+
+  return manifests;
 });
 
 const prepareClone = Effect.fn("prepareClone")(function* (
@@ -346,9 +386,20 @@ const bumpConsumers = Command.make(
     const { version, sha } = yield* resolveRelease(to);
     const found = yield* discover(owner);
 
+    // A named repository code search missed is read directly
     const consumers =
       repo.length > 0
-        ? [...found].filter(([name]) => repo.includes(name))
+        ? yield* Effect.forEach(repo, (name) =>
+            found.has(name)
+              ? Effect.succeed([name, found.get(name) ?? []] as const)
+              : discoverIn(name).pipe(
+                  Effect.map((paths) => [name, paths] as const),
+                ),
+          ).pipe(
+            Effect.map((entries) =>
+              entries.filter(([, manifests]) => manifests.length > 0),
+            ),
+          )
         : [...found];
 
     const cacheDirectory = path.join(
