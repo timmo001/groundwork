@@ -1,12 +1,13 @@
 // Pre-push checks: the shared base from timmo001/workflows, plus every
-// package's lint, type-check and formatting. Run them by hand with `hk check`.
+// package's lint. Tests, types and generated files are left to CI and
+// `mise run check`. Run them by hand with `hk check`.
 amends "package://github.com/timmo001/workflows/releases/download/20261027.0/hk-base@20261027.0.0#/base.pkl"
 
 hooks {
   ["pre-push"] {
     steps {
-      ["check"] {
-        check = "mise run check"
+      ["lint"] {
+        check = "mise run lint"
       }
     }
   }

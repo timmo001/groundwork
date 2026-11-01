@@ -1,6 +1,6 @@
 # Groundwork's pinned tools and tasks: install, lint, format, generate, check,
-# the docs server and build, the sync, and the docs-kit rollout. CI and the
-# hk pre-push hook run the same tasks, so local and CI checks match.
+# the docs server and build, the sync, and the docs-kit rollout. CI runs check;
+# the hk pre-push hook runs only lint.
 min_version = "2025.1.0"
 
 [tools]
