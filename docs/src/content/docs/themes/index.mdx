@@ -79,6 +79,12 @@ const store: ThemeStore = localThemeStore("my-app:theme");
 const text = await store.load();
 ```
 
+A page on `pageTheme` takes the store as `store`. Its theme replaces the browser's own on load, so a change made on another client shows up here, and importing or resetting writes through to it. Local storage still caches the solved CSS, so the theme applies before the first paint:
+
+```ts
+pageTheme({ key: "my-app:theme", themes, defaultTheme: "bridge", store: hostStore });
+```
+
 ### Following Omarchy
 
 An app can follow the desktop's theme by reading an [Omarchy](https://omarchy.org) theme's `colors.toml`, in `~/.config/omarchy/current/theme/` for the one in use. `omarchyTheme(text)` maps it onto a mapped theme in the mode it declares: its backgrounds become the lower, background and raised surfaces, its foregrounds the text and muted text, and its accent and named colors the accent and status roles. The result applies the same way as any other theme, and its contrast misses are shown.

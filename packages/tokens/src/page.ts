@@ -15,6 +15,7 @@ import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
+import type { ThemeStore } from "./runtime.ts";
 import type { Theme } from "./schema.ts";
 // Only for `document.modelContext`'s type; the tools themselves load lazily
 import type {} from "./webmcp.ts";
@@ -99,6 +100,13 @@ export interface PageThemeOptions {
    * entry, on the page with their CSS.
    */
   readonly tones?: Readonly<Record<string, string>>;
+  /**
+   * Where the visitor's own theme is kept beyond this browser, such as an
+   * app's host or a profile. Its theme replaces the local one on load, and
+   * importing or resetting writes through to it. Local storage still caches
+   * the CSS, so the theme applies before the first paint.
+   */
+  readonly store?: ThemeStore;
 }
 
 export interface PageTheme {
@@ -273,7 +281,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   };
 
   /** Solves a document under the custom id, applies it and keeps it. */
-  const applyCustom = async (document: Theme, text: string) => {
+  const applyCustom = async (document: Theme, text: string, keep = true) => {
     const { appTonesCss, runtimeTheme } = await import("./runtime.ts");
     const runtime = runtimeTheme(document, customThemeId);
 
@@ -289,6 +297,8 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     picks = { light: customThemeId, dark: customThemeId };
     savePicks();
     commit(resolve(state.mode, document.name));
+
+    if (keep) await options.store?.save(text).catch(() => undefined);
 
     return runtime.checks
       .filter((result) => !result.passes)
@@ -361,6 +371,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
 
       picks = { light: fallback("light"), dark: fallback("dark") };
       commit(resolve(defaultMode, null));
+      void options.store?.clear().catch(() => undefined);
     },
     subscribe: (listener) => {
       listeners.add(listener);
@@ -372,6 +383,42 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   };
 
   commit(state);
+
+  // The store's theme wins over this browser's: another client may have
+  // changed or dropped it
+  if (options.store !== undefined) {
+    void options.store
+      .load()
+      .then(async (text) => {
+        if (text === read(stored.document)) return;
+
+        if (text === null) {
+          setStyle(null);
+
+          for (const key of [stored.document, stored.css, stored.name]) {
+            write(key, null);
+          }
+
+          picks = {
+            light:
+              picks.light === customThemeId ? fallback("light") : picks.light,
+            dark: picks.dark === customThemeId ? fallback("dark") : picks.dark,
+          };
+          savePicks();
+          commit(resolve(state.mode, null));
+
+          return;
+        }
+
+        const { Result } = await import("effect");
+        const parsed = await readTheme(text);
+
+        if (Result.isSuccess(parsed)) {
+          await applyCustom(parsed.success, text, false);
+        }
+      })
+      .catch(() => undefined);
+  }
 
   if (document.modelContext !== undefined) {
     void import("./webmcp.ts").then(
