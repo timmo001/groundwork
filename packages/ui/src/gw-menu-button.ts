@@ -1,5 +1,5 @@
 import { GwElement, css, h } from "./element.js";
-import { base, createIcon } from "./styles.js";
+import { base, createIcon, setIconPath } from "./styles.js";
 
 export interface MenuItem {
   readonly value: string;
@@ -27,6 +27,7 @@ export interface MenuItem {
 export class GwMenuButton extends GwElement {
   static override properties = {
     label: {},
+    icon: {},
     empty: {},
     items: { type: "json" },
     actions: { type: "json" },
@@ -207,6 +208,8 @@ export class GwMenuButton extends GwElement {
   ];
 
   declare label: string;
+  /** SVG path data for an icon before the trigger's label. */
+  declare icon: string;
   /** What the menu says when it has no items, such as "No backups yet". */
   declare empty: string;
   declare items: readonly MenuItem[];
@@ -222,6 +225,8 @@ export class GwMenuButton extends GwElement {
 
   readonly #triggerText = document.createTextNode("");
 
+  readonly #triggerIcon = createIcon("");
+
   readonly #items = h("div", { class: "items", role: "none" });
 
   readonly #actions = h("div", { class: "actions", role: "none" });
@@ -236,6 +241,7 @@ export class GwMenuButton extends GwElement {
   constructor() {
     super();
     this.label = "";
+    this.icon = "";
     this.empty = "Nothing here yet";
     this.items = [];
     this.actions = [];
@@ -316,6 +322,7 @@ export class GwMenuButton extends GwElement {
 
   protected override create(root: ShadowRoot) {
     this.#trigger.append(
+      this.#triggerIcon,
       this.#triggerText,
       h("span", { class: "chevron", "aria-hidden": "true" }),
     );
@@ -326,6 +333,8 @@ export class GwMenuButton extends GwElement {
 
   protected override update(changed: ReadonlySet<string>) {
     this.#triggerText.data = this.label;
+    setIconPath(this.#triggerIcon, this.icon);
+    this.#triggerIcon.toggleAttribute("hidden", !this.icon);
     this.#popover.setAttribute("aria-label", this.label);
 
     if (changed.has("items") || changed.has("empty")) {

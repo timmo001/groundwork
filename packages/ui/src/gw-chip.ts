@@ -1,7 +1,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
-import { base, type Tone } from "./styles.js";
+import { base, createIcon, setIconPath, type Tone } from "./styles.js";
 
 /**
  * A short status or category, tinted by its `tone`. While `loading`, a
@@ -10,6 +10,7 @@ import { base, type Tone } from "./styles.js";
 export class GwChip extends GwElement {
   static override properties = {
     tone: { reflect: true },
+    icon: {},
     loading: { type: "boolean", reflect: true },
   } as const;
 
@@ -47,7 +48,11 @@ export class GwChip extends GwElement {
   ];
 
   declare tone: Tone;
+  /** SVG path data for an icon before the text, instead of the `icon` slot. */
+  declare icon: string;
   declare loading: boolean;
+
+  readonly #icon = createIcon("");
 
   readonly #chip = h("span", { class: "chip", part: "chip" });
 
@@ -58,13 +63,14 @@ export class GwChip extends GwElement {
   readonly #content = h(
     "span",
     { class: "content" },
-    h("slot", { name: "icon" }),
+    h("slot", { name: "icon" }, this.#icon),
     h("slot"),
   );
 
   constructor() {
     super();
     this.tone = "neutral";
+    this.icon = "";
     this.loading = false;
   }
 
@@ -75,6 +81,9 @@ export class GwChip extends GwElement {
 
   protected override update(changed: ReadonlySet<string>) {
     const wasLoading = this.#content.hidden;
+
+    setIconPath(this.#icon, this.icon);
+    this.#icon.toggleAttribute("hidden", !this.icon);
 
     setAttribute(this.#chip, "aria-busy", this.loading ? "true" : null);
     this.#skeleton.hidden = !this.loading;
