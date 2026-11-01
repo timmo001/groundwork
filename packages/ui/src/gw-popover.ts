@@ -1,4 +1,4 @@
-import { Dismissal } from "./dismiss.js";
+import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base } from "./styles.js";
 
@@ -26,6 +26,7 @@ export class GwPopover extends GwElement {
 
   static override styles = [
     base,
+    dismissalStyles,
     css`
       [popover] {
         position: fixed;
@@ -160,8 +161,9 @@ export class GwPopover extends GwElement {
 
   readonly #dismissal = new Dismissal(
     this,
+    this.#popover,
     () => this.close(),
-    (prompt) => this.#popover.append(prompt),
+    () => this.#position(),
   );
 
   #anchor: Element | undefined;
@@ -185,7 +187,7 @@ export class GwPopover extends GwElement {
   show(anchor?: Element) {
     this.#anchor = anchor;
     this.returnValue = "";
-    this.#dismissal.mark(false);
+    this.#dismissal.reset();
     this.#popover.dataset.placement = this.#placementFor(anchor);
     this.#popover.showPopover();
   }

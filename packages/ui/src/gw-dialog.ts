@@ -1,7 +1,6 @@
-import { Dismissal } from "./dismiss.js";
+import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h } from "./element.js";
 import "./gw-button.js";
-import "./gw-popover.js";
 import { base } from "./styles.js";
 
 // MDI's close
@@ -22,6 +21,7 @@ export class GwDialog extends GwElement {
 
   static override styles = [
     base,
+    dismissalStyles,
     css`
       dialog {
         width: min(32rem, calc(100vw - 2 * var(--gw-space-3)));
@@ -103,6 +103,10 @@ export class GwDialog extends GwElement {
         justify-content: flex-end;
         padding: 0 var(--gw-space-4) var(--gw-space-4);
       }
+
+      dialog > .discard {
+        padding: var(--gw-space-4);
+      }
     `,
   ];
 
@@ -143,11 +147,7 @@ export class GwDialog extends GwElement {
     this.#footer,
   );
 
-  readonly #dismissal = new Dismissal(
-    this,
-    () => this.close(),
-    (prompt) => this.#dialog.append(prompt),
-  );
+  readonly #dismissal = new Dismissal(this, this.#dialog, () => this.close());
 
   /** Whether its content has changed since it opened, so closing it asks first. */
   get dirty() {
@@ -159,7 +159,7 @@ export class GwDialog extends GwElement {
   }
 
   show() {
-    this.#dismissal.mark(false);
+    this.#dismissal.reset();
     this.open = true;
   }
 
@@ -199,7 +199,7 @@ export class GwDialog extends GwElement {
     this.#dialog.addEventListener("cancel", this.#onCancel);
     this.#dialog.addEventListener("click", this.#onBackdrop);
     this.#closeButton.addEventListener("click", () => {
-      this.#dismissal.request(this.#closeButton);
+      this.#dismissal.request();
     });
     this.#footer.addEventListener("click", this.#onAction);
     root.append(this.#dialog);

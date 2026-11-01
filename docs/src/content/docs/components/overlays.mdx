@@ -7,6 +7,8 @@ description: Anchored popovers for confirmations, renames and small forms, dialo
 
 Whatever a button asks or offers opens next to that button, not in the middle of the screen, so it stays tied to what was pressed. That covers a confirmation, a rename, a small form and a question that follows the action, such as asking to restart after a save: it opens from the Save button. On phones it's a bottom sheet.
 
+Only one overlay shows at a time. A popover, bottom sheet or dialog never opens another over itself: a follow-up question or a next step replaces its content as a new view, and anything bigger is a page.
+
 <Demo id="popover">
   <gw-button variant="danger" data-opens="forget-device">Forget device</gw-button>
   <gw-popover id="forget-device" confirm>
@@ -47,6 +49,8 @@ Popovers and dialogs that hold edits close the same way, so a stray key or click
 | --- | --- | --- | --- |
 | Nothing has changed | Closes at once | Closes at once | Disabled |
 | Something has changed | Asks "Discard your changes?" first | Does nothing | Enabled |
+
+The question takes the place of the content in the same popover or dialog, rather than opening over it, and Keep editing brings the content back as it was. Pressing Esc again does the same.
 
 An `input` or `change` event from the content marks it changed, and `show()` clears that. Set `dirty` to mark it yourself, such as after an edit made through script. Put `data-needs-changes` on the actions that only make sense after a change, such as Save, and they're disabled until then. Cancel and the other actions close it straight away, since pressing them is a choice. Nothing confirms a save with a toast: the popover closing, or the dialog closing, is the confirmation.
 
