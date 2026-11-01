@@ -4,7 +4,7 @@
  *
  * @module
  */
-import { GwElement, css, h } from "./element.js";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
 export interface MenuItem {
@@ -15,7 +15,17 @@ export interface MenuItem {
   /** SVG path data for an icon before the label. */
   readonly icon?: string;
   readonly disabled?: boolean;
+  /**
+   * Whether the item is the one picked, for a menu of choices such as a sort
+   * order. Give it on every item in the group: the picked one shows a tick.
+   */
+  readonly checked?: boolean;
+  /** Draws a line above the item, starting a new group. */
+  readonly separator?: boolean;
 }
+
+// mdi's check, for the picked item in a menu of choices
+const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
 
 /**
  * A button that opens a menu on the Popover API, so it shows in the top
@@ -26,6 +36,9 @@ export interface MenuItem {
  * Contextual actions, such as "Add a schedule", go in `actions`: they stay
  * below the items as the list scrolls, so they're found without scrolling to
  * the end, and with no items the menu says `empty` above them.
+ *
+ * For a menu of choices, such as sort and order, give each item `checked`:
+ * the picked one shows a tick, and `separator` starts the next group.
  *
  * Items render inside the component, so a page's own button styles can't
  * reach them.
@@ -39,6 +52,8 @@ export interface MenuItem {
  * @attr {MenuItem[]} items - The items, as JSON.
  * @attr {MenuItem[]} actions - Actions pinned under the items, as JSON.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The trigger's size, 24 to 56px tall. Defaults to `medium`.
+ * @attr {boolean} active - Marks the trigger as set, such as a grouping that's on, with an accent border and text.
+ * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. Defaults to `show`.
  *
  * @csspart trigger - The button that opens the menu.
  *
@@ -55,6 +70,8 @@ export class GwMenuButton extends GwElement {
     items: { type: "json" },
     actions: { type: "json" },
     size: { reflect: true },
+    active: { type: "boolean", reflect: true },
+    labels: { reflect: true },
   } as const;
 
   static override styles = [
@@ -93,6 +110,40 @@ export class GwMenuButton extends GwElement {
 
       .trigger:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      :host([active]) .trigger {
+        color: var(--gw-color-accent);
+        border-color: var(--gw-color-accent);
+      }
+
+      /* Icon only, square, with the text kept for assistive technology */
+      :host([labels="hide"]) .trigger.has-icon {
+        padding: 0 calc(var(--gw-space-2) * var(--gw-size));
+      }
+
+      :host([labels="hide"]) .has-icon .label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+
+      @media (width < 40rem) {
+        :host([labels="auto"]) .trigger.has-icon {
+          padding: 0 calc(var(--gw-space-2) * var(--gw-size));
+        }
+
+        :host([labels="auto"]) .has-icon .label {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
       }
 
       .chevron {
@@ -223,6 +274,27 @@ export class GwMenuButton extends GwElement {
         color: var(--gw-color-accent);
       }
 
+      /* Holds the tick's place on every choice, so the labels line up */
+      .tick {
+        flex: none;
+        width: var(--gw-icon-size);
+        height: var(--gw-icon-size);
+        color: var(--gw-color-accent);
+      }
+
+      .item[aria-checked="false"] .tick {
+        visibility: hidden;
+      }
+
+      .separator {
+        flex: none;
+        height: 0;
+        margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1));
+        border: 0;
+        border-block-start: max(var(--gw-border-width), 1px) solid
+          var(--gw-color-border-normal);
+      }
+
       .text {
         display: flex;
         flex-direction: column;
@@ -244,6 +316,10 @@ export class GwMenuButton extends GwElement {
   declare items: readonly MenuItem[];
   declare actions: readonly MenuItem[];
   declare size: "xs" | "small" | "medium" | "large" | "xl";
+  /** Marks the trigger as set, such as a grouping that's on. */
+  declare active: boolean;
+  /** Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. */
+  declare labels: "show" | "hide" | "auto";
 
   readonly #trigger = h("button", {
     class: "trigger",
@@ -253,7 +329,7 @@ export class GwMenuButton extends GwElement {
     "aria-expanded": "false",
   });
 
-  readonly #triggerText = document.createTextNode("");
+  readonly #triggerText: HTMLSpanElement = h("span", { class: "label" });
 
   readonly #triggerIcon = createIcon("");
 
@@ -276,6 +352,8 @@ export class GwMenuButton extends GwElement {
     this.items = [];
     this.actions = [];
     this.size = "medium";
+    this.active = false;
+    this.labels = "show";
   }
 
   /** The enabled items then actions, in the order arrow keys move through them. */
@@ -327,14 +405,18 @@ export class GwMenuButton extends GwElement {
   }
 
   #renderItem(item: MenuItem, kind: "item" | "action") {
+    const choice = item.checked !== undefined;
+
     const button = h(
       "button",
       {
         class: kind === "action" ? "item action" : "item",
-        role: "menuitem",
+        role: choice ? "menuitemradio" : "menuitem",
+        "aria-checked": choice ? String(item.checked) : null,
         value: item.value,
         disabled: item.disabled === true,
       },
+      choice ? this.#tick() : null,
       item.icon ? createIcon(item.icon) : null,
       h(
         "span",
@@ -348,7 +430,17 @@ export class GwMenuButton extends GwElement {
 
     button.addEventListener("click", () => this.#choose(item.value));
 
-    return button;
+    return item.separator === true
+      ? [h("hr", { class: "separator", role: "separator" }), button]
+      : [button];
+  }
+
+  #tick() {
+    const icon = createIcon(tick);
+
+    icon.classList.add("tick");
+
+    return icon;
   }
 
   protected override create(root: ShadowRoot) {
@@ -363,9 +455,16 @@ export class GwMenuButton extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
-    this.#triggerText.data = this.label;
+    this.#triggerText.textContent = this.label;
     setIconPath(this.#triggerIcon, this.icon);
     this.#triggerIcon.toggleAttribute("hidden", !this.icon);
+    this.#trigger.classList.toggle("has-icon", this.icon !== "");
+    // A tooltip for when the text is hidden beside the icon
+    setAttribute(
+      this.#trigger,
+      "title",
+      this.icon !== "" && this.labels !== "show" ? this.label || null : null,
+    );
     this.#popover.setAttribute("aria-label", this.label);
 
     if (changed.has("items") || changed.has("empty")) {
@@ -374,7 +473,7 @@ export class GwMenuButton extends GwElement {
       this.#items.replaceChildren(
         ...(items.length === 0
           ? [h("p", { class: "empty", role: "none" }, this.empty)]
-          : items.map((item) => this.#renderItem(item, "item"))),
+          : items.flatMap((item) => this.#renderItem(item, "item"))),
       );
     }
 
@@ -382,7 +481,7 @@ export class GwMenuButton extends GwElement {
       const actions = Array.isArray(this.actions) ? this.actions : [];
 
       this.#actions.replaceChildren(
-        ...actions.map((item) => this.#renderItem(item, "action")),
+        ...actions.flatMap((item) => this.#renderItem(item, "action")),
       );
       this.#actions.hidden = actions.length === 0;
     }

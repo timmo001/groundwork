@@ -10318,7 +10318,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
+          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
           "name": "GwMenuButton",
           "cssProperties": [
             {
@@ -10344,7 +10344,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, }",
+              "default": "{ label: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10357,7 +10357,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-block, flip-inline; inset: auto; top: anchor(bottom); left: anchor(left); box-sizing: border-box; min-width: 15rem; max-height: min(24rem, 60vh); padding: 0; margin: var(--gw-space-1) 0 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } :host([active]) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"hide\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) .trigger.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } :host([labels=\"auto\"]) .has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-block, flip-inline; inset: auto; top: anchor(bottom); left: anchor(left); box-sizing: border-box; min-width: 15rem; max-height: min(24rem, 60vh); padding: 0; margin: var(--gw-space-1) 0 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: 2.5rem; padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10415,6 +10415,24 @@
             },
             {
               "kind": "field",
+              "name": "active",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Marks the trigger as set, such as a grouping that's on.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "\"show\" | \"hide\" | \"auto\""
+              },
+              "description": "Whether the trigger's text shows beside its icon: always, never, or not on narrow screens.",
+              "default": "\"show\""
+            },
+            {
+              "kind": "field",
               "name": "#trigger",
               "privacy": "private",
               "readonly": true
@@ -10423,6 +10441,9 @@
               "kind": "field",
               "name": "#triggerText",
               "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
               "readonly": true
             },
             {
@@ -10499,6 +10520,11 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#tick",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -10863,6 +10889,20 @@
               },
               "description": "The trigger's size, 24 to 56px tall. Defaults to `medium`.",
               "name": "size"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Marks the trigger as set, such as a grouping that's on, with an accent border and text.",
+              "name": "active"
+            },
+            {
+              "type": {
+                "text": "\"show\"|\"hide\"|\"auto\""
+              },
+              "description": "Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. Defaults to `show`.",
+              "name": "labels"
             }
           ],
           "superclass": {
