@@ -31,7 +31,9 @@ The desktop demo runs `gw-demo-app` from `@timmo001/groundwork-demo/web`, the sa
 mise run demo:desktop
 ```
 
-[Building apps](/desktop/building) covers the template it runs from.
+Beside the demo, a "This machine" card calls the main process: what the app runs on, copying to the clipboard, a notice and a link out to the browser. The window has the browser defaults from `@timmo001/groundwork-desktop`, such as find, zoom, a right-click menu and a tray icon.
+
+[Building apps](/desktop/building) covers the template it runs from and every default.
 
 ## References
 

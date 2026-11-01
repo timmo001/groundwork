@@ -25,7 +25,15 @@ body {
 
 main {
   box-sizing: border-box;
+  display: grid;
+  gap: var(--gw-space-6);
   max-width: 720px;
   margin: 0 auto;
   padding: var(--gw-space-6) var(--gw-space-5);
+}
+
+.native-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gw-space-2);
 }

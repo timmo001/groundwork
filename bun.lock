@@ -86,6 +86,21 @@
         "typescript": "7.0.2",
       },
     },
+    "packages/desktop": {
+      "name": "@timmo001/groundwork-desktop",
+      "dependencies": {
+        "@timmo001/groundwork-ui": "workspace:*",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/docs-kit": {
       "name": "@timmo001/docs-kit",
       "version": "0.9.30",
@@ -221,6 +236,7 @@
         "@fontsource-variable/geist-mono": "5.3.0",
         "@fontsource-variable/mona-sans": "5.3.0",
         "@timmo001/groundwork-demo": "workspace:*",
+        "@timmo001/groundwork-desktop": "workspace:*",
         "@timmo001/groundwork-tokens": "workspace:*",
         "@timmo001/groundwork-ui": "workspace:*",
       },
@@ -915,6 +931,8 @@
     "@timmo001/groundwork-conventions": ["@timmo001/groundwork-conventions@workspace:packages/conventions"],
 
     "@timmo001/groundwork-demo": ["@timmo001/groundwork-demo@workspace:packages/demo"],
+
+    "@timmo001/groundwork-desktop": ["@timmo001/groundwork-desktop@workspace:packages/desktop"],
 
     "@timmo001/groundwork-lit-effect": ["@timmo001/groundwork-lit-effect@workspace:packages/lit-effect"],
 

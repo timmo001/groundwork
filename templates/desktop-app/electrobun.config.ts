@@ -27,11 +27,13 @@ export default {
     },
     copy: {
       "src/mainview/index.html": "views/mainview/index.html",
+      "src/tray/icon.png": "views/tray/icon.png",
     },
     // The workspace packages the view bundles, so `dev --watch` rebuilds on
     // their edits too
     watch: [
       "../../packages/demo/src",
+      "../../packages/desktop/src",
       "../../packages/ui/src",
       "../../packages/tokens/src",
       "../../packages/tokens/generated",

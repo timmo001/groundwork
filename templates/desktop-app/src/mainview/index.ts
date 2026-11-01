@@ -16,7 +16,13 @@ import {
   type ThemeMode,
 } from "@timmo001/groundwork-tokens/page";
 import { on } from "@timmo001/groundwork-ui";
+import {
+  connectDesktop,
+  type DesktopSchema,
+} from "@timmo001/groundwork-desktop/view";
+import { Electroview } from "electrobun/view";
 
+import type { DemoRequests } from "../shared/requests.ts";
 import { themeOptions } from "./theme.ts";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
@@ -50,3 +56,84 @@ if (picker !== null) {
     picker.status = result.ok ? `Using ${result.name}` : result.error;
   });
 }
+
+// The desktop defaults, and a card that calls the main process: a notice,
+// the clipboard, the system browser and what the machine is
+const desktop = await connectDesktop<DemoRequests>((messages) => {
+  const rpc = Electroview.defineRPC<DesktopSchema<DemoRequests>>({
+    maxRequestTime: 10_000,
+    handlers: { messages },
+  });
+
+  new Electroview({ rpc });
+
+  return rpc;
+});
+
+const card = document.createElement("gw-card");
+const facts = document.createElement("gw-facts");
+const actions = document.createElement("div");
+
+const action = (label: string, run: () => Promise<void>) => {
+  const button = document.createElement("gw-button");
+
+  button.setAttribute("appearance", "outlined");
+  button.setAttribute("size", "small");
+  button.textContent = label;
+  button.addEventListener("click", () => void run());
+
+  return button;
+};
+
+card.setAttribute("heading", "This machine");
+
+card.setAttribute(
+  "description",
+  "Calls from the view to the app's main process",
+);
+
+facts.loading = true;
+
+actions.slot = "footer";
+
+actions.className = "native-actions";
+
+card.append(facts, actions);
+
+document.querySelector("main")?.append(card);
+
+const info = await desktop.request.systemInfo();
+
+const details = [
+  { label: "Platform", value: `${info.platform} (${info.arch})` },
+  { label: "Webview", value: info.webview },
+  { label: "Bun", value: info.bun },
+  { label: "Build", value: desktop.dev ? "Development" : "Release" },
+];
+
+facts.items = details;
+
+facts.loading = false;
+
+actions.append(
+  action("Send a notification", () =>
+    desktop.notify({
+      heading: "Hello from the main process",
+      body: desktop.config.notifications
+        ? undefined
+        : "In the app, since system notifications are off.",
+      tone: "info",
+    }),
+  ),
+  action("Copy details", async () => {
+    await desktop.request.clipboardWrite({
+      text: details.map(({ label, value }) => `${label}: ${value}`).join("\n"),
+    });
+    await desktop.notify({ heading: "Copied the details", tone: "success" });
+  }),
+  action("Open the docs in the browser", async () => {
+    await desktop.request.openExternal({
+      url: "https://groundwork.timmo.dev/desktop/",
+    });
+  }),
+);
