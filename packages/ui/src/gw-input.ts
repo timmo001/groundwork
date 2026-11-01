@@ -46,7 +46,7 @@ const hideIcon =
  * @attr {boolean} reveal - On a password field, adds a button at the end to show and hide what's typed.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
  * @attr {string} icon - SVG path data for an icon inside the field, before the text, such as a magnifier on a search.
- * @attr {boolean} hide-label - Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.
+ * @attr {boolean} label-hidden - Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
@@ -75,7 +75,7 @@ export class GwInput extends LightElement {
     reveal: { type: "boolean" },
     size: { reflect: true },
     icon: {},
-    hideLabel: { type: "boolean", attribute: "hide-label", reflect: true },
+    labelHidden: { type: "boolean", attribute: "label-hidden", reflect: true },
   } as const;
 
   declare label: string;
@@ -112,7 +112,7 @@ export class GwInput extends LightElement {
   /** SVG path data for an icon inside the field, before the text. */
   declare icon: string;
   /** Keeps the label as the accessible name without showing it. */
-  declare hideLabel: boolean;
+  declare labelHidden: boolean;
 
   readonly #id = fieldId();
 
@@ -184,7 +184,7 @@ export class GwInput extends LightElement {
     this.reveal = false;
     this.size = "medium";
     this.icon = "";
-    this.hideLabel = false;
+    this.labelHidden = false;
   }
 
   protected override create(root: HTMLElement) {
@@ -259,7 +259,7 @@ export class GwInput extends LightElement {
     this.#label.replaceChildren(this.label, this.#optional);
     this.#optional.hidden = !this.optional;
     this.#info.update(this.label, this.info);
-    this.#info.heading.classList.toggle("gw-visually-hidden", this.hideLabel);
+    this.#info.heading.classList.toggle("gw-visually-hidden", this.labelHidden);
     setIconPath(this.#icon, this.icon);
     this.#icon.toggleAttribute("hidden", !this.icon);
     this.#input.type = reveal && this.#revealed ? "text" : this.type;

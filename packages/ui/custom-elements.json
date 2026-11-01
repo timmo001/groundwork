@@ -9857,7 +9857,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, size: { reflect: true }, icon: {}, hideLabel: { type: \"boolean\", attribute: \"hide-label\", reflect: true }, }",
+              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, size: { reflect: true }, icon: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10052,7 +10052,7 @@
             },
             {
               "kind": "field",
-              "name": "hideLabel",
+              "name": "labelHidden",
               "type": {
                 "text": "boolean"
               },
@@ -10627,7 +10627,7 @@
                 "text": "boolean"
               },
               "description": "Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.",
-              "name": "hide-label"
+              "name": "label-hidden"
             }
           ],
           "superclass": {
