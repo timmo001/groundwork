@@ -24,6 +24,11 @@ export interface OptionItem {
   readonly swatches?: readonly string[];
   /** One color shown as a dot before the label, such as a tag's color. */
   readonly swatch?: string;
+  /**
+   * Shows the option but stops it being picked, such as one that isn't
+   * available here. Say why in its `description`.
+   */
+  readonly disabled?: boolean;
 }
 
 // MDI's magnify and check
@@ -202,6 +207,13 @@ export class GwOptionList extends GwElement {
         color: var(--gw-color-text-strong);
       }
 
+      /* A disabled option can still be reached, so its reason is read, but
+         reads as unavailable and can't be picked */
+      [role="option"][aria-disabled="true"] {
+        color: var(--gw-color-text-disabled);
+        cursor: not-allowed;
+      }
+
       [role="option"] > .icon {
         flex: none;
         color: var(--gw-color-text-primary);
@@ -366,7 +378,7 @@ export class GwOptionList extends GwElement {
   }
 
   #pick(option: OptionItem | undefined) {
-    if (option === undefined) return;
+    if (option === undefined || option.disabled === true) return;
 
     this.dispatchEvent(
       new CustomEvent("pick", {
@@ -630,6 +642,7 @@ export class GwOptionList extends GwElement {
         id: `${this.#id}-${index}`,
         "data-index": index,
         "aria-selected": selected ? "true" : "false",
+        "aria-disabled": option.disabled === true ? "true" : null,
         "aria-setsize": this.#filtered.length,
         "aria-posinset": index + 1,
         "data-active": index === this.#active,

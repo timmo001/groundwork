@@ -216,6 +216,8 @@ export class GwSelect extends LightElement {
           item.description = option.dataset.description;
         }
 
+        if (option.disabled) item.disabled = true;
+
         if (group instanceof HTMLOptGroupElement) item.group = group.label;
 
         return item;
