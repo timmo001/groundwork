@@ -102,6 +102,20 @@ The page header holds the page's `<h1>`, with an optional `icon` tile and `descr
 | `gw-page` | Centers a page's content at `--gw-content-width`, or the narrow width with `narrow` |
 | `gw-stack` | Stacks its children with the theme's gap |
 | `gw-row` | Lines its children up and wraps them; `nowrap` stops that |
-| `gw-grid` | Fills columns at least `--gw-grid-min` (18rem) wide |
+| `gw-grid` | Fills columns at least `--gw-grid-min` (18rem) wide, and at most `max` of them |
 
 `gap="s"` or `gap="l"` changes the gap of a stack, row or grid.
+
+### Capping the columns
+
+On a wide screen a grid keeps adding columns. `max` (2 to 6) caps how many it shows, so the cards grow wider instead. Set `--gw-grid-max` for any other count. Narrow screens still drop to fewer columns at `--gw-grid-min`.
+
+<Demo id="grid-max" layout="stack">
+  <gw-grid max="3" style="--gw-grid-min: 8rem">
+    <gw-card heading="One">Up to three columns</gw-card>
+    <gw-card heading="Two">however wide</gw-card>
+    <gw-card heading="Three">the page gets</gw-card>
+    <gw-card heading="Four">This one wraps</gw-card>
+    <gw-card heading="Five">to a second row</gw-card>
+  </gw-grid>
+</Demo>

@@ -138,16 +138,19 @@ export class GwRow extends GwSlotted {
 }
 
 /**
- * Fills as many columns as fit, each at least `--gw-grid-min` wide.
+ * Fills as many columns as fit, each at least `--gw-grid-min` wide, and at
+ * most `max` of them when it's set.
  *
  * @element gw-grid
  * @summary Children in responsive columns.
  *
  * @attr {"s"|"l"} gap - A smaller or larger gap.
+ * @attr {"2"|"3"|"4"|"5"|"6"} max - The most columns it shows. Sets `--gw-grid-max`.
  *
  * @slot - The children.
  *
  * @cssprop --gw-grid-min - The narrowest a column gets. Defaults to `18rem`.
+ * @cssprop --gw-grid-max - The most columns it shows, as a number. Unset by default, so as many fit as the width allows.
  * @cssprop --gw-gap - The gap. Defaults to `--gw-space-3`.
  */
 export class GwGrid extends GwSlotted {
@@ -156,12 +159,41 @@ export class GwGrid extends GwSlotted {
     gaps,
     css`
       :host {
+        /* A column's width at the cap. Invalid while --gw-grid-max is unset,
+           so the var() below falls back to 0px and the cap does nothing */
+        --_gw-grid-cap: calc(
+          (100% - (var(--gw-grid-max) - 1) * var(--gw-gap, var(--gw-space-3))) /
+            var(--gw-grid-max)
+        );
         display: grid;
         grid-template-columns: repeat(
           auto-fill,
-          minmax(min(100%, var(--gw-grid-min, 18rem)), 1fr)
+          minmax(
+            min(100%, max(var(--gw-grid-min, 18rem), var(--_gw-grid-cap, 0px))),
+            1fr
+          )
         );
         gap: var(--gw-gap, var(--gw-space-3));
+      }
+
+      :host([max="2"]) {
+        --gw-grid-max: 2;
+      }
+
+      :host([max="3"]) {
+        --gw-grid-max: 3;
+      }
+
+      :host([max="4"]) {
+        --gw-grid-max: 4;
+      }
+
+      :host([max="5"]) {
+        --gw-grid-max: 5;
+      }
+
+      :host([max="6"]) {
+        --gw-grid-max: 6;
       }
     `,
   ];
