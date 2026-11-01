@@ -9,6 +9,8 @@
     "docs"
   ],
   "trustedDependencies": [
-    "sharp"
+    "rs-module-lexer",
+    "sharp",
+    "workerd"
   ]
 }
