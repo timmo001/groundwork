@@ -49,7 +49,12 @@ export class GwDemoApp extends GwElement {
 
   readonly #restart: GwButton = h(
     "gw-button",
-    { variant: "neutral", appearance: "outlined", icon: icons.restart },
+    {
+      variant: "neutral",
+      appearance: "outlined",
+      icon: icons.restart,
+      disabled: true,
+    },
     "Restart",
   );
 
@@ -174,9 +179,13 @@ export class GwDemoApp extends GwElement {
 
     this.#applyAll.disabled = pending === 0;
 
-    // Once something is applied, Restart turns accent to say it's next
-    this.#restart.variant = this.#applied.size > 0 ? "brand" : "neutral";
-    this.#restart.appearance = this.#applied.size > 0 ? "accent" : "outlined";
+    // Restart only has work once something is applied, and turns accent to
+    // say it's next; after a restart it's done and disabled again
+    const restartable = this.#applied.size > 0;
+
+    this.#restart.disabled = !restartable;
+    this.#restart.variant = restartable ? "brand" : "neutral";
+    this.#restart.appearance = restartable ? "accent" : "outlined";
 
     this.#list.replaceChildren(
       ...items.map((item) => {
