@@ -10,6 +10,19 @@ import { base, type Tone } from "./styles.js";
 /**
  * A message in the flow of the page. `urgent` announces it at once, for
  * errors that need attention; otherwise it's announced politely.
+ *
+ * @element gw-alert
+ * @summary A message in the flow of the page.
+ *
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The color and default icon. Defaults to `info`.
+ * @attr {string} heading - A heading above the message.
+ * @attr {boolean} urgent - Announces it at once.
+ *
+ * @slot - The message.
+ * @slot icon - An icon in place of the tone's.
+ * @slot actions - Buttons beside the message.
+ *
+ * @csspart alert - The alert.
  */
 export class GwAlert extends GwElement {
   static override properties = {

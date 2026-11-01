@@ -21,6 +21,15 @@ const emptyIcon =
  * left. Put it in a page, a panel or a popover from a bell button. Each
  * card folds away when dismissed, and the list closes up smoothly. It fires
  * `clear` when Clear all is pressed.
+ *
+ * @element gw-notification-center
+ * @summary A list of notifications with Clear all and an empty state.
+ *
+ * @attr {string} heading - The list's heading. Defaults to `Notifications`.
+ *
+ * @slot - The `gw-notification` cards.
+ *
+ * @fires clear - When Clear all is pressed.
  */
 export class GwNotificationCenter extends GwElement {
   static override properties = {

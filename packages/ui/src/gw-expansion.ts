@@ -12,6 +12,22 @@ import { base } from "./styles.js";
  * `<details>`, so find-in-page and the keyboard work as they do anywhere. The
  * content glides open and shut rather than jumping, and the chevron turns
  * with it. `open` reflects its state and it fires `toggle`.
+ *
+ * @element gw-expansion
+ * @summary A heading that opens and closes the content under it.
+ *
+ * @attr {string} heading - The heading in the summary row.
+ * @attr {string} description - A line under the heading.
+ * @attr {boolean} open - Whether the content shows.
+ *
+ * @slot - The content.
+ * @slot icon - An icon before the heading.
+ *
+ * @csspart details - The native `<details>`.
+ * @csspart summary - The summary row.
+ * @csspart content - The content's wrapper.
+ *
+ * @fires toggle - When it opens or closes.
  */
 export class GwExpansion extends GwElement {
   static override properties = {

@@ -14,6 +14,19 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * icon takes the `tone`'s color. While `loading`, a skeleton stands in for
  * the value, and for the icon if it has none yet, and the value fades in
  * once it's loaded.
+ *
+ * @element gw-badge
+ * @summary A pill with an icon, a value and an optional label.
+ *
+ * @attr {string} icon - SVG path data for the icon.
+ * @attr {string} label - A small label above the value.
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The icon's color. Defaults to `accent`.
+ * @attr {"small"|"medium"} size - The size. Defaults to `medium`.
+ * @attr {boolean} loading - Shows a skeleton for the value, and the icon if it has none.
+ *
+ * @slot - The value.
+ *
+ * @csspart badge - The badge.
  */
 export class GwBadge extends GwElement {
   static override properties = {

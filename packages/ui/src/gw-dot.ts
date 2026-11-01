@@ -10,6 +10,13 @@ import { base, type Tone } from "./styles.js";
 /**
  * A small status dot. Give it a `label`, such as "Online", unless text
  * beside it already says the same.
+ *
+ * @element gw-dot
+ * @summary A small status dot.
+ *
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The color. Defaults to `neutral`.
+ * @attr {string} label - What it means, for assistive technology.
+ * @attr {boolean} pulse - Pulses, for something live.
  */
 export class GwDot extends GwElement {
   static override properties = {

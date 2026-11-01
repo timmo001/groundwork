@@ -14,6 +14,19 @@ import { base } from "./styles.js";
  * other. A wide control drops under the text when there isn't room. Rows
  * after the first in their parent get a line above them. While `loading`, a
  * skeleton stands in for the control, and for the text until it's known.
+ *
+ * @element gw-setting-row
+ * @summary A setting's name and description beside its control.
+ *
+ * @attr {string} heading - The setting's name.
+ * @attr {string} description - What it does.
+ * @attr {boolean} loading - Shows skeletons for the control and any unknown text.
+ *
+ * @slot - The control.
+ *
+ * @csspart row - The row.
+ *
+ * @cssprop --gw-row-padding - The padding above and below. Defaults to `--gw-space-2`.
  */
 export class GwSettingRow extends GwElement {
   static override properties = {

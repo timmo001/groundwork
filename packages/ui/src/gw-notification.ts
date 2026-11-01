@@ -19,6 +19,22 @@ const closeIcon =
  * a line of text, when it happened and up to two actions. Its close button
  * dismisses it: it fires `dismiss`, then folds away and removes itself,
  * unless the event is cancelled.
+ *
+ * @element gw-notification
+ * @summary One notification card, dismissed with its close button.
+ *
+ * @attr {string} heading - The heading.
+ * @attr {string} icon - SVG path data for its icon.
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The icon's color. Defaults to `neutral`.
+ * @attr {string} time - When it happened, as shown, such as `2 min ago`.
+ * @attr {boolean} unread - Marks it with a stripe until it's seen.
+ *
+ * @slot - A line of text.
+ * @slot actions - Up to two buttons.
+ *
+ * @csspart card - The card.
+ *
+ * @fires dismiss - When the close button is pressed. Cancel it to keep the card.
  */
 export class GwNotification extends GwElement {
   static override properties = {

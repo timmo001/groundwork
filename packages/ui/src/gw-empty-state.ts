@@ -10,6 +10,17 @@ import { base, createIcon, setIconPath } from "./styles.js";
 /**
  * What a list or page shows when there's nothing in it, or nothing to do:
  * an icon, a heading, a line of text and an optional action.
+ *
+ * @element gw-empty-state
+ * @summary What a list or page shows when there's nothing in it.
+ *
+ * @attr {string} icon - SVG path data for the icon.
+ * @attr {string} heading - The heading.
+ *
+ * @slot - A line of text.
+ * @slot actions - An action, such as adding the first item.
+ *
+ * @csspart empty - The block.
  */
 export class GwEmptyState extends GwElement {
   static override properties = {

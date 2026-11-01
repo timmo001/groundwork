@@ -7,7 +7,16 @@
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
-/** A spinning ring while something loads, announced by its `label`. */
+/**
+ * A spinning ring while something loads, announced by its `label`.
+ *
+ * @element gw-spinner
+ * @summary A spinning ring for a wait a skeleton can't stand in for.
+ *
+ * @attr {string} label - What's loading, for assistive technology. Defaults to `Loading`.
+ *
+ * @cssprop --gw-spinner-size - The ring's size. Defaults to `1.25rem`.
+ */
 export class GwSpinner extends GwElement {
   static override properties = {
     label: {},

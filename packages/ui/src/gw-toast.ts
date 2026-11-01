@@ -17,6 +17,11 @@ import { base, type Tone } from "./styles.js";
  * it may sit over something interactive and leaves before it can be used.
  * It's in the top layer and rises above any dialog each time one shows. It's
  * a last resort: show an outcome where it happened instead.
+ *
+ * @element gw-toaster
+ * @summary Brief, non-interactive toasts in the bottom end corner.
+ *
+ * @attr {number} duration - Milliseconds each toast shows for. Defaults to 5000.
  */
 export class GwToaster extends GwElement {
   static override properties = {

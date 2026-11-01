@@ -21,6 +21,13 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
  * Label and value pairs, as a description list. While `loading`, `rows`
  * skeleton pairs stand in for them, keeping any labels already known. The
  * list glides to its new height and the values fade in once they've loaded.
+ *
+ * @element gw-facts
+ * @summary Label and value pairs, as a description list.
+ *
+ * @attr {Fact[]} items - The pairs, as JSON.
+ * @attr {boolean} loading - Shows skeleton pairs, keeping any labels already known.
+ * @attr {number} rows - How many skeleton pairs while loading. Defaults to 4.
  */
 export class GwFacts extends GwElement {
   static override properties = {

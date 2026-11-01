@@ -15,6 +15,9 @@ import { base } from "./styles.js";
  * for an action in progress. It's hidden from assistive technology, so mark
  * the region it sits in `aria-busy`.
  *
+ * @element gw-skeleton
+ * @summary A pulsing placeholder for what's loading.
+ *
  * @cssprop --gw-skeleton-color - The fill. Defaults to the neutral fill.
  * @cssprop --gw-skeleton-radius - The corners. Defaults to the control radius.
  */
@@ -57,6 +60,9 @@ export class GwSkeleton extends GwElement {
  * A line of text. Its height follows the font size around it, so it lines up
  * with the text it stands in for.
  *
+ * @element gw-skeleton-text
+ * @summary A placeholder for a line of text.
+ *
  * @cssprop --gw-skeleton-width - Defaults to `8rem`.
  */
 export class GwSkeletonText extends GwSkeleton {
@@ -78,6 +84,11 @@ export class GwSkeletonText extends GwSkeleton {
 /**
  * Several lines of text, as a paragraph, with a shorter last line so it
  * doesn't read as a solid block.
+ *
+ * @element gw-skeleton-lines
+ * @summary A placeholder for a paragraph.
+ *
+ * @attr {number} lines - How many lines. Defaults to 3.
  */
 export class GwSkeletonLines extends GwElement {
   static override properties = {
@@ -124,7 +135,14 @@ export class GwSkeletonLines extends GwElement {
   }
 }
 
-/** A round placeholder for an icon or avatar. */
+/**
+ * A round placeholder for an icon or avatar.
+ *
+ * @element gw-skeleton-icon
+ * @summary A round placeholder for an icon or avatar.
+ *
+ * @cssprop --gw-icon-size - Its size. Defaults to `1.25rem`.
+ */
 export class GwSkeletonIcon extends GwSkeleton {
   static override styles = [
     ...GwSkeleton.styles,

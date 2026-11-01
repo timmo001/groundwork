@@ -18,6 +18,17 @@ const closeIcon =
  * closes it and the page behind is inert. Open it with `show()`. Put buttons
  * in the `actions` slot; a click on one with a `value` closes the dialog with
  * that value, and fires `close`.
+ *
+ * @element gw-dialog
+ * @summary A modal for what blocks the whole app.
+ *
+ * @attr {string} heading - The heading beside the close button.
+ * @attr {boolean} open - Whether it shows.
+ *
+ * @slot - The content.
+ * @slot actions - Buttons; one with a `value` closes it with that value.
+ *
+ * @fires close - When it closes; `returnValue` holds the button's value.
  */
 export class GwDialog extends GwElement {
   static override properties = {

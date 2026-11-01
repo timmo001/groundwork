@@ -39,6 +39,22 @@ const chevronIcon =
  * groups, with `data-icon` and `data-description`), which it reads once when
  * it first connects. A hidden input carries the value in forms, and it fires
  * `change` when the value changes.
+ *
+ * @element gw-select
+ * @summary A labeled picker with search, a bottom sheet on phones.
+ *
+ * @attr {string} label - The field's label.
+ * @attr {string} name - The form field name.
+ * @attr {string} value - The chosen option's value.
+ * @attr {string} hint - One line of help under the field.
+ * @attr {string} info - Longer help, opened from an (i) button by the label.
+ * @attr {string} placeholder - What the trigger shows with nothing chosen. Defaults to `Choose`.
+ * @attr {"auto"|"always"|"never"} search - Whether the list has a search field; `auto` adds one from 7 options. Defaults to `auto`.
+ * @attr {boolean} disabled - Disables the field.
+ * @attr {boolean} open - Whether the list shows.
+ * @attr {OptionItem[]} options - The options, as JSON.
+ *
+ * @fires change - When the value changes.
  */
 export class GwSelect extends LightElement {
   static override properties = {

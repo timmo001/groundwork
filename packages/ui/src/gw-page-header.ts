@@ -10,6 +10,15 @@ import { base, createIcon, setIconPath } from "./styles.js";
 /**
  * A page's title, with an optional icon tile and description, and its
  * controls at the top right in the `actions` slot.
+ *
+ * @element gw-page-header
+ * @summary A page's title, icon, description and actions.
+ *
+ * @attr {string} heading - The page's title.
+ * @attr {string} description - A line under the title.
+ * @attr {string} icon - SVG path data for the icon tile.
+ *
+ * @slot actions - The page's controls.
  */
 export class GwPageHeader extends GwElement {
   static override properties = {

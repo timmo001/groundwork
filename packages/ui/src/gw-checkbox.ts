@@ -7,7 +7,20 @@
 import { h, setAttribute } from "./element.js";
 import { LightElement, fieldId } from "./fields.js";
 
-/** A labeled native checkbox. `gw-switch` draws the same control as a switch. */
+/**
+ * A labeled native checkbox. `gw-switch` draws the same control as a switch.
+ *
+ * @element gw-checkbox
+ * @summary A labeled checkbox in light DOM, so forms see it.
+ *
+ * @attr {string} label - The label.
+ * @attr {string} name - The form field name.
+ * @attr {string} value - The value submitted when checked. Defaults to `on`.
+ * @attr {string} hint - One line of help under it.
+ * @attr {boolean} checked - Whether it's checked.
+ * @attr {boolean} disabled - Disables it.
+ * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
+ */
 export class GwCheckbox extends LightElement {
   static override properties = {
     label: {},
@@ -75,7 +88,13 @@ export class GwCheckbox extends LightElement {
   }
 }
 
-/** A checkbox drawn as a switch, announced as a switch. */
+/**
+ * A checkbox drawn as a switch, announced as a switch. It takes the same
+ * attributes as `gw-checkbox`.
+ *
+ * @element gw-switch
+ * @summary A labeled switch for a setting that applies at once.
+ */
 export class GwSwitch extends GwCheckbox {
   protected override get controlRole() {
     return "switch";

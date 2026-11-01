@@ -14,6 +14,20 @@ import { base } from "./styles.js";
  * With `href` the whole card is a link. While `loading`, lines of skeleton
  * stand in for the content, and for the heading until it's known. The card
  * glides to its new height and the content fades in once it's loaded.
+ *
+ * @element gw-card
+ * @summary A surface for one group of content, or a link to more.
+ *
+ * @attr {string} heading - The card's heading.
+ * @attr {string} href - Makes the whole card a link to this address.
+ * @attr {boolean} flush - Drops the padding, for content that runs to the edges.
+ * @attr {boolean} loading - Shows skeleton lines for the content and any unknown heading.
+ * @attr {number} lines - How many skeleton lines while loading. Defaults to 3.
+ *
+ * @slot - The content.
+ * @slot actions - Buttons beside the heading.
+ *
+ * @csspart card - The card's surface.
  */
 export class GwCard extends GwElement {
   static override properties = {

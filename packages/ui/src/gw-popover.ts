@@ -28,6 +28,17 @@ const sheetBelow = 600;
  * outside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a
  * click on one with a `value` closes it with that value, and fires `close`.
  * `confirm` makes it an `alertdialog`, for a question that needs an answer.
+ *
+ * @element gw-popover
+ * @summary A small surface anchored to the button that opened it.
+ *
+ * @attr {string} heading - The heading beside the close button.
+ * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
+ *
+ * @slot - The content.
+ * @slot actions - Buttons; one with a `value` closes it with that value.
+ *
+ * @fires close - When it closes; `returnValue` holds the button's value.
  */
 export class GwPopover extends GwElement {
   static override properties = {

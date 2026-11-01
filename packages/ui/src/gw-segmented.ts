@@ -22,6 +22,19 @@ export interface Segment {
  * whether their text shows: `show` (the default), `hide` (icons only, with
  * the text as a tooltip and accessible name) or `auto`, which shows the text
  * on wide screens and only the icons on narrow ones.
+ *
+ * @element gw-segmented
+ * @summary Picks one of a few options, as a row of radio buttons.
+ *
+ * @attr {string} label - The group's accessible name.
+ * @attr {string} name - The form field name. Defaults to a unique name.
+ * @attr {string} value - The chosen option's value.
+ * @attr {"show"|"hide"|"auto"} labels - Whether option text shows beside icons. Defaults to `show`.
+ * @attr {Segment[]} options - The options, as JSON.
+ *
+ * @csspart indicator - The pill that slides to the chosen option.
+ *
+ * @fires change - When the chosen option changes.
  */
 export class GwSegmented extends GwElement {
   static override properties = {

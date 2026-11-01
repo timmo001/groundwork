@@ -18,6 +18,17 @@ const sheetBelow = 600;
  * closes the menu and fires `pick` with its value. Esc or a click outside
  * closes it. It won't open over another dialog, so only one overlay shows at
  * a time. Set `shortcut="none"` to open it only with `show()`.
+ *
+ * @element gw-command-menu
+ * @summary A searchable list of commands on Cmd+K or Ctrl+K.
+ *
+ * @attr {OptionItem[]} options - The commands, as JSON.
+ * @attr {string} label - The accessible name. Defaults to `Commands`.
+ * @attr {string} placeholder - The search placeholder. Defaults to `Search commands`.
+ * @attr {string} shortcut - The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.
+ * @attr {boolean} open - Whether it shows.
+ *
+ * @fires pick - When a command is picked, with its `value` in `detail`.
  */
 export class GwCommandMenu extends GwElement {
   static override properties = {

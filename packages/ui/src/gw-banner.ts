@@ -14,6 +14,19 @@ import { base, type Tone } from "./styles.js";
  * opens and closes smoothly, so the page below moves with it rather than
  * jumping. Put one action in the `actions` slot, which opens what it's
  * about. `urgent` announces it at once.
+ *
+ * @element gw-banner
+ * @summary A slim bar for app-wide state, such as a lost connection.
+ *
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The color. Defaults to `info`.
+ * @attr {boolean} open - Whether it shows.
+ * @attr {boolean} urgent - Announces it at once.
+ *
+ * @slot - The message.
+ * @slot icon - An icon before the message.
+ * @slot actions - One button, opening what it's about.
+ *
+ * @csspart bar - The bar.
  */
 export class GwBanner extends GwElement {
   static override properties = {

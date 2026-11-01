@@ -20,6 +20,29 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * While `loading`, a spinning ring takes the icon's place, or the text's
  * when there's no icon, so the button keeps its size, and clicks are
  * ignored. The icon fades back once it's done.
+ *
+ * @element gw-button
+ * @summary A pill button, or a link that looks like one.
+ *
+ * @attr {"brand"|"neutral"|"info"|"success"|"warning"|"danger"} variant - The color. Defaults to `brand`.
+ * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the color is applied. Defaults to `accent`.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, 24 to 56px tall. Defaults to `medium`.
+ * @attr {"button"|"submit"|"reset"} type - The native button type. Defaults to `button`.
+ * @attr {string} href - Renders a link to this address instead of a button.
+ * @attr {string} label - The accessible name, when the text alone isn't enough.
+ * @attr {boolean} disabled - Disables the button.
+ * @attr {boolean} loading - Shows a spinning ring in the icon's place and ignores clicks.
+ * @attr {string} icon - SVG path data for an icon before the text.
+ * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not on narrow screens. Defaults to `show`.
+ *
+ * @slot - The text.
+ * @slot icon - An icon before the text, in place of `icon`.
+ *
+ * @csspart button - The native button or link.
+ *
+ * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
+ * @cssprop --gw-button-tone - The color, set by `variant`.
+ * @cssprop --gw-button-ink - The text color, when it differs from the tone.
  */
 export class GwButton extends GwElement {
   static override properties = {

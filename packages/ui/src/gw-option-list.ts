@@ -64,6 +64,19 @@ let lastList = 0;
  * with thousands of options. Type to filter, move with the arrow keys, Home,
  * End and Page Up or Down, and pick with Enter or a click; it fires `pick`
  * with the option's value. Call `reset()` each time it's shown.
+ *
+ * @element gw-option-list
+ * @summary A searchable, windowed list of options.
+ *
+ * @attr {OptionItem[]} options - The options, as JSON.
+ * @attr {string} value - The selected option's value.
+ * @attr {string} label - The list's accessible name.
+ * @attr {boolean} search - Shows a search field above the list.
+ * @attr {string} placeholder - The search placeholder. Defaults to `Search`.
+ *
+ * @cssprop --gw-option-list-height - The list's maximum height. Defaults to `20rem`.
+ *
+ * @fires pick - When an option is picked, with its `value` in `detail`.
  */
 export class GwOptionList extends GwElement {
   static override properties = {

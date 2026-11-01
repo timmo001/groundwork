@@ -12,6 +12,18 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
 /**
  * A short status or category, tinted by its `tone`. While `loading`, a
  * skeleton stands in for its text, and the text fades in once it's loaded.
+ *
+ * @element gw-chip
+ * @summary A short status or category, tinted by its tone.
+ *
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The tint. Defaults to `neutral`.
+ * @attr {string} icon - SVG path data for an icon before the text.
+ * @attr {boolean} loading - Shows a skeleton for the text.
+ *
+ * @slot - The text.
+ * @slot icon - An icon before the text, in place of `icon`.
+ *
+ * @csspart chip - The chip.
  */
 export class GwChip extends GwElement {
   static override properties = {

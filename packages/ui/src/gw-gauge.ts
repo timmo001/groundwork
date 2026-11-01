@@ -60,6 +60,24 @@ const circle = (className: string) => {
  * colored by `warning` and `danger`, and glides when the value changes.
  * While `loading`, the track pulses and a skeleton stands in for the
  * reading.
+ *
+ * @element gw-gauge
+ * @summary A reading on a dial.
+ *
+ * @attr {number} value - The reading.
+ * @attr {number} min - The bottom of the dial. Defaults to 0.
+ * @attr {number} max - The top of the dial. Defaults to 100.
+ * @attr {string} display - The reading as shown, in place of `value`.
+ * @attr {string} unit - The unit after the reading. Defaults to `%`.
+ * @attr {string} label - What it measures, under the dial.
+ * @attr {string} caption - A line under the label.
+ * @attr {number} warning - From here it turns warning. Defaults to 75.
+ * @attr {number} danger - From here it turns danger. Defaults to 90.
+ * @attr {boolean} inverted - Lower is worse, such as for a battery.
+ * @attr {boolean} loading - Pulses the track and shows a skeleton for the reading.
+ *
+ * @cssprop --gw-gauge-size - The dial's width. Defaults to `8.5rem`.
+ * @cssprop --gw-gauge-color - The arc's color, overriding the thresholds.
  */
 export class GwGauge extends GwElement {
   static override properties = {

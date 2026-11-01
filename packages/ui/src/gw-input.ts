@@ -8,7 +8,24 @@ import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 
-/** A labeled native `<input>`, with an optional hint and error. */
+/**
+ * A labeled native `<input>`, with an optional hint and error.
+ *
+ * @element gw-input
+ * @summary A labeled text field in light DOM, so forms and autofill see it.
+ *
+ * @attr {string} label - The field's label.
+ * @attr {string} name - The form field name.
+ * @attr {string} type - The native input type. Defaults to `text`.
+ * @attr {string} value - The value.
+ * @attr {string} placeholder - Placeholder text.
+ * @attr {string} autocomplete - The native autocomplete hint.
+ * @attr {string} hint - One line of help under the field.
+ * @attr {string} info - Longer help, opened from an (i) button by the label.
+ * @attr {string} error - An error under the field, which marks it invalid.
+ * @attr {boolean} required - Requires a value.
+ * @attr {boolean} disabled - Disables the field.
+ */
 export class GwInput extends LightElement {
   static override properties = {
     label: {},

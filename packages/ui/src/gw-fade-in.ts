@@ -14,8 +14,13 @@ import { fadeEasing, fadeIn, motionDuration, reducedMotion } from "./motion.js";
  * popping. With reduced motion it still waits, then shows at once. The tokens
  * stylesheet hides it until it's defined, so its content never shows first.
  *
- * @attr delay - Milliseconds to wait before fading in. Defaults to 0.
- * @attr duration - Milliseconds the fade takes. Defaults to `--gw-motion-slow`.
+ * @element gw-fade-in
+ * @summary Fades its content in after a delay.
+ *
+ * @attr {number} delay - Milliseconds to wait before fading in. Defaults to 0.
+ * @attr {number} duration - Milliseconds the fade takes. Defaults to `--gw-motion-slow`.
+ *
+ * @slot - The content to fade in.
  */
 export class GwFadeIn extends GwElement {
   static override properties = {

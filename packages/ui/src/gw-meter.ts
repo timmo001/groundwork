@@ -13,6 +13,19 @@ import { base, type Tone } from "./styles.js";
  * A labeled bar for a value in a range, such as disk use. Past `high` it
  * turns warning, and past `critical` danger, unless a `tone` is set. While
  * `loading`, the track pulses and a skeleton stands in for the value.
+ *
+ * @element gw-meter
+ * @summary A labeled bar for a value in a range.
+ *
+ * @attr {string} label - What it measures.
+ * @attr {number} value - The value. Defaults to 0.
+ * @attr {number} min - The bottom of the range. Defaults to 0.
+ * @attr {number} max - The top of the range. Defaults to 100.
+ * @attr {number} high - Past this it turns warning.
+ * @attr {number} critical - Past this it turns danger.
+ * @attr {string} display - The value as shown, such as `42 GB`. Defaults to a percentage.
+ * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - A fixed color, overriding `high` and `critical`.
+ * @attr {boolean} loading - Pulses the track and shows a skeleton for the value.
  */
 export class GwMeter extends GwElement {
   static override properties = {

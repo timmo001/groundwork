@@ -29,6 +29,19 @@ export interface MenuItem {
  *
  * Items render inside the component, so a page's own button styles can't
  * reach them.
+ *
+ * @element gw-menu-button
+ * @summary A button that opens a menu of items and actions.
+ *
+ * @attr {string} label - The trigger's text.
+ * @attr {string} icon - SVG path data for an icon before the trigger's text.
+ * @attr {string} empty - What the menu says with no items. Defaults to `Nothing here yet`.
+ * @attr {MenuItem[]} items - The items, as JSON.
+ * @attr {MenuItem[]} actions - Actions pinned under the items, as JSON.
+ *
+ * @csspart trigger - The button that opens the menu.
+ *
+ * @fires select - When an item or action is chosen, with its `value` in `detail`.
  */
 export class GwMenuButton extends GwElement {
   static override properties = {

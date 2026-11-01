@@ -8,9 +8,17 @@ import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
 /**
- * Layout: `gw-page` centers a page's content at
- * the theme's width, `gw-stack` stacks its children, `gw-row` lines them up
- * and `gw-grid` fills columns at least `--gw-grid-min` wide.
+ * Centers a page's content at the theme's width, with the page gap between
+ * its children.
+ *
+ * @element gw-page
+ * @summary A page's content column.
+ *
+ * @attr {boolean} narrow - Uses the narrow content width, for forms and settings.
+ *
+ * @slot - The page's content.
+ *
+ * @csspart page - The content column.
  */
 export class GwPage extends GwElement {
   static override properties = {
@@ -68,6 +76,18 @@ class GwSlotted extends GwElement {
   }
 }
 
+/**
+ * Stacks its children in a column.
+ *
+ * @element gw-stack
+ * @summary Children in a column.
+ *
+ * @attr {"s"|"l"} gap - A smaller or larger gap.
+ *
+ * @slot - The children.
+ *
+ * @cssprop --gw-gap - The gap. Defaults to `--gw-space-3`.
+ */
 export class GwStack extends GwSlotted {
   static override styles = [
     base,
@@ -82,6 +102,19 @@ export class GwStack extends GwSlotted {
   ];
 }
 
+/**
+ * Lines its children up in a row, wrapping when they run out of room.
+ *
+ * @element gw-row
+ * @summary Children in a wrapping row.
+ *
+ * @attr {"s"|"l"} gap - A smaller or larger gap.
+ * @attr {boolean} nowrap - Keeps the children on one line.
+ *
+ * @slot - The children.
+ *
+ * @cssprop --gw-gap - The gap. Defaults to `--gw-space-2`.
+ */
 export class GwRow extends GwSlotted {
   static override styles = [
     base,
@@ -101,6 +134,19 @@ export class GwRow extends GwSlotted {
   ];
 }
 
+/**
+ * Fills as many columns as fit, each at least `--gw-grid-min` wide.
+ *
+ * @element gw-grid
+ * @summary Children in responsive columns.
+ *
+ * @attr {"s"|"l"} gap - A smaller or larger gap.
+ *
+ * @slot - The children.
+ *
+ * @cssprop --gw-grid-min - The narrowest a column gets. Defaults to `18rem`.
+ * @cssprop --gw-gap - The gap. Defaults to `--gw-space-3`.
+ */
 export class GwGrid extends GwSlotted {
   static override styles = [
     base,

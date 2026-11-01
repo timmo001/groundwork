@@ -7,7 +7,17 @@
 import { GwElement, css, h } from "./element.js";
 import { base } from "./styles.js";
 
-/** A small heading between groups on a page, as an `<h2>` unless `level` says otherwise. */
+/**
+ * A small heading between groups on a page, as an `<h2>` unless `level` says otherwise.
+ *
+ * @element gw-section-title
+ * @summary A heading for a section of a page.
+ *
+ * @attr {number} level - The heading level. Defaults to 2.
+ *
+ * @slot - The heading text.
+ * @slot actions - Buttons at the end of the row.
+ */
 export class GwSectionTitle extends GwElement {
   static override properties = {
     level: { type: "number" },
