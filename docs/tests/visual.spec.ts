@@ -1,14 +1,16 @@
-import { globSync } from "node:fs";
-import { join } from "node:path";
-import tokens from "@groundwork/tokens/themes.json" with { type: "json" };
-import { expect, test, type Page } from "@playwright/test";
-
 /**
  * Every docs page in every core theme and mode. Each test attaches a
  * full-page screenshot per mode for a person to look over after a large
  * change, and checks the page background comes from the picked theme, which
  * fails when the theme picker or docs-kit's Blume bridge stops applying.
+ *
+ * @module
  */
+import { globSync } from "node:fs";
+import { join } from "node:path";
+import tokens from "@groundwork/tokens/themes.json" with { type: "json" };
+import { expect, test, type Page } from "@playwright/test";
+
 const content = join(import.meta.dirname, "../src/content/docs");
 
 const routes = globSync("**/*.{md,mdx}", { cwd: content })

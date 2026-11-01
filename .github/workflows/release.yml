@@ -1,4 +1,6 @@
 ---
+# Publishes @timmo001/docs-kit to npm and JSR when a GitHub release is
+# published, with the tool versions mise pins.
 name: Release
 
 on:

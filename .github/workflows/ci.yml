@@ -1,4 +1,6 @@
 ---
+# Checks every push and pull request: the repository's own check and pack,
+# the docs build, and the shared lint workflows.
 name: CI
 
 on:

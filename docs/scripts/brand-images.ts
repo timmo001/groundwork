@@ -1,4 +1,9 @@
-// Renders the PNG branding from src/assets/logo.svg. Run with: bun run brand
+/**
+ * Renders the PNG branding (social preview, logo and Apple touch icon) from
+ * `src/assets/logo.svg`. Run it with `bun run brand`.
+ *
+ * @module
+ */
 import { writeBrandImages } from "@timmo001/docs-kit";
 
 const written = await writeBrandImages({

@@ -1,4 +1,5 @@
 ---
+# Merges Renovate's pull requests once they pass, through the shared workflow.
 name: Renovate automerge
 
 on:

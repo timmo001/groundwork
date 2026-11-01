@@ -1,3 +1,9 @@
+/**
+ * `gw-demo-frame`: the frame around each live demo on the docs site, with its
+ * theme, mode and tone pickers. It's docs-only, not part of `@groundwork/ui`.
+ *
+ * @module
+ */
 import tokens from "@groundwork/tokens/themes.json";
 import { GwButton, GwElement, css, h, withViewTransition } from "@groundwork/ui";
 

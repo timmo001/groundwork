@@ -1,3 +1,7 @@
+/*
+ * The docs site's styles: docs-kit's Blume theme, the Groundwork themes and
+ * the fonts they can pick, plus a few site-only fixes.
+ */
 @import "@timmo001/docs-kit/blume/theme.css";
 @import "@timmo001/docs-kit/blume/themes/base.css";
 @import "@timmo001/docs-kit/blume/themes/all.css";

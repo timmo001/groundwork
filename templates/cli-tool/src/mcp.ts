@@ -1,3 +1,9 @@
+/**
+ * The MCP server: the CLI's operations as tools, with the destructive ones
+ * left out unless they're asked for.
+ *
+ * @module
+ */
 import { NodeStdio } from "@effect/platform-node";
 import { Effect, Layer, Schema } from "effect";
 import { McpProtocol, McpServer, Tool, Toolkit } from "effect/ai";

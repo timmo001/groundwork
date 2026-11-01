@@ -1,4 +1,8 @@
 ---
+/**
+ * `<Demo>`: a live example on a component page, in a `gw-demo-frame` with
+ * its own theme, mode and tone controls.
+ */
 interface Props {
   /** The theme the demo renders in. */
   theme?: string;
@@ -21,7 +25,7 @@ const { theme = "base", layout = "row", id } = Astro.props;
 </gw-demo-frame>
 
 <script>
-  // Registers the Lit elements the demos use. Astro bundles this once per page.
+  // Registers the elements the demos use. Astro bundles this once per page.
   import "../demos/index.ts";
 </script>
 

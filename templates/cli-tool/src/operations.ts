@@ -1,3 +1,9 @@
+/**
+ * The operations the CLI and MCP server share, and the `Items` service they
+ * run against. Swap the service for the real system's SDK.
+ *
+ * @module
+ */
 import { Context, Effect, Layer, Schema } from "effect";
 
 /**

@@ -1,3 +1,9 @@
+/**
+ * The site's own components for Blume: the header and banner in the layout,
+ * and the ones the MDX pages use, such as `<Demo>` and `<ThemePreview>`.
+ *
+ * @module
+ */
 import HomeBanner from "@timmo001/docs-kit/blume/home-banner.astro";
 import { defineComponents } from "blume";
 import Demo from "./components/demo.astro";

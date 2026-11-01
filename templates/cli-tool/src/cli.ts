@@ -1,4 +1,10 @@
 #!/usr/bin/env bun
+/**
+ * The CLI: `status`, `apply` and `restart` for people, with `--json` for
+ * scripts and agents, and `mcp` to serve the same operations over MCP.
+ *
+ * @module
+ */
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, Layer } from "effect";
 import { Argument, Command, Flag, Prompt } from "effect/cli";
