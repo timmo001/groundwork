@@ -48,6 +48,7 @@ export const base = css`
     box-sizing: border-box;
   }
 
+  :host([hidden]),
   [hidden] {
     display: none !important;
   }

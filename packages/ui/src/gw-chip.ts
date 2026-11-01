@@ -24,6 +24,7 @@ import {
  *
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - The tint. Defaults to `neutral`.
  * @attr {string} icon - SVG path data for an icon before the text.
+ * @attr {string} swatch - A CSS color, drawn as a small round dot in the icon's place, such as a tag's own color.
  * @attr {boolean} loading - Shows a skeleton for the text.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, around 32px tall at medium. Defaults to `medium`.
  *
@@ -41,6 +42,7 @@ export class GwChip extends GwElement {
   static override properties = {
     tone: { reflect: true },
     icon: {},
+    swatch: {},
     loading: { type: "boolean", reflect: true },
     size: { reflect: true },
   } as const;
@@ -82,16 +84,30 @@ export class GwChip extends GwElement {
         gap: inherit;
         align-items: center;
       }
+
+      /* A color dot in the icon's place */
+      .swatch {
+        flex: none;
+        width: calc(var(--gw-icon-size) * 0.6);
+        height: calc(var(--gw-icon-size) * 0.6);
+        border: 1px solid
+          color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent);
+        border-radius: 50%;
+      }
     `,
   ];
 
   declare tone: Tone;
   /** SVG path data for an icon before the text, instead of the `icon` slot. */
   declare icon: string;
+  /** A CSS color, drawn as a small round dot in the icon's place. */
+  declare swatch: string;
   declare loading: boolean;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #icon = createIcon("");
+
+  readonly #swatch = h("span", { class: "swatch", "aria-hidden": "true" });
 
   readonly #chip = h("span", { class: "chip", part: "chip" });
 
@@ -102,7 +118,7 @@ export class GwChip extends GwElement {
   readonly #content = h(
     "span",
     { class: "content" },
-    h("slot", { name: "icon" }, this.#icon),
+    h("slot", { name: "icon" }, this.#icon, this.#swatch),
     h("slot"),
   );
 
@@ -110,6 +126,7 @@ export class GwChip extends GwElement {
     super();
     this.tone = "neutral";
     this.icon = "";
+    this.swatch = "";
     this.loading = false;
     this.size = "medium";
   }
@@ -124,6 +141,8 @@ export class GwChip extends GwElement {
 
     setIconPath(this.#icon, this.icon);
     this.#icon.toggleAttribute("hidden", !this.icon);
+    this.#swatch.style.background = this.swatch;
+    this.#swatch.hidden = this.swatch === "" || this.icon !== "";
 
     setAttribute(this.#chip, "aria-busy", this.loading ? "true" : null);
     this.#skeleton.hidden = !this.loading;

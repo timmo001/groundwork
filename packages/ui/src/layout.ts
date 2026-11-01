@@ -36,13 +36,16 @@ export class GwPage extends GwElement {
         display: flex;
         flex-direction: column;
         gap: var(--gw-space-6);
-        width: 100%;
-        max-width: var(--gw-content-width);
+        /* The same box as gw-app-bar's content, so the two line up */
+        width: min(100% - 2 * var(--gw-space-3), var(--gw-content-width));
         margin-inline: auto;
       }
 
       :host([narrow]) .page {
-        max-width: var(--gw-content-width-narrow);
+        width: min(
+          100% - 2 * var(--gw-space-3),
+          var(--gw-content-width-narrow)
+        );
       }
     `,
   ];

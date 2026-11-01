@@ -61,21 +61,19 @@ A site whose pages open with a hero, with a nav too long to share a row with its
 
 ### Lining up with the page
 
-The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` either side. Give the page's own content the same box and the two line up at every width. Set `--gw-content-width` to change the width for both:
+The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` either side. `gw-page` uses the same box, so a page inside it lines up with the bar at every width. Set `--gw-content-width` to change the width for both:
 
-```css
-:root {
-  --gw-content-width: min(87.5rem, 100vw - 6rem);
-}
-
-.content {
-  box-sizing: border-box;
-  width: min(100% - 2 * var(--gw-space-3), var(--gw-content-width));
-  margin-inline: auto;
-}
+```html
+<style>
+  :root {
+    --gw-content-width: min(87.5rem, 100vw - 6rem);
+  }
+</style>
+<gw-app-bar>…</gw-app-bar>
+<gw-page>…</gw-page>
 ```
 
-The `.content` element's parent must span the page, as the bar does.
+`gw-page` must span the page, as the bar does. For content outside it, give the element the same box: `width: min(100% - 2 * var(--gw-space-3), var(--gw-content-width))` with `margin-inline: auto`.
 
 ## Page header and section title
 

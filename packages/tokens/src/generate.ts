@@ -279,7 +279,7 @@ const preUpgrade = {
     "vertical-align": "middle",
   },
   "gw-theme-gallery": { display: "block" },
-  "gw-button[icon]": {
+  "gw-button[icon], gw-button[swatch]": {
     "padding-inline-start":
       "calc(var(--gw-space-4) + var(--gw-space-2) + 1.125rem + 1px)",
   },

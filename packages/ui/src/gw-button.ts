@@ -38,6 +38,7 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @attr {boolean} disabled - Disables the button.
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and ignores clicks.
  * @attr {string} icon - SVG path data for an icon before the text.
+ * @attr {string} swatch - A CSS color, drawn as a small round dot in the icon's place, such as a tag's own color.
  * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not on narrow screens. Defaults to `show`.
  *
  * @slot - The text, or an `<a>` holding it, in place of `href`.
@@ -61,6 +62,7 @@ export class GwButton extends GwElement {
     disabled: { type: "boolean", reflect: true },
     loading: { type: "boolean", reflect: true },
     icon: {},
+    swatch: {},
     labels: { reflect: true },
   } as const;
 
@@ -242,8 +244,20 @@ export class GwButton extends GwElement {
         place-items: center;
       }
 
-      .lead > * {
+      /* The icon slot is display: contents, so its slotted icon is a grid
+         item of its own and needs the shared cell too */
+      .lead > *,
+      ::slotted([slot="icon"]) {
         grid-area: 1 / 1;
+      }
+
+      /* A color dot in the icon's place */
+      .swatch {
+        width: calc(var(--gw-icon-size) * 0.6);
+        height: calc(var(--gw-icon-size) * 0.6);
+        border: 1px solid
+          color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent);
+        border-radius: 50%;
       }
 
       .lead > *,
@@ -341,6 +355,8 @@ export class GwButton extends GwElement {
   declare loading: boolean;
   /** SVG path data for an icon before the text. */
   declare icon: string;
+  /** A CSS color, drawn as a small round dot in the icon's place. */
+  declare swatch: string;
   /** Whether the text shows beside an icon: always, never, or not on narrow screens. */
   declare labels: "show" | "hide" | "auto";
 
@@ -348,10 +364,13 @@ export class GwButton extends GwElement {
 
   readonly #iconSlot = h("slot", { name: "icon" });
 
+  readonly #swatch = h("span", { class: "swatch", "aria-hidden": "true" });
+
   readonly #lead = h(
     "span",
     { class: "lead" },
     this.#icon,
+    this.#swatch,
     this.#iconSlot,
     h("span", { class: "ring" }),
   );
@@ -376,6 +395,7 @@ export class GwButton extends GwElement {
   constructor() {
     super();
     this.icon = "";
+    this.swatch = "";
     this.labels = "show";
     this.variant = "brand";
     this.appearance = "accent";
@@ -456,7 +476,9 @@ export class GwButton extends GwElement {
     const control = this.#control;
 
     const hasIcon =
-      this.icon !== "" || this.querySelector("[slot='icon']") !== null;
+      this.icon !== "" ||
+      this.swatch !== "" ||
+      this.querySelector("[slot='icon']") !== null;
 
     control.classList.toggle("has-icon", hasIcon);
     control.classList.toggle(
@@ -466,6 +488,8 @@ export class GwButton extends GwElement {
     );
     setIconPath(this.#icon, this.icon);
     this.#icon.style.display = this.icon ? "" : "none";
+    this.#swatch.style.background = this.swatch;
+    this.#swatch.hidden = this.swatch === "" || this.icon !== "";
     setAttribute(
       control,
       "title",

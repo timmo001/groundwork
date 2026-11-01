@@ -63,10 +63,11 @@ A heading that glides its content open and shut, on a native `<details>`, so fin
   <gw-chip tone="danger">Failed</gw-chip>
   <gw-chip tone="info">Planned</gw-chip>
   <gw-chip tone="important">Breaking</gw-chip>
+  <gw-chip swatch="#3178c6">TypeScript</gw-chip>
   <gw-dot tone="success" label="Online" pulse></gw-dot>
 </Demo>
 
-A chip's `icon` takes SVG path data for an icon before its text; for anything else, such as a dot, use the `icon` slot.
+A chip's `icon` takes SVG path data for an icon before its text, and `swatch` takes a CSS color for a small round dot in its place, such as a tag's own color; for anything else, use the `icon` slot.
 
 <Demo id="chip-anatomy" layout="stack">
   <gw-anatomy>
