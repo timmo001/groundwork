@@ -1,5 +1,4 @@
-import { html, nothing } from "lit";
-import { live } from "lit/directives/live.js";
+import { h, setAttribute } from "./element.js";
 import { LightElement, fieldId } from "./fields.js";
 
 /** A labeled native `<input>`, with an optional hint and error. */
@@ -13,9 +12,9 @@ export class GwInput extends LightElement {
     autocomplete: {},
     hint: {},
     error: {},
-    required: { type: Boolean },
-    disabled: { type: Boolean },
-  };
+    required: { type: "boolean" },
+    disabled: { type: "boolean" },
+  } as const;
 
   declare label: string;
   declare name: string;
@@ -29,6 +28,14 @@ export class GwInput extends LightElement {
   declare disabled: boolean;
 
   readonly #id = fieldId();
+
+  readonly #label = h("label", { for: this.#id });
+
+  readonly #input = h("input", { id: this.#id });
+
+  readonly #hint = h("p", { class: "gw-hint", id: `${this.#id}-hint` });
+
+  readonly #error = h("p", { class: "gw-error", id: `${this.#id}-error` });
 
   constructor() {
     super();
@@ -44,42 +51,43 @@ export class GwInput extends LightElement {
     this.disabled = false;
   }
 
-  readonly #onInput = (event: Event) => {
-    if (event.target instanceof HTMLInputElement) {
-      this.value = event.target.value;
-    }
-  };
+  protected override create(root: HTMLElement) {
+    this.#input.addEventListener("input", () => {
+      this.value = this.#input.value;
+    });
+    root.append(this.#label, this.#input, this.#hint, this.#error);
+  }
 
-  override render() {
-    const hintId = `${this.#id}-hint`;
-    const errorId = `${this.#id}-error`;
+  protected override update() {
+    const input = this.#input;
 
-    const described = [this.hint ? hintId : "", this.error ? errorId : ""]
+    const described = [
+      this.hint ? this.#hint.id : "",
+      this.error ? this.#error.id : "",
+    ]
       .join(" ")
       .trim();
 
-    return html`
-      <label for=${this.#id}>${this.label}</label>
-      <input
-        id=${this.#id}
-        type=${this.type}
-        name=${this.name || nothing}
-        placeholder=${this.placeholder || nothing}
-        autocomplete=${this.autocomplete || nothing}
-        aria-invalid=${this.error ? "true" : nothing}
-        aria-describedby=${described || nothing}
-        ?required=${this.required}
-        ?disabled=${this.disabled}
-        .value=${live(this.value)}
-        @input=${this.#onInput}
-      />
-      ${this.hint ? html`<p class="gw-hint" id=${hintId}>${this.hint}</p>` : nothing}
-      ${this.error ? html`<p class="gw-error" id=${errorId}>${this.error}</p>` : nothing}
-    `;
+    this.#label.textContent = this.label;
+    input.type = this.type;
+    setAttribute(input, "name", this.name || null);
+    setAttribute(input, "placeholder", this.placeholder || null);
+    setAttribute(input, "autocomplete", this.autocomplete || null);
+    setAttribute(input, "aria-invalid", this.error ? "true" : null);
+    setAttribute(input, "aria-describedby", described || null);
+    input.required = this.required;
+    input.disabled = this.disabled;
+
+    if (input.value !== this.value) input.value = this.value;
+
+    this.#hint.textContent = this.hint;
+    this.#hint.hidden = !this.hint;
+    this.#error.textContent = this.error;
+    this.#error.hidden = !this.error;
   }
 }
 
-customElements.define("gw-input", GwInput);
+GwInput.define("gw-input");
 
 declare global {
   interface HTMLElementTagNameMap {

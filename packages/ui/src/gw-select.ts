@@ -1,5 +1,4 @@
-import { html, nothing } from "lit";
-import { live } from "lit/directives/live.js";
+import { h, setAttribute } from "./element.js";
 import { LightElement, fieldId } from "./fields.js";
 
 export interface SelectOption {
@@ -17,9 +16,9 @@ export class GwSelect extends LightElement {
     name: {},
     value: {},
     hint: {},
-    disabled: { type: Boolean },
-    options: { type: Array },
-  };
+    disabled: { type: "boolean" },
+    options: { type: "json" },
+  } as const;
 
   declare label: string;
   declare name: string;
@@ -29,6 +28,12 @@ export class GwSelect extends LightElement {
   declare options: readonly SelectOption[];
 
   readonly #id = fieldId();
+
+  readonly #label = h("label", { for: this.#id });
+
+  readonly #select = h("select", { id: this.#id });
+
+  readonly #hint = h("p", { class: "gw-hint", id: `${this.#id}-hint` });
 
   constructor() {
     super();
@@ -40,10 +45,10 @@ export class GwSelect extends LightElement {
     this.options = [];
   }
 
-  override connectedCallback() {
-    if (this.options.length === 0 && !this.hasUpdated) {
-      const children = [...this.querySelectorAll("option")];
+  protected override create(root: HTMLElement) {
+    const children = [...this.querySelectorAll("option")];
 
+    if (this.options.length === 0 && children.length > 0) {
       this.options = children.map((option) => ({
         value: option.value,
         label: option.textContent.trim(),
@@ -52,50 +57,52 @@ export class GwSelect extends LightElement {
       const picked = children.find((option) => option.selected);
 
       if (this.value === "" && picked !== undefined) this.value = picked.value;
-
-      for (const option of children) option.remove();
     }
 
-    super.connectedCallback();
+    for (const option of children) option.remove();
+
+    this.#select.addEventListener("change", () => {
+      this.value = this.#select.value;
+    });
+    root.append(
+      this.#label,
+      h("span", { class: "gw-select-control" }, this.#select),
+      this.#hint,
+    );
   }
 
-  readonly #onChange = (event: Event) => {
-    if (event.target instanceof HTMLSelectElement) {
-      this.value = event.target.value;
+  protected override update(changed: ReadonlySet<string>) {
+    const select = this.#select;
+
+    this.#label.textContent = this.label;
+    setAttribute(select, "name", this.name || null);
+    setAttribute(select, "aria-describedby", this.hint ? this.#hint.id : null);
+    select.disabled = this.disabled;
+
+    if (changed.has("options")) {
+      const options = Array.isArray(this.options) ? this.options : [];
+
+      select.replaceChildren(
+        ...options.map((option) => {
+          const element = h("option", { value: option.value }, option.label);
+
+          element.selected = option.value === this.value;
+
+          return element;
+        }),
+      );
     }
-  };
 
-  override render() {
-    const hintId = `${this.#id}-hint`;
+    if (this.value !== "" && select.value !== this.value) {
+      select.value = this.value;
+    }
 
-    return html`
-      <label for=${this.#id}>${this.label}</label>
-      <span class="gw-select-control"
-        ><select
-          id=${this.#id}
-          name=${this.name || nothing}
-          aria-describedby=${this.hint ? hintId : nothing}
-          ?disabled=${this.disabled}
-          .value=${live(this.value)}
-          @change=${this.#onChange}
-        >
-          ${this.options.map(
-            (option) =>
-              html`<option
-                value=${option.value}
-                ?selected=${option.value === this.value}
-              >
-                ${option.label}
-              </option>`,
-          )}
-        </select></span
-      >
-      ${this.hint ? html`<p class="gw-hint" id=${hintId}>${this.hint}</p>` : nothing}
-    `;
+    this.#hint.textContent = this.hint;
+    this.#hint.hidden = !this.hint;
   }
 }
 
-customElements.define("gw-select", GwSelect);
+GwSelect.define("gw-select");
 
 declare global {
   interface HTMLElementTagNameMap {

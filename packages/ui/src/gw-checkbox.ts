@@ -1,5 +1,4 @@
-import { html, nothing } from "lit";
-import { live } from "lit/directives/live.js";
+import { h, setAttribute } from "./element.js";
 import { LightElement, fieldId } from "./fields.js";
 
 /** A labeled native checkbox. `gw-switch` draws the same control as a switch. */
@@ -9,10 +8,10 @@ export class GwCheckbox extends LightElement {
     name: {},
     value: {},
     hint: {},
-    checked: { type: Boolean },
-    disabled: { type: Boolean },
-    labelHidden: { type: Boolean, attribute: "label-hidden" },
-  };
+    checked: { type: "boolean" },
+    disabled: { type: "boolean" },
+    labelHidden: { type: "boolean", attribute: "label-hidden" },
+  } as const;
 
   declare label: string;
   /** Keeps the label for assistive technology but hides it, such as in a setting row. */
@@ -24,6 +23,12 @@ export class GwCheckbox extends LightElement {
   declare disabled: boolean;
 
   readonly #id = fieldId();
+
+  readonly #input = h("input", { type: "checkbox" });
+
+  readonly #text = h("span");
+
+  readonly #hint = h("p", { class: "gw-hint", id: `${this.#id}-hint` });
 
   /** `switch` for `gw-switch`, so assistive technology announces it as one. */
   protected get controlRole(): string | undefined {
@@ -41,33 +46,26 @@ export class GwCheckbox extends LightElement {
     this.labelHidden = false;
   }
 
-  readonly #onChange = (event: Event) => {
-    if (event.target instanceof HTMLInputElement) {
-      this.checked = event.target.checked;
-    }
-  };
+  protected override create(root: HTMLElement) {
+    setAttribute(this.#input, "role", this.controlRole);
+    this.#input.addEventListener("change", () => {
+      this.checked = this.#input.checked;
+    });
+    root.append(h("label", {}, this.#input, this.#text), this.#hint);
+  }
 
-  override render() {
-    const hintId = `${this.#id}-hint`;
+  protected override update() {
+    const input = this.#input;
 
-    return html`
-      <label>
-        <input
-          type="checkbox"
-          role=${this.controlRole ?? nothing}
-          name=${this.name || nothing}
-          value=${this.value}
-          aria-describedby=${this.hint ? hintId : nothing}
-          ?disabled=${this.disabled}
-          .checked=${live(this.checked)}
-          @change=${this.#onChange}
-        />
-        <span class=${this.labelHidden ? "gw-visually-hidden" : ""}
-          >${this.label}</span
-        >
-      </label>
-      ${this.hint ? html`<p class="gw-hint" id=${hintId}>${this.hint}</p>` : nothing}
-    `;
+    setAttribute(input, "name", this.name || null);
+    input.value = this.value;
+    setAttribute(input, "aria-describedby", this.hint ? this.#hint.id : null);
+    input.disabled = this.disabled;
+    input.checked = this.checked;
+    this.#text.textContent = this.label;
+    this.#text.className = this.labelHidden ? "gw-visually-hidden" : "";
+    this.#hint.textContent = this.hint;
+    this.#hint.hidden = !this.hint;
   }
 }
 
@@ -78,9 +76,9 @@ export class GwSwitch extends GwCheckbox {
   }
 }
 
-customElements.define("gw-checkbox", GwCheckbox);
+GwCheckbox.define("gw-checkbox");
 
-customElements.define("gw-switch", GwSwitch);
+GwSwitch.define("gw-switch");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -1,4 +1,4 @@
-import { LitElement, css, type CSSResult } from "lit";
+import { GwElement, css } from "./element.js";
 
 /**
  * Field components render their native control in light DOM, never in a
@@ -161,11 +161,8 @@ export const fieldStyles = css`
   }
 `;
 
-const adoptStyles = (element: Element, styles: CSSResult) => {
+const adoptStyles = (element: Element, sheet: CSSStyleSheet) => {
   const root = element.getRootNode();
-  const sheet = styles.styleSheet;
-
-  if (sheet === undefined) return;
 
   if (root instanceof Document || root instanceof ShadowRoot) {
     if (!root.adoptedStyleSheets.includes(sheet)) {
@@ -184,10 +181,8 @@ export const fieldId = () => {
 };
 
 /** A component that renders into itself, so its native control stays in light DOM. */
-export class LightElement extends LitElement {
-  override createRenderRoot() {
-    return this;
-  }
+export class LightElement extends GwElement {
+  static override shadow = false;
 
   override connectedCallback() {
     super.connectedCallback();

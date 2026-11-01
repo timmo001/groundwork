@@ -1,5 +1,6 @@
-import { LitElement, css, html, nothing } from "lit";
+import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-skeleton.js";
+import { fadeIn } from "./motion.js";
 import { base } from "./styles.js";
 
 /**
@@ -8,12 +9,12 @@ import { base } from "./styles.js";
  * after the first in their parent get a line above them. While `loading`, a
  * skeleton stands in for the control, and for the text until it's known.
  */
-export class GwSettingRow extends LitElement {
+export class GwSettingRow extends GwElement {
   static override properties = {
     heading: {},
     description: {},
-    loading: { type: Boolean, reflect: true },
-  };
+    loading: { type: "boolean", reflect: true },
+  } as const;
 
   static override styles = [
     base,
@@ -56,12 +57,48 @@ export class GwSettingRow extends LitElement {
       .control {
         max-width: 100%;
       }
+
+      .control-skeleton {
+        width: 3.25rem;
+        min-height: 0;
+        height: 2rem;
+        --gw-skeleton-radius: var(--gw-radius-pill);
+      }
     `,
   ];
 
   declare heading: string;
   declare description: string;
   declare loading: boolean;
+
+  readonly #row = h("div", { class: "row", part: "row" });
+
+  readonly #heading = h("span");
+
+  readonly #headingSkeleton = h("gw-skeleton-text", {
+    style: "--gw-skeleton-width: 8rem",
+  });
+
+  readonly #description = h("div", { class: "description" });
+
+  readonly #descriptionSkeleton = h(
+    "div",
+    { class: "description" },
+    h("gw-skeleton-text", { style: "--gw-skeleton-width: 12rem" }),
+  );
+
+  readonly #slot = h("slot");
+
+  readonly #controlSkeleton = h("gw-skeleton", { class: "control-skeleton" });
+
+  readonly #control = h(
+    "div",
+    { class: "control" },
+    this.#controlSkeleton,
+    this.#slot,
+  );
+
+  #rendered = false;
 
   constructor() {
     super();
@@ -70,43 +107,40 @@ export class GwSettingRow extends LitElement {
     this.loading = false;
   }
 
-  override render() {
-    const skeleton = (width: string) =>
-      html`<gw-skeleton-text
-        style="--gw-skeleton-width: ${width}"
-      ></gw-skeleton-text>`;
+  protected override create(root: ShadowRoot) {
+    this.#row.append(
+      h(
+        "div",
+        { class: "text" },
+        h("div", { class: "heading" }, this.#heading, this.#headingSkeleton),
+        this.#description,
+        this.#descriptionSkeleton,
+      ),
+      this.#control,
+    );
+    root.append(this.#row);
+  }
 
-    return html`<div
-      class="row"
-      part="row"
-      aria-busy=${this.loading ? "true" : nothing}
-    >
-      <div class="text">
-        <div class="heading">
-          ${this.heading || (this.loading ? skeleton("8rem") : nothing)}
-        </div>
-        ${
-          this.description
-            ? html`<div class="description">${this.description}</div>`
-            : this.loading && !this.heading
-              ? html`<div class="description">${skeleton("12rem")}</div>`
-              : nothing
-        }
-      </div>
-      <div class="control">
-        ${
-          this.loading
-            ? html`<gw-skeleton
-                style="width: 3.25rem; min-height: 0; height: 2rem; --gw-skeleton-radius: var(--gw-radius-pill)"
-              ></gw-skeleton>`
-            : html`<slot></slot>`
-        }
-      </div>
-    </div>`;
+  protected override update(changed: ReadonlySet<string>) {
+    setAttribute(this.#row, "aria-busy", this.loading ? "true" : null);
+    this.#heading.textContent = this.heading;
+    this.#headingSkeleton.hidden = !this.loading || this.heading !== "";
+    this.#description.textContent = this.description;
+    this.#description.hidden = !this.description;
+    this.#descriptionSkeleton.hidden =
+      !this.loading || this.heading !== "" || this.description !== "";
+    this.#controlSkeleton.hidden = !this.loading;
+    this.#slot.hidden = this.loading;
+
+    if (this.#rendered && changed.has("loading") && !this.loading) {
+      fadeIn(this.#control);
+    }
+
+    this.#rendered = true;
   }
 }
 
-customElements.define("gw-setting-row", GwSettingRow);
+GwSettingRow.define("gw-setting-row");
 
 declare global {
   interface HTMLElementTagNameMap {
