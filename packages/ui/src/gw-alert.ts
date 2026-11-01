@@ -70,7 +70,7 @@ export class GwAlert extends GwElement {
         border: var(--gw-border-width) solid
           var(--gw-tone-border, var(--gw-color-border-info));
         border-inline-start-width: calc(var(--gw-border-width) * 4);
-        border-radius: var(--gw-radius-control);
+        border-radius: min(var(--gw-radius-control), var(--gw-radius-panel));
       }
 
       ::slotted(p) {

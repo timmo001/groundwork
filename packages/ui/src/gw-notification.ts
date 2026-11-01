@@ -66,7 +66,7 @@ export class GwNotification extends GwElement {
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-raised);
         border: var(--gw-border-width) solid var(--gw-color-border-quiet);
-        border-radius: var(--gw-radius-control);
+        border-radius: min(var(--gw-radius-control), var(--gw-radius-panel));
       }
 
       /* An inset stripe, so unread and read cards line up */

@@ -71,7 +71,7 @@ export class GwToaster extends GwElement {
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
         border-inline-start: calc(var(--gw-border-width) * 4) solid
           var(--gw-toast-tone);
-        border-radius: var(--gw-radius-control);
+        border-radius: min(var(--gw-radius-control), var(--gw-radius-panel));
         box-shadow: var(--gw-shadow-m);
       }
     `,

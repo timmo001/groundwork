@@ -140,6 +140,9 @@ export const fieldStyles = css`
      corner, never sideways out of the layout */
   gw-input textarea {
     display: block;
+    /* Pill-shaped controls would make a tall box a stadium, so it rounds no
+       more than a panel */
+    border-radius: min(var(--gw-radius-control), var(--gw-radius-panel));
     padding-block: calc(var(--gw-space-2) * var(--gw-field-size));
     line-height: 1.5;
     resize: vertical;
