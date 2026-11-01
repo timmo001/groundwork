@@ -181,14 +181,21 @@ export class GwOptionList extends GwElement {
 
       [role="option"] {
         font-size: var(--gw-font-size-s);
+        color: var(--gw-color-text-strong);
         cursor: pointer;
         border-radius: var(--gw-radius-control);
         transition: background-color var(--gw-motion-fast)
           var(--gw-motion-easing);
       }
 
+      /* Mixed from the text color, so the active row stands out on any
+         surface the list sits on, overlays included */
       [role="option"][data-active] {
-        background: var(--gw-color-fill-neutral-hovered);
+        background: color-mix(
+          in oklab,
+          transparent,
+          var(--gw-color-text-primary) 12%
+        );
       }
 
       [role="option"][aria-selected="true"] {
@@ -197,7 +204,7 @@ export class GwOptionList extends GwElement {
 
       [role="option"] > .icon {
         flex: none;
-        color: var(--gw-color-text-secondary);
+        color: var(--gw-color-text-primary);
       }
 
       [role="option"] > .check {

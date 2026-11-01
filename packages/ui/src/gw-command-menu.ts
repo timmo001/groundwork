@@ -56,14 +56,14 @@ export class GwCommandMenu extends GwElement {
         color: var(--gw-color-text-primary);
         background: var(--gw-color-surface-overlay);
         border: max(var(--gw-border-width), 1px) solid
-          var(--gw-color-border-normal);
+          var(--gw-color-border-loud);
         border-radius: var(--gw-radius-panel);
         box-shadow: var(--gw-shadow-l);
         --gw-option-list-height: min(24rem, 56vh);
       }
 
       dialog::backdrop {
-        background: rgb(0 0 0 / 50%);
+        background: rgb(0 0 0 / 60%);
       }
 
       dialog,
