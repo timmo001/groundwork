@@ -76,7 +76,7 @@ let lastList = 0;
  *
  * @cssprop --gw-option-list-height - The list's maximum height. Defaults to `20rem`.
  *
- * @fires pick - When an option is picked, with its `value` in `detail`.
+ * @fires {CustomEvent<{ value: string }>} pick - When an option is picked, with its `value` in `detail`.
  */
 export class GwOptionList extends GwElement {
   static override properties = {

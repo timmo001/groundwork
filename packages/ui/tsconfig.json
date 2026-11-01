@@ -11,5 +11,5 @@
     "skipLibCheck": true,
     "useDefineForClassFields": false
   },
-  "include": ["src", "lint"]
+  "include": ["src", "lint", "types"]
 }

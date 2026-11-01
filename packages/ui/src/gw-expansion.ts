@@ -27,7 +27,7 @@ import { base } from "./styles.js";
  * @csspart summary - The summary row.
  * @csspart content - The content's wrapper.
  *
- * @fires toggle - When it opens or closes.
+ * @fires {Event} toggle - When it opens or closes.
  */
 export class GwExpansion extends GwElement {
   static override properties = {

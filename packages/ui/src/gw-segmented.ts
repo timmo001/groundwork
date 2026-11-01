@@ -34,7 +34,7 @@ export interface Segment {
  *
  * @csspart indicator - The pill that slides to the chosen option.
  *
- * @fires change - When the chosen option changes.
+ * @fires {Event} change - When the chosen option changes.
  */
 export class GwSegmented extends GwElement {
   static override properties = {

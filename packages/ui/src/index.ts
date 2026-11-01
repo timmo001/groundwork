@@ -15,6 +15,8 @@ export * from "./fields.js";
 
 export * from "./layout.js";
 
+export * from "./on.js";
+
 export * from "./gw-alert.js";
 
 export * from "./gw-badge.js";

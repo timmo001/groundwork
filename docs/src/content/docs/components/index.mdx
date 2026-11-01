@@ -46,6 +46,40 @@ Set `data-gw-theme` and `data-gw-mode` on a container, and everything inside fol
 
 The packages aren't published yet. Until they are, apps keep the copies the [sync](/sync) gave them.
 
+## Using with Lit
+
+The elements work in Lit templates as they are. The package ships a Custom Elements Manifest, `custom-elements.json`, generated from each element's docs, so editors and `lit-analyzer` know every tag, attribute and its values:
+
+```sh
+bun add -DE lit-analyzer typescript@5
+bun x lit-analyzer src --strict
+```
+
+```text
+Type '"nope"' is not assignable to '"brand" | "neutral" | "info" | "success" | "warning" | "danger"'
+5:  <gw-button variant="nope">Save</gw-button>
+```
+
+`lit-analyzer` needs TypeScript 5, so keep it apart from a TypeScript 7 typecheck.
+
+For events, `on()` adds a listener typed from the element's docs and returns a function that removes it. A `pick` handler gets `CustomEvent<{ value: string }>` with no cast, and an event the element doesn't fire won't compile:
+
+```ts
+import { on } from "@timmo001/groundwork-ui";
+
+const off = on(menu, "pick", (event) => open(event.detail.value));
+```
+
+| Element | Events |
+| --- | --- |
+| `gw-command-menu`, `gw-option-list` | `pick`, with `detail.value` |
+| `gw-menu-button` | `select`, with `detail.value` |
+| `gw-dialog`, `gw-popover` | `close` |
+| `gw-select`, `gw-segmented` | `change` |
+| `gw-expansion` | `toggle` |
+| `gw-notification` | `dismiss` |
+| `gw-notification-center` | `clear` |
+
 ## Fields stay in light DOM
 
 Password managers and `<label for>` can't reach into a shadow root, and a form only submits the controls it can see. So `gw-input`, `gw-select`, `gw-checkbox` and `gw-switch` render their native control in light DOM, and adopt their styles into whichever document or shadow root they're in. Pages with credentials keep the whole form out of shadow roots.

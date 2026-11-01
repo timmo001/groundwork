@@ -34,7 +34,7 @@ const closeIcon =
  *
  * @csspart card - The card.
  *
- * @fires dismiss - When the close button is pressed. Cancel it to keep the card.
+ * @fires {Event} dismiss - When the close button is pressed. Cancel it to keep the card.
  */
 export class GwNotification extends GwElement {
   static override properties = {

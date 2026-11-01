@@ -41,7 +41,7 @@ export interface MenuItem {
  *
  * @csspart trigger - The button that opens the menu.
  *
- * @fires select - When an item or action is chosen, with its `value` in `detail`.
+ * @fires {CustomEvent<{ value: string }>} select - When an item or action is chosen, with its `value` in `detail`.
  */
 export class GwMenuButton extends GwElement {
   static override properties = {

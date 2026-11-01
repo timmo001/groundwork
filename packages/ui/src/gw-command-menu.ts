@@ -28,7 +28,7 @@ const sheetBelow = 600;
  * @attr {string} shortcut - The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.
  * @attr {boolean} open - Whether it shows.
  *
- * @fires pick - When a command is picked, with its `value` in `detail`.
+ * @fires {CustomEvent<{ value: string }>} pick - When a command is picked, with its `value` in `detail`.
  */
 export class GwCommandMenu extends GwElement {
   static override properties = {

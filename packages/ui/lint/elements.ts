@@ -3,7 +3,7 @@
  * a file defines documents its API in its class docstring, for editor hovers
  * and the Custom Elements Manifest: `@element`, `@summary`, then an `@attr`
  * for each property with an attribute, a `@slot` for each slot, a `@csspart`
- * for each part and a `@fires` for each event it dispatches.
+ * for each part and a typed `@fires` for each event it dispatches.
  *
  * Moving it to the shared rules is tracked in timmo001/oxlint-rules#107.
  *
@@ -270,7 +270,9 @@ const elementDocsRule = defineRule({
           }
 
           for (const event of api.events) {
-            if (!has(`fires\\s+${escape(event)}`)) report(`@fires ${event}`);
+            if (!has(`fires\\s+\\{[^\\n]+\\}\\s+${escape(event)}`)) {
+              report(`@fires {type} ${event}`);
+            }
           }
         }
       },

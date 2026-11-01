@@ -38,7 +38,7 @@ const sheetBelow = 600;
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
- * @fires close - When it closes; `returnValue` holds the button's value.
+ * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */
 export class GwPopover extends GwElement {
   static override properties = {

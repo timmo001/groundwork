@@ -56,7 +56,7 @@ const chevronIcon =
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
  * @attr {boolean} inline-label - Shows the label inside the trigger, before the value, for toolbars and filters.
  *
- * @fires change - When the value changes.
+ * @fires {Event} change - When the value changes.
  */
 export class GwSelect extends LightElement {
   static override properties = {

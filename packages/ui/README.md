@@ -22,7 +22,7 @@ import "@timmo001/groundwork-ui";
 
 ```html
 <html data-gw-theme="base" data-gw-mode="dark">
-  <gw-button variant="primary" appearance="filled">Save</gw-button>
+  <gw-button appearance="filled">Save</gw-button>
 </html>
 ```
 

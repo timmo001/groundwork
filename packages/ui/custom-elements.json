@@ -551,6 +551,12 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/events.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/field-info.ts",
       "declarations": [
         {
@@ -5451,7 +5457,7 @@
             {
               "name": "pick",
               "type": {
-                "text": "CustomEvent"
+                "text": "CustomEvent<{ value: string }>"
               },
               "description": "When a command is picked, with its `value` in `detail`."
             }
@@ -5971,6 +5977,9 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "Event"
+              },
               "description": "When it closes; `returnValue` holds the button's value.",
               "name": "close"
             }
@@ -7279,6 +7288,9 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "Event"
+              },
               "description": "When it opens or closes.",
               "name": "toggle"
             }
@@ -9882,7 +9894,7 @@
             {
               "name": "select",
               "type": {
-                "text": "CustomEvent"
+                "text": "CustomEvent<{ value: string }>"
               },
               "description": "When an item or action is chosen, with its `value` in `detail`."
             }
@@ -11398,6 +11410,9 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "Event"
+              },
               "description": "When the close button is pressed. Cancel it to keep the card.",
               "name": "dismiss"
             }
@@ -12056,7 +12071,7 @@
             {
               "name": "pick",
               "type": {
-                "text": "CustomEvent"
+                "text": "CustomEvent<{ value: string }>"
               },
               "description": "When an option is picked, with its `value` in `detail`."
             }
@@ -13052,6 +13067,9 @@
           ],
           "events": [
             {
+              "type": {
+                "text": "Event"
+              },
               "description": "When it closes; `returnValue` holds the button's value.",
               "name": "close"
             }
@@ -17547,6 +17565,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/on.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-alert.js"
           }
         },
@@ -19479,6 +19505,67 @@
           "declaration": {
             "name": "withViewTransition",
             "module": "src/motion.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/on.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "on",
+          "return": {
+            "type": {
+              "text": "() => void"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "E"
+              }
+            },
+            {
+              "name": "type",
+              "type": {
+                "text": "K"
+              }
+            },
+            {
+              "name": "listener",
+              "type": {
+                "text": "Listener<GwEventsOf<E>[K] & Event>"
+              }
+            },
+            {
+              "name": "options",
+              "optional": true,
+              "type": {
+                "text": "AddEventListenerOptions"
+              }
+            }
+          ],
+          "description": "Adds a listener for one of the element's own events, typed from its\n`@fires` docs, and returns a function that removes it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwEventMap",
+          "declaration": {
+            "name": "GwEventMap",
+            "module": "./events.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "on",
+          "declaration": {
+            "name": "on",
+            "module": "src/on.ts"
           }
         }
       ]

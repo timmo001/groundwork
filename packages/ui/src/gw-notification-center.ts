@@ -29,7 +29,7 @@ const emptyIcon =
  *
  * @slot - The `gw-notification` cards.
  *
- * @fires clear - When Clear all is pressed.
+ * @fires {Event} clear - When Clear all is pressed.
  */
 export class GwNotificationCenter extends GwElement {
   static override properties = {
