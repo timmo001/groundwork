@@ -14,7 +14,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@opentui/core": "0.8.0",
+    "@opentui/core": "0.8.1",
     "@timmo001/groundwork-demo": "workspace:*",
     "@timmo001/groundwork-tui": "workspace:*",
     "effect": "4.1.1"
