@@ -173,11 +173,12 @@ A `swatch` on an option draws a dot of that color before its label, such as a ta
 
 <Demo id="range" layout="stack">
   <gw-range label="Volume" value="40" unit="%"></gw-range>
+  <gw-range label="Release delay" value="200" max="2000" step="20" unit="ms" readout></gw-range>
   <gw-range label="Brightness" value="128" max="255" hint="Applies as you let go"></gw-range>
   <gw-range label="Unavailable" value="60" disabled></gw-range>
 </Demo>
 
-A labeled native slider. While it's held, a bubble above the thumb shows the value, so a slider with no readout beside it still says where it is. It takes `label`, `name`, `value`, `min`, `max`, `step`, `unit`, `hint` and `disabled`; `unit` follows the value in the bubble and for assistive technology. The native `input` event fires while dragging and `change` when it's let go. `label-hidden` keeps the label for assistive technology but hides it.
+A labeled native slider. While it's held, a bubble above the thumb shows the value, so a slider with no readout beside it still says where it is. `readout` shows the value beside the track all the time, for settings where the number matters. It takes `label`, `name`, `value`, `min`, `max`, `step`, `unit`, `readout`, `hint` and `disabled`; `unit` follows the value in the bubble, the readout and for assistive technology. The native `input` event fires while dragging and `change` when it's let go. `label-hidden` keeps the label for assistive technology but hides it.
 
 ## Setting row
 

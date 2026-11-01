@@ -496,9 +496,31 @@ export const fieldStyles = css`
     color: var(--gw-color-text-strong);
   }
 
+  gw-range .gw-range-row {
+    display: flex;
+    gap: var(--gw-space-3);
+    align-items: center;
+  }
+
   gw-range .gw-range-control {
     position: relative;
     display: block;
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* The value beside the track, with readout */
+  gw-range .gw-range-readout {
+    min-width: 5ch;
+    font-size: var(--gw-font-size-s);
+    font-variant-numeric: tabular-nums;
+    color: var(--gw-color-text-secondary);
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  gw-range .gw-range-readout[hidden] {
+    display: none;
   }
 
   gw-range input {
