@@ -74,13 +74,13 @@ Each role is measured with the WCAG 2 ratio against the raised surface, the lowe
 | text-strong | 11 | 11.05 | 11.02 | 11.50 |
 | text-primary | 9 | 9.07 | 9.00 | 9.39 |
 | text-secondary | 4.6 | 4.61 | 4.63 | 4.83 |
-| accent | 5 | 5.05 | 5.08 | 5.30 |
+| accent | 5 | 5.00 | 5.10 | 5.32 |
 | Status: info | 4.8 | 4.81 | 4.90 | 5.11 |
 | Status: success | 4.8 | 4.80 | 4.89 | 5.10 |
 | Status: important | 4.8 | 4.81 | 4.89 | 5.10 |
 | Status: warning | 4.8 | 4.83 | 4.87 | 5.08 |
 | Status: danger | 4.8 | 4.81 | 4.92 | 5.13 |
-| on-accent | 4.5 | 5.85 | 7.20 | 7.20 |
+| on-accent | 4.5 | 5.79 | 7.23 | 7.23 |
 
 ## Snag
 
