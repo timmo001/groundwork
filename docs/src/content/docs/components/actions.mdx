@@ -118,6 +118,16 @@ While the work a button started runs, set `loading`. A spinning ring takes the i
 
 It renders a native `<button>`, or an `<a>` with `href`. Put an icon in the `icon` slot. Style the inner element with `::part(button)`.
 
+### Links in the page
+
+An `href` link lives in the button's shadow root, so it isn't in the page's HTML. When the link has to be there, such as for `rel="me"`, a `target`, crawlers or `aria-current="page"`, put a plain `<a>` inside instead. The button styles it, a click anywhere on the pill follows it, and `aria-current` on it gets a current style:
+
+<Demo id="button-links">
+  <gw-button variant="neutral" appearance="plain"><a href="#button-links" aria-current="page">Home</a></gw-button>
+  <gw-button variant="neutral" appearance="plain"><a href="#button-links">Projects</a></gw-button>
+  <gw-button appearance="outlined"><a href="https://github.com/timmo001" rel="me" target="_blank">GitHub</a></gw-button>
+</Demo>
+
 ## Menu button
 
 <Demo id="menu-button">

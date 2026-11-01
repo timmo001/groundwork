@@ -12,6 +12,11 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * theme and mode around it. With `href` it renders a link that looks the
  * same. Put an icon in the `icon` slot.
  *
+ * For a link the page's HTML has to carry, such as one with `rel="me"`, a
+ * `target` or `aria-current="page"`, put a plain `<a>` inside instead of
+ * `href`. The button styles it, a click anywhere on the pill follows it, and
+ * `aria-current` on it gets a current style.
+ *
  * `variant` picks the color and `appearance` how it's applied, from most to
  * least important: `accent` (a solid fill), `filled` (a soft tint),
  * `outlined` (a stroke) or `plain` (text only). Every button is a pill.
@@ -35,10 +40,10 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} icon - SVG path data for an icon before the text.
  * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not on narrow screens. Defaults to `show`.
  *
- * @slot - The text.
+ * @slot - The text, or an `<a>` holding it, in place of `href`.
  * @slot icon - An icon before the text, in place of `icon`.
  *
- * @csspart button - The native button or link.
+ * @csspart button - The native button or link, or the pill around a slotted link.
  *
  * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
  * @cssprop --gw-button-tone - The color, set by `variant`.
@@ -204,6 +209,27 @@ export class GwButton extends GwElement {
         border-color: var(--gw-button-tone);
       }
 
+      /* A slotted link carries the text; the pill draws its focus ring */
+      ::slotted(a) {
+        color: inherit;
+        text-decoration: none;
+        outline: none;
+      }
+
+      .button.focused {
+        outline: var(--gw-focus-width) solid var(--gw-color-focus);
+        outline-offset: var(--gw-focus-offset);
+      }
+
+      :host([appearance="plain"]) .button.current,
+      :host([appearance="outlined"]) .button.current {
+        background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
+      }
+
+      :host([appearance="filled"]) .button.current {
+        background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent);
+      }
+
       .button:disabled,
       .button[aria-disabled="true"] {
         color: var(--gw-color-text-disabled);
@@ -350,10 +376,18 @@ export class GwButton extends GwElement {
 
   readonly #over = h("span", { class: "ring over" });
 
-  #control: HTMLButtonElement | HTMLAnchorElement = h("button", {
-    class: "button",
-    part: "button",
-  });
+  #control: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement = h(
+    "button",
+    {
+      class: "button",
+      part: "button",
+    },
+  );
+
+  /** A plain `<a>` the page put inside, which the button wraps instead of `href`. */
+  #link(): HTMLAnchorElement | null {
+    return this.querySelector(":scope > a:not([slot])");
+  }
 
   constructor() {
     super();
@@ -373,11 +407,42 @@ export class GwButton extends GwElement {
       if (this.loading) {
         event.preventDefault();
         event.stopImmediatePropagation();
+
+        return;
+      }
+
+      // A click on the pill around a slotted link follows the link
+      const link = this.#link();
+
+      if (link !== null && !event.composedPath().includes(link)) {
+        link.click();
       }
     });
 
+    const focus = () => {
+      this.#control.classList.toggle(
+        "focused",
+        this.#link()?.matches(":focus-visible") === true,
+      );
+    };
+
+    this.addEventListener("focusin", focus);
+    this.addEventListener("focusout", focus);
+
     this.#iconSlot.addEventListener("slotchange", () => {
       this.requestUpdate("icon");
+    });
+
+    this.#text.addEventListener("slotchange", () => {
+      this.requestUpdate("href");
+    });
+
+    new MutationObserver(() => {
+      this.requestUpdate("href");
+    }).observe(this, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["aria-current"],
     });
   }
 
@@ -387,13 +452,16 @@ export class GwButton extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
+    const link = this.#link();
+
     if (changed.has("href")) {
-      const wanted = this.href ? "A" : "BUTTON";
+      const wanted = link ? "SPAN" : this.href ? "A" : "BUTTON";
 
       if (this.#control.tagName !== wanted) {
-        const next = this.href
-          ? h("a", { class: "button", part: "button" })
-          : h("button", { class: "button", part: "button" });
+        const next = h(link ? "span" : this.href ? "a" : "button", {
+          class: "button",
+          part: "button",
+        });
 
         next.append(...this.#control.childNodes);
         this.#control.replaceWith(next);
@@ -407,6 +475,11 @@ export class GwButton extends GwElement {
       this.icon !== "" || this.querySelector("[slot='icon']") !== null;
 
     control.classList.toggle("has-icon", hasIcon);
+    control.classList.toggle(
+      "current",
+      link !== null &&
+        (link.getAttribute("aria-current") ?? "false") !== "false",
+    );
     setIconPath(this.#icon, this.icon);
     this.#icon.style.display = this.icon ? "" : "none";
     setAttribute(
@@ -416,13 +489,19 @@ export class GwButton extends GwElement {
         ? this.textContent.trim() || null
         : null,
     );
-    setAttribute(control, "aria-label", this.label || null);
     setAttribute(control, "aria-busy", this.loading ? "true" : null);
+
+    if (control instanceof HTMLSpanElement) {
+      // The slotted link is the control, so it carries the name
+      setAttribute(control, "aria-label", null);
+    } else {
+      setAttribute(control, "aria-label", this.label || null);
+    }
 
     if (control instanceof HTMLAnchorElement) {
       setAttribute(control, "href", this.disabled ? null : this.href);
       setAttribute(control, "aria-disabled", this.disabled ? "true" : null);
-    } else {
+    } else if (control instanceof HTMLButtonElement) {
       control.type = this.type;
       control.disabled = this.disabled;
     }
