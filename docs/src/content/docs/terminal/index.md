@@ -27,7 +27,7 @@ import { loadTheme } from "@timmo001/groundwork-tui";
 const theme = await Effect.runPromise(loadTheme);
 ```
 
-`themeFor(id, mode)` picks one directly, for an app with its own setting.
+`themeFor(id, mode)` picks one directly, for an app with its own setting. For a theme picker, `themeOptions` lists the Omarchy theme and the core themes with the modes each has, and `resolveTheme({ theme, mode })` turns the pick into colors. The demo's Theme item does this and keeps the pick in `~/.config/tui-menu/theme.json`. Since every view is built in its theme, it opens the renderer again in the new one.
 
 ## Keys
 
@@ -42,6 +42,8 @@ Every view lists its keys along the bottom with `formatHelpBar`, so nothing has 
 | Tab and Shift+Tab | Move between controls and dialog buttons |
 | Esc | Clears the filter, then closes a dialog or goes back |
 | Ctrl+C | Quits from anywhere |
+
+The mouse works too, once the app creates its renderer with `useMouse: true`, as the template does. A click runs a list row or a grid tile, presses a button, picks a choice or opens a collapsible, and the wheel scrolls. A grid passes clicks to its `onActivate` option.
 
 ## Effect
 

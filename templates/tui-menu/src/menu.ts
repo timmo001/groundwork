@@ -113,12 +113,22 @@ const mainItems: readonly MenuItem[] = [
 
   item(
     "settings",
-    "",
+    "\u{f08bb}",
     "Settings",
     "Configuration and preferences",
     submenu("settings"),
     undefined,
     ["config", "preferences", "options", ":set", "prefs", "opts", "cfg"],
+  ),
+
+  item(
+    "theme",
+    "\u{f03d8}",
+    "Theme",
+    "Pick the colors, and light or dark",
+    { type: "theme" },
+    undefined,
+    ["colors", "colours", "dark", "light", "omarchy", "mode", ":theme"],
   ),
 
   item(
@@ -181,7 +191,7 @@ const settingsItems: readonly MenuItem[] = [
 
   item(
     "settings.editor",
-    "",
+    "\u{f03eb}",
     "Editor",
     "Show configured editor or shell",
     cmd('echo "Editor: ${EDITOR:-not set}"'),

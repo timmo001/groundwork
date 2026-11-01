@@ -5,7 +5,14 @@
  */
 import type { CliRenderer } from "@opentui/core";
 import type { ViewId, MenuItem, MenuAction } from "../types.js";
-import { ChoiceDialog, type Theme } from "@timmo001/groundwork-tui";
+import {
+  ChoiceDialog,
+  themeOptions,
+  type Theme,
+  type ThemeOption,
+  type ThemePick,
+} from "@timmo001/groundwork-tui";
+import { Effect } from "effect";
 import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
 import type { ItemsRunnerService } from "../services/items.js";
@@ -42,7 +49,17 @@ export interface AppDeps {
   readonly commandRunner: CommandRunnerService;
   /** Service for the demo's `Items` operations */
   readonly itemsRunner: ItemsRunnerService;
+  /** The theme and mode in use, as picked */
+  readonly themePick: ThemePick;
+  /** Called with a new theme and mode from the picker */
+  readonly onThemePick: (pick: ThemePick) => void;
 }
+
+const modeNames = new Map([
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["darker", "Darker"],
+]);
 
 /** Top-level TUI application shell managing a view stack and global keyboard */
 export class App {
@@ -54,6 +71,10 @@ export class App {
   private controlsView: ControlsView;
   private gridView: GridView;
   private variants: ChoiceDialog<MenuAction>;
+  private themeDialog: ChoiceDialog<ThemeOption>;
+  private modeDialog: ChoiceDialog<ThemePick>;
+  private themePick: ThemePick;
+  private onThemePick: (pick: ThemePick) => void;
   private activeView: ViewId = "main";
   private viewStack: ViewId[] = [];
   private appTitle: string;
@@ -62,6 +83,8 @@ export class App {
     this.renderer = deps.renderer;
     this.commandRunner = deps.commandRunner;
     this.itemsRunner = deps.itemsRunner;
+    this.themePick = deps.themePick;
+    this.onThemePick = deps.onThemePick;
     this.appTitle = options.title ?? "TUI menu";
 
     // --- Create views ---
@@ -100,6 +123,20 @@ export class App {
       id: "variants",
       theme: deps.theme,
       onChoose: (action) => this.dispatchAction(action),
+    });
+
+    // The theme picker: a theme, then its mode when it has more than one
+    this.modeDialog = new ChoiceDialog<ThemePick>(deps.renderer, {
+      id: "theme-mode",
+      theme: deps.theme,
+      width: 40,
+      onChoose: (pick) => this.onThemePick(pick),
+    });
+
+    this.themeDialog = new ChoiceDialog<ThemeOption>(deps.renderer, {
+      id: "theme",
+      theme: deps.theme,
+      onChoose: (option) => this.pickMode(option),
     });
 
     // --- Hide all views initially ---
@@ -279,7 +316,59 @@ export class App {
       case "restart":
         void this.itemsRunner.restart();
         break;
+
+      case "theme":
+        void this.pickTheme();
+        break;
     }
+  }
+
+  /** Opens the theme picker, the theme in use first. */
+  private async pickTheme(): Promise<void> {
+    const options = await Effect.runPromise(themeOptions);
+    const current = this.themePick.theme ?? options[0]?.id;
+
+    const ordered = [
+      ...options.filter((option) => option.id === current),
+      ...options.filter((option) => option.id !== current),
+    ];
+
+    this.themeDialog.show(
+      "Theme",
+      ordered.map((option) => ({
+        label: option.name,
+        description:
+          option.id === current
+            ? "In use"
+            : option.id === "omarchy"
+              ? "The desktop's theme"
+              : undefined,
+        value: option,
+      })),
+    );
+  }
+
+  /** Asks for the mode, unless the theme only has one. */
+  private pickMode(option: ThemeOption): void {
+    const [only, ...others] = option.modes;
+
+    if (only === undefined || others.length === 0) {
+      this.onThemePick({ theme: option.id, mode: only });
+
+      return;
+    }
+
+    this.modeDialog.show(
+      option.name,
+      option.modes.map((mode) => ({
+        label: modeNames.get(mode) ?? mode,
+        description:
+          option.id === this.themePick.theme && mode === this.themePick.mode
+            ? "In use"
+            : undefined,
+        value: { theme: option.id, mode },
+      })),
+    );
   }
 
   /** Rebuild the Updates submenu from the latest list */

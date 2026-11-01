@@ -68,6 +68,11 @@ export interface RestartAction {
   readonly type: "restart";
 }
 
+/** Action that opens the theme picker */
+export interface ThemeAction {
+  readonly type: "theme";
+}
+
 /** Discriminated union of all possible menu item actions */
 export type MenuAction =
   | CommandAction
@@ -77,7 +82,8 @@ export type MenuAction =
   | SubmenuAction
   | QuitAction
   | ApplyAction
-  | RestartAction;
+  | RestartAction
+  | ThemeAction;
 
 /** A selectable variant for a menu item offering an alternative action */
 export interface MenuVariant {

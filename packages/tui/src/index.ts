@@ -77,8 +77,12 @@ export {
   DEFAULT_THEME,
   loadTheme,
   omarchyThemeFor,
+  resolveTheme,
   themeFor,
+  themeOptions,
   type Theme,
+  type ThemeOption,
+  type ThemePick,
 } from "./theme.ts";
 
 export { Tile, type TileOptions } from "./tile.ts";

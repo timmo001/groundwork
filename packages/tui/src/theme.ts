@@ -8,6 +8,7 @@
  */
 import { readOmarchyTheme } from "@timmo001/groundwork-tokens/omarchy-current";
 import { opentuiThemes } from "@timmo001/groundwork-tokens/opentui";
+import { coreThemeChoices } from "@timmo001/groundwork-tokens/page";
 import {
   hexModes,
   omarchyTheme,
@@ -119,32 +120,85 @@ export const omarchyThemeFor = (
   return roles === undefined ? undefined : fromRoles(roles);
 };
 
+/** A theme a TUI can offer in a picker, with the modes it has. */
+export interface ThemeOption {
+  readonly id: string;
+  readonly name: string;
+  readonly modes: readonly string[];
+}
+
+/**
+ * The themes to offer in a picker: the desktop's Omarchy theme first where
+ * there is one, then the core themes.
+ */
+export const themeOptions: Effect.Effect<readonly ThemeOption[]> = Effect.gen(
+  function* () {
+    const core = coreThemeChoices.map(({ id, name }) => ({
+      id,
+      name,
+      modes: Object.keys(isTheme(id) ? opentuiThemes[id] : {}),
+    }));
+
+    const current = yield* Effect.promise(readOmarchyTheme);
+    const parsed = current === null ? undefined : omarchyTheme(current.colors);
+
+    if (current === null || parsed === undefined || Result.isFailure(parsed))
+      return core;
+
+    const omarchy = {
+      id: "omarchy",
+      name: `Omarchy (${current.name})`,
+      modes: Object.keys(hexModes(runtimeTheme(parsed.success).theme)),
+    };
+
+    return [omarchy, ...core];
+  },
+);
+
+/** A theme and mode to show; either can be left to the defaults. */
+export interface ThemePick {
+  /** A core theme's id, or `omarchy` for the desktop's Omarchy theme */
+  readonly theme?: string | undefined;
+  /** `light`, `dark` or `darker` */
+  readonly mode?: string | undefined;
+}
+
+/**
+ * A pick's slots. Without a theme it's the desktop's Omarchy theme where
+ * there is one, otherwise Base; without a mode it's the Omarchy theme's own,
+ * otherwise dark.
+ */
+export const resolveTheme = (pick: ThemePick): Effect.Effect<Theme> =>
+  Effect.gen(function* () {
+    if (pick.theme === undefined || pick.theme === "omarchy") {
+      const current = yield* Effect.promise(readOmarchyTheme);
+
+      const theme =
+        current === null
+          ? undefined
+          : omarchyThemeFor(current.colors, pick.mode);
+
+      if (theme !== undefined) return theme;
+    }
+
+    return themeFor(pick.theme ?? "base", pick.mode ?? "dark");
+  });
+
 /**
  * Loads the theme from `GW_THEME` and `GW_MODE` (`light`, `dark` or
- * `darker`). `GW_THEME` is a core theme's id, or `omarchy` for the desktop's
- * Omarchy theme, which is also the default where Omarchy is installed. Base
- * and dark are the fallback.
+ * `darker`), as `resolveTheme` picks it: `GW_THEME` is a core theme's id, or
+ * `omarchy` for the desktop's Omarchy theme, which is also the default where
+ * Omarchy is installed.
  */
 export const loadTheme: Effect.Effect<Theme> = Effect.gen(function* () {
-  const id = yield* Config.option(Config.String("GW_THEME"));
+  const theme = yield* Config.option(Config.String("GW_THEME"));
 
   const mode = yield* Config.option(
     Config.Literals(["light", "dark", "darker"], "GW_MODE"),
   );
 
-  if (Option.isNone(id) || id.value === "omarchy") {
-    const current = yield* Effect.promise(readOmarchyTheme);
-
-    const theme =
-      current === null
-        ? undefined
-        : omarchyThemeFor(current.colors, Option.getOrUndefined(mode));
-
-    if (theme !== undefined) return theme;
-  }
-
-  return themeFor(
-    Option.getOrElse(id, () => "base"),
-    Option.getOrElse(mode, () => "dark"),
-  );
+  return yield* resolveTheme({
+    theme: Option.getOrUndefined(theme),
+    mode: Option.getOrUndefined(mode),
+  });
 }).pipe(Effect.orElseSucceed(() => DEFAULT_THEME));

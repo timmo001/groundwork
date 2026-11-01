@@ -258,6 +258,7 @@
         "tui-menu": "./src/index.ts",
       },
       "dependencies": {
+        "@effect/platform-node": "4.1.1",
         "@opentui/core": "0.8.1",
         "@timmo001/groundwork-demo": "workspace:*",
         "@timmo001/groundwork-tui": "workspace:*",
