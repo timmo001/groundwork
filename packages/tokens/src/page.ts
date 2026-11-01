@@ -15,6 +15,7 @@ import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
+import type { OmarchyCurrentTheme } from "./omarchy.ts";
 import type { ThemeStore } from "./runtime.ts";
 import type { Theme } from "./schema.ts";
 // Only for `document.modelContext`'s type; the tools themselves load lazily
@@ -29,6 +30,12 @@ export const customThemeId = "custom";
 /** The id of the `<style>` holding a custom theme's CSS. */
 export const customThemeStyleId = "gw-custom-theme";
 
+/** The theme id the desktop's Omarchy theme is solved under. */
+export const omarchyThemeId = "omarchy";
+
+/** The id of the `<style>` holding the Omarchy theme's CSS. */
+export const omarchyThemeStyleId = "gw-omarchy-theme";
+
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
 
 /** Light or dark: the side of a mode a theme has to cover. Darker is dark. */
@@ -42,6 +49,8 @@ export interface PageThemeState {
   readonly theme: string;
   /** The visitor's own theme's name, when they've imported one. */
   readonly custom: string | null;
+  /** The desktop's Omarchy theme as a choice, when the app passed one. */
+  readonly omarchy: ThemeChoice | null;
 }
 
 /** What `importTheme` reports: the theme's name and any contrast misses, or why it failed. */
@@ -117,6 +126,15 @@ export interface PageTheme {
   readonly importTheme: (text: string) => Promise<ImportResult>;
   /** Drops the visitor's own theme and goes back to the defaults. */
   readonly reset: () => void;
+  /**
+   * Offers the Omarchy theme the app runs under, or drops it with `null`.
+   * It's used for its scheme until the visitor picks another, and a theme
+   * switch on the desktop follows through while it's picked. Apps that can
+   * read it, such as desktop apps, pass it on start and on every switch.
+   */
+  readonly setOmarchyTheme: (
+    theme: OmarchyCurrentTheme | null,
+  ) => Promise<void>;
   /** Calls `listener` on every change; returns a function that stops it. */
   readonly subscribe: (listener: (state: PageThemeState) => void) => () => void;
 }
@@ -128,6 +146,13 @@ const keys = (key: string) => ({
   document: `${key}:custom`,
   css: `${key}:custom-css`,
   name: `${key}:custom-name`,
+});
+
+/** The Omarchy theme's cache, kept apart so a reset doesn't drop it. */
+const omarchyKeys = (key: string) => ({
+  css: `${key}:omarchy-css`,
+  name: `${key}:omarchy-name`,
+  mode: `${key}:omarchy-mode`,
 });
 
 const read = (key: string) => {
@@ -148,24 +173,26 @@ const write = (key: string, value: string | null) => {
 };
 
 /**
- * An inline script that applies the stored mode, theme and any custom theme's
- * cached CSS before the first paint. Takes the same key and defaults as
- * `pageTheme`.
+ * An inline script that applies the stored mode, theme and any custom or
+ * Omarchy theme's cached CSS before the first paint. Takes the same key and
+ * defaults as `pageTheme`.
  */
 export const themeBootScript = (
   options: Pick<PageThemeOptions, "key" | "defaultTheme" | "defaultMode">,
 ) => {
-  const stored = keys(options.key);
-
   const config = JSON.stringify({
-    keys: stored,
+    keys: keys(options.key),
+    omarchy: omarchyKeys(options.key),
     theme: options.defaultTheme,
     mode: options.defaultMode ?? "auto",
     custom: customThemeId,
     style: customThemeStyleId,
+    omarchyId: omarchyThemeId,
+    omarchyStyle: omarchyThemeStyleId,
   });
 
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??c.theme;if(t===c.custom){const css=g(c.keys.css);if(css){const e=document.createElement("style");e.id=c.style;e.textContent=css;document.head.append(e)}else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  // With nothing picked, a cached Omarchy theme for the scheme is the default
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);const o=g(c.omarchy.css);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??(o&&g(c.omarchy.mode)===(d?"dark":"light")?c.omarchyId:c.theme);if(t===c.custom){const css=g(c.keys.css);if(css)a(c.style,css);else t=c.theme}else if(t===c.omarchyId){if(o)a(c.omarchyStyle,o);else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
 
 /** Reads a theme from JSON text or an Omarchy `colors.toml`. */
@@ -187,6 +214,7 @@ const readTheme = async (text: string) => {
  */
 export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const stored = keys(options.key);
+  const storedOmarchy = omarchyKeys(options.key);
   const root = options.root ?? document.documentElement;
   const defaultMode = options.defaultMode ?? "auto";
   const listeners = new Set<(state: PageThemeState) => void>();
@@ -196,6 +224,49 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const storedMode = read(stored.mode);
   const customName = read(stored.name);
   const customCss = read(stored.css);
+
+  const setStyle = (id: string, css: string | null) => {
+    let style = document.getElementById(id);
+
+    if (css === null) {
+      style?.remove();
+
+      return;
+    }
+
+    if (style === null) {
+      style = document.createElement("style");
+      style.id = id;
+      document.head.append(style);
+    }
+
+    style.textContent = css;
+  };
+
+  /** The Omarchy theme as a choice, from the last one the app passed. */
+  let omarchy: ThemeChoice | null = null;
+
+  {
+    const css = read(storedOmarchy.css);
+    const name = read(storedOmarchy.name);
+    const mode = read(storedOmarchy.mode);
+
+    if (
+      css !== null &&
+      name !== null &&
+      (mode === "light" || mode === "dark")
+    ) {
+      omarchy = { id: omarchyThemeId, name, mode };
+
+      // The boot script may have put it on already
+      if (document.getElementById(omarchyThemeStyleId) === null) {
+        setStyle(omarchyThemeStyleId, css);
+      }
+    }
+  }
+
+  const choices = () =>
+    omarchy === null ? options.themes : [...options.themes, omarchy];
 
   const system = matchMedia("(prefers-color-scheme: dark)");
 
@@ -210,18 +281,20 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const fits = (id: string | null, scheme: ThemeScheme, custom: boolean) =>
     id !== null &&
     ((id === customThemeId && custom) ||
-      options.themes.some(
-        (theme) => theme.id === id && themeCovers(theme, scheme),
-      ));
+      choices().some((theme) => theme.id === id && themeCovers(theme, scheme)));
 
+  // The Omarchy theme comes first where it covers the scheme, so the app
+  // matches the desktop until the visitor picks another
   const fallback = (scheme: ThemeScheme) =>
-    options.themes.some(
-      (theme) =>
-        theme.id === options.defaultTheme && themeCovers(theme, scheme),
-    )
-      ? options.defaultTheme
-      : (options.themes.find((theme) => themeCovers(theme, scheme))?.id ??
-        options.defaultTheme);
+    omarchy !== null && themeCovers(omarchy, scheme)
+      ? omarchy.id
+      : options.themes.some(
+            (theme) =>
+              theme.id === options.defaultTheme && themeCovers(theme, scheme),
+          )
+        ? options.defaultTheme
+        : (options.themes.find((theme) => themeCovers(theme, scheme))?.id ??
+          options.defaultTheme);
 
   const storedLight = read(stored.theme);
   const storedDark = read(stored.dark) ?? storedLight;
@@ -244,31 +317,13 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const resolve = (mode: ThemeMode, custom: string | null): PageThemeState => {
     const scheme = schemeOf(mode);
 
-    return { mode, scheme, theme: picks[scheme], custom };
+    return { mode, scheme, theme: picks[scheme], custom, omarchy };
   };
 
   let state: PageThemeState = resolve(
     modes.find((mode) => mode === storedMode) ?? defaultMode,
     customCss === null ? null : customName,
   );
-
-  const setStyle = (css: string | null) => {
-    let style = document.getElementById(customThemeStyleId);
-
-    if (css === null) {
-      style?.remove();
-
-      return;
-    }
-
-    if (style === null) {
-      style = document.createElement("style");
-      style.id = customThemeStyleId;
-      document.head.append(style);
-    }
-
-    style.textContent = css;
-  };
 
   const commit = (next: PageThemeState) => {
     state = next;
@@ -290,7 +345,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         ? runtime.css
         : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
 
-    setStyle(css);
+    setStyle(customThemeStyleId, css);
     write(stored.document, text);
     write(stored.css, css);
     write(stored.name, document.name);
@@ -314,7 +369,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
 
       picks = { light: id, dark: id };
     } else {
-      const choice = options.themes.find((theme) => theme.id === id);
+      const choice = choices().find((theme) => theme.id === id);
 
       if (choice === undefined) return;
 
@@ -365,13 +420,79 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
       return { ok: true, name: parsed.success.name, misses };
     },
     reset: () => {
-      setStyle(null);
+      setStyle(customThemeStyleId, null);
 
       for (const key of Object.values(stored)) write(key, null);
 
       picks = { light: fallback("light"), dark: fallback("dark") };
       commit(resolve(defaultMode, null));
       void options.store?.clear().catch(() => undefined);
+    },
+    setOmarchyTheme: async (theme) => {
+      // Stored as well as in use, so it's picked again when it comes back
+      const followed = [
+        picks.light,
+        picks.dark,
+        read(stored.theme),
+        read(stored.dark),
+      ].includes(omarchyThemeId);
+
+      const unpicked = read(stored.theme) === null;
+      let mode: ThemeScheme | undefined;
+
+      if (theme !== null) {
+        const { Result } = await import("effect");
+
+        const { appTonesCss, omarchyTheme, runtimeTheme } =
+          await import("./runtime.ts");
+
+        const name = `Omarchy (${theme.name})`;
+        const parsed = omarchyTheme(theme.colors, name, omarchyThemeId);
+
+        if (Result.isSuccess(parsed)) {
+          const runtime = runtimeTheme(parsed.success);
+
+          const css =
+            options.tones === undefined
+              ? runtime.css
+              : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
+
+          mode = parsed.success.mode;
+          setStyle(omarchyThemeStyleId, css);
+          write(storedOmarchy.css, css);
+          write(storedOmarchy.name, name);
+          write(storedOmarchy.mode, mode);
+          omarchy = { id: omarchyThemeId, name, mode };
+        }
+      }
+
+      if (mode === undefined) {
+        // Gone, or a colors.toml that doesn't map: back off it, keeping the
+        // pick so it comes back with the theme
+        setStyle(omarchyThemeStyleId, null);
+
+        for (const key of Object.values(storedOmarchy)) write(key, null);
+
+        omarchy = null;
+        picks = {
+          light:
+            picks.light === omarchyThemeId ? fallback("light") : picks.light,
+          dark: picks.dark === omarchyThemeId ? fallback("dark") : picks.dark,
+        };
+      } else if (followed || unpicked) {
+        // A switch between a light and a dark Omarchy theme moves it across
+        const keep = (scheme: ThemeScheme) =>
+          picks[scheme] === omarchyThemeId ? fallback(scheme) : picks[scheme];
+
+        picks =
+          mode === "dark"
+            ? { light: keep("light"), dark: omarchyThemeId }
+            : { light: omarchyThemeId, dark: keep("dark") };
+
+        if (!unpicked) savePicks();
+      }
+
+      commit(resolve(state.mode, state.custom));
     },
     subscribe: (listener) => {
       listeners.add(listener);
@@ -393,7 +514,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         if (text === read(stored.document)) return;
 
         if (text === null) {
-          setStyle(null);
+          setStyle(customThemeStyleId, null);
 
           for (const key of [stored.document, stored.css, stored.name]) {
             write(key, null);

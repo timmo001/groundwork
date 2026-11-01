@@ -9,6 +9,7 @@
     "./runtime": "./src/runtime.ts",
     "./page": "./src/page.ts",
     "./webmcp": "./src/webmcp.ts",
+    "./omarchy-current": "./src/omarchy-current.ts",
     "./opentui": "./generated/opentui.ts",
     "./themes.css": "./generated/themes.css",
     "./themes.json": "./generated/themes.json",

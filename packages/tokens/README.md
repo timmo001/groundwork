@@ -31,5 +31,16 @@ their own:
 import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
 ```
 
+The `omarchy-current` export reads and watches the Omarchy theme a machine
+is using, for apps outside a browser, such as a desktop app's main process or
+a terminal UI. `pageTheme`'s `setOmarchyTheme` offers it in the view:
+
+```ts
+import {
+  readOmarchyTheme,
+  watchOmarchyTheme,
+} from "@timmo001/groundwork-tokens/omarchy-current";
+```
+
 The themes, their roles and contrast targets are documented at
 [groundwork.timmo.dev/themes](https://groundwork.timmo.dev/themes).

@@ -554,7 +554,8 @@ const hexRoles = (roles: Roles) =>
     Object.entries(roles).map(([role, color]) => [role, toHex(color)]),
   );
 
-const hexModes = (theme: ResolvedTheme) =>
+/** A solved theme's roles as hex in each mode it has, as terminals take them. */
+export const hexModes = (theme: ResolvedTheme) =>
   Object.fromEntries(
     modes.flatMap((mode) => {
       const roles = theme.modes[mode];

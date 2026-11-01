@@ -12,7 +12,9 @@ import { SolvedTheme, Theme } from "./schema.ts";
 import { check, resolve, type Check, type ResolvedTheme } from "./solve.ts";
 import { appTonesCss, type AppTones } from "./tones.ts";
 
-export { omarchyTheme } from "./omarchy.ts";
+export { omarchyTheme, type OmarchyCurrentTheme } from "./omarchy.ts";
+
+export { hexModes } from "./generate.ts";
 
 export { appTonesCss, type AppTones } from "./tones.ts";
 

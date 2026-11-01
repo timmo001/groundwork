@@ -8,6 +8,15 @@
 import { Schema } from "effect";
 import { MappedTheme } from "./schema.ts";
 
+/**
+ * The Omarchy theme a machine is using: its name, such as `Tokyo Night`,
+ * and the text of its `colors.toml`.
+ */
+export interface OmarchyCurrentTheme {
+  readonly name: string;
+  readonly colors: string;
+}
+
 /** The `key = "value"` pairs of a flat TOML file, ignoring comments. */
 const readPairs = (text: string): ReadonlyMap<string, string> => {
   const pairs = new Map<string, string>();
