@@ -170,6 +170,16 @@ The square ends follow each scroller's scroll through the `gw-scrollbar-edges-y`
 }
 ```
 
+The page's rules can't reach inside a shadow root, so an app's own components add the `scrollbars` sheet from the ui package to their styles to match, which also squares their scrollers off:
+
+```ts
+import { scrollbars } from "@timmo001/groundwork-ui";
+
+class MyList extends LitElement {
+  static styles = [scrollbars, css`...`];
+}
+```
+
 The docs check every page with a Playwright test that measures the layout shift while it loads. It fails above 0.025, a quarter of the 0.1 the web counts as good, and lists what moved.
 
 ## References
