@@ -629,7 +629,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ gw-input .gw-input-control { position: relative; display: flex; align-items: center; } gw-input .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } gw-input .gw-input-control > .icon[hidden] { display: none; } gw-input .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ gw-select .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } gw-select .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } gw-select .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } gw-select .gw-select-clear[hidden] { display: none; } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } `",
+          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ gw-input .gw-input-control { position: relative; display: flex; align-items: center; } gw-input .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } gw-input .gw-input-control > .icon[hidden] { display: none; } gw-input .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ gw-select .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } gw-select .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ gw-select[inline-label] { display: inline-flex; } gw-select[inline-label] .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ gw-select .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } gw-select .gw-select-inline-label[hidden] { display: none; } gw-select .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } gw-select .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } gw-select .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } gw-select[open] .gw-select-trigger > .icon:last-child { rotate: 180deg; } gw-select .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ gw-select .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } gw-select .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } gw-select .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { gw-select .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } gw-select .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { gw-select .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } gw-select .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ gw-select .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } gw-select .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } gw-select .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } gw-select .gw-select-clear[hidden] { display: none; } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } gw-checkbox input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } gw-switch input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } gw-switch input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } gw-switch input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } gw-switch input:disabled { opacity: 0.5; } gw-range { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } gw-range > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } gw-range .gw-range-control { position: relative; display: block; } gw-range input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } gw-range input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } gw-range input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ gw-range .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } gw-range .gw-range-bubble[hidden] { display: none; } gw-range .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } gw-range .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -14594,6 +14594,592 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-range.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A labeled native range slider. While it's pressed or dragged, a bubble\nabove the thumb shows the value, so a slider without a readout beside it\nstill says where it is. The native `input` and `change` events bubble out\nas usual.",
+          "name": "GwRange",
+          "cssProperties": [
+            {
+              "description": "The thumb's size. Defaults to 1rem.",
+              "name": "--gw-range-thumb"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, name: {}, value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, step: { type: \"number\" }, unit: {}, hint: {}, disabled: { type: \"boolean\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "labelHidden",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Keeps the label for assistive technology but hides it.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "number"
+              },
+              "default": "100"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "default": "1"
+            },
+            {
+              "kind": "field",
+              "name": "unit",
+              "type": {
+                "text": "string"
+              },
+              "description": "Shown after the value, such as `%`.",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#label",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#bubble",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#hint",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#text",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "string"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#placeBubble",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#release",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "false",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The label, also its accessible name.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hides the label but keeps it for assistive technology.",
+              "name": "label-hidden"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The form field name.",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The value.",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The lowest value. Defaults to 0.",
+              "name": "min"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The highest value. Defaults to 100.",
+              "name": "max"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The step between values. Defaults to 1.",
+              "name": "step"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Shown after the value in the bubble and for assistive technology, such as `%`. Empty for a plain number.",
+              "name": "unit"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "One line of help under it.",
+              "name": "hint"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disables it.",
+              "name": "disabled"
+            }
+          ],
+          "superclass": {
+            "name": "LightElement",
+            "module": "/src/fields.js"
+          },
+          "tagName": "gw-range",
+          "customElement": true,
+          "summary": "A labeled slider in light DOM, so forms see it."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwRange",
+          "declaration": {
+            "name": "GwRange",
+            "module": "src/gw-range.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-section-title.ts",
       "declarations": [
         {
@@ -21208,6 +21794,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-popover.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-range.js"
           }
         },
         {

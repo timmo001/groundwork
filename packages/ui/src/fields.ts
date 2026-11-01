@@ -406,6 +406,79 @@ export const fieldStyles = css`
   gw-switch input:disabled {
     opacity: 0.5;
   }
+
+  gw-range {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gw-space-2);
+    min-width: 0;
+    font-family: var(--gw-font-sans);
+    color: var(--gw-color-text-primary);
+  }
+
+  gw-range > label {
+    font-size: var(--gw-font-size-s);
+    font-weight: var(--gw-font-weight-strong);
+    color: var(--gw-color-text-strong);
+  }
+
+  gw-range .gw-range-control {
+    position: relative;
+    display: block;
+  }
+
+  gw-range input {
+    display: block;
+    width: 100%;
+    margin: 0;
+    accent-color: var(--gw-color-fill-accent-resting);
+    cursor: pointer;
+  }
+
+  gw-range input:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: var(--gw-focus-offset);
+  }
+
+  gw-range input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* The value above the thumb while it's held */
+  gw-range .gw-range-bubble {
+    position: absolute;
+    bottom: calc(100% + var(--gw-space-1));
+    padding: var(--gw-space-1) var(--gw-space-2);
+    font-size: var(--gw-font-size-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--gw-color-on-accent);
+    white-space: nowrap;
+    pointer-events: none;
+    background: var(--gw-color-fill-accent-resting);
+    border-radius: var(--gw-radius-control);
+    box-shadow: var(--gw-shadow-s);
+    translate: -50% 0;
+  }
+
+  gw-range .gw-range-bubble[hidden] {
+    display: none;
+  }
+
+  gw-range .gw-hint {
+    margin: 0;
+    font-size: var(--gw-font-size-xs);
+    color: var(--gw-color-text-secondary);
+  }
+
+  gw-range .gw-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 `;
 
 const adoptStyles = (element: Element, sheet: CSSStyleSheet) => {

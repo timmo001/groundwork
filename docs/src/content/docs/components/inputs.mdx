@@ -130,6 +130,16 @@ A `swatch` on an option draws a dot of that color before its label, such as a ta
 
 `gw-switch` is the same native checkbox drawn as a switch, with `role="switch"` so it's announced as one. Both take `label`, `name`, `value`, `checked`, `disabled` and `hint`. `label-hidden` keeps the label for assistive technology but hides it, for a control whose name is already beside it, as in a setting row.
 
+## Range
+
+<Demo id="range" layout="stack">
+  <gw-range label="Volume" value="40" unit="%"></gw-range>
+  <gw-range label="Brightness" value="128" max="255" hint="Applies as you let go"></gw-range>
+  <gw-range label="Unavailable" value="60" disabled></gw-range>
+</Demo>
+
+A labeled native slider. While it's held, a bubble above the thumb shows the value, so a slider with no readout beside it still says where it is. It takes `label`, `name`, `value`, `min`, `max`, `step`, `unit`, `hint` and `disabled`; `unit` follows the value in the bubble and for assistive technology. The native `input` event fires while dragging and `change` when it's let go. `label-hidden` keeps the label for assistive technology but hides it.
+
 ## Setting row
 
 <Demo id="setting-row" layout="stack">
