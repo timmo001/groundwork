@@ -1,0 +1,31 @@
+---
+/**
+ * `<OwnLook>`: the "after" styles for the Your own look demo on the
+ * Components page, giving a badge an app's own shape through variables and
+ * parts, scoped to `.own-look`.
+ */
+---
+
+<style is:global>
+  .own-look gw-badge {
+    --gw-tone: var(--gw-color-danger);
+  }
+
+  .own-look gw-badge::part(badge) {
+    gap: var(--gw-space-2);
+    padding-inline: var(--gw-space-2) var(--gw-space-3);
+    background: var(--gw-color-surface-raised);
+    border-color: var(--gw-color-border-quiet);
+    border-inline-start: calc(var(--gw-border-width) * 4) solid var(--gw-tone);
+    border-radius: var(--gw-radius-s);
+  }
+
+  .own-look gw-badge::part(label) {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .own-look gw-badge::part(value) {
+    font-family: var(--gw-font-mono);
+  }
+</style>

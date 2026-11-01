@@ -22,6 +22,8 @@ import { base, type Tone } from "./styles.js";
  * @summary Brief, non-interactive toasts in the bottom end corner.
  *
  * @attr {number} duration - Milliseconds each toast shows for. Defaults to 5000.
+ *
+ * @csspart toast - Each toast.
  */
 export class GwToaster extends GwElement {
   static override properties = {
@@ -111,7 +113,7 @@ export class GwToaster extends GwElement {
   }
 
   show(message: string, tone: Tone = "neutral") {
-    const toast = h("div", { class: "toast" }, message);
+    const toast = h("div", { class: "toast", part: "toast" }, message);
 
     toast.style.setProperty(
       "--gw-toast-tone",

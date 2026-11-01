@@ -76,6 +76,12 @@ const circle = (className: string) => {
  * @attr {boolean} inverted - Lower is worse, such as for a battery.
  * @attr {boolean} loading - Pulses the track and shows a skeleton for the reading.
  *
+ * @csspart dial - The dial, with the arc and the reading.
+ * @csspart value - The reading's number.
+ * @csspart unit - The unit after it.
+ * @csspart label - What it measures.
+ * @csspart caption - The line under the label.
+ *
  * @cssprop --gw-gauge-size - The dial's width. Defaults to `8.5rem`.
  * @cssprop --gw-gauge-color - The arc's color, overriding the thresholds.
  */
@@ -208,11 +214,11 @@ export class GwGauge extends GwElement {
 
   readonly #fill = circle("fill");
 
-  readonly #dial = h("div", { class: "dial", role: "meter" });
+  readonly #dial = h("div", { class: "dial", part: "dial", role: "meter" });
 
-  readonly #value = h("span", { class: "value" });
+  readonly #value = h("span", { class: "value", part: "value" });
 
-  readonly #unit = h("span", { class: "unit" });
+  readonly #unit = h("span", { class: "unit", part: "unit" });
 
   readonly #shown = h("span", { class: "shown" }, this.#value, this.#unit);
 
@@ -220,9 +226,9 @@ export class GwGauge extends GwElement {
     style: "--gw-skeleton-width: 2em",
   });
 
-  readonly #label = h("span", { class: "label" });
+  readonly #label = h("span", { class: "label", part: "label" });
 
-  readonly #caption = h("span", { class: "caption" });
+  readonly #caption = h("span", { class: "caption", part: "caption" });
 
   readonly #captionSkeleton = h("gw-skeleton-text", {
     style: "--gw-skeleton-width: 5rem",

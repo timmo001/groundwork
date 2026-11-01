@@ -28,6 +28,10 @@ const sheetBelow = 600;
  * @attr {string} shortcut - The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.
  * @attr {boolean} open - Whether it shows.
  *
+ * @csspart dialog - The menu's surface.
+ * @csspart list - The `gw-option-list` of commands.
+ * @csspart footer - The row of key hints.
+ *
  * @fires {CustomEvent<{ value: string }>} pick - When a command is picked, with its `value` in `detail`.
  */
 export class GwCommandMenu extends GwElement {
@@ -150,15 +154,15 @@ export class GwCommandMenu extends GwElement {
   declare shortcut: string;
   declare open: boolean;
 
-  readonly #list = h("gw-option-list", { search: true });
+  readonly #list = h("gw-option-list", { search: true, part: "list" });
 
   readonly #dialog = h(
     "dialog",
-    {},
+    { part: "dialog" },
     this.#list,
     h(
       "footer",
-      { "aria-hidden": "true" },
+      { part: "footer", "aria-hidden": "true" },
       h("span", {}, h("kbd", {}, "↑"), " ", h("kbd", {}, "↓"), " to move"),
       h("span", {}, h("kbd", {}, "Enter"), " to pick"),
       h("span", {}, h("kbd", {}, "Esc"), " to close"),

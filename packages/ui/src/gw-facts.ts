@@ -28,6 +28,10 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
  * @attr {Fact[]} items - The pairs, as JSON.
  * @attr {boolean} loading - Shows skeleton pairs, keeping any labels already known.
  * @attr {number} rows - How many skeleton pairs while loading. Defaults to 4.
+ *
+ * @csspart list - The description list.
+ * @csspart label - Each label.
+ * @csspart value - Each value.
  */
 export class GwFacts extends GwElement {
   static override properties = {
@@ -69,7 +73,7 @@ export class GwFacts extends GwElement {
   declare loading: boolean;
   declare rows: number;
 
-  readonly #list = h("dl");
+  readonly #list = h("dl", { part: "list" });
 
   #rendered = false;
 
@@ -97,13 +101,13 @@ export class GwFacts extends GwElement {
         ...Array.from({ length: count }, (_, index) => [
           h(
             "dt",
-            {},
+            { part: "label" },
             items[index]?.label ??
               h("gw-skeleton-text", { style: "--gw-skeleton-width: 5rem" }),
           ),
           h(
             "dd",
-            {},
+            { part: "value" },
             h("gw-skeleton-text", {
               style: `--gw-skeleton-width: ${skeletonWidths[index % skeletonWidths.length]}`,
             }),
@@ -114,8 +118,12 @@ export class GwFacts extends GwElement {
       this.#list.removeAttribute("aria-busy");
       this.#list.replaceChildren(
         ...items.flatMap((item) => [
-          h("dt", {}, item.label),
-          h("dd", {}, loaded ? h("span", {}, item.value) : item.value),
+          h("dt", { part: "label" }, item.label),
+          h(
+            "dd",
+            { part: "value" },
+            loaded ? h("span", {}, item.value) : item.value,
+          ),
         ]),
       );
     }

@@ -15,6 +15,8 @@ import { base } from "./styles.js";
  *
  * @attr {string} label - What's loading, for assistive technology. Defaults to `Loading`.
  *
+ * @csspart ring - The spinning ring.
+ *
  * @cssprop --gw-spinner-size - The ring's size. Defaults to `1.25rem`.
  */
 export class GwSpinner extends GwElement {
@@ -67,7 +69,9 @@ export class GwSpinner extends GwElement {
   }
 
   protected override create(root: ShadowRoot) {
-    root.append(h("span", { class: "ring", role: "status" }, this.#label));
+    root.append(
+      h("span", { class: "ring", part: "ring", role: "status" }, this.#label),
+    );
   }
 
   protected override update() {

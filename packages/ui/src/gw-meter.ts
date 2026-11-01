@@ -26,6 +26,11 @@ import { base, type Tone } from "./styles.js";
  * @attr {string} display - The value as shown, such as `42 GB`. Defaults to a percentage.
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - A fixed color, overriding `high` and `critical`.
  * @attr {boolean} loading - Pulses the track and shows a skeleton for the value.
+ *
+ * @csspart top - The row with the label and value.
+ * @csspart value - The value as shown.
+ * @csspart track - The bar's track.
+ * @csspart fill - The filled part of the bar.
  */
 export class GwMeter extends GwElement {
   static override properties = {
@@ -93,7 +98,7 @@ export class GwMeter extends GwElement {
   declare tone: Tone | undefined;
   declare loading: boolean;
 
-  readonly #top = h("div", { class: "top" });
+  readonly #top = h("div", { class: "top", part: "top" });
 
   readonly #label = h("span");
 
@@ -101,15 +106,23 @@ export class GwMeter extends GwElement {
     style: "--gw-skeleton-width: 6rem",
   });
 
-  readonly #value = h("span", { class: "value", "aria-hidden": "true" });
+  readonly #value = h("span", {
+    class: "value",
+    part: "value",
+    "aria-hidden": "true",
+  });
 
   readonly #valueSkeleton = h("gw-skeleton-text", {
     style: "--gw-skeleton-width: 2.5rem",
   });
 
-  readonly #fill = h("div", { class: "fill" });
+  readonly #fill = h("div", { class: "fill", part: "fill" });
 
-  readonly #track = h("div", { class: "track", role: "meter" }, this.#fill);
+  readonly #track = h(
+    "div",
+    { class: "track", part: "track", role: "meter" },
+    this.#fill,
+  );
 
   readonly #bar = h("gw-skeleton", { class: "bar" });
 

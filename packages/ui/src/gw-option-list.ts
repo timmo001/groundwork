@@ -81,6 +81,13 @@ let lastList = 0;
  * @attr {boolean} search - Shows a search field above the list.
  * @attr {string} placeholder - The search placeholder. Defaults to `Search`.
  *
+ * @csspart search - The search field's row.
+ * @csspart listbox - The scrolling list.
+ * @csspart option - Each option.
+ * @csspart group - Each group heading.
+ * @csspart description - An option's second line.
+ * @csspart none - The no matches line.
+ *
  * @cssprop --gw-option-list-height - The list's maximum height. Defaults to `20rem`.
  *
  * @fires {CustomEvent<{ value: string }>} pick - When an option is picked, with its `value` in `detail`.
@@ -273,11 +280,15 @@ export class GwOptionList extends GwElement {
 
   readonly #listbox = h(
     "div",
-    { role: "listbox", tabindex: "-1" },
+    { role: "listbox", part: "listbox", tabindex: "-1" },
     this.#spacer,
   );
 
-  readonly #none = h("div", { class: "none", hidden: true }, "No matches");
+  readonly #none = h(
+    "div",
+    { class: "none", part: "none", hidden: true },
+    "No matches",
+  );
 
   #query = "";
 
@@ -433,7 +444,12 @@ export class GwOptionList extends GwElement {
     });
 
     root.append(
-      h("div", { class: "search" }, createIcon(searchIcon), this.#input),
+      h(
+        "div",
+        { class: "search", part: "search" },
+        createIcon(searchIcon),
+        this.#input,
+      ),
       this.#listbox,
       this.#none,
     );
@@ -585,7 +601,7 @@ export class GwOptionList extends GwElement {
     if (row.kind === "group") {
       const element = h(
         "div",
-        { class: "row group", role: "presentation" },
+        { class: "row group", part: "group", role: "presentation" },
         row.label,
       );
 
@@ -602,6 +618,7 @@ export class GwOptionList extends GwElement {
       "div",
       {
         class: "row",
+        part: "option",
         role: "option",
         id: `${this.#id}-${index}`,
         "data-index": index,
@@ -618,7 +635,11 @@ export class GwOptionList extends GwElement {
         h("span", {}, option.label),
         option.description === undefined
           ? null
-          : h("span", { class: "description" }, option.description),
+          : h(
+              "span",
+              { class: "description", part: "description" },
+              option.description,
+            ),
       ),
       option.swatches === undefined
         ? null

@@ -28,6 +28,9 @@ import { base } from "./styles.js";
  * @slot actions - Buttons beside the heading.
  *
  * @csspart card - The card's surface.
+ * @csspart header - The row with the heading and actions.
+ * @csspart heading - The heading.
+ * @csspart body - The content.
  */
 export class GwCard extends GwElement {
   static override properties = {
@@ -107,14 +110,14 @@ export class GwCard extends GwElement {
 
   readonly #header = h(
     "header",
-    {},
-    h("h2", {}, this.#title, this.#titleSkeleton),
+    { part: "header" },
+    h("h2", { part: "heading" }, this.#title, this.#titleSkeleton),
     h("slot", { name: "actions" }),
   );
 
   readonly #skeleton = h("gw-skeleton-lines");
 
-  readonly #body = h("div", { class: "body" }, h("slot"));
+  readonly #body = h("div", { class: "body", part: "body" }, h("slot"));
 
   #card: HTMLElement = h("section", { class: "card", part: "card" });
 

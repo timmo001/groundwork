@@ -27,6 +27,8 @@ import { base, createIcon, setIconPath, type Tone } from "./styles.js";
  * @slot - The value.
  *
  * @csspart badge - The badge.
+ * @csspart label - The label above the value.
+ * @csspart value - The value.
  *
  * @cssprop --gw-tone - The icon's color, for a tone of your own. `tone` sets it.
  */
@@ -115,7 +117,7 @@ export class GwBadge extends GwElement {
 
   readonly #iconSkeleton = h("gw-skeleton-icon");
 
-  readonly #label = h("span", { class: "label" });
+  readonly #label = h("span", { class: "label", part: "label" });
 
   readonly #skeleton = h("gw-skeleton-text", {
     style: "--gw-skeleton-width: 3rem",
@@ -140,7 +142,12 @@ export class GwBadge extends GwElement {
         "span",
         { class: "info" },
         this.#label,
-        h("span", { class: "content" }, this.#skeleton, this.#value),
+        h(
+          "span",
+          { class: "content", part: "value" },
+          this.#skeleton,
+          this.#value,
+        ),
       ),
     );
     root.append(this.#badge);

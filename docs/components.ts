@@ -11,6 +11,7 @@ import Demo from "./components/demo.astro";
 import FontSpecimen from "./components/font-specimen.astro";
 import HeaderSearch from "./components/header-search.astro";
 import LabelSet from "./components/label-set.astro";
+import OwnLook from "./components/own-look.astro";
 import RepoKinds from "./components/repo-kinds.astro";
 import ThemeGrid from "./components/theme-grid.astro";
 import ThemePreview from "./components/theme-preview.astro";
@@ -28,6 +29,7 @@ export default defineComponents({
     Demo,
     FontSpecimen,
     LabelSet,
+    OwnLook,
     RepoKinds,
     ThemeGrid,
     ThemePreview,

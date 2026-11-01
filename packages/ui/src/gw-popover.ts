@@ -38,6 +38,11 @@ const sheetBelow = 600;
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
+ * @csspart surface - The popover's surface.
+ * @csspart heading - The heading.
+ * @csspart body - The content.
+ * @csspart footer - The actions row.
+ *
  * @cssprop --gw-popover-width - Its width beside a button. Defaults to `20rem`.
  *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
@@ -187,7 +192,7 @@ export class GwPopover extends GwElement {
   /** The value of the action that closed it, or "" for Esc or a click outside. */
   returnValue = "";
 
-  readonly #heading = h("h2", { id: "heading" });
+  readonly #heading = h("h2", { id: "heading", part: "heading" });
 
   readonly #closeButton = h(
     "gw-button",
@@ -204,7 +209,12 @@ export class GwPopover extends GwElement {
 
   readonly #popover = h(
     "div",
-    { popover: "manual", tabindex: "-1", "data-placement": "center" },
+    {
+      popover: "manual",
+      tabindex: "-1",
+      "data-placement": "center",
+      part: "surface",
+    },
     h(
       "header",
       {},
@@ -212,11 +222,11 @@ export class GwPopover extends GwElement {
         "div",
         { class: "content" },
         this.#heading,
-        h("div", { class: "body", id: "body" }, h("slot")),
+        h("div", { class: "body", id: "body", part: "body" }, h("slot")),
       ),
       this.#closeButton,
     ),
-    h("footer", {}, h("slot", { name: "actions" })),
+    h("footer", { part: "footer" }, h("slot", { name: "actions" })),
   );
 
   readonly #dismissal = new Dismissal(

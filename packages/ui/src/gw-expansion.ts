@@ -25,6 +25,8 @@ import { base } from "./styles.js";
  *
  * @csspart details - The native `<details>`.
  * @csspart summary - The summary row.
+ * @csspart heading - The heading.
+ * @csspart description - The line under the heading.
  * @csspart content - The content's wrapper.
  *
  * @fires {Event} toggle - When it opens or closes.
@@ -169,9 +171,12 @@ export class GwExpansion extends GwElement {
   declare description: string;
   declare open: boolean;
 
-  readonly #heading = h("span", { class: "heading" });
+  readonly #heading = h("span", { class: "heading", part: "heading" });
 
-  readonly #description = h("span", { class: "description" });
+  readonly #description = h("span", {
+    class: "description",
+    part: "description",
+  });
 
   readonly #details = h(
     "details",

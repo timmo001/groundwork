@@ -19,6 +19,10 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} icon - SVG path data for the icon tile.
  *
  * @slot actions - The page's controls.
+ *
+ * @csspart tile - The icon tile.
+ * @csspart heading - The title.
+ * @csspart description - The line under the title.
  */
 export class GwPageHeader extends GwElement {
   static override properties = {
@@ -86,11 +90,11 @@ export class GwPageHeader extends GwElement {
 
   readonly #icon = createIcon("");
 
-  readonly #tile = h("span", { class: "tile" }, this.#icon);
+  readonly #tile = h("span", { class: "tile", part: "tile" }, this.#icon);
 
-  readonly #heading = h("h1");
+  readonly #heading = h("h1", { part: "heading" });
 
-  readonly #description = h("p");
+  readonly #description = h("p", { part: "description" });
 
   constructor() {
     super();

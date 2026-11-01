@@ -3,7 +3,8 @@
  * a file defines documents its API in its class docstring, for editor hovers
  * and the Custom Elements Manifest: `@element`, `@summary`, then an `@attr`
  * for each property with an attribute, a `@slot` for each slot, a `@csspart`
- * for each part and a typed `@fires` for each event it dispatches.
+ * for each part and a typed `@fires` for each event it dispatches. A
+ * `@csspart` for a part the class doesn't render fails too.
  *
  * Moving it to the shared rules is tracked in timmo001/oxlint-rules#107.
  *
@@ -132,6 +133,8 @@ const elementDocsRule = defineRule({
         "`{{tag}}` has no class docstring. Document its API with `@element`, `@summary`, `@attr`, `@slot`, `@csspart`, `@cssprop` and `@fires`.",
       missingTag:
         "`{{tag}}`'s class docstring is missing `{{expected}}`, which editor hovers and the Custom Elements Manifest read.",
+      staleTag:
+        "`{{tag}}`'s class docstring documents `{{documented}}`, which it doesn't render.",
     },
   },
   create(context) {
@@ -267,6 +270,16 @@ const elementDocsRule = defineRule({
 
           for (const part of api.parts) {
             if (!has(`csspart\\s+${escape(part)}`)) report(`@csspart ${part}`);
+          }
+
+          for (const [, part = ""] of text.matchAll(/@csspart\s+(\S+)/g)) {
+            if (!api.parts.has(part)) {
+              context.report({
+                node: api.node.id ?? api.node,
+                messageId: "staleTag",
+                data: { tag, documented: `@csspart ${part}` },
+              });
+            }
           }
 
           for (const event of api.events) {

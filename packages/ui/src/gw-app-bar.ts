@@ -44,7 +44,9 @@ const closeIcon =
  * @slot actions - Icon links and buttons at the end.
  *
  * @csspart bar - The bar.
+ * @csspart brand - The brand's container.
  * @csspart nav - The nav links' container, the menu panel on narrow screens.
+ * @csspart actions - The actions' container.
  *
  * @fires {Event} toggle - When the nav menu opens or closes.
  */
@@ -368,9 +370,17 @@ export class GwAppBar extends GwElement {
         { class: "bar", part: "bar" },
         // The menu button leads, so a revealed brand opens beside it
         this.#menu,
-        h("div", { class: "brand" }, h("slot", { name: "brand" })),
+        h(
+          "div",
+          { class: "brand", part: "brand" },
+          h("slot", { name: "brand" }),
+        ),
         this.#nav,
-        h("div", { class: "actions" }, h("slot", { name: "actions" })),
+        h(
+          "div",
+          { class: "actions", part: "actions" },
+          h("slot", { name: "actions" }),
+        ),
       ),
     );
   }

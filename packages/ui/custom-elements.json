@@ -1487,8 +1487,16 @@
               "name": "bar"
             },
             {
+              "description": "The brand's container.",
+              "name": "brand"
+            },
+            {
               "description": "The nav links' container, the menu panel on narrow screens.",
               "name": "nav"
+            },
+            {
+              "description": "The actions' container.",
+              "name": "actions"
             }
           ],
           "slots": [
@@ -2095,6 +2103,14 @@
             {
               "description": "The badge.",
               "name": "badge"
+            },
+            {
+              "description": "The label above the value.",
+              "name": "label"
+            },
+            {
+              "description": "The value.",
+              "name": "value"
             }
           ],
           "slots": [
@@ -3642,6 +3658,18 @@
             {
               "description": "The card's surface.",
               "name": "card"
+            },
+            {
+              "description": "The row with the heading and actions.",
+              "name": "header"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The content.",
+              "name": "body"
             }
           ],
           "slots": [
@@ -5706,6 +5734,20 @@
           "kind": "class",
           "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet on phones. Picking one\ncloses the menu and fires `pick` with its value. Esc or a click outside\ncloses it. It won't open over another dialog, so only one overlay shows at\na time. Set `shortcut=\"none\"` to open it only with `show()`.",
           "name": "GwCommandMenu",
+          "cssParts": [
+            {
+              "description": "The menu's surface.",
+              "name": "dialog"
+            },
+            {
+              "description": "The `gw-option-list` of commands.",
+              "name": "list"
+            },
+            {
+              "description": "The row of key hints.",
+              "name": "footer"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -6186,6 +6228,28 @@
           "kind": "class",
           "description": "A modal on the native `<dialog>`, so focus is trapped and returned, Esc\ncloses it and the page behind is inert. Open it with `show()`. Put buttons\nin the `actions` slot; a click on one with a `value` closes the dialog with\nthat value, and fires `close`.",
           "name": "GwDialog",
+          "cssParts": [
+            {
+              "description": "The dialog's surface.",
+              "name": "dialog"
+            },
+            {
+              "description": "The row with the heading and close button.",
+              "name": "header"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The content.",
+              "name": "body"
+            },
+            {
+              "description": "The actions row.",
+              "name": "footer"
+            }
+          ],
           "slots": [
             {
               "description": "The content.",
@@ -7550,6 +7614,14 @@
               "name": "summary"
             },
             {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The line under the heading.",
+              "name": "description"
+            },
+            {
               "description": "The content's wrapper.",
               "name": "content"
             }
@@ -8011,6 +8083,20 @@
           "kind": "class",
           "description": "Label and value pairs, as a description list. While `loading`, `rows`\nskeleton pairs stand in for them, keeping any labels already known. The\nlist glides to its new height and the values fade in once they've loaded.",
           "name": "GwFacts",
+          "cssParts": [
+            {
+              "description": "The description list.",
+              "name": "list"
+            },
+            {
+              "description": "Each label.",
+              "name": "label"
+            },
+            {
+              "description": "Each value.",
+              "name": "value"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -8900,6 +8986,28 @@
             {
               "description": "The arc's color, overriding the thresholds.",
               "name": "--gw-gauge-color"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The dial, with the arc and the reading.",
+              "name": "dial"
+            },
+            {
+              "description": "The reading's number.",
+              "name": "value"
+            },
+            {
+              "description": "The unit after it.",
+              "name": "unit"
+            },
+            {
+              "description": "What it measures.",
+              "name": "label"
+            },
+            {
+              "description": "The line under the label.",
+              "name": "caption"
             }
           ],
           "members": [
@@ -10629,6 +10737,24 @@
           "kind": "class",
           "description": "A labeled bar for a value in a range, such as disk use. Past `high` it\nturns warning, and past `critical` danger, unless a `tone` is set. While\n`loading`, the track pulses and a skeleton stands in for the value.",
           "name": "GwMeter",
+          "cssParts": [
+            {
+              "description": "The row with the label and value.",
+              "name": "top"
+            },
+            {
+              "description": "The value as shown.",
+              "name": "value"
+            },
+            {
+              "description": "The bar's track.",
+              "name": "track"
+            },
+            {
+              "description": "The filled part of the bar.",
+              "name": "fill"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -11196,6 +11322,20 @@
           "kind": "class",
           "description": "Where notifications wait until they're dealt with: a list of\n`gw-notification` cards with Clear all, and an empty state once nothing's\nleft. Put it in a page, a panel or a popover from a bell button. Each\ncard folds away when dismissed, and the list closes up smoothly. It fires\n`clear` when Clear all is pressed.",
           "name": "GwNotificationCenter",
+          "cssParts": [
+            {
+              "description": "The row with the heading and Clear all.",
+              "name": "header"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The list of cards.",
+              "name": "list"
+            }
+          ],
           "slots": [
             {
               "description": "The `gw-notification` cards.",
@@ -12159,6 +12299,32 @@
               "name": "--gw-option-list-height"
             }
           ],
+          "cssParts": [
+            {
+              "description": "The search field's row.",
+              "name": "search"
+            },
+            {
+              "description": "The scrolling list.",
+              "name": "listbox"
+            },
+            {
+              "description": "Each option.",
+              "name": "option"
+            },
+            {
+              "description": "Each group heading.",
+              "name": "group"
+            },
+            {
+              "description": "An option's second line.",
+              "name": "description"
+            },
+            {
+              "description": "The no matches line.",
+              "name": "none"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -12868,6 +13034,20 @@
           "kind": "class",
           "description": "A page's title, with an optional icon tile and description, and its\ncontrols at the top right in the `actions` slot.",
           "name": "GwPageHeader",
+          "cssParts": [
+            {
+              "description": "The icon tile.",
+              "name": "tile"
+            },
+            {
+              "description": "The title.",
+              "name": "heading"
+            },
+            {
+              "description": "The line under the title.",
+              "name": "description"
+            }
+          ],
           "slots": [
             {
               "description": "The page's controls.",
@@ -13316,6 +13496,24 @@
             {
               "description": "Its width beside a button. Defaults to `20rem`.",
               "name": "--gw-popover-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The popover's surface.",
+              "name": "surface"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "The content.",
+              "name": "body"
+            },
+            {
+              "description": "The actions row.",
+              "name": "footer"
             }
           ],
           "slots": [
@@ -13851,6 +14049,12 @@
           "kind": "class",
           "description": "A small heading between groups on a page, as an `<h2>` unless `level` says otherwise.",
           "name": "GwSectionTitle",
+          "cssParts": [
+            {
+              "description": "The heading.",
+              "name": "heading"
+            }
+          ],
           "slots": [
             {
               "description": "The heading text.",
@@ -14252,6 +14456,10 @@
           "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons, as Home Assistant's toggles do. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons on narrow ones.",
           "name": "GwSegmented",
           "cssParts": [
+            {
+              "description": "Each option.",
+              "name": "option"
+            },
             {
               "description": "The pill that slides to the chosen option.",
               "name": "indicator"
@@ -16714,6 +16922,12 @@
           "kind": "class",
           "description": "Several lines of text, as a paragraph, with a shorter last line so it\ndoesn't read as a solid block.",
           "name": "GwSkeletonLines",
+          "cssParts": [
+            {
+              "description": "Each line.",
+              "name": "line"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -17499,6 +17713,12 @@
             {
               "description": "The ring's size. Defaults to `1.25rem`.",
               "name": "--gw-spinner-size"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The spinning ring.",
+              "name": "ring"
             }
           ],
           "members": [
@@ -18991,6 +19211,12 @@
           "kind": "class",
           "description": "Where toasts appear: the bottom corner on the end side, away from what\npeople click. Call `show(message, tone)`; each toast is announced politely\nand fades out after `duration` milliseconds.\n\nA toast only tells; it has no actions and lets every click through, since\nit may sit over something interactive and leaves before it can be used.\nIt's in the top layer and rises above any dialog each time one shows. It's\na last resort: show an outcome where it happened instead.",
           "name": "GwToaster",
+          "cssParts": [
+            {
+              "description": "Each toast.",
+              "name": "toast"
+            }
+          ],
           "members": [
             {
               "kind": "field",

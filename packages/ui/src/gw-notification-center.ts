@@ -29,6 +29,10 @@ const emptyIcon =
  *
  * @slot - The `gw-notification` cards.
  *
+ * @csspart header - The row with the heading and Clear all.
+ * @csspart heading - The heading.
+ * @csspart list - The list of cards.
+ *
  * @fires {Event} clear - When Clear all is pressed.
  */
 export class GwNotificationCenter extends GwElement {
@@ -75,7 +79,7 @@ export class GwNotificationCenter extends GwElement {
 
   declare heading: string;
 
-  readonly #heading = h("h2");
+  readonly #heading = h("h2", { part: "heading" });
 
   readonly #clear = h(
     "gw-button",
@@ -83,7 +87,11 @@ export class GwNotificationCenter extends GwElement {
     "Clear all",
   );
 
-  readonly #list = h("div", { class: "list", role: "list" }, h("slot"));
+  readonly #list = h(
+    "div",
+    { class: "list", part: "list", role: "list" },
+    h("slot"),
+  );
 
   readonly #empty = h(
     "gw-empty-state",
@@ -138,7 +146,10 @@ export class GwNotificationCenter extends GwElement {
     this.#clear.addEventListener("click", () => {
       this.clear();
     });
-    root.append(h("header", {}, this.#heading, this.#clear), this.#body);
+    root.append(
+      h("header", { part: "header" }, this.#heading, this.#clear),
+      this.#body,
+    );
   }
 
   protected override update() {

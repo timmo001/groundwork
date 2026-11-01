@@ -32,6 +32,7 @@ export interface Segment {
  * @attr {"show"|"hide"|"auto"} labels - Whether option text shows beside icons. Defaults to `show`.
  * @attr {Segment[]} options - The options, as JSON.
  *
+ * @csspart option - Each option.
  * @csspart indicator - The pill that slides to the chosen option.
  *
  * @fires {Event} change - When the chosen option changes.
@@ -267,7 +268,7 @@ export class GwSegmented extends GwElement {
 
         const label = h(
           "label",
-          { class: option.icon ? "has-icon" : null },
+          { class: option.icon ? "has-icon" : null, part: "option" },
           input,
           option.icon ? createIcon(option.icon) : null,
           h("span", { class: "text" }, option.label),

@@ -17,6 +17,8 @@ import { base } from "./styles.js";
  *
  * @slot - The heading text.
  * @slot actions - Buttons at the end of the row.
+ *
+ * @csspart heading - The heading.
  */
 export class GwSectionTitle extends GwElement {
   static override properties = {
@@ -46,7 +48,7 @@ export class GwSectionTitle extends GwElement {
 
   declare level: number;
 
-  readonly #heading = h("div", { role: "heading" }, h("slot"));
+  readonly #heading = h("div", { role: "heading", part: "heading" }, h("slot"));
 
   constructor() {
     super();

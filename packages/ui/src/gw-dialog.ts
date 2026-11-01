@@ -28,6 +28,12 @@ const closeIcon =
  * @slot - The content.
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
+ * @csspart dialog - The dialog's surface.
+ * @csspart header - The row with the heading and close button.
+ * @csspart heading - The heading.
+ * @csspart body - The content.
+ * @csspart footer - The actions row.
+ *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */
 export class GwDialog extends GwElement {
@@ -139,9 +145,13 @@ export class GwDialog extends GwElement {
     this.open = false;
   }
 
-  readonly #heading = h("h2", { id: "heading" });
+  readonly #heading = h("h2", { id: "heading", part: "heading" });
 
-  readonly #footer = h("footer", {}, h("slot", { name: "actions" }));
+  readonly #footer = h(
+    "footer",
+    { part: "footer" },
+    h("slot", { name: "actions" }),
+  );
 
   readonly #closeButton = h(
     "gw-button",
@@ -158,9 +168,9 @@ export class GwDialog extends GwElement {
 
   readonly #dialog = h(
     "dialog",
-    { "aria-labelledby": "heading" },
-    h("header", {}, this.#heading, this.#closeButton),
-    h("div", { class: "body" }, h("slot")),
+    { "aria-labelledby": "heading", part: "dialog" },
+    h("header", { part: "header" }, this.#heading, this.#closeButton),
+    h("div", { class: "body", part: "body" }, h("slot")),
     this.#footer,
   );
 

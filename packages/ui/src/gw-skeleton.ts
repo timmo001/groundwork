@@ -89,6 +89,8 @@ export class GwSkeletonText extends GwSkeleton {
  * @summary A placeholder for a paragraph.
  *
  * @attr {number} lines - How many lines. Defaults to 3.
+ *
+ * @csspart line - Each line.
  */
 export class GwSkeletonLines extends GwElement {
   static override properties = {
@@ -129,7 +131,7 @@ export class GwSkeletonLines extends GwElement {
   protected override update() {
     this.renderRoot.replaceChildren(
       ...Array.from({ length: Math.max(1, this.lines || 1) }, () =>
-        h("gw-skeleton-text"),
+        h("gw-skeleton-text", { part: "line" }),
       ),
     );
   }
