@@ -472,6 +472,7 @@ export class GwThemePicker extends GwElement {
     this.#button.addEventListener("click", () => {
       this.show();
     });
+
     // A theme or mode applies at once, so it isn't an edit for the popover
     // to ask about discarding, and a click outside still closes it
     for (const type of ["input", "change"]) {
@@ -479,6 +480,7 @@ export class GwThemePicker extends GwElement {
         if (event.target !== this.#controls) event.stopPropagation();
       });
     }
+
     this.#mode.addEventListener("change", (event) => {
       event.stopPropagation();
       this.mode = this.#mode.value;
