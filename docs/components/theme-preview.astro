@@ -59,33 +59,26 @@ const statuses = [
             </p>
             <p class="secondary">Updated 4 minutes ago</p>
             <div class="row">
-              <button class="button primary-button" type="button">
-                Reboot
-              </button>
-              <button class="button accent-button" type="button">
-                Plan boot
-              </button>
-              <button class="button neutral-button" type="button">
+              <gw-button>Reboot</gw-button>
+              <gw-button appearance="filled">Plan boot</gw-button>
+              <gw-button variant="neutral" appearance="outlined">
                 Cancel
-              </button>
+              </gw-button>
             </div>
           </div>
           {!compact && (
             <>
-              <label class="field">
-                <span class="label">Hostname</span>
-                <input type="text" value="workshop" />
-              </label>
-              <div class="row chips">
-                <span class="chip">Linux</span>
-                <span class="chip selected">Windows</span>
-                <span class="chip">Installer</span>
+              <gw-input label="Hostname" value="workshop" />
+              <div class="row">
+                <gw-chip>Linux</gw-chip>
+                <gw-chip tone="accent">Windows</gw-chip>
+                <gw-chip>Installer</gw-chip>
               </div>
               <div class="alerts">
                 {statuses.map(([status, title, text]) => (
-                  <p class={`alert ${status}`}>
-                    <strong>{title}</strong> {text}
-                  </p>
+                  <gw-alert tone={status} heading={title}>
+                    {text}
+                  </gw-alert>
                 ))}
               </div>
               <table class="rows">
@@ -94,21 +87,21 @@ const statuses = [
                     <td>dotfiles</td>
                     <td class="figure">14</td>
                     <td>
-                      <span class="badge success">Passing</span>
+                      <gw-chip tone="success">Passing</gw-chip>
                     </td>
                   </tr>
                   <tr>
                     <td>system-bridge</td>
                     <td class="figure">3</td>
                     <td>
-                      <span class="badge warning">Waiting</span>
+                      <gw-chip tone="warning">Waiting</gw-chip>
                     </td>
                   </tr>
                   <tr>
                     <td>triage</td>
                     <td class="figure">1</td>
                     <td>
-                      <span class="badge danger">Failing</span>
+                      <gw-chip tone="danger">Failing</gw-chip>
                     </td>
                   </tr>
                 </tbody>
@@ -229,92 +222,9 @@ const statuses = [
     gap: var(--gw-space-2);
   }
 
-  .button {
-    padding: var(--gw-space-2) var(--gw-space-4);
-    font: inherit;
-    font-weight: var(--gw-font-weight-strong);
-    text-transform: var(--gw-label-transform);
-    letter-spacing: var(--gw-label-tracking);
-    cursor: pointer;
-    border: var(--gw-border-width) solid transparent;
-    border-radius: var(--gw-radius-control);
-    transition: background-color var(--gw-motion-fast) var(--gw-motion-easing);
-  }
-
-  .button:focus-visible,
-  input:focus-visible {
-    outline: var(--gw-focus-width) solid var(--gw-color-focus);
-    outline-offset: var(--gw-focus-offset);
-  }
-
-  .primary-button {
-    color: var(--gw-color-on-primary);
-    background: var(--gw-color-fill-primary-resting);
-  }
-
-  .primary-button:hover {
-    background: var(--gw-color-fill-primary-hovered);
-  }
-
-  .accent-button {
-    color: var(--gw-color-on-accent);
-    background: var(--gw-color-fill-accent-resting);
-  }
-
-  .accent-button:hover {
-    background: var(--gw-color-fill-accent-hovered);
-  }
-
-  .neutral-button {
-    color: var(--gw-color-text-strong);
-    background: var(--gw-color-fill-neutral-resting);
-    border-color: var(--gw-border-color);
-  }
-
-  .neutral-button:hover {
-    background: var(--gw-color-fill-neutral-hovered);
-  }
-
-  .field input {
-    box-sizing: border-box;
-    width: 100%;
-    padding: var(--gw-space-2) var(--gw-space-3);
-    font: inherit;
-    color: var(--gw-color-text-strong);
-    background: var(--gw-color-surface-raised);
-    border: max(1px, var(--gw-border-width)) solid var(--gw-color-border-normal);
-    border-radius: var(--gw-radius-control);
-  }
-
-  .chip {
-    padding: var(--gw-space-0-5) var(--gw-space-3);
-    font-size: var(--gw-font-size-xs);
-    color: var(--gw-color-text-primary);
-    background: var(--gw-color-fill-neutral-resting);
-    border-radius: var(--gw-radius-chip);
-  }
-
-  .chip.selected {
-    color: var(--gw-color-accent);
-    background: var(--gw-color-fill-accent-quiet);
-    box-shadow: inset 0 0 0 1px var(--gw-color-border-accent);
-  }
-
   .alerts {
     display: grid;
-    gap: var(--gw-space-1);
-  }
-
-  .alert {
-    margin: 0;
-    padding: var(--gw-space-2) var(--gw-space-3);
-    color: var(--gw-color-text-primary);
-    border-inline-start: 3px solid currentcolor;
-    border-radius: var(--gw-radius-s);
-  }
-
-  .alert strong {
-    font-weight: var(--gw-font-weight-strong);
+    gap: var(--gw-space-2);
   }
 
   .rows {
@@ -335,51 +245,12 @@ const statuses = [
     text-align: end;
   }
 
-  .badge {
-    padding: 0 var(--gw-space-2);
-    font-size: var(--gw-font-size-2xs);
-    font-weight: var(--gw-font-weight-strong);
-    text-transform: var(--gw-label-transform);
-    letter-spacing: var(--gw-label-tracking);
-    border-radius: var(--gw-radius-chip);
-  }
-
-  .info {
-    --status: var(--gw-color-info);
-    --status-fill: var(--gw-color-fill-info-quiet);
-  }
-
-  .success {
-    --status: var(--gw-color-success);
-    --status-fill: var(--gw-color-fill-success-quiet);
-  }
-
-  .important {
-    --status: var(--gw-color-important);
-    --status-fill: var(--gw-color-fill-important-quiet);
-  }
-
-  .warning {
-    --status: var(--gw-color-warning);
-    --status-fill: var(--gw-color-fill-warning-quiet);
-  }
-
-  .danger {
-    --status: var(--gw-color-danger);
-    --status-fill: var(--gw-color-fill-danger-quiet);
-  }
-
-  .alert,
-  .badge {
-    background: var(--status-fill);
-  }
-
-  .alert {
-    border-inline-start-color: var(--status);
-  }
-
-  .alert strong,
-  .badge {
-    color: var(--status);
+  .rows td:last-child {
+    text-align: end;
   }
 </style>
+
+<script>
+  // Registers the elements the preview uses. Astro bundles this once per page.
+  import "../demos/index.ts";
+</script>
