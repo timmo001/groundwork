@@ -31,6 +31,9 @@ const hideIcon =
  * @attr {string} placeholder - Placeholder text.
  * @attr {string} autocomplete - The native autocomplete hint.
  * @attr {string} inputmode - The native inputmode hint, such as `numeric` for a port, which picks the on-screen keyboard.
+ * @attr {string} min - The lowest value of a `number`, date or time field.
+ * @attr {string} max - The highest value of a `number`, date or time field.
+ * @attr {string} step - The step between values of a `number`, date or time field, or `any`.
  * @attr {string} hint - One line of help under the field.
  * @attr {string} info - Longer help, opened from an (i) button by the label.
  * @attr {string} error - An error under the field, which marks it invalid and is announced.
@@ -57,6 +60,9 @@ export class GwInput extends LightElement {
     placeholder: {},
     autocomplete: {},
     inputmode: {},
+    min: {},
+    max: {},
+    step: {},
     hint: {},
     info: {},
     error: {},
@@ -80,6 +86,12 @@ export class GwInput extends LightElement {
   declare autocomplete: string;
   /** The native inputmode hint, which picks the on-screen keyboard. */
   declare inputmode: string;
+  /** The lowest value of a number, date or time field. */
+  declare min: string;
+  /** The highest value of a number, date or time field. */
+  declare max: string;
+  /** The step between values of a number, date or time field. */
+  declare step: string;
   declare hint: string;
   /** Longer help, opened from an (i) button by the label. */
   declare info: string;
@@ -157,6 +169,9 @@ export class GwInput extends LightElement {
     this.placeholder = "";
     this.autocomplete = "";
     this.inputmode = "";
+    this.min = "";
+    this.max = "";
+    this.step = "";
     this.hint = "";
     this.info = "";
     this.error = "";
@@ -253,6 +268,9 @@ export class GwInput extends LightElement {
     setAttribute(control, "placeholder", this.placeholder || null);
     setAttribute(control, "autocomplete", this.autocomplete || null);
     setAttribute(control, "inputmode", this.inputmode || null);
+    setAttribute(this.#input, "min", this.min || null);
+    setAttribute(this.#input, "max", this.max || null);
+    setAttribute(this.#input, "step", this.step || null);
     setAttribute(control, "spellcheck", this.monospace ? "false" : null);
     setAttribute(control, "aria-invalid", this.error ? "true" : null);
     setAttribute(control, "aria-describedby", described || null);
