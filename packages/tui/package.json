@@ -29,7 +29,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@opentui/core": "0.8.0",
+    "@opentui/core": "0.8.1",
     "@timmo001/groundwork-tokens": "0.9.21",
     "effect": "4.1.1",
     "fuse.js": "7.5.0"
