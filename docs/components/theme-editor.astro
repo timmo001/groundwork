@@ -5,7 +5,7 @@
  */
 ---
 
-<gw-theme-editor class="theme-editor">
+<gw-theme-editor class="theme-editor" data-gw-theme="base" data-gw-mode="dark">
   <div class="editor-preview" data-gw-theme="base" data-gw-mode="dark">
     <div class="editor-surface">
       <p class="editor-heading">Machine controls</p>
@@ -33,9 +33,14 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--gw-space-4);
     margin-block: 1.5rem;
+    padding: var(--gw-space-4);
     font-family: var(--gw-font-sans);
     color: var(--gw-color-text-primary);
-    background: transparent;
+    /* Its own surface, like a demo frame, so its controls never sit on the
+       page's background in another mode */
+    background: var(--gw-color-surface-lower);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
   }
 
   .theme-editor .editor-actions {
