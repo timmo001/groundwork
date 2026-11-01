@@ -1,3 +1,9 @@
+/**
+ * Tests the sync's decision table: each state from the three hashes, and what
+ * happens to a copy in it.
+ *
+ * @module
+ */
 import { expect, test } from "bun:test";
 import { actionFor, classify } from "./rules.ts";
 

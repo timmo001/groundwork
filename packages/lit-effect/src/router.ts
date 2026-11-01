@@ -1,3 +1,9 @@
+/**
+ * A typed router: routes declare their path params and search as Schemas,
+ * and the current route is an atom.
+ *
+ * @module
+ */
 import { Option, Schema } from "effect";
 import { Atom } from "effect/reactivity";
 

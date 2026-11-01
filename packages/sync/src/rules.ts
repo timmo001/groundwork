@@ -1,3 +1,9 @@
+/**
+ * The sync's decisions, kept pure so they're easy to test: where a copy
+ * stands, and whether to copy it out, carry an edit back or flag it.
+ *
+ * @module
+ */
 import type { Kind } from "./schema.ts";
 
 /**

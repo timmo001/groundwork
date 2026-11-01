@@ -1,3 +1,9 @@
+/**
+ * Works out the labels a repository should have from the manifest, and checks
+ * that no two of its colors are too close to tell apart.
+ *
+ * @module
+ */
 import { distance } from "@groundwork/tokens";
 import type { Kind, Label, LabelSet, Repo } from "./schema.ts";
 

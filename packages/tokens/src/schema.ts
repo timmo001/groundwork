@@ -1,3 +1,9 @@
+/**
+ * The schema for `themes/*.json`: fonts, style, and the colors a theme sets
+ * for each mode.
+ *
+ * @module
+ */
 import { Schema } from "effect";
 
 /** A color written as a six-digit sRGB hex, such as `#1b1e23`. */

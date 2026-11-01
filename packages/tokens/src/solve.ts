@@ -1,3 +1,9 @@
+/**
+ * Solves a theme: derives every color role in every mode from the colors it
+ * sets, and checks each pair against its contrast target.
+ *
+ * @module
+ */
 import {
   contrast,
   fromHex,

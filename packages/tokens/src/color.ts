@@ -1,3 +1,9 @@
+/**
+ * Color math in OKLCH: parsing, gamut mapping, contrast and solving for a
+ * lightness that meets a contrast target.
+ *
+ * @module
+ */
 import {
   converter,
   differenceEuclidean,

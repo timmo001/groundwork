@@ -1,3 +1,9 @@
+/**
+ * Writes the solved themes out to every target in `generated/`: CSS, TS,
+ * JSON, QML, OpenTUI and ANSI.
+ *
+ * @module
+ */
 import { toCss, toHex } from "./color.ts";
 import type { Font, MonoFont, Style } from "./schema.ts";
 import {

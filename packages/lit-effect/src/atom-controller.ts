@@ -1,3 +1,9 @@
+/**
+ * `AtomController`: keeps an Effect atom mounted for a Lit element and redraws
+ * the element when it changes.
+ *
+ * @module
+ */
 import { ContextConsumer, createContext } from "@lit/context";
 import type { ReactiveController, ReactiveElement } from "lit";
 import { type Atom, AtomRegistry } from "effect/reactivity";

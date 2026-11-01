@@ -1,3 +1,9 @@
+/**
+ * The schema for `registry.json`, an app's `sync.json` and its
+ * `sync.lock.json`.
+ *
+ * @module
+ */
 import { Schema } from "effect";
 
 /** QML copies mirror both ways; every other kind only travels out. */

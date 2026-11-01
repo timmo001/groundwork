@@ -1,3 +1,9 @@
+/**
+ * The schema for `conventions/`: repository kinds, label sets and each
+ * repository's own file.
+ *
+ * @module
+ */
 import { Schema } from "effect";
 
 /** A six-digit hex color without `#`, as GitHub takes label colors. */

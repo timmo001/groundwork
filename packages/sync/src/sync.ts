@@ -1,3 +1,9 @@
+/**
+ * Copies registry items into apps and records each copy's hash, so the next
+ * run can tell a source change from an edit in the app.
+ *
+ * @module
+ */
 import { createHash } from "node:crypto";
 import { Effect, FileSystem, Path, Schema } from "effect";
 import { ChildProcess, ChildProcessSpawner } from "effect/process";

@@ -1,3 +1,9 @@
+/**
+ * Tests that routes match, parse and build URLs both ways, including under a
+ * base path.
+ *
+ * @module
+ */
 import { expect, test } from "bun:test";
 import { Schema } from "effect";
 import { NoParams, NoSearch, makeRouter, route } from "./router.ts";
