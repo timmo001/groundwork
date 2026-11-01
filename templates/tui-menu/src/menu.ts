@@ -318,6 +318,15 @@ export function registerUpdates(items: readonly Item[]): void {
   const pending = items.filter((entry) => entry.pending).length;
 
   const updateItems: readonly MenuItem[] = [
+    item(
+      "updates.all",
+      "󰇚",
+      "Apply all",
+      pending === 0 ? "Nothing to apply" : `Apply ${pending} pending updates`,
+      { type: "apply", itemId: undefined },
+      undefined,
+      ["all", ":all"],
+    ),
     ...items.map((entry) =>
       item(
         `updates.${entry.id}`,
@@ -330,15 +339,6 @@ export function registerUpdates(items: readonly Item[]): void {
         undefined,
         [entry.id],
       ),
-    ),
-    item(
-      "updates.all",
-      "󰇚",
-      "Apply all",
-      pending === 0 ? "Nothing to apply" : `Apply ${pending} pending updates`,
-      { type: "apply", itemId: undefined },
-      undefined,
-      ["all", ":all"],
     ),
     item(
       "updates.restart",

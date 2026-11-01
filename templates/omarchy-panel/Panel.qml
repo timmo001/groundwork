@@ -30,8 +30,8 @@ Panel {
 
   readonly property var rows: {
     var result = [
-      { key: "action:apply", kind: "action", section: "actions", action: "apply", icon: "󰚰", primaryText: "Apply all pending", secondaryText: "" },
-      { key: "action:restart", kind: "action", section: "actions", action: "restart", icon: "󰜉", primaryText: "Restart the system", secondaryText: "" }
+      { key: "action:restart", kind: "action", section: "actions", action: "restart", icon: "󰜉", primaryText: "Restart the system", secondaryText: "" },
+      { key: "action:apply", kind: "action", section: "items", action: "apply", icon: "󰚰", primaryText: "Apply all pending", secondaryText: "" }
     ]
     for (var i = 0; i < items.length; i++) {
       var item = items[i]

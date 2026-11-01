@@ -19,6 +19,12 @@ gw-demo-app .demo-app-list {
   gap: var(--gw-space-3);
 }
 
+/* A row's control is a small button or an "Up to date" badge; the badge
+   matches the button's 32px so the column lines up */
+gw-demo-app .demo-app-list gw-badge {
+  --gw-badge-scale: calc(32 / 36);
+}
+
 gw-demo-app .demo-app-status:empty {
   display: none;
 }

@@ -41,7 +41,7 @@ export class GwDemoApp extends GwElement {
 
   readonly #applyAll: GwButton = h(
     "gw-button",
-    { appearance: "filled", icon: icons.update },
+    { appearance: "plain", icon: icons.update },
     "Apply all",
   );
 
@@ -97,15 +97,15 @@ export class GwDemoApp extends GwElement {
             "What this machine has waiting, and what it's up to date on.",
           icon: icons.update,
         },
-        h(
-          "div",
-          { slot: "actions", class: "demo-app-actions" },
-          this.#applyAll,
-          restart,
-        ),
+        h("div", { slot: "actions", class: "demo-app-actions" }, restart),
       ),
       this.#status,
-      h("gw-card", { heading: "Items" }, this.#list),
+      h(
+        "gw-card",
+        { heading: "Items" },
+        h("div", { slot: "actions" }, this.#applyAll),
+        this.#list,
+      ),
       this.#dialog,
     );
 
@@ -142,12 +142,8 @@ export class GwDemoApp extends GwElement {
     this.#list.replaceChildren(
       ...items.map((item) => {
         const control = item.pending
-          ? h("gw-button", { appearance: "outlined" }, "Apply")
-          : h(
-              "gw-badge",
-              { tone: "success", size: "small", icon: icons.check },
-              "Up to date",
-            );
+          ? h("gw-button", { appearance: "outlined", size: "small" }, "Apply")
+          : h("gw-badge", { tone: "success", icon: icons.check }, "Up to date");
 
         control.addEventListener("click", () => void this.#apply([item]));
 

@@ -9,6 +9,21 @@ body {
   margin: 0;
 }
 
+.brand {
+  display: inline-flex;
+  gap: var(--gw-space-2);
+  align-items: center;
+  color: var(--gw-color-text-strong);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.brand svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
 main {
   box-sizing: border-box;
   max-width: 720px;

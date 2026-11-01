@@ -16,6 +16,11 @@ export default {
       entrypoint: "src/bun/index.ts",
     },
     views: {
+      // A classic script for `<head>`, so the theme applies before first paint
+      boot: {
+        entrypoint: "src/mainview/boot.ts",
+        format: "iife",
+      },
       mainview: {
         entrypoint: "src/mainview/index.ts",
       },
@@ -23,6 +28,14 @@ export default {
     copy: {
       "src/mainview/index.html": "views/mainview/index.html",
     },
+    // The workspace packages the view bundles, so `dev --watch` rebuilds on
+    // their edits too
+    watch: [
+      "../../packages/demo/src",
+      "../../packages/ui/src",
+      "../../packages/tokens/src",
+      "../../packages/tokens/generated",
+    ],
     mac: {
       bundleCEF: false,
     },
