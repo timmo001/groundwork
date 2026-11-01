@@ -5,7 +5,6 @@ description: The work in progress or up next, and where each piece stands.
 
 | Work | Issue | Where it stands |
 | --- | --- | --- |
-| Terminal components | [#40](https://github.com/timmo001/groundwork/issues/40) | Built and [documented](/terminal); the package publishes with the next release |
 | Demos for every target | [#69](https://github.com/timmo001/groundwork/issues/69) | Web, CLI, TUI and the Omarchy panel run; the desktop waits on the shell |
 | Bring your own theme | [#68](https://github.com/timmo001/groundwork/issues/68) | Stored locally; storage on the host waits on apps on Groundwork |
 | Framework wrappers | [#66](https://github.com/timmo001/groundwork/issues/66) | The manifest and [Lit](/components/#using-with-lit) are done; React, Vue or Svelte once an app needs one |
