@@ -17,6 +17,20 @@ Every theme fills the same roles. Components only ever read roles, so they never
 
 Each is a CSS variable named `--gw-color-<role>`.
 
+## Surface layers
+
+The surfaces are layers, each a step lighter than the one below in both modes. Pick a surface by what a piece is, not by how it should look:
+
+| Layer | Role | For |
+| --- | --- | --- |
+| Wells | `surface-lower` | What's set into a surface: field inputs, meter and gauge tracks, segmented tracks |
+| Low | `surface-low` | Quiet bands within the page, such as a sidebar |
+| Page | `surface-default` | The page and the app bar |
+| Raised | `surface-raised` | Cards, expansions, notifications and badges |
+| Overlay | `surface-overlay` | What floats above the page: dialogs, sheets, popovers, menus, toasts and the command menu |
+
+A small piece sitting on a surface, such as a key hint, takes a layer above it so it reads as lifted: `surface-raised` on a well or the page, and the overlay with 8% of `text-primary` mixed in on an overlay, where there's no layer left.
+
 ## Solved, not hand-set
 
 A core theme has two inputs: a dark background and an accent. Everything else is solved in OKLCH, with derived colors mixed in OKLab:

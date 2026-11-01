@@ -30,8 +30,13 @@ export const customThemeStyleId = "gw-custom-theme";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
 
+/** Light or dark: the side of a mode a theme has to cover. Darker is dark. */
+export type ThemeScheme = "light" | "dark";
+
 export interface PageThemeState {
   readonly mode: ThemeMode;
+  /** The scheme in use, with `auto` resolved from the system. */
+  readonly scheme: ThemeScheme;
   /** The theme id in use: a built-in one, or `custom`. */
   readonly theme: string;
   /** The visitor's own theme's name, when they've imported one. */
@@ -47,11 +52,20 @@ export type ImportResult =
     }
   | { readonly ok: false; readonly error: string };
 
-/** A theme to offer, by id and name. A `Theme` document is one. */
+/**
+ * A theme to offer, by id and name. A `Theme` document is one. `mode` marks
+ * a theme with only one scheme, such as Catppuccin Latte: it's offered and
+ * kept for that scheme alone, beside a pick for the other.
+ */
 export interface ThemeChoice {
   readonly id: string;
   readonly name: string;
+  readonly mode?: ThemeScheme | undefined;
 }
+
+/** Whether `choice` can show in `scheme`. */
+export const themeCovers = (choice: ThemeChoice, scheme: ThemeScheme) =>
+  choice.mode === undefined || choice.mode === scheme;
 
 /** The core themes by id and name, in the order the docs list them. */
 export const coreThemeChoices: readonly ThemeChoice[] = [
@@ -102,6 +116,7 @@ export interface PageTheme {
 const keys = (key: string) => ({
   mode: `${key}:mode`,
   theme: `${key}:id`,
+  dark: `${key}:id-dark`,
   document: `${key}:custom`,
   css: `${key}:custom-css`,
   name: `${key}:custom-name`,
@@ -142,7 +157,7 @@ export const themeBootScript = (
     style: customThemeStyleId,
   });
 
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;let t=g(c.keys.theme)??c.theme;const m=g(c.keys.mode)??c.mode;if(t===c.custom){const css=g(c.keys.css);if(css){const e=document.createElement("style");e.id=c.style;e.textContent=css;document.head.append(e)}else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??c.theme;if(t===c.custom){const css=g(c.keys.css);if(css){const e=document.createElement("style");e.id=c.style;e.textContent=css;document.head.append(e)}else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
 
 /** Reads a theme from JSON text or an Omarchy `colors.toml`. */
@@ -171,20 +186,63 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const known = (id: string) => options.themes.some((theme) => theme.id === id);
 
   const storedMode = read(stored.mode);
-  const storedTheme = read(stored.theme);
   const customName = read(stored.name);
   const customCss = read(stored.css);
 
-  let state: PageThemeState = {
-    mode: modes.find((mode) => mode === storedMode) ?? defaultMode,
-    theme:
-      storedTheme !== null &&
-      (known(storedTheme) ||
-        (storedTheme === customThemeId && customCss !== null))
-        ? storedTheme
-        : options.defaultTheme,
-    custom: customCss === null ? null : customName,
+  const system = matchMedia("(prefers-color-scheme: dark)");
+
+  const schemeOf = (mode: ThemeMode): ThemeScheme =>
+    mode === "light"
+      ? "light"
+      : mode === "auto" && !system.matches
+        ? "light"
+        : "dark";
+
+  /** Whether `id` can be the pick for `scheme`. */
+  const fits = (id: string | null, scheme: ThemeScheme, custom: boolean) =>
+    id !== null &&
+    ((id === customThemeId && custom) ||
+      options.themes.some(
+        (theme) => theme.id === id && themeCovers(theme, scheme),
+      ));
+
+  const fallback = (scheme: ThemeScheme) =>
+    options.themes.some(
+      (theme) =>
+        theme.id === options.defaultTheme && themeCovers(theme, scheme),
+    )
+      ? options.defaultTheme
+      : (options.themes.find((theme) => themeCovers(theme, scheme))?.id ??
+        options.defaultTheme);
+
+  const storedLight = read(stored.theme);
+  const storedDark = read(stored.dark) ?? storedLight;
+
+  /** The theme kept for each scheme. */
+  let picks: Record<ThemeScheme, string> = {
+    light: fits(storedLight, "light", customCss !== null)
+      ? (storedLight ?? options.defaultTheme)
+      : fallback("light"),
+    dark: fits(storedDark, "dark", customCss !== null)
+      ? (storedDark ?? options.defaultTheme)
+      : fallback("dark"),
   };
+
+  const savePicks = () => {
+    write(stored.theme, picks.light);
+    write(stored.dark, picks.dark);
+  };
+
+  const resolve = (mode: ThemeMode, custom: string | null): PageThemeState => {
+    const scheme = schemeOf(mode);
+
+    return { mode, scheme, theme: picks[scheme], custom };
+  };
+
+  let state: PageThemeState = resolve(
+    modes.find((mode) => mode === storedMode) ?? defaultMode,
+    customCss === null ? null : customName,
+  );
 
   const setStyle = (css: string | null) => {
     let style = document.getElementById(customThemeStyleId);
@@ -228,8 +286,9 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     write(stored.document, text);
     write(stored.css, css);
     write(stored.name, document.name);
-    write(stored.theme, customThemeId);
-    commit({ ...state, theme: customThemeId, custom: document.name });
+    picks = { light: customThemeId, dark: customThemeId };
+    savePicks();
+    commit(resolve(state.mode, document.name));
 
     return runtime.checks
       .filter((result) => !result.passes)
@@ -240,17 +299,44 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   };
 
   const setTheme = (id: string) => {
-    if (!known(id) && !(id === customThemeId && state.custom !== null)) return;
+    if (id === customThemeId) {
+      if (state.custom === null) return;
 
-    write(stored.theme, id);
-    commit({ ...state, theme: id });
+      picks = { light: id, dark: id };
+    } else {
+      const choice = options.themes.find((theme) => theme.id === id);
+
+      if (choice === undefined) return;
+
+      picks =
+        choice.mode === undefined
+          ? { light: id, dark: id }
+          : { ...picks, [choice.mode]: id };
+
+      // Picking a light-only theme in dark, or the reverse, shows it
+      if (choice.mode !== undefined && choice.mode !== state.scheme) {
+        savePicks();
+        write(stored.mode, choice.mode);
+        commit(resolve(choice.mode, state.custom));
+
+        return;
+      }
+    }
+
+    savePicks();
+    commit(resolve(state.mode, state.custom));
   };
+
+  // A system change moves `auto` between the light and dark picks
+  system.addEventListener("change", () => {
+    if (state.mode === "auto") commit(resolve(state.mode, state.custom));
+  });
 
   const page: PageTheme = {
     state: () => state,
     setMode: (mode) => {
       write(stored.mode, mode);
-      commit({ ...state, mode });
+      commit(resolve(mode, state.custom));
     },
     setTheme,
     importTheme: async (text) => {
@@ -273,7 +359,8 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
 
       for (const key of Object.values(stored)) write(key, null);
 
-      commit({ mode: defaultMode, theme: options.defaultTheme, custom: null });
+      picks = { light: fallback("light"), dark: fallback("dark") };
+      commit(resolve(defaultMode, null));
     },
     subscribe: (listener) => {
       listeners.add(listener);

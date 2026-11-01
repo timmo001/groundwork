@@ -47,6 +47,8 @@ const result = await page.importTheme(colorsToml);
 
 A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too.
 
+A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "light"` or `mode: "dark"` in its choice. `pageTheme` keeps a pick for light and one for dark, so a visitor can pair Latte with Mocha and `auto` moves between them with the system. Picking a light-only theme while the page is dark switches the mode to light, so the pick always shows. `state().scheme` says which side is in use.
+
 `themeBootScript()` takes the same key and defaults and returns a script for an inline `<script>` in `<head>`. It applies the stored pick, and a custom theme's last solved CSS, before the first paint, so the page never flashes the default.
 
 ## Your own theme

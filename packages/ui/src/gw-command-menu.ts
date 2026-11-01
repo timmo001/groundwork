@@ -135,8 +135,14 @@ export class GwCommandMenu extends GwElement {
       }
 
       kbd {
-        padding: 0 var(--gw-space-1);
+        padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5);
         font: inherit;
+        line-height: 1;
+        background: color-mix(
+          in oklab,
+          var(--gw-color-surface-overlay),
+          var(--gw-color-text-primary) 8%
+        );
         border: 1px solid var(--gw-color-border-normal);
         border-radius: var(--gw-radius-control);
       }
