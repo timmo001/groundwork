@@ -6,6 +6,7 @@
  */
 import { GwElement, css, h } from "./element.js";
 import "./gw-button.js";
+import "./gw-menu-button.js";
 import type { OptionItem } from "./gw-option-list.js";
 import "./gw-popover.js";
 import "./gw-segmented.js";
@@ -57,7 +58,8 @@ const moreIcon =
  * and the theme as a select in place while they fit the room it's given,
  * then moves them into the popover, the theme first, as the room runs out.
  * Reset, Import, the gallery and `status` stay in the popover, opened from a
- * palette button, or from a more button once the mode and theme are out.
+ * palette button. Once the mode and theme are in place and only Reset and
+ * Import are left, they're a ⋮ menu instead.
  * In a flex row, such as `gw-page-header`'s actions, it gives up room before
  * the title does. `popover` keeps everything behind the palette button. `cycle` is one button
  * showing the mode in use, which steps to the next mode on each press, for an
@@ -224,6 +226,18 @@ export class GwThemePicker extends GwElement {
 
   readonly #popover = h("gw-popover");
 
+  // Reset and Import on their own, once nothing else is left in the popover
+  readonly #menu = h("gw-menu-button", {
+    appearance: "plain",
+    icon: moreIcon,
+    labels: "hide",
+    hidden: true,
+    items: JSON.stringify([
+      { value: "reset", label: "Reset" },
+      { value: "import", label: "Import a theme file" },
+    ]),
+  });
+
   readonly #actions = h("div", { class: "actions", part: "actions" });
 
   constructor() {
@@ -286,6 +300,7 @@ export class GwThemePicker extends GwElement {
       this.#actions.append(this.#reset, this.#import);
       root.append(this.#controls, this.#actions);
       this.#button.remove();
+      this.#menu.remove();
       this.#popover.remove();
     } else {
       if (this.#controls.parentNode !== this.#popover) {
@@ -293,7 +308,7 @@ export class GwThemePicker extends GwElement {
       }
 
       if (this.#button.parentNode !== root) {
-        root.prepend(this.#button, this.#popover);
+        root.prepend(this.#button, this.#menu, this.#popover);
       }
 
       this.#actions.remove();
@@ -327,14 +342,23 @@ export class GwThemePicker extends GwElement {
     this.#theme.inlineLabel = theme;
     // The popover's heading names it once the mode is out of it
     this.#theme.labelHidden = mode && !theme;
-    // The palette while the popover holds the theme; the overflow dots
-    // once only Reset and Import are left in it
+    // The palette while the popover holds the theme; the overflow dots once
+    // the theme is in place, as a menu of Reset and Import when they're all
+    // that's left
+    const more = theme || (mode && this.#theme.hidden && !this.gallery);
+    const menu = more && !this.status;
+
     this.#button.icon =
       this.layout === "cycle"
         ? this.#button.icon
-        : theme || (mode && this.#theme.hidden && !this.gallery)
+        : more
           ? moreIcon
           : paletteIcon;
+
+    if (menu && this.#menu.hidden) this.#popover.close();
+
+    this.#button.hidden = menu;
+    this.#menu.hidden = !menu;
   }
 
   /**
@@ -377,7 +401,13 @@ export class GwThemePicker extends GwElement {
     }
 
     const gap = Number.parseFloat(getComputedStyle(this).columnGap) || 0;
-    const button = this.#button.getBoundingClientRect().width;
+
+    // Whichever of the button and the menu shows; both are square
+    const button = Math.max(
+      this.#button.getBoundingClientRect().width,
+      this.#menu.getBoundingClientRect().width,
+    );
+
     const mode = this.#mode.getBoundingClientRect().width + gap;
     const select = theme ? this.#theme.getBoundingClientRect().width + gap : 0;
 
@@ -445,6 +475,17 @@ export class GwThemePicker extends GwElement {
     this.#reset.addEventListener("click", () => {
       this.dispatchEvent(new Event("reset", { bubbles: true, composed: true }));
     });
+    this.#menu.addEventListener("select", (event) => {
+      event.stopPropagation();
+
+      if (event instanceof CustomEvent && event.detail.value === "import") {
+        this.#file.click();
+      } else {
+        this.dispatchEvent(
+          new Event("reset", { bubbles: true, composed: true }),
+        );
+      }
+    });
     this.#file.addEventListener("change", async () => {
       const file = this.#file.files?.[0];
 
@@ -484,6 +525,7 @@ export class GwThemePicker extends GwElement {
     }
 
     this.#popover.heading = this.label;
+    this.#menu.label = this.label;
     this.#mode.label = "Mode";
     this.#mode.options = offered.map(({ value, label, icon }) => ({
       value,
