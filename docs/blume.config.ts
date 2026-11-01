@@ -62,11 +62,5 @@ export default defineConfig(
         "/roadmap",
       ],
     },
-    theme: {
-      accent: {
-        light: "#1b2025",
-        dark: "#e5e8ec",
-      },
-    },
   }),
 );
