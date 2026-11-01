@@ -102,6 +102,18 @@ export const fieldStyles = css`
     white-space: nowrap;
   }
 
+  /* With an inline label the select sits among toolbar controls, so it's a
+     pill that fits its content, like the toggles and buttons beside it */
+  gw-select[inline-label] {
+    display: inline-flex;
+  }
+
+  gw-select[inline-label] .gw-select-trigger {
+    width: auto;
+    padding-inline: var(--gw-space-4) var(--gw-space-3);
+    border-radius: var(--gw-radius-pill);
+  }
+
   /* An inline label reads as a quiet prefix to the value */
   gw-select .gw-select-inline-label {
     flex: none;

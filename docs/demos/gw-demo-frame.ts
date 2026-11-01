@@ -64,10 +64,6 @@ export class GwDemoFrame extends GwElement {
       border-bottom: 1px solid var(--gw-color-border-quiet);
     }
 
-    gw-select {
-      width: 12rem;
-    }
-
     .stage {
       position: relative;
       display: flex;
