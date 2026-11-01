@@ -151,7 +151,8 @@ const modeBlock = (roles: Roles, dark: boolean, indent = "  ") =>
     declarations({ ...colorProperties(roles), ...shadows(dark) }, indent),
   ].join("\n");
 
-const themeCss = (theme: ResolvedTheme) => {
+/** One theme's `--gw-*` rules under `[data-gw-theme]`, in each of its modes. */
+export const themeCss = (theme: ResolvedTheme) => {
   const selector = `[data-gw-theme="${theme.id}"]`;
   const style = `${selector} {\n${declarations(styleProperties(theme.style))}\n}`;
   const { light, dark, darker } = theme.modes;

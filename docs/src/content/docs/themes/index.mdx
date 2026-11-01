@@ -27,6 +27,29 @@ On the web, load `themes.css` and set the theme and mode on any element:
 
 Leave `data-gw-mode` off to follow the system's light or dark setting. Darker is opt-in with `data-gw-mode="darker"`.
 
+## Your own theme
+
+Themes aren't only the built-in set. A user can upload a theme file, or an agent can write one, and the app applies it at runtime. The document is the same one the core themes use, checked against the same [Schema](/themes/writing-a-theme), so an agent can write a valid one from that page alone.
+
+The app decodes it, solves it into light, dark and Darker, and checks every role against its contrast target, all in the browser with `@groundwork/tokens/runtime`. A theme that misses a target is still applied, with the misses shown, as optional themes are.
+
+```ts
+import { parseTheme, runtimeTheme } from "@groundwork/tokens/runtime";
+
+const parsed = parseTheme(text);
+
+if (parsed._tag === "Success") {
+  const { css, checks } = runtimeTheme(parsed.success, "custom");
+  // Add css to the page, then set data-gw-theme="custom"
+}
+```
+
+Where it's kept depends on what the app has. An uploaded theme starts in the browser's local storage, then moves to a profile or the app's own storage when it has one, such as the host machine for an app served from it, so every client of that host gets it. The document is stored, not the solved CSS, so it's solved again when the solver changes.
+
+Try it: upload a theme document, or use the sample, and these components take it. It's kept in this browser's local storage.
+
+<ThemeUpload />
+
 ## More
 
 - [Optional themes](/themes/optional): Catppuccin and Tokyo Night.
