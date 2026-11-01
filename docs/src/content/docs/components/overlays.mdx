@@ -65,14 +65,13 @@ An `input` or `change` event from the content marks it changed, and `show()` cle
   <gw-button variant="neutral" appearance="outlined" data-opens="signed-out" icon="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z">Expire the sign-in</gw-button>
   <gw-dialog id="signed-out" heading="Signed out">
     <p>Your sign-in expired. Sign in again to keep working; nothing you've done is lost.</p>
-    <gw-button slot="actions" variant="neutral" appearance="plain" value="close">Close</gw-button>
     <gw-button slot="actions" value="sign-in">Sign in</gw-button>
   </gw-dialog>
 </Demo>
 
 Only for something nothing on screen started that blocks the whole app until it's answered, such as an expired sign-in. App-wide state you can work through, such as a lost connection, a needed restart or a new version, is a slim bar instead, and anything a button starts is a [popover](#popover). The button in the demo stands in for the sign-in expiring.
 
-It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, and the page behind can't be reached. It has a close button in its header, and Esc, the close button and the backdrop follow the [closing rules](#closing). Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
+It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, and the page behind can't be reached. The close button in its header is the only way to close it, with Esc and the backdrop, following the [closing rules](#closing). The footer holds only the real actions, never a second Close or Cancel: one action shows one button, two show both. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
 
 ## Menus
 
