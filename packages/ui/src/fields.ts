@@ -108,6 +108,34 @@ export const fieldStyles = css`
     transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
+  /* An icon inside the field, before the text, with the text moved clear of
+     it */
+  gw-input .gw-input-control {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  gw-input .gw-input-control > .icon {
+    position: absolute;
+    inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1));
+    width: calc(1.125rem * var(--gw-field-scale, 1));
+    height: calc(1.125rem * var(--gw-field-scale, 1));
+    color: var(--gw-color-text-secondary);
+    pointer-events: none;
+    fill: currentColor;
+  }
+
+  gw-input .gw-input-control > .icon[hidden] {
+    display: none;
+  }
+
+  gw-input .gw-input-control > .icon:not([hidden]) + input {
+    padding-inline-start: calc(
+      (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1)
+    );
+  }
+
   /* The trigger shows the chosen option, with its icon, and a chevron with
      room around it that turns over while the list is open */
   gw-select .gw-select-trigger {
@@ -276,6 +304,10 @@ export const fieldStyles = css`
     display: none;
   }
 
+  :where(gw-input) .gw-input-control:focus-within > .icon {
+    color: var(--gw-color-text-strong);
+  }
+
   :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover {
     border-color: var(--gw-color-border-loud);
   }
@@ -315,7 +347,7 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
-  :where(gw-switch, gw-checkbox, gw-select) .gw-visually-hidden {
+  :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;

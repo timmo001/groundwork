@@ -5,6 +5,7 @@
  * @module
  */
 import { h, setAttribute } from "./element.js";
+import { createIcon, setIconPath } from "./styles.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 
@@ -26,6 +27,8 @@ import { LightElement, fieldId } from "./fields.js";
  * @attr {boolean} required - Requires a value.
  * @attr {boolean} disabled - Disables the field.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
+ * @attr {string} icon - SVG path data for an icon inside the field, before the text, such as a magnifier on a search.
+ * @attr {boolean} hide-label - Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
@@ -44,6 +47,8 @@ export class GwInput extends LightElement {
     required: { type: "boolean" },
     disabled: { type: "boolean" },
     size: { reflect: true },
+    icon: {},
+    hideLabel: { type: "boolean", attribute: "hide-label", reflect: true },
   } as const;
 
   declare label: string;
@@ -59,8 +64,14 @@ export class GwInput extends LightElement {
   declare required: boolean;
   declare disabled: boolean;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
+  /** SVG path data for an icon inside the field, before the text. */
+  declare icon: string;
+  /** Keeps the label as the accessible name without showing it. */
+  declare hideLabel: boolean;
 
   readonly #id = fieldId();
+
+  readonly #icon = createIcon("");
 
   readonly #label = h("label", { for: this.#id });
 
@@ -86,13 +97,20 @@ export class GwInput extends LightElement {
     this.required = false;
     this.disabled = false;
     this.size = "medium";
+    this.icon = "";
+    this.hideLabel = false;
   }
 
   protected override create(root: HTMLElement) {
     this.#input.addEventListener("input", () => {
       this.value = this.#input.value;
     });
-    root.append(this.#info.heading, this.#input, this.#hint, this.#error);
+    root.append(
+      this.#info.heading,
+      h("span", { class: "gw-input-control" }, this.#icon, this.#input),
+      this.#hint,
+      this.#error,
+    );
   }
 
   protected override update() {
@@ -107,6 +125,9 @@ export class GwInput extends LightElement {
 
     this.#label.textContent = this.label;
     this.#info.update(this.label, this.info);
+    this.#info.heading.classList.toggle("gw-visually-hidden", this.hideLabel);
+    setIconPath(this.#icon, this.icon);
+    this.#icon.toggleAttribute("hidden", !this.icon);
     input.type = this.type;
     setAttribute(input, "name", this.name || null);
     setAttribute(input, "placeholder", this.placeholder || null);
