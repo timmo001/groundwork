@@ -17,6 +17,8 @@
  */
 import "@timmo001/groundwork-ui";
 
+import type { OmarchyCurrentTheme } from "@timmo001/groundwork-tokens/runtime";
+
 import type { ResolvedDesktopConfig } from "./config.ts";
 import type {
   DesktopMessageHandlers,
@@ -46,6 +48,12 @@ export interface ViewRPC<AppRequests extends RequestHandlers> {
 export interface ConnectOptions {
   /** Called with each deep link the app is opened with. */
   readonly onDeepLink?: (url: string) => void;
+  /**
+   * Called with the desktop's Omarchy theme once connected and on every
+   * switch, or `null` where there's none. Pass it to `pageTheme`'s
+   * `setOmarchyTheme`.
+   */
+  readonly onOmarchyTheme?: (theme: OmarchyCurrentTheme | null) => void;
 }
 
 /** The connection to the main process. */
@@ -281,10 +289,18 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
         new CustomEvent("gw-deep-link", { detail: { url } }),
       );
     },
+    omarchyTheme: ({ theme }) => options.onOmarchyTheme?.(theme),
   });
 
   const request: Client<DesktopRequests> = rpc.request;
   const { config, dev } = await request.config();
+
+  if (config.omarchyTheme && options.onOmarchyTheme !== undefined) {
+    const { onOmarchyTheme } = options;
+
+    void request.omarchyTheme().then(({ theme }) => onOmarchyTheme(theme));
+  }
+
   const sheet = new CSSStyleSheet();
 
   sheet.replaceSync(styles);

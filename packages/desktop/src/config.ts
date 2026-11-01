@@ -48,6 +48,12 @@ export interface DesktopConfig {
   readonly spellcheck?: boolean;
   /** Passes the app's deep links (`urlSchemes`) to the view. */
   readonly deepLinks?: boolean;
+  /**
+   * Passes the desktop's Omarchy theme to the view, and every switch, where
+   * Omarchy is installed. `pageTheme` offers it and uses it until another
+   * theme is picked.
+   */
+  readonly omarchyTheme?: boolean;
 }
 
 /** Every option filled in. */
@@ -69,6 +75,7 @@ export interface ResolvedDesktopConfig {
   readonly devTools: boolean;
   readonly spellcheck: boolean;
   readonly deepLinks: boolean;
+  readonly omarchyTheme: boolean;
 }
 
 /** Types a config in the app's `desktop.config.ts`. */
@@ -107,6 +114,7 @@ export const resolveConfig = (
     devTools: config.devTools ?? true,
     spellcheck: config.spellcheck ?? true,
     deepLinks: config.deepLinks ?? true,
+    omarchyTheme: config.omarchyTheme ?? true,
   };
 };
 

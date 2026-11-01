@@ -3,7 +3,14 @@
  * view asks for, and what the main process tells it. An app adds its own
  * requests beside these.
  */
+import type { OmarchyCurrentTheme } from "@timmo001/groundwork-tokens/runtime";
+
 import type { ResolvedDesktopConfig } from "./config.ts";
+
+/** The desktop's Omarchy theme, or `null` where there's none or it's off. */
+export interface OmarchyThemeMessage {
+  readonly theme: OmarchyCurrentTheme | null;
+}
 
 /** A notice for the view to show in the app, such as a finished download. */
 export interface Notice {
@@ -44,6 +51,8 @@ export interface DesktopRequests {
   readonly devTools: () => boolean;
   /** A system notification when the config turns them on, otherwise false. */
   readonly notify: (params: Notice) => boolean;
+  /** The desktop's Omarchy theme, when the config passes it on. */
+  readonly omarchyTheme: () => Promise<OmarchyThemeMessage>;
 }
 
 /** What the main process tells the view. */
@@ -51,6 +60,8 @@ export interface DesktopMessages {
   readonly notice: Notice;
   /** A deep link the app was opened with. */
   readonly deepLink: { readonly url: string };
+  /** The desktop switched its Omarchy theme. */
+  readonly omarchyTheme: OmarchyThemeMessage;
 }
 
 /** Requests in the `{ params, response }` shape Electrobun's schemas use. */
@@ -81,4 +92,5 @@ export type DesktopSchema<AppRequests extends RequestHandlers = {}> = {
 export interface DesktopMessageHandlers {
   readonly notice: (notice: Notice) => void;
   readonly deepLink: (link: { readonly url: string }) => void;
+  readonly omarchyTheme: (message: OmarchyThemeMessage) => void;
 }

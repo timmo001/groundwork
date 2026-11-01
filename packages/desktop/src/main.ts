@@ -12,12 +12,17 @@
 import { join } from "node:path";
 
 import {
+  readOmarchyTheme,
+  watchOmarchyTheme,
+} from "@timmo001/groundwork-tokens/omarchy-current";
+
+import {
   isExternal,
   resolveConfig,
   type DesktopConfig,
   type ResolvedDesktopConfig,
 } from "./config.ts";
-import type { DesktopRequests, Notice } from "./rpc.ts";
+import type { DesktopRequests, Notice, OmarchyThemeMessage } from "./rpc.ts";
 
 export * from "./config.ts";
 
@@ -59,6 +64,7 @@ interface MainRPC {
   readonly send: {
     notice(notice: Notice): void;
     deepLink(link: { url: string }): void;
+    omarchyTheme(message: OmarchyThemeMessage): void;
   };
 }
 
@@ -388,6 +394,9 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
 
       return true;
     },
+    omarchyTheme: async () => ({
+      theme: config.omarchyTheme ? await readOmarchyTheme() : null,
+    }),
   };
 
   const rpc = options.createRPC(desktopRequests);
@@ -449,6 +458,10 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
       bringForward();
       rpc.send.deepLink({ url: data.url });
     });
+  }
+
+  if (config.omarchyTheme) {
+    watchOmarchyTheme((theme) => rpc.send.omarchyTheme({ theme }));
   }
 
   if (config.tray !== false) {

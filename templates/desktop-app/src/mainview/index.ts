@@ -32,11 +32,12 @@ const picker = document.querySelector("gw-theme-picker");
 
 if (picker !== null) {
   const render = () => {
-    const { mode, theme, custom } = page.state();
+    const { mode, theme, custom, omarchy } = page.state();
     picker.mode = mode;
     picker.theme = theme;
     picker.themes = [
       ...coreThemeChoices.map(({ id, name }) => ({ value: id, label: name })),
+      ...(omarchy === null ? [] : [{ value: omarchy.id, label: omarchy.name }]),
       ...(custom === null ? [] : [{ value: customThemeId, label: custom }]),
     ];
   };
@@ -57,18 +58,22 @@ if (picker !== null) {
   });
 }
 
-// The desktop defaults, and a card that calls the main process: a notice,
-// the clipboard, the system browser and what the machine is
-const desktop = await connectDesktop<DemoRequests>((messages) => {
-  const rpc = Electroview.defineRPC<DesktopSchema<DemoRequests>>({
-    maxRequestTime: 10_000,
-    handlers: { messages },
-  });
+// The desktop defaults, the desktop's Omarchy theme as a theme to pick, and a
+// card that calls the main process: a notice, the clipboard, the system
+// browser and what the machine is
+const desktop = await connectDesktop<DemoRequests>(
+  (messages) => {
+    const rpc = Electroview.defineRPC<DesktopSchema<DemoRequests>>({
+      maxRequestTime: 10_000,
+      handlers: { messages },
+    });
 
-  new Electroview({ rpc });
+    new Electroview({ rpc });
 
-  return rpc;
-});
+    return rpc;
+  },
+  { onOmarchyTheme: (theme) => void page.setOmarchyTheme(theme) },
+);
 
 const card = document.createElement("gw-card");
 const facts = document.createElement("gw-facts");

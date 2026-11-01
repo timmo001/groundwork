@@ -15,6 +15,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@timmo001/groundwork-tokens": "workspace:*",
     "@timmo001/groundwork-ui": "workspace:*"
   },
   "devDependencies": {

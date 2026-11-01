@@ -89,6 +89,7 @@
     "packages/desktop": {
       "name": "@timmo001/groundwork-desktop",
       "dependencies": {
+        "@timmo001/groundwork-tokens": "workspace:*",
         "@timmo001/groundwork-ui": "workspace:*",
       },
       "devDependencies": {

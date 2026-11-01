@@ -60,6 +60,7 @@ export default defineDesktopConfig({ tray: false });
 | `devTools` | On | F12 and Ctrl+Shift+I open the dev tools, in dev builds only |
 | `spellcheck` | On | The system spell checker in text fields |
 | `deepLinks` | On | Passes the app's deep links (`urlSchemes`) to the view |
+| `omarchyTheme` | On | Passes the desktop's Omarchy theme to the view, and every switch |
 
 Notices in the app sit in the bottom end corner, the find bar in the top end corner, and neither moves the page. The window's size, place and zoom are kept in `desktop-state.json` in the app's data folder.
 
@@ -134,6 +135,20 @@ The demo's "This machine" card uses each of these: it asks the main process what
 The view sets `data-gw-theme` and leaves out `data-gw-mode`, so it follows the system's light or dark mode through `prefers-color-scheme`. An app with its own setting sets `data-gw-mode` instead, as on the web.
 
 On Linux, WebKitGTK takes the mode from GTK 3, not from the desktop's color scheme setting. A desktop that only sets the color scheme, as Omarchy does, shows the light mode. Setting `gtk-application-prefer-dark-theme=true` in `~/.config/gtk-3.0/settings.ini`, or running the app with `GTK_THEME=Adwaita:dark`, gives the dark one.
+
+### Omarchy theme
+
+Where Omarchy is installed, the app matches its theme. The main process reads the theme in use from `~/.local/state/omarchy/current/theme/colors.toml` and passes it to the view, then again on every theme switch. Pass it to `pageTheme` in the view:
+
+```ts
+const page = pageTheme({ ...themeOptions, themes: coreThemeChoices });
+
+await connectDesktop<AppRequests>(createRPC, {
+  onOmarchyTheme: (theme) => void page.setOmarchyTheme(theme),
+});
+```
+
+`page.state().omarchy` is then a theme choice, such as "Omarchy (Tokyo Night)", to list in the theme picker. It covers the Omarchy theme's own scheme, light or dark. Until someone picks another theme it's the one in use, and while it's picked a switch on the desktop follows through. The boot script keeps the last one, so it applies before the first paint. Set `omarchyTheme: false` in `desktop.config.ts` to leave it out.
 
 ## Scaling
 
