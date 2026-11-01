@@ -72,8 +72,8 @@
       "name": "@timmo001/docs-kit",
       "version": "0.3.0",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "workspace:*",
-        "@timmo001/groundwork-ui": "workspace:*",
+        "@timmo001/groundwork-tokens": "0.3.0",
+        "@timmo001/groundwork-ui": "0.3.0",
         "sharp": "0.35.5",
       },
       "devDependencies": {
@@ -128,12 +128,13 @@
     },
     "packages/tokens": {
       "name": "@timmo001/groundwork-tokens",
+      "version": "0.3.0",
       "dependencies": {
-        "@effect/platform-node": "4.1.1",
         "culori": "4.0.2",
         "effect": "4.1.1",
       },
       "devDependencies": {
+        "@effect/platform-node": "4.1.1",
         "@oxlint/plugins": "1.90.0",
         "@timmo001/oxlint-rules": "0.6.3",
         "@types/bun": "1.4.4",
@@ -146,6 +147,7 @@
     },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
+      "version": "0.3.0",
       "devDependencies": {
         "@oxlint/plugins": "1.90.0",
         "@timmo001/oxlint-rules": "0.6.3",

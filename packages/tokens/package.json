@@ -1,6 +1,8 @@
 {
   "name": "@timmo001/groundwork-tokens",
-  "private": true,
+  "version": "0.3.0",
+  "description": "Groundwork's design tokens: the theme schema, the OKLCH solver and every theme as CSS and JSON",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
@@ -8,7 +10,28 @@
     "./themes.css": "./generated/themes.css",
     "./themes.json": "./generated/themes.json"
   },
+  "files": [
+    "src",
+    "!src/cli.ts",
+    "themes",
+    "generated",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/tokens"
+  },
   "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "gen": "bun run src/cli.ts gen",
     "gen:check": "bun run src/cli.ts gen --check",
     "contrast": "bun run src/cli.ts contrast",
@@ -18,11 +41,11 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@effect/platform-node": "4.1.1",
     "culori": "4.0.2",
     "effect": "4.1.1"
   },
   "devDependencies": {
+    "@effect/platform-node": "4.1.1",
     "@oxlint/plugins": "1.90.0",
     "@timmo001/oxlint-rules": "0.6.3",
     "@types/bun": "1.4.4",

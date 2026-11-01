@@ -1,12 +1,30 @@
 {
   "name": "@timmo001/groundwork-ui",
-  "private": true,
+  "version": "0.3.0",
+  "description": "Groundwork's framework-free web components, styled by the --gw-* tokens",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
     "./*": "./src/*"
   },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": true,
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/ui"
+  },
   "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "lint": "oxlint .",
     "typecheck": "tsc",
     "format": "prettier --write .",

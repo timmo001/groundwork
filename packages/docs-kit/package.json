@@ -39,8 +39,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "workspace:*",
-    "@timmo001/groundwork-ui": "workspace:*",
+    "@timmo001/groundwork-tokens": "0.3.0",
+    "@timmo001/groundwork-ui": "0.3.0",
     "sharp": "0.35.5"
   },
   "peerDependencies": {

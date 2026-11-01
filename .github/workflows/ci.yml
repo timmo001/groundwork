@@ -32,8 +32,10 @@ jobs:
         run: mise run check
 
       - name: Pack
-        run: npm pack --dry-run
-        working-directory: packages/docs-kit
+        run: |
+          for package in tokens ui docs-kit; do
+            (cd "packages/$package" && npm pack --dry-run)
+          done
 
   docs:
     name: Build docs

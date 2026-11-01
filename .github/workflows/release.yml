@@ -1,6 +1,7 @@
 ---
-# Publishes @timmo001/docs-kit to npm and JSR when a GitHub release is
-# published, with the tool versions mise pins.
+# Publishes @timmo001/groundwork-tokens and -ui to npm, and
+# @timmo001/docs-kit to npm and JSR, when a GitHub release is published, with
+# the tool versions mise pins. The three share one version, the release tag.
 name: Release
 
 on:
@@ -31,8 +32,37 @@ jobs:
           printf 'bun=%s\n' "$(mise current bun)" >> "$GITHUB_OUTPUT"
           printf 'node=%s\n' "$(mise current node)" >> "$GITHUB_OUTPUT"
 
-  npm:
+  npm-tokens:
     needs: tools
+    permissions:
+      contents: read
+      id-token: write
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@de4221cd9b24ad3d61aa1db87b6e4864cf56d5a1 # 20261027.0
+    with:
+      bun-version: ${{ needs.tools.outputs.bun }}
+      node-version: ${{ needs.tools.outputs.node }}
+      package-path: packages/tokens
+      build-command: "true"
+
+  npm-ui:
+    needs: tools
+    permissions:
+      contents: read
+      id-token: write
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@de4221cd9b24ad3d61aa1db87b6e4864cf56d5a1 # 20261027.0
+    with:
+      bun-version: ${{ needs.tools.outputs.bun }}
+      node-version: ${{ needs.tools.outputs.node }}
+      package-path: packages/ui
+      build-command: "true"
+
+  # docs-kit depends on ui and tokens at the same version, so it waits for
+  # them to reach npm before publishing anywhere
+  npm:
+    needs:
+      - tools
+      - npm-tokens
+      - npm-ui
     permissions:
       contents: read
       id-token: write
@@ -44,7 +74,10 @@ jobs:
       build-command: "true"
 
   jsr:
-    needs: tools
+    needs:
+      - tools
+      - npm-tokens
+      - npm-ui
     permissions:
       contents: read
       id-token: write
