@@ -164,6 +164,12 @@ depends = ["install"]
 dir = "docs"
 run = "bun run capture"
 
+[tasks.frame]
+description = "Wrap a desktop or terminal screenshot in a window frame for the docs"
+depends = ["install"]
+dir = "docs"
+run = "bun scripts/frame.ts"
+
 [tasks.check]
 description = "Lint, type-check, test, verify formatting, generated files, contrast and conventions"
 depends = [

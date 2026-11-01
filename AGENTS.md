@@ -63,6 +63,13 @@ go-ahead needed. Before the session ends, once `mise run check` passes:
   `pitchfork proxy doctor`, then `pitchfork proxy setup -y`, to restore the 443
   redirect instead.
 
+## Screenshots
+
+- Desktop and terminal screenshots in `docs/public/screenshots/` sit in a
+  window frame. Frame each raw capture once with
+  `mise run frame -- <in.png> [out.png] --title <title> [--mode light]`
+  (paths relative to `docs/`); framing a framed shot adds a second bar.
+
 ## Tokens and themes
 
 - Themes are data in `packages/tokens/themes/*.json`, checked against the
