@@ -84,8 +84,23 @@ export class GwSheet extends GwElement {
         translate: 0 0;
       }
 
+      /* The page dims as the sheet slides in, and back as it leaves */
       [popover]::backdrop {
+        background: rgb(0 0 0 / 0%);
+        transition:
+          background-color var(--gw-motion-normal) var(--gw-motion-easing),
+          display var(--gw-motion-normal) allow-discrete,
+          overlay var(--gw-motion-normal) allow-discrete;
+      }
+
+      [popover]:popover-open::backdrop {
         background: rgb(0 0 0 / 40%);
+      }
+
+      @starting-style {
+        [popover]:popover-open::backdrop {
+          background: rgb(0 0 0 / 0%);
+        }
       }
 
       /* Full height from the start or end edge */
