@@ -1,29 +1,34 @@
 /**
- * The menu list: two-line rows with icons, scrolling and fuzzy
- * type-to-filter.
+ * The menu list: two-line rows with icons, group headings, paging and fuzzy
+ * filtering, either as you type or after `/`. Rows update in place when the
+ * items change but the layout doesn't, so the list never jumps.
  *
  * @module
  */
 import {
-  type CliRenderer,
   BoxRenderable,
   ScrollBoxRenderable,
   TextRenderable,
-  type KeyEvent,
-  t,
+  bold,
   fg,
+  t,
 } from "@opentui/core";
+import type { CliRenderer, KeyEvent } from "@opentui/core";
 import Fuse from "fuse.js";
 import type { Theme } from "./theme.ts";
 
 /** What a menu row shows; apps extend it with their own action fields. */
 export interface MenuListItem {
+  /** Stable id, used to keep the selection across updates */
+  readonly id: string;
   /** Primary display text */
   readonly title: string;
   /** Secondary text shown below the title */
   readonly description: string;
   /** Nerd Font icon character */
   readonly icon: string;
+  /** A heading is drawn above the first item of each run of the same group */
+  readonly group?: string;
   /** Extra words the filter matches */
   readonly keywords?: readonly string[];
 }
@@ -31,218 +36,414 @@ export interface MenuListItem {
 /** Width of the left icon column in characters */
 const ICON_COLUMN_WIDTH = 4;
 
-/** Internal state for a single rendered menu row */
-interface MenuRow<MenuItem extends MenuListItem> {
+/** What a row stands for: an item, a group heading or a page step. */
+type RowEntry<Item> =
+  | { readonly kind: "item"; readonly item: Item }
+  | { readonly kind: "group"; readonly title: string }
+  | { readonly kind: "previous" }
+  | { readonly kind: "next" };
+
+interface MenuRow<Item> {
   readonly container: BoxRenderable;
-  readonly iconCol: BoxRenderable;
   readonly iconText: TextRenderable;
   readonly titleText: TextRenderable;
   readonly descText: TextRenderable;
-  readonly item: MenuItem;
+  /** Replaced when rows update in place */
+  entry: RowEntry<Item>;
 }
 
 /** Configuration for the {@link MenuList} component */
-export interface MenuListOptions<MenuItem extends MenuListItem> {
+export interface MenuListOptions<Item extends MenuListItem> {
   /** Unique renderable ID */
   readonly id: string;
   /** Menu items to display */
-  readonly items: readonly MenuItem[];
+  readonly items: readonly Item[];
   /** Active color theme */
   readonly theme: Theme;
   /** Called when the user presses Enter on an item */
-  readonly onSelect: (item: MenuItem) => void;
+  readonly onSelect: (item: Item) => void;
   /** Called when the highlighted item changes */
-  readonly onSelectionChanged?: (item: MenuItem) => void;
-  /** Called when filter text changes (for external display) */
+  readonly onSelectionChanged?: (item: Item) => void;
+  /** Called when the filter text changes, or `/` filtering starts or ends */
   readonly onFilterChange?: (filter: string) => void;
   /** Called when Escape is pressed with an empty filter */
   readonly onEscape?: () => void;
   /** Called when Backspace is pressed with an empty filter */
   readonly onBack?: () => void;
-  /** Index of the initially selected item */
+  /** Index of the initially selected row */
   readonly initialSelectedIndex?: number;
   /** Whether navigation wraps around (default: true) */
   readonly wrapSelection?: boolean;
+  /**
+   * The most items on a page. Longer lists get "Previous page" and "Next
+   * page" rows, and Page Up and Page Down step through them. No paging when
+   * unset.
+   */
+  readonly pageSize?: number;
+  /** Called when the page changes, for a page indicator */
+  readonly onPageChange?: (page: number, totalPages: number) => void;
+  /**
+   * Leave filtering to the app: the list only collects the filter text and
+   * reports it through `onFilterChange`, and the app calls
+   * `setFilteredItems` with the results.
+   */
+  readonly externalFilter?: boolean;
+  /** Sees each key first; return true when it handled the key. */
+  readonly onKeyPress?: (key: KeyEvent) => boolean;
+  /** `type` filters on any printable key (the default), `slash` after `/`. */
+  readonly filterActivation?: "type" | "slash";
 }
 
+const isPrintable = (key: KeyEvent): boolean =>
+  key.sequence.length === 1 && !key.ctrl && !key.meta && key.sequence >= " ";
+
 /**
- * Custom menu list with left-aligned full-height icons, vertical scrolling,
- * and walker-style fuzzy type-to-filter.
- *
- * Each item renders as a two-line row:
- * - Line 1: icon character + title text
- * - Line 2: blank icon column + description text
- *
- * Typing any printable character accumulates a fuzzy filter query
- * (powered by Fuse.js with weighted keys). Escape clears the filter;
- * Backspace removes the last character.
+ * A scrolling menu of two-line rows: the icon and title, then the
+ * description. Up and Down move, Enter selects, Escape clears the filter or
+ * goes back, and Backspace removes a filter character or goes back.
  */
 export class MenuList<
-  MenuItem extends MenuListItem = MenuListItem,
+  Item extends MenuListItem = MenuListItem,
 > extends ScrollBoxRenderable {
-  private _allItems: readonly MenuItem[];
-  private _items: readonly MenuItem[];
-  private _selectedIndex: number;
-  private readonly _wrapSelection: boolean;
-  private _rows: MenuRow<MenuItem>[] = [];
-  private readonly _selectCb: (item: MenuItem) => void;
-  private readonly _selectionChangedCb: ((item: MenuItem) => void) | undefined;
-  private readonly _onFilterChange: ((filter: string) => void) | undefined;
-  private readonly _onEscape: (() => void) | undefined;
-  private readonly _onBack: (() => void) | undefined;
-  private readonly _renderer: CliRenderer;
-  private readonly _theme: Theme;
+  private allItems: readonly Item[];
+  private items: readonly Item[];
+  private selectedIndex: number;
+  private rows: MenuRow<Item>[] = [];
+  private filterText = "";
+  private slashFilterOpen = false;
+  private fuse: Fuse<Item>;
+  private page = 0;
+  private readonly menuRenderer: CliRenderer;
+  private readonly menuTheme: Theme;
+  private readonly options: MenuListOptions<Item>;
+  private readonly wrapSelection: boolean;
+  private readonly filterActivation: "type" | "slash";
 
-  private _filterText = "";
-  private _fuse: Fuse<MenuItem>;
-
-  constructor(renderer: CliRenderer, options: MenuListOptions<MenuItem>) {
+  constructor(renderer: CliRenderer, options: MenuListOptions<Item>) {
     super(renderer, {
       id: options.id,
       flexGrow: 1,
       width: "100%",
       scrollY: true,
       scrollX: false,
+      viewportCulling: true,
       backgroundColor: options.theme.bgElevated,
       focusable: true,
     });
 
-    this._renderer = renderer;
-    this._theme = options.theme;
-    this._allItems = options.items;
-    this._items = options.items;
-    this._selectedIndex = options.initialSelectedIndex ?? 0;
-    this._wrapSelection = options.wrapSelection ?? true;
-    this._selectCb = options.onSelect;
-    this._selectionChangedCb = options.onSelectionChanged;
-    this._onFilterChange = options.onFilterChange;
-    this._onEscape = options.onEscape;
-    this._onBack = options.onBack;
-
-    this._fuse = this._createFuse(options.items);
-    this._buildRows();
+    this.menuRenderer = renderer;
+    this.menuTheme = options.theme;
+    this.options = options;
+    this.allItems = options.items;
+    this.items = options.items;
+    this.selectedIndex = options.initialSelectedIndex ?? 0;
+    this.wrapSelection = options.wrapSelection ?? true;
+    this.filterActivation = options.filterActivation ?? "type";
+    this.fuse = this.createFuse(options.items);
+    this.buildRows();
   }
 
-  /** Replace displayed items and reset selection and filter to the top */
-  setItems(items: readonly MenuItem[]): void {
-    this._clearRows();
-    this._allItems = items;
-    this._items = items;
-    this._filterText = "";
-    this._fuse = this._createFuse(items);
-    this._selectedIndex = 0;
-    this._buildRows();
-    this._onFilterChange?.("");
+  /** Replaces the items and resets the selection, filter and page. */
+  setItems(items: readonly Item[]): void {
+    this.clearRows();
+    this.allItems = items;
+    this.items = items;
+    this.filterText = "";
+    this.slashFilterOpen = false;
+    this.page = 0;
+    this.fuse = this.createFuse(items);
+    this.selectedIndex = 0;
+    this.buildRows();
+    this.options.onFilterChange?.("");
+    this.emitPageChange();
   }
 
-  /** Programmatically select an item by index */
-  setSelectedIndex(index: number): void {
+  /**
+   * Shows items filtered by the app, keeping the filter text, page and
+   * selected item. Rows update in place when the layout is unchanged.
+   */
+  setFilteredItems(
+    items: readonly Item[],
+    options?: { readonly resetSelection?: boolean },
+  ): void {
+    const previousId = options?.resetSelection
+      ? undefined
+      : this.getSelectedItem()?.id;
+
+    this.items = items;
+    let targetPage = this.page;
+    const pageSize = this.options.pageSize;
+
+    if (items.length === 0) targetPage = 0;
+    else if (previousId && pageSize !== undefined && this.isPaginated()) {
+      const index = items.findIndex((item) => item.id === previousId);
+      targetPage = index >= 0 ? Math.floor(index / pageSize) : 0;
+    }
+
     if (
-      index < 0 ||
-      index >= this._items.length ||
-      index === this._selectedIndex
-    )
+      targetPage === this.page &&
+      this.rows.length > 0 &&
+      this.canPatchInPlace(this.pageItemsFor(targetPage))
+    ) {
+      this.patchRowsInPlace();
+      this.emitPageChange();
+
       return;
-    this._applySelection(index);
+    }
+
+    this.clearRows();
+    this.page = targetPage;
+    this.selectedIndex = 0;
+    this.buildRows();
+
+    if (previousId) this.selectItemRow(previousId);
+
+    this.emitPageChange();
   }
 
-  /** Return the currently highlighted item */
-  getSelectedItem(): MenuItem | undefined {
-    return this._items[this._selectedIndex];
+  /** Selects a row by index. */
+  setSelectedIndex(index: number): void {
+    if (index < 0 || index >= this.rows.length || index === this.selectedIndex)
+      return;
+
+    this.applySelection(index);
   }
 
-  /** Clear the filter and restore the full item list */
+  /** Whether the first selectable row is selected. */
+  isFirstSelectableSelected(): boolean {
+    if (this.rows.length === 0) return true;
+
+    return this.selectedIndex === this.nextSelectableIndex(-1, 1);
+  }
+
+  /** The highlighted item, or nothing on a heading or page row. */
+  getSelectedItem(): Item | undefined {
+    const entry = this.rows[this.selectedIndex]?.entry;
+
+    return entry?.kind === "item" ? entry.item : undefined;
+  }
+
+  /** Clears the filter and shows every item. */
   resetFilter(): void {
-    if (this._filterText.length === 0) return;
-    this._filterText = "";
-    this._applyFilter();
+    if (this.filterText.length === 0) return;
+
+    this.filterText = "";
+    this.slashFilterOpen = false;
+    this.page = 0;
+    this.applyFilter();
   }
 
-  /** Whether a filter query is currently active */
+  /** Selects the first item. */
+  resetSelection(): void {
+    const first = this.rows.findIndex((row) => row.entry.kind === "item");
+
+    if (first >= 0 && first !== this.selectedIndex) this.applySelection(first);
+  }
+
+  /** The page shown, from 0 */
+  get currentPage(): number {
+    return this.page;
+  }
+
+  /** How many pages there are, 1 without paging */
+  get totalPages(): number {
+    if (!this.options.pageSize || !this.isPaginated()) return 1;
+
+    return Math.ceil(this.items.length / this.options.pageSize);
+  }
+
+  /** How many items match the filter */
+  get filteredCount(): number {
+    return this.items.length;
+  }
+
+  /** Whether there's filter text */
   get hasFilter(): boolean {
-    return this._filterText.length > 0;
+    return this.filterText.length > 0;
   }
 
-  // -- Keyboard handling ------------------------------------------------
+  /** Whether `/` filtering is taking keys */
+  get filterActive(): boolean {
+    return this.slashFilterOpen;
+  }
 
-  handleKeyPress(key: KeyEvent): boolean {
-    // Escape: clear filter → or fire onEscape callback
+  /**
+   * Changes one item's title or description in place, keeping the
+   * selection, scroll position and filter. Filtered-out items change too, so
+   * the next filter sees the new text.
+   */
+  patchItemById(
+    id: string,
+    patch: Partial<Pick<Item, "title" | "description">>,
+  ): void {
+    const current = this.allItems.find((item) => item.id === id);
+
+    if (current === undefined) return;
+
+    const updated: Item = { ...current, ...patch };
+    const swap = (item: Item): Item => (item.id === id ? updated : item);
+
+    this.allItems = this.allItems.map(swap);
+    this.items = this.items.map(swap);
+    this.fuse = this.createFuse(this.allItems);
+
+    const index = this.rows.findIndex(
+      (row) => row.entry.kind === "item" && row.entry.item.id === id,
+    );
+
+    const row = this.rows[index];
+
+    if (row === undefined) return;
+
+    row.entry = { kind: "item", item: updated };
+    this.paintRow(row, index === this.selectedIndex);
+  }
+
+  override handleKeyPress(key: KeyEvent): boolean {
+    if (this.filterActivation === "slash" && this.handleSlashFilter(key))
+      return true;
+
+    if (this.options.onKeyPress?.(key)) return true;
+
     if (key.name === "escape") {
-      if (this._filterText.length > 0) {
-        this._filterText = "";
-        this._applyFilter();
+      if (this.filterText.length > 0) {
+        this.filterText = "";
+        this.page = 0;
+        this.applyFilter();
 
         return true;
       }
 
-      if (this._onEscape) {
-        this._onEscape();
+      this.options.onEscape?.();
 
-        return true;
-      }
-
-      return false;
+      return this.options.onEscape !== undefined;
     }
 
-    // Backspace: remove last filter char → or fire onBack callback
     if (key.name === "backspace") {
-      if (this._filterText.length > 0) {
-        this._filterText = this._filterText.slice(0, -1);
-        this._applyFilter();
+      if (this.filterText.length > 0) {
+        this.filterText = this.filterText.slice(0, -1);
+        this.page = 0;
+        this.applyFilter();
 
         return true;
       }
 
-      if (this._onBack) {
-        this._onBack();
+      this.options.onBack?.();
 
-        return true;
-      }
-
-      return false;
+      return this.options.onBack !== undefined;
     }
 
-    // Arrow navigation
-    if (key.name === "up") {
-      this._moveSelection(-1);
+    if (key.name === "pagedown" || key.name === "pageup") {
+      this.turnPage(key.name === "pagedown" ? 1 : -1);
 
       return true;
     }
 
-    if (key.name === "down") {
-      this._moveSelection(1);
+    if (key.name === "up" || key.name === "down") {
+      this.moveSelection(key.name === "up" ? -1 : 1);
 
       return true;
     }
 
-    // Enter: select highlighted item
     if (key.name === "return") {
-      const item = this._items[this._selectedIndex];
+      const entry = this.rows[this.selectedIndex]?.entry;
 
-      if (item) this._selectCb(item);
+      if (entry?.kind === "item") this.options.onSelect(entry.item);
+      else if (entry?.kind === "next") this.turnPage(1);
+      else if (entry?.kind === "previous") this.turnPage(-1);
 
       return true;
     }
 
-    // Printable character → fuzzy filter
-    if (key.sequence && key.sequence.length === 1 && !key.ctrl && !key.meta) {
-      const ch = key.sequence;
+    if (this.filterActivation === "type" && isPrintable(key)) {
+      this.filterText += key.sequence;
+      this.page = 0;
+      this.applyFilter();
 
-      if (ch >= " ") {
-        this._filterText += ch;
-        this._applyFilter();
-
-        return true;
-      }
+      return true;
     }
 
     return super.handleKeyPress(key);
   }
 
-  // -- Private helpers --------------------------------------------------
+  /** `/` opens the filter, which then takes every key until Escape or Enter. */
+  private handleSlashFilter(key: KeyEvent): boolean {
+    if (!this.slashFilterOpen) {
+      if (key.sequence !== "/" || key.ctrl || key.meta) return false;
 
-  /** Create a Fuse.js instance for the given item set */
-  private _createFuse(items: readonly MenuItem[]): Fuse<MenuItem> {
+      this.slashFilterOpen = true;
+      this.options.onFilterChange?.(this.filterText);
+
+      return true;
+    }
+
+    if (
+      key.name === "escape" ||
+      key.name === "return" ||
+      (key.name === "backspace" && this.filterText.length === 0)
+    ) {
+      this.slashFilterOpen = false;
+      this.options.onFilterChange?.(this.filterText);
+
+      return true;
+    }
+
+    if (key.name === "backspace") {
+      this.filterText = this.filterText.slice(0, -1);
+      this.page = 0;
+      this.applyFilter();
+
+      return true;
+    }
+
+    if (!isPrintable(key)) return false;
+
+    this.filterText += key.sequence;
+    this.page = 0;
+    this.applyFilter();
+
+    return true;
+  }
+
+  private isPaginated(): boolean {
+    const pageSize = this.options.pageSize;
+
+    return pageSize !== undefined && this.items.length > pageSize;
+  }
+
+  private pageItemsFor(page: number): readonly Item[] {
+    const pageSize = this.options.pageSize;
+
+    if (pageSize === undefined || !this.isPaginated()) return this.items;
+
+    return this.items.slice(page * pageSize, (page + 1) * pageSize);
+  }
+
+  private turnPage(direction: 1 | -1): void {
+    const target = this.page + direction;
+
+    if (!this.isPaginated() || target < 0 || target >= this.totalPages) return;
+
+    this.page = target;
+    this.clearRows();
+    this.selectedIndex = 0;
+    this.buildRows();
+
+    if (direction === -1) {
+      const last = this.rows.findLastIndex((row) => row.entry.kind === "item");
+
+      if (last >= 0 && last !== this.selectedIndex) this.applySelection(last);
+    }
+
+    this.emitPageChange();
+  }
+
+  private emitPageChange(): void {
+    if (this.isPaginated())
+      this.options.onPageChange?.(this.page, this.totalPages);
+  }
+
+  private createFuse(items: readonly Item[]): Fuse<Item> {
     return new Fuse([...items], {
       keys: [
         { name: "title", weight: 4 },
@@ -254,148 +455,230 @@ export class MenuList<
     });
   }
 
-  /** Re-filter visible items from the full set using current filter text */
-  private _applyFilter(): void {
-    this._clearRows();
+  /** Re-filters the items, keeping the selected item when the filter clears. */
+  private applyFilter(): void {
+    if (this.options.externalFilter) {
+      this.options.onFilterChange?.(this.filterText);
 
-    if (this._filterText.length === 0) {
-      // Restoring full list: preserve selected item position
-      const currentItem = this._items[this._selectedIndex];
-      this._items = this._allItems;
+      return;
+    }
 
-      const preservedIndex = currentItem
-        ? this._items.indexOf(currentItem)
-        : -1;
+    const selectedId = this.getSelectedItem()?.id;
+    this.clearRows();
+    this.selectedIndex = 0;
 
-      this._selectedIndex = preservedIndex >= 0 ? preservedIndex : 0;
+    if (this.filterText.length === 0) {
+      this.items = this.allItems;
+      this.buildRows();
+
+      if (selectedId) this.selectItemRow(selectedId);
     } else {
-      // Filtering: always select top result
-      this._items = this._fuse.search(this._filterText).map((r) => r.item);
-      this._selectedIndex = 0;
+      this.items = this.fuse.search(this.filterText).map(({ item }) => item);
+      this.buildRows();
     }
 
-    this._buildRows();
-    this._onFilterChange?.(this._filterText);
+    this.options.onFilterChange?.(this.filterText);
+    this.emitPageChange();
   }
 
-  private _moveSelection(delta: number): void {
-    const len = this._items.length;
+  /** Whether the rows on screen have the same layout as these items. */
+  private canPatchInPlace(pageItems: readonly Item[]): boolean {
+    let index = 0;
 
-    if (len === 0) return;
+    for (const { entry } of this.rows) {
+      const next = pageItems[index];
 
-    let next = this._selectedIndex + delta;
+      if (entry.kind === "group") {
+        if (next?.group !== entry.title) return false;
+      } else if (entry.kind === "item") {
+        if (next?.id !== entry.item.id || next.group !== entry.item.group)
+          return false;
 
-    if (this._wrapSelection) {
-      if (next < 0) next = len - 1;
-      else if (next >= len) next = 0;
-    } else {
-      next = Math.max(0, Math.min(len - 1, next));
+        index++;
+      }
     }
 
-    if (next !== this._selectedIndex) this._applySelection(next);
+    return index === pageItems.length;
   }
 
-  private _applySelection(newIndex: number): void {
-    const oldRow = this._rows[this._selectedIndex];
-    const newRow = this._rows[newIndex];
+  private patchRowsInPlace(): void {
+    const pageItems = this.pageItemsFor(this.page);
+    let index = 0;
 
-    if (oldRow) this._styleRow(oldRow, false);
+    for (const [rowIndex, row] of this.rows.entries()) {
+      if (row.entry.kind !== "item") continue;
 
-    if (newRow) this._styleRow(newRow, true);
-    this._selectedIndex = newIndex;
+      const item = pageItems[index];
 
-    // Scroll the selected item into view
-    if (newRow) this.scrollChildIntoView(newRow.container.id);
-    const item = this._items[newIndex];
+      if (item === undefined) break;
 
-    if (item) this._selectionChangedCb?.(item);
+      row.entry = { kind: "item", item };
+      this.paintRow(row, rowIndex === this.selectedIndex);
+      index++;
+    }
   }
 
-  private _clearRows(): void {
-    for (const row of this._rows) {
-      this.remove(row.container);
+  private selectItemRow(id: string): void {
+    const index = this.rows.findIndex(
+      (row) => row.entry.kind === "item" && row.entry.item.id === id,
+    );
+
+    if (index >= 0 && index !== this.selectedIndex) this.applySelection(index);
+  }
+
+  /** Moves by `delta` selectable rows, skipping group headings. */
+  private moveSelection(delta: number): void {
+    let next = this.selectedIndex;
+
+    for (let step = 0; step < Math.abs(delta); step++)
+      next = this.nextSelectableIndex(next, delta > 0 ? 1 : -1);
+
+    if (next !== this.selectedIndex) this.applySelection(next);
+  }
+
+  /** The next row that isn't a group heading, or `from` when there's none. */
+  private nextSelectableIndex(from: number, direction: 1 | -1): number {
+    const length = this.rows.length;
+    let index = from;
+
+    for (let attempt = 0; attempt < length; attempt++) {
+      index += direction;
+
+      if (this.wrapSelection) index = (index + length) % length;
+      else if (index < 0 || index >= length) return from;
+
+      if (this.rows[index]?.entry.kind !== "group") return index;
     }
 
-    this._rows = [];
+    return from;
   }
 
-  private _buildRows(): void {
-    for (const [i, item] of this._items.entries()) {
-      const isSelected = i === this._selectedIndex;
-      const row = this._createRow(item, i, isSelected);
-      this._rows.push(row);
+  private applySelection(index: number): void {
+    const previous = this.rows[this.selectedIndex];
+    const row = this.rows[index];
+
+    if (previous) this.paintRow(previous, false);
+
+    this.selectedIndex = index;
+
+    if (row === undefined) return;
+
+    this.paintRow(row, true);
+    this.scrollChildIntoView(row.container.id);
+
+    if (row.entry.kind === "item")
+      this.options.onSelectionChanged?.(row.entry.item);
+  }
+
+  private clearRows(): void {
+    for (const row of this.rows) this.remove(row.container);
+
+    this.rows = [];
+  }
+
+  private buildRows(): void {
+    const entries: RowEntry<Item>[] = [];
+
+    if (this.isPaginated() && this.page > 0) entries.push({ kind: "previous" });
+
+    let lastGroup: string | undefined;
+
+    for (const item of this.pageItemsFor(this.page)) {
+      if (item.group !== undefined && item.group !== lastGroup)
+        entries.push({ kind: "group", title: item.group });
+
+      lastGroup = item.group;
+      entries.push({ kind: "item", item });
+    }
+
+    if (this.isPaginated() && this.page < this.totalPages - 1)
+      entries.push({ kind: "next" });
+
+    for (const [index, entry] of entries.entries()) {
+      const row = this.createRow(entry, index);
+      this.rows.push(row);
       this.add(row.container);
     }
+
+    if (this.rows[this.selectedIndex]?.entry.kind === "group")
+      this.selectedIndex = this.nextSelectableIndex(this.selectedIndex, 1);
+
+    for (const [index, row] of this.rows.entries())
+      this.paintRow(row, index === this.selectedIndex);
   }
 
-  private _createRow(
-    item: MenuItem,
-    index: number,
-    isSelected: boolean,
-  ): MenuRow<MenuItem> {
-    const th = this._theme;
+  private createRow(entry: RowEntry<Item>, index: number): MenuRow<Item> {
     const id = `${this.id}-row-${index}`;
-    const bgColor = isSelected ? th.bgSelected : th.bgElevated;
-    const textColor = isSelected ? th.accent : th.fg;
-    const descColor = isSelected ? th.fgMuted : th.fgMuted;
 
-    // Row container: horizontal layout, full width
-    const container = new BoxRenderable(this._renderer, {
+    const container = new BoxRenderable(this.menuRenderer, {
       id,
       flexDirection: "row",
       width: "100%",
       flexShrink: 0,
-      backgroundColor: bgColor,
+      paddingTop: entry.kind === "group" && index > 0 ? 1 : 0,
     });
 
-    // Icon column: fixed width, icon on the top row spanning full height
-    const iconCol = new BoxRenderable(this._renderer, {
+    const iconCol = new BoxRenderable(this.menuRenderer, {
       id: `${id}-icol`,
       width: ICON_COLUMN_WIDTH,
       paddingLeft: 1,
     });
 
-    const iconText = new TextRenderable(this._renderer, {
-      id: `${id}-icon`,
-      content: t`${fg(textColor)(item.icon)}`,
-    });
-
-    iconCol.add(iconText);
-    container.add(iconCol);
-
-    // Text column: title + description stacked vertically
-    const textCol = new BoxRenderable(this._renderer, {
+    const textCol = new BoxRenderable(this.menuRenderer, {
       id: `${id}-tcol`,
       flexGrow: 1,
       flexDirection: "column",
     });
 
-    const titleText = new TextRenderable(this._renderer, {
-      id: `${id}-title`,
-      content: t`${fg(textColor)(item.title)}`,
-    });
+    const text = (part: string): TextRenderable =>
+      new TextRenderable(this.menuRenderer, {
+        id: `${id}-${part}`,
+        content: "",
+      });
 
-    const descText = new TextRenderable(this._renderer, {
-      id: `${id}-desc`,
-      content: t`${fg(descColor)(item.description)}`,
-    });
+    const iconText = text("icon");
+    const titleText = text("title");
+    const descText = text("desc");
 
+    iconCol.add(iconText);
     textCol.add(titleText);
     textCol.add(descText);
+    container.add(iconCol);
     container.add(textCol);
 
-    return { container, iconCol, iconText, titleText, descText, item };
+    return { container, iconText, titleText, descText, entry };
   }
 
-  private _styleRow(row: MenuRow<MenuItem>, selected: boolean): void {
-    const th = this._theme;
-    const bg = selected ? th.bgSelected : th.bgElevated;
-    const textColor = selected ? th.accent : th.fg;
-    const descColor = selected ? th.fgMuted : th.fgMuted;
+  private paintRow(row: MenuRow<Item>, selected: boolean): void {
+    const theme = this.menuTheme;
+    const { entry } = row;
 
-    row.container.backgroundColor = bg;
-    row.iconText.content = t`${fg(textColor)(row.item.icon)}`;
-    row.titleText.content = t`${fg(textColor)(row.item.title)}`;
-    row.descText.content = t`${fg(descColor)(row.item.description)}`;
+    row.container.backgroundColor =
+      selected && entry.kind !== "group" ? theme.bgSelected : theme.bgElevated;
+
+    if (entry.kind === "group") {
+      row.iconText.content = "";
+      row.titleText.content = t`${bold(fg(theme.fgSubtle)(entry.title))}`;
+      row.descText.content = "";
+
+      return;
+    }
+
+    if (entry.kind !== "item") {
+      const color = selected ? theme.accent : theme.fgSubtle;
+      const next = entry.kind === "next";
+
+      row.iconText.content = t`${fg(color)(next ? "→" : "←")}`;
+      row.titleText.content = t`${fg(color)(next ? "Next page" : "Previous page")}`;
+      row.descText.content = "";
+
+      return;
+    }
+
+    const color = selected ? theme.accent : theme.fg;
+
+    row.iconText.content = t`${fg(color)(entry.item.icon)}`;
+    row.titleText.content = t`${fg(color)(entry.item.title)}`;
+    row.descText.content = t`${fg(theme.fgMuted)(entry.item.description)}`;
   }
 }
