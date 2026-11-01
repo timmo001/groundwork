@@ -46,7 +46,7 @@ A page on [`pageTheme`](/themes/#on-a-page) gets them without this: it registers
 | --- | --- | --- |
 | System Bridge | The theme tools, `show-module`, `filter-processes` | Media, windows, audio and displays |
 | Triage | The theme tools, `filter-issues`, `open-issue` | Resolving, muting and merging, which ask the user first |
-| [timmo.dev](https://timmo.dev) | The theme tools, `filter-projects` | Nothing; it has no server of its own |
+| [timmo.dev](https://timmo.dev) | `filter-projects` | Nothing; it has no server of its own |
 
 Each app adds its tools in its own repository when it moves onto Groundwork.
 
