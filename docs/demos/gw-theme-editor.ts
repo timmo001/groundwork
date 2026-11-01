@@ -7,7 +7,12 @@
  * @module
  */
 import { Font, MonoFont, type SolvedTheme } from "@timmo001/groundwork-tokens";
-import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
+import {
+  localThemeStore,
+  parseTheme,
+  runtimeTheme,
+  type ThemeStore,
+} from "@timmo001/groundwork-tokens/runtime";
 import {
   GwElement,
   h,
@@ -19,6 +24,9 @@ import {
 } from "@timmo001/groundwork-ui";
 
 const storageKey = "groundwork:custom-theme";
+
+/** The docs keep the theme in this browser; an app with a host passes its own store. */
+const store: ThemeStore = localThemeStore(storageKey);
 
 const themeId = "custom";
 
@@ -240,7 +248,7 @@ export class GwThemeEditor extends GwElement {
       button("Use a sample", icons.sample, () => this.#load(JSON.stringify(sample))),
       button("Download", icons.download, () => this.#download()),
       button("Reset", icons.reset, () => {
-        localStorage.removeItem(storageKey);
+        void store.clear();
         this.#load(JSON.stringify(starter));
       }),
       this.#file,
@@ -254,7 +262,11 @@ export class GwThemeEditor extends GwElement {
     this.#preview?.prepend(labeled("Preview mode", this.#mode));
     this.#preview?.after(this.#status);
     document.head.append(this.#style);
-    this.#load(localStorage.getItem(storageKey) ?? JSON.stringify(starter));
+    // Starts on the starter, so the form is never empty while the store reads
+    this.#load(JSON.stringify(starter));
+    void store.load().then((text) => {
+      if (text !== null) this.#load(text);
+    });
   }
 
   override disconnectedCallback() {
@@ -363,7 +375,7 @@ export class GwThemeEditor extends GwElement {
       if (fill) this.#fill(document);
     }
 
-    localStorage.setItem(storageKey, text);
+    void store.save(text);
     this.#style.textContent = css;
     this.#preview?.setAttribute("data-gw-theme", themeId);
 

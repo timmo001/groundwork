@@ -46,6 +46,15 @@ if (parsed._tag === "Success") {
 
 Where it's kept depends on what the app has. An uploaded theme starts in the browser's local storage, then moves to a profile or the app's own storage when it has one, such as the host machine for an app served from it, so every client of that host gets it. The document is stored, not the solved CSS, so it's solved again when the solver changes.
 
+The runtime defines that store as `ThemeStore`, with `load`, `save` and `clear`. `localThemeStore(key)` is the first tier; an app with a profile or a host passes its own store with the same shape, and nothing else changes:
+
+```ts
+import { localThemeStore, type ThemeStore } from "@timmo001/groundwork-tokens/runtime";
+
+const store: ThemeStore = localThemeStore("my-app:theme");
+const text = await store.load();
+```
+
 Try it: design a theme with the controls, upload a theme document or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.
 
 <ThemeEditor />
