@@ -24,9 +24,3 @@ gw-demo-app .demo-app-list {
 gw-demo-app .demo-app-list gw-badge {
   --gw-badge-scale: calc(32 / 36);
 }
-
-/* Room for the one status alert before the first list arrives, so its
-   first message doesn't push the page down */
-gw-demo-app .demo-app-status {
-  min-height: 3.75rem;
-}

@@ -27,7 +27,8 @@ const icons = {
 
 /**
  * The demo app's web target: lists the items, applies one or all of them, and
- * restarts after a confirmation. Results show inline, not as toasts.
+ * restarts after a confirmation. Results show on the buttons and rows that
+ * caused them, not as alerts or toasts.
  */
 export class GwDemoApp extends GwElement {
   static override shadow = false;
@@ -37,7 +38,20 @@ export class GwDemoApp extends GwElement {
 
   readonly #list = h("div", { class: "demo-app-list" });
 
-  readonly #status = h("div", { class: "demo-app-status" });
+  // Applied this session, so their rows say so and Restart asks to finish
+  readonly #applied = new Set<string>();
+
+  // A failed button's own label and color, put back once it works
+  readonly #before = new Map<
+    GwButton,
+    { label: string; variant: GwButton["variant"] }
+  >();
+
+  readonly #restart: GwButton = h(
+    "gw-button",
+    { variant: "neutral", appearance: "outlined", icon: icons.restart },
+    "Restart",
+  );
 
   readonly #applyAll: GwButton = h(
     "gw-button",
@@ -72,20 +86,14 @@ export class GwDemoApp extends GwElement {
   );
 
   protected override create(root: HTMLElement) {
-    const restart = h(
-      "gw-button",
-      { variant: "neutral", appearance: "outlined", icon: icons.restart },
-      "Restart",
-    );
-
-    restart.addEventListener("click", () => {
+    this.#restart.addEventListener("click", () => {
       this.#dialog.open = true;
     });
 
     this.#applyAll.addEventListener("click", () => void this.#applyPending());
 
     this.#dialog.addEventListener("close", () => {
-      if (this.#dialog.returnValue === "restart") void this.#restart();
+      if (this.#dialog.returnValue === "restart") void this.#restartNow();
     });
 
     root.append(
@@ -97,9 +105,8 @@ export class GwDemoApp extends GwElement {
             "What this machine has waiting, and what it's up to date on.",
           icon: icons.update,
         },
-        h("div", { slot: "actions", class: "demo-app-actions" }, restart),
+        h("div", { slot: "actions", class: "demo-app-actions" }, this.#restart),
       ),
-      this.#status,
       h(
         "gw-card",
         { heading: "Items" },
@@ -112,22 +119,50 @@ export class GwDemoApp extends GwElement {
     void this.#refresh();
   }
 
-  /** Runs an effect on the fixture service, showing a failure inline. */
-  async #run<A>(effect: Effect.Effect<A, unknown, Items>) {
+  /**
+   * Runs an effect on the fixture service. A failure shows on the button that
+   * started it, as a danger "Try again" with the cause as its tooltip.
+   */
+  async #run<A>(button: GwButton, effect: Effect.Effect<A, unknown, Items>) {
+    button.loading = true;
+
     const exit = await this.#runtime.runPromiseExit(effect);
 
-    if (Exit.isFailure(exit))
-      this.#show("danger", "That didn't work", String(exit.cause));
+    button.loading = false;
+    this.#failed(button, Exit.isFailure(exit) ? String(exit.cause) : undefined);
 
     return exit;
   }
 
-  #show(tone: "success" | "danger" | "info", heading: string, message: string) {
-    this.#status.replaceChildren(h("gw-alert", { tone, heading }, message));
+  #failed(button: GwButton, cause: string | undefined) {
+    const before = this.#before.get(button);
+
+    if (cause) {
+      if (!before) {
+        this.#before.set(button, {
+          label: button.textContent ?? "",
+          variant: button.variant,
+        });
+      }
+
+      button.variant = "danger";
+      button.textContent = "Try again";
+      button.title = cause;
+
+      return;
+    }
+
+    if (!before) return;
+
+    button.textContent = before.label;
+    button.variant = before.variant;
+    button.title = "";
+    this.#before.delete(button);
   }
 
   async #refresh() {
     const exit = await this.#run(
+      this.#applyAll,
       Effect.flatMap(Items, (items) => items.list()),
     );
 
@@ -139,85 +174,91 @@ export class GwDemoApp extends GwElement {
 
     this.#applyAll.disabled = pending === 0;
 
-    // The status always holds one alert, so a result replaces it in place
-    if (this.#status.childElementCount === 0) {
-      this.#show(
-        "info",
-        pending === 0 ? "Up to date" : `${pending} waiting`,
-        `${items.length} items checked.`,
-      );
-    }
+    // Once something is applied, Restart turns accent to say it's next
+    this.#restart.variant = this.#applied.size > 0 ? "brand" : "neutral";
+    this.#restart.appearance = this.#applied.size > 0 ? "accent" : "outlined";
 
     this.#list.replaceChildren(
       ...items.map((item) => {
-        const control = item.pending
-          ? h("gw-button", { appearance: "outlined", size: "small" }, "Apply")
-          : h("gw-badge", { tone: "success", icon: icons.check }, "Up to date");
+        const applied = this.#applied.has(item.id);
 
-        control.addEventListener("click", () => void this.#apply([item]));
+        if (!item.pending) {
+          return this.#row(
+            item,
+            h(
+              "gw-badge",
+              { tone: applied ? "info" : "success", icon: icons.check },
+              applied ? "Applied" : "Up to date",
+            ),
+          );
+        }
 
-        return h(
-          "gw-setting-row",
-          {
-            heading: item.name,
-            description: item.pending
-              ? `${item.description}. ${item.current} to ${item.available}.`
-              : `${item.description}. ${item.current}.`,
-          },
-          control,
+        const apply: GwButton = h(
+          "gw-button",
+          { appearance: "outlined", size: "small" },
+          "Apply",
         );
+
+        apply.addEventListener("click", () => void this.#apply(apply, [item]));
+
+        return this.#row(item, apply);
       }),
     );
   }
 
-  async #apply(items: readonly Item[]) {
+  #row(item: Item, control: HTMLElement) {
+    return h(
+      "gw-setting-row",
+      {
+        heading: item.name,
+        description: item.pending
+          ? `${item.description}. ${item.current} to ${item.available}.`
+          : `${item.description}. ${item.current}.`,
+      },
+      control,
+    );
+  }
+
+  async #apply(button: GwButton, items: readonly Item[]) {
     const pending = items.filter((item) => item.pending);
 
     if (pending.length === 0) return;
 
-    this.#applyAll.loading = true;
-
     const exit = await this.#run(
+      button,
       Effect.flatMap(Items, (service) =>
         Effect.forEach(pending, (item) => service.apply(item.id)),
       ),
     );
 
-    this.#applyAll.loading = false;
+    // A failed button keeps its "Try again" rather than being redrawn
+    if (Exit.isFailure(exit)) return;
 
-    if (Exit.isSuccess(exit)) {
-      const names = exit.value.map((item) => item.name).join(", ");
-
-      this.#show(
-        "success",
-        `Applied ${exit.value.length}`,
-        `${names}. Restart to finish.`,
-      );
-    }
+    for (const item of exit.value) this.#applied.add(item.id);
 
     await this.#refresh();
   }
 
   async #applyPending() {
     const exit = await this.#run(
+      this.#applyAll,
       Effect.flatMap(Items, (items) => items.list()),
     );
 
-    if (Exit.isSuccess(exit)) await this.#apply(exit.value);
+    if (Exit.isSuccess(exit)) await this.#apply(this.#applyAll, exit.value);
   }
 
-  async #restart() {
+  async #restartNow() {
     const exit = await this.#run(
+      this.#restart,
       Effect.flatMap(Items, (items) => items.restart()),
     );
 
-    if (Exit.isSuccess(exit)) {
-      this.#show(
-        "info",
-        "Restarting",
-        "In the demo, nothing restarts. Reload to start over.",
-      );
-    }
+    if (Exit.isFailure(exit)) return;
+
+    this.#applied.clear();
+
+    await this.#refresh();
   }
 }
 
