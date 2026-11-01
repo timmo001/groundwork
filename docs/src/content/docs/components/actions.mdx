@@ -279,7 +279,7 @@ A site can use both, with a mode button in its app bar and the full controls in 
 
 Cards that each show a small app in a theme's colors: a rail, a panel and the status tones. It's for a settings page, or the theme picker's popover with `gallery`. Picking one fires `theme` with its `id`, as the picker does, so it pairs with [`pageTheme`](/themes/#on-a-page) the same way.
 
-Give themes a `group` to keep a family together, such as a theme's light and dark variants. A group with only one theme joins the others like it under Other, at the end. The previews draw in `mode` from the theme CSS already on the page, so a custom theme `pageTheme` imported shows too. Call `refresh()` after an import changes that CSS.
+Give themes a `group` to keep a family together, such as a theme's light and dark variants. Themes with no group gather where the first of them comes: with no heading when that's first, so an app's own theme can lead, and under Other after a family. The previews draw in `mode` from the theme CSS already on the page, so a custom theme `pageTheme` imported shows too. Call `refresh()` after an import changes that CSS.
 
 | Attribute | Values |
 | --- | --- |

@@ -72,29 +72,23 @@ const closestWith = (start: Element, attribute: string) => {
 };
 
 /**
- * Themes in groups, in the order they come. A group with one theme joins the
- * others like it under "Other", last. With no groups, one unnamed group.
+ * Themes in groups, in the order they come. Themes with no group gather where
+ * the first of them came: with no heading when that's first, and under
+ * "Other" after a named group.
  */
 const grouped = (themes: readonly OptionItem[]) => {
-  if (!themes.some((theme) => theme.group)) return [["", themes] as const];
-
   const groups = new Map<string, OptionItem[]>();
 
   for (const theme of themes) {
-    const name = theme.group ?? other;
+    const name = theme.group ?? "";
 
     groups.set(name, [...(groups.get(name) ?? []), theme]);
   }
 
-  const own = [...groups].filter(
-    ([name, members]) => name !== other && members.length > 1,
+  return [...groups].map(
+    ([name, members], index) =>
+      [name === "" && index > 0 ? other : name, members] as const,
   );
-
-  const rest = themes.filter(
-    (theme) => !own.some(([name]) => name === theme.group),
-  );
-
-  return rest.length === 0 ? own : [...own, [other, rest] as const];
 };
 
 /**
@@ -102,8 +96,9 @@ const grouped = (themes: readonly OptionItem[]) => {
  * theme's colors: a rail, a panel and the status tones. For a settings page,
  * or inside `gw-theme-picker` with `gallery`.
  *
- * Themes with a `group` sit together under its name, and lone ones under
- * "Other", so a family's light and dark variants line up. Previews draw in
+ * Themes with a `group` sit together under its name, so a family's light and
+ * dark variants line up. Themes with none gather where the first of them
+ * comes: with no heading when that's first, and under "Other" after a family. Previews draw in
  * `mode`, or the mode of the page or themed container it sits in, from the
  * theme CSS already on the page, including a custom theme `pageTheme`
  * imported. Call `refresh()` after that CSS changes.
@@ -292,12 +287,6 @@ export class GwThemeGallery extends GwElement {
         color: var(--gw-color-text-strong);
       }
 
-      .name small {
-        font-size: var(--gw-font-size-xs);
-        font-weight: normal;
-        color: var(--gw-color-text-secondary);
-      }
-
       label:has(input:checked) .name {
         color: var(--gw-color-accent);
       }
@@ -393,7 +382,7 @@ export class GwThemeGallery extends GwElement {
     this.#modeRoot.disconnect();
   }
 
-  #card(theme: OptionItem, inOther: boolean) {
+  #card(theme: OptionItem) {
     const input = h("input", {
       type: "radio",
       name: this.#name,
@@ -440,12 +429,7 @@ export class GwThemeGallery extends GwElement {
       { part: "card" },
       input,
       preview,
-      h(
-        "span",
-        { class: "name", part: "name" },
-        theme.label,
-        inOther && theme.group ? h("small", {}, theme.group) : null,
-      ),
+      h("span", { class: "name", part: "name" }, theme.label),
       h("span", { class: "check" }, createIcon(checkIcon)),
     );
 
@@ -472,7 +456,7 @@ export class GwThemeGallery extends GwElement {
             "div",
             { class: "group" },
             name ? h("h3", { class: "group-name", part: "group" }, name) : null,
-            ...members.map((theme) => this.#card(theme, name === other)),
+            ...members.map((theme) => this.#card(theme)),
           ),
         ),
       );

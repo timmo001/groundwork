@@ -65,7 +65,8 @@ const moreIcon =
  * showing the mode in use, which steps to the next mode on each press, for an
  * app bar. `inline` lays every control out in place, in one wrapping row with
  * Reset and Import, for a footer or a settings page; set `justify-content` on
- * it to align the row. `modes` picks which modes it offers, such as
+ * it to align the row. With `gallery`, the cards take a row of their own
+ * under it. `modes` picks which modes it offers, such as
  * `light dark` without Auto.
  *
  * @element gw-theme-picker
@@ -146,6 +147,23 @@ export class GwThemePicker extends GwElement {
         flex-flow: row wrap;
         align-items: center;
         margin-block-start: 0;
+      }
+
+      /* The cards get a row of their own under the mode, Reset and Import */
+      :host([layout="inline"][gallery]) .controls {
+        display: contents;
+      }
+
+      :host([layout="inline"]) .gallery {
+        flex: 1 0 100%;
+        order: 1;
+        max-height: none;
+        overflow: visible;
+      }
+
+      :host([layout="inline"][gallery]) .status {
+        flex: 1 0 100%;
+        order: 2;
       }
 
       .actions {
