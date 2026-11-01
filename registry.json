@@ -144,11 +144,18 @@
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
+      "name": "gw-command-menu",
+      "kind": "element",
+      "description": "A searchable command menu on Cmd or Ctrl+K, a bottom sheet on phones",
+      "files": ["packages/ui/src/gw-command-menu.ts", "packages/ui/src/gw-option-list.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-dialog",
       "kind": "element",
       "description": "A modal on the native dialog element, with a close button, that asks before discarding edits",
-      "files": ["packages/ui/src/gw-dialog.ts"],
-      "needs": ["ui-base", "gw-button", "gw-popover"]
+      "files": ["packages/ui/src/gw-dialog.ts", "packages/ui/src/dismiss.ts"],
+      "needs": ["ui-base", "gw-button"]
     },
     {
       "name": "gw-dot",

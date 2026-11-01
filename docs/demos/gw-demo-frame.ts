@@ -215,7 +215,7 @@ export class GwDemoFrame extends GwElement {
       }
     });
 
-    for (const type of ["change", "select", "close"]) {
+    for (const type of ["change", "select", "close", "pick"]) {
       this.addEventListener(type, (event) => {
         const source = event.target;
 

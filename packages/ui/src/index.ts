@@ -22,6 +22,8 @@ export * from "./gw-checkbox.js";
 
 export * from "./gw-chip.js";
 
+export * from "./gw-command-menu.js";
+
 export * from "./gw-dialog.js";
 
 export * from "./gw-dot.js";
@@ -46,6 +48,8 @@ export * from "./gw-notification.js";
 
 export * from "./gw-notification-center.js";
 
+export * from "./gw-option-list.js";
+
 export * from "./gw-page-header.js";
 
 export * from "./gw-popover.js";
@@ -53,8 +57,6 @@ export * from "./gw-popover.js";
 export * from "./gw-section-title.js";
 
 export * from "./gw-segmented.js";
-
-export * from "./gw-option-list.js";
 
 export * from "./gw-select.js";
 
