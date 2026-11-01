@@ -117,6 +117,9 @@ export class GwSelect extends LightElement {
     },
     this.#icon,
     this.#inline,
+    // Keeps the visible text "Theme Base" rather than "ThemeBase", matching
+    // the accessible name
+    " ",
     this.#text,
     createIcon(chevronIcon),
   );

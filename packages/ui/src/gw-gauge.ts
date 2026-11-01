@@ -286,7 +286,8 @@ export class GwGauge extends GwElement {
     setAttribute(this.#dial, "aria-label", this.label || null);
     setAttribute(this.#dial, "aria-valuemin", this.min);
     setAttribute(this.#dial, "aria-valuemax", this.max);
-    setAttribute(this.#dial, "aria-valuenow", value);
+    // A meter needs a value; while loading or unknown, the text says so
+    setAttribute(this.#dial, "aria-valuenow", value ?? this.min);
     setAttribute(this.#dial, "aria-valuetext", text);
     this.#fill.setAttribute(
       "stroke",

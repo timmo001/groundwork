@@ -17,12 +17,14 @@ export interface DocsConfigOptions extends Omit<
 /**
  * Build a Blume config with the shared defaults: light and dark logos from
  * `public/`, Cloudflare deployment, agent surfaces on, Ask AI and feedback off,
- * and generated share cards. Any option given here wins over the default it
- * replaces; `navigation` and `seo` merge one level deep.
+ * high-contrast code themes and generated share cards. Any option given here
+ * wins over the default it replaces; `markdown`, `navigation` and `seo` merge
+ * one level deep.
  */
 export const docsConfig = ({
   site,
   github,
+  markdown,
   navigation,
   seo,
   ...config
@@ -37,9 +39,6 @@ export const docsConfig = ({
   },
   content: {
     root: "src/content/docs",
-  },
-  markdown: {
-    externalLinks: true,
   },
   ai: {
     assistant: {
@@ -70,6 +69,20 @@ export const docsConfig = ({
     branch: "main",
     dir: "docs",
     ...github,
+  },
+  // The high-contrast GitHub themes, since the default ones miss WCAG AA on
+  // comments and keywords
+  markdown: {
+    externalLinks: true,
+    ...markdown,
+    code: {
+      ...markdown?.code,
+      theme: {
+        dark: "github-dark-high-contrast",
+        light: "github-light-high-contrast",
+        ...markdown?.code?.theme,
+      },
+    },
   },
   navigation: {
     repo: true,

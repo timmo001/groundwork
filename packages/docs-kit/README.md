@@ -21,7 +21,7 @@ The `blume` export needs the `blume` version in `peerDependencies`.
 
 `docsConfig` returns a full Blume config from the site details. Pass anything
 else Blume accepts alongside them; it overrides the default it replaces, and
-`navigation` and `seo` merge one level deep.
+`markdown`, `navigation` and `seo` merge one level deep.
 
 ```ts
 import { docsConfig } from "@timmo001/docs-kit/blume";
@@ -46,6 +46,8 @@ The defaults:
   with the title as the logo text.
 - Content in `src/content/docs`, last-modified dates from git and external links
   opening in a new tab.
+- GitHub's high-contrast code themes, since the default ones miss WCAG AA on
+  comments and keywords. Set `markdown.code.theme` to change them.
 - Cloudflare deployment to `https://<site>`.
 - `llms.txt`, the MCP endpoint at `/mcp`, WebMCP and agent readability on. Ask
   AI and page feedback off.

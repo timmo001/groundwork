@@ -7,7 +7,9 @@ interface Props {
 
 const { name, color } = Astro.props;
 
-// GitHub picks black or white label text by the background's luminance.
+// Black or white text, whichever contrasts more with the label's color, so
+// every label reaches WCAG AA rather than following GitHub's cutoff. One of
+// the two always clears 4.5:1.
 const channel = (offset: number) => {
   const value = Number.parseInt(color.slice(offset, offset + 2), 16) / 255;
 
@@ -16,11 +18,14 @@ const channel = (offset: number) => {
 
 const luminance =
   0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
+
+const dark = (luminance + 0.05) / 0.05;
+const light = 1.05 / (luminance + 0.05);
 ---
 
 <span
   class="chip"
-  style={`background: #${color}; color: ${luminance > 0.4 ? "#1f2328" : "#ffffff"}`}
+  style={`background: #${color}; color: ${dark >= light ? "#000000" : "#ffffff"}`}
   >{name}</span
 >
 

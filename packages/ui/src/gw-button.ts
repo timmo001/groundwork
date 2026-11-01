@@ -178,7 +178,17 @@ export class GwButton extends GwElement {
         );
       }
 
+      /* The tint lowers the tone's contrast, so the text leans toward the
+         strongest text color to stay readable on it */
       :host([appearance="filled"]) .button {
+        color: var(
+          --gw-button-ink,
+          color-mix(
+            in oklch,
+            var(--gw-button-tone) 70%,
+            var(--gw-color-text-strong)
+          )
+        );
         background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
       }
 
