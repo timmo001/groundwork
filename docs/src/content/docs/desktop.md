@@ -53,6 +53,12 @@ The view sets `data-gw-theme` and leaves out `data-gw-mode`, so it follows the s
 
 On Linux, WebKitGTK takes the mode from GTK 3, not from the desktop's color scheme setting. A desktop that only sets the color scheme, as Omarchy does, shows the light mode. Setting `gtk-application-prefer-dark-theme=true` in `~/.config/gtk-3.0/settings.ini`, or running the app with `GTK_THEME=Adwaita:dark`, gives the dark one.
 
+## Scaling
+
+GTK 3 only takes whole numbers in `GDK_SCALE`, so on Linux a fractional scale such as 1.6 renders at 1 and the app looks too small. The template's main process makes up the difference with the page zoom: it divides `GDK_SCALE` by its whole part and zooms the webview by the rest.
+
+Set `GROUNDWORK_DESKTOP_ZOOM` to scale on top of that, such as `0.8` to match a browser started with `--force-device-scale-factor=0.8`. It defaults to 1.
+
 ## Demo
 
 The desktop demo runs `gw-demo-app` from `@timmo001/groundwork-demo/web`, the same element as the [web demo](/demo), on the shared `Items` service:
