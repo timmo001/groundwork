@@ -557,8 +557,10 @@ export class GwOptionList extends GwElement {
       const headed =
         previous?.kind === "group" ? (this.#tops[position - 1] ?? top) : top;
 
+      // A third of the way down, so what's above it shows too without
+      // the option sitting at either edge
       if (center) {
-        listbox.scrollTop = Math.max(0, top - listbox.clientHeight / 2);
+        listbox.scrollTop = Math.max(0, top - listbox.clientHeight / 3);
       } else if (headed - listPadding < listbox.scrollTop) {
         listbox.scrollTop = Math.max(0, headed - listPadding);
       } else if (

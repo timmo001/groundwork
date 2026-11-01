@@ -23,6 +23,7 @@ const sheetBelow = 600;
  * @summary A searchable list of commands on Cmd+K or Ctrl+K.
  *
  * @attr {OptionItem[]} options - The commands, as JSON.
+ * @attr {string} value - The current command, such as the page you're on. It's marked, and selected and scrolled into view each time the menu opens.
  * @attr {string} label - The accessible name. Defaults to `Commands`.
  * @attr {string} placeholder - The search placeholder. Defaults to `Search commands`.
  * @attr {string} shortcut - The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.
@@ -37,6 +38,7 @@ const sheetBelow = 600;
 export class GwCommandMenu extends GwElement {
   static override properties = {
     options: { type: "json" },
+    value: {},
     label: {},
     placeholder: {},
     shortcut: {},
@@ -154,6 +156,8 @@ export class GwCommandMenu extends GwElement {
   ];
 
   declare options: readonly OptionItem[];
+  /** The current command, marked and selected when the menu opens. */
+  declare value: string;
   declare label: string;
   declare placeholder: string;
   /** `mod+k` (the default) opens it on Cmd+K or Ctrl+K; `none` turns that off. */
@@ -178,6 +182,7 @@ export class GwCommandMenu extends GwElement {
   constructor() {
     super();
     this.options = [];
+    this.value = "";
     this.label = "Commands";
     this.placeholder = "Search commands";
     this.shortcut = "mod+k";
@@ -268,6 +273,7 @@ export class GwCommandMenu extends GwElement {
     const dialog = this.#dialog;
 
     list.options = Array.isArray(this.options) ? this.options : [];
+    list.value = this.value;
     list.label = this.label;
     list.placeholder = this.placeholder;
     dialog.setAttribute("aria-label", this.label);

@@ -6068,7 +6068,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ options: { type: \"json\" }, label: {}, placeholder: {}, shortcut: {}, open: { type: \"boolean\", reflect: true }, }",
+              "default": "{ options: { type: \"json\" }, value: {}, label: {}, placeholder: {}, shortcut: {}, open: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6094,6 +6094,15 @@
                 "text": "readonly OptionItem[]"
               },
               "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "description": "The current command, marked and selected when the menu opens.",
+              "default": "\"\""
             },
             {
               "kind": "field",
@@ -6485,6 +6494,13 @@
               },
               "description": "The commands, as JSON.",
               "name": "options"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The current command, such as the page you're on. It's marked, and selected and scrolled into view each time the menu opens.",
+              "name": "value"
             },
             {
               "type": {
