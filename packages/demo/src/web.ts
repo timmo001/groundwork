@@ -41,6 +41,9 @@ export class GwDemoApp extends GwElement {
   // Applied this session, so their rows say so and Restart asks to finish
   readonly #applied = new Set<string>();
 
+  // Restarted since the last apply, so Restart shows a check while it's done
+  #restarted = false;
+
   // A failed button's own label and color, put back once it works
   readonly #before = new Map<
     GwButton,
@@ -186,6 +189,8 @@ export class GwDemoApp extends GwElement {
     this.#restart.disabled = !restartable;
     this.#restart.variant = restartable ? "brand" : "neutral";
     this.#restart.appearance = restartable ? "accent" : "outlined";
+    this.#restart.icon =
+      this.#restarted && !restartable ? icons.check : icons.restart;
 
     this.#list.replaceChildren(
       ...items.map((item) => {
@@ -245,6 +250,8 @@ export class GwDemoApp extends GwElement {
 
     for (const item of exit.value) this.#applied.add(item.id);
 
+    this.#restarted = false;
+
     await this.#refresh();
   }
 
@@ -266,6 +273,7 @@ export class GwDemoApp extends GwElement {
     if (Exit.isFailure(exit)) return;
 
     this.#applied.clear();
+    this.#restarted = true;
 
     await this.#refresh();
   }
