@@ -146,6 +146,18 @@ The menu opens on the Popover API, in the top layer, and closes on Esc or a clic
 
 `icon` takes SVG path data for an icon before the trigger's label.
 
+### Appearance
+
+The trigger is a neutral fill with a border by default (`filled`). `outlined`, `plain` and `accent` draw it as a neutral `gw-button` of that appearance, a pill, so it sits in a toolbar of buttons without a seam.
+
+<Demo id="menu-appearance">
+  <gw-button variant="neutral" appearance="outlined">Filters</gw-button>
+  <gw-menu-button appearance="outlined" label="Group" items='[{"value":"state","label":"State"}]'></gw-menu-button>
+  <gw-menu-button appearance="plain" label="Sort" items='[{"value":"last-seen","label":"Last seen"}]'></gw-menu-button>
+  <gw-menu-button appearance="accent" label="Add" items='[{"value":"note","label":"A note"}]'></gw-menu-button>
+  <gw-menu-button label="Power" items='[{"value":"sleep","label":"Sleep"}]'></gw-menu-button>
+</Demo>
+
 Set `items` to `[{ "value", "label", "description", "icon", "disabled", "checked", "separator" }]`, as JSON or as a property. They render inside the component, so a page's own button styles can't reach them.
 
 ### Choices

@@ -53,6 +53,7 @@ const tick = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
  * @attr {MenuItem[]} items - The items, as JSON.
  * @attr {MenuItem[]} actions - Actions pinned under the items, as JSON.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The trigger's size, 24 to 56px tall. Defaults to `medium`.
+ * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the trigger is drawn: `filled` is a neutral fill with a border, and the others match a neutral `gw-button` of that appearance, so it sits in a row of them. Defaults to `filled`.
  * @attr {boolean} active - Marks the trigger as set, such as a grouping that's on, with an accent border and text.
  * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. Defaults to `show`.
  *
@@ -72,6 +73,7 @@ export class GwMenuButton extends GwElement {
     items: { type: "json" },
     actions: { type: "json" },
     size: { reflect: true },
+    appearance: { reflect: true },
     active: { type: "boolean", reflect: true },
     labels: { reflect: true },
   } as const;
@@ -114,7 +116,49 @@ export class GwMenuButton extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      :host([active]) .trigger {
+      /* The other appearances draw the trigger as gw-button draws a neutral
+         one, a pill, so it sits in a row of buttons without a seam */
+      :host([appearance="accent"]) .trigger,
+      :host([appearance="outlined"]) .trigger,
+      :host([appearance="plain"]) .trigger {
+        background: transparent;
+        border: max(var(--gw-border-width), 1px) solid transparent;
+        border-radius: var(--gw-radius-pill);
+        transition:
+          background-color var(--gw-motion-fast) var(--gw-motion-easing),
+          border-color var(--gw-motion-fast) var(--gw-motion-easing),
+          color var(--gw-motion-fast) var(--gw-motion-easing);
+      }
+
+      :host([appearance="outlined"]) .trigger {
+        border-color: var(--gw-color-text-secondary);
+      }
+
+      :host([appearance="outlined"]) .trigger:hover,
+      :host([appearance="plain"]) .trigger:hover {
+        background: color-mix(
+          in oklch,
+          var(--gw-color-text-secondary) 16%,
+          transparent
+        );
+      }
+
+      /* A solid fill, with text that flips between black and white by the
+         fill's lightness, as gw-button's accent does */
+      :host([appearance="accent"]) .trigger {
+        color: oklch(
+          from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0
+        );
+        background: var(--gw-color-accent);
+      }
+
+      :host([appearance="accent"]) .trigger:hover {
+        background: oklch(
+          from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h
+        );
+      }
+
+      :host([active]:not([appearance="accent"])) .trigger {
         color: var(--gw-color-accent);
         border-color: var(--gw-color-accent);
       }
@@ -320,6 +364,8 @@ export class GwMenuButton extends GwElement {
   declare items: readonly MenuItem[];
   declare actions: readonly MenuItem[];
   declare size: "xs" | "small" | "medium" | "large" | "xl";
+  /** How the trigger is drawn: a neutral fill, or as a neutral `gw-button` of that appearance. */
+  declare appearance: "accent" | "filled" | "outlined" | "plain";
   /** Marks the trigger as set, such as a grouping that's on. */
   declare active: boolean;
   /** Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. */
@@ -366,6 +412,7 @@ export class GwMenuButton extends GwElement {
     this.items = [];
     this.actions = [];
     this.size = "medium";
+    this.appearance = "filled";
     this.active = false;
     this.labels = "show";
   }
