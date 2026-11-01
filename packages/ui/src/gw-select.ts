@@ -36,9 +36,14 @@ const chevronIcon =
  * with Enter. Below 600px wide the list is a bottom sheet.
  *
  * Pass `options`, or write `<option>` children (in `<optgroup>`s for
- * groups, with `data-icon` and `data-description`), which it reads once when
- * it first connects. A hidden input carries the value in forms, and it fires
- * `change` when the value changes.
+ * groups, with `data-icon`, `data-swatch` and `data-description`), which it
+ * reads once when it first connects. A hidden input carries the value in
+ * forms, and it fires `change` when the value changes.
+ *
+ * With `multiple` it picks several: each pick toggles an option in `values`
+ * and the list stays open, the trigger shows the first choice and how many
+ * more, and a Clear button under the list empties it. A hidden input per
+ * value carries them in forms.
  *
  * @element gw-select
  * @summary A labeled picker with search, a bottom sheet on phones.
@@ -46,6 +51,8 @@ const chevronIcon =
  * @attr {string} label - The field's label.
  * @attr {string} name - The form field name.
  * @attr {string} value - The chosen option's value.
+ * @attr {boolean} multiple - Picks several options, kept in `values`.
+ * @attr {string[]} values - The chosen options' values with `multiple`, as JSON.
  * @attr {string} hint - One line of help under the field.
  * @attr {string} info - Longer help, opened from an (i) button by the label.
  * @attr {string} placeholder - What the trigger shows with nothing chosen. Defaults to `Choose`.
@@ -56,13 +63,15 @@ const chevronIcon =
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
  * @attr {boolean} inline-label - Shows the label inside the trigger, before the value, for toolbars and filters.
  *
- * @fires {Event} change - When the value changes.
+ * @fires {Event} change - When the value, or `values` with `multiple`, changes.
  */
 export class GwSelect extends LightElement {
   static override properties = {
     label: {},
     name: {},
     value: {},
+    multiple: { type: "boolean", reflect: true },
+    values: { type: "json" },
     hint: {},
     info: {},
     placeholder: {},
@@ -77,6 +86,8 @@ export class GwSelect extends LightElement {
   declare label: string;
   declare name: string;
   declare value: string;
+  declare multiple: boolean;
+  declare values: readonly string[];
   declare hint: string;
   /** Longer help, opened from an (i) button by the label. */
   declare info: string;
@@ -126,14 +137,23 @@ export class GwSelect extends LightElement {
 
   readonly #input = h("input", { type: "hidden" });
 
+  readonly #inputs = h("span", { hidden: true });
+
   readonly #hint = h("p", { class: "gw-hint", id: `${this.#id}-hint` });
 
   readonly #list = h("gw-option-list");
+
+  readonly #clear = h(
+    "button",
+    { type: "button", class: "gw-select-clear" },
+    "Clear",
+  );
 
   readonly #popup = h(
     "div",
     { class: "gw-select-popup", popover: "manual" },
     this.#list,
+    this.#clear,
   );
 
   constructor() {
@@ -141,6 +161,8 @@ export class GwSelect extends LightElement {
     this.label = "";
     this.name = "";
     this.value = "";
+    this.multiple = false;
+    this.values = [];
     this.hint = "";
     this.info = "";
     this.placeholder = "Choose";
@@ -179,6 +201,10 @@ export class GwSelect extends LightElement {
 
         if (option.dataset.icon !== undefined) item.icon = option.dataset.icon;
 
+        if (option.dataset.swatch !== undefined) {
+          item.swatch = option.dataset.swatch;
+        }
+
         if (option.dataset.description !== undefined) {
           item.description = option.dataset.description;
         }
@@ -188,9 +214,15 @@ export class GwSelect extends LightElement {
         return item;
       });
 
-      const picked = children.find((option) => option.selected);
+      const picked = children.filter((option) => option.selected);
 
-      if (this.value === "" && picked !== undefined) this.value = picked.value;
+      if (this.multiple) {
+        if (this.values.length === 0 && picked.length > 0) {
+          this.values = picked.map((option) => option.value);
+        }
+      } else if (this.value === "" && picked[0] !== undefined) {
+        this.value = picked[0].value;
+      }
     }
 
     for (const element of this.querySelectorAll("option, optgroup")) {
@@ -294,6 +326,17 @@ export class GwSelect extends LightElement {
           ? String(event.detail.value)
           : "";
 
+      if (this.multiple) {
+        const chosen = Array.isArray(this.values) ? this.values : [];
+
+        this.values = chosen.includes(value)
+          ? chosen.filter((item) => item !== value)
+          : [...chosen, value];
+        this.dispatchEvent(new Event("change", { bubbles: true }));
+
+        return;
+      }
+
       this.close();
       this.#trigger.focus();
 
@@ -302,19 +345,44 @@ export class GwSelect extends LightElement {
         this.dispatchEvent(new Event("change", { bubbles: true }));
       }
     });
+    this.#clear.addEventListener("click", () => {
+      this.values = [];
+      this.close();
+      this.#trigger.focus();
+      this.dispatchEvent(new Event("change", { bubbles: true }));
+    });
 
     root.append(
       this.#info.heading,
       this.#trigger,
       this.#input,
+      this.#inputs,
       this.#hint,
       this.#popup,
     );
   }
 
+  /** What the trigger says: the choice, or with `multiple` the first and how many more. */
+  #summary(options: readonly OptionItem[]) {
+    if (!this.multiple) {
+      return options.find((option) => option.value === this.value);
+    }
+
+    const values = Array.isArray(this.values) ? this.values : [];
+    const chosen = options.filter((option) => values.includes(option.value));
+    const [first] = chosen;
+
+    if (first === undefined) return undefined;
+
+    return chosen.length === 1
+      ? first
+      : { ...first, label: `${first.label} +${chosen.length - 1}` };
+  }
+
   protected override update() {
     const options = Array.isArray(this.options) ? this.options : [];
-    const selected = options.find((option) => option.value === this.value);
+    const selected = this.#summary(options);
+    const values = Array.isArray(this.values) ? this.values : [];
 
     this.#label.textContent = this.label;
     this.#info.update(this.label, this.info);
@@ -335,13 +403,23 @@ export class GwSelect extends LightElement {
     setAttribute(trigger, "aria-expanded", this.open ? "true" : "false");
     setAttribute(trigger, "aria-describedby", this.hint ? this.#hint.id : null);
 
-    setAttribute(this.#input, "name", this.name || null);
-    this.#input.value = this.value;
+    setAttribute(this.#input, "name", this.multiple ? null : this.name || null);
+    this.#input.value = this.multiple ? "" : this.value;
+    this.#inputs.replaceChildren(
+      ...(this.multiple && this.name
+        ? values.map((value) =>
+            h("input", { type: "hidden", name: this.name, value }),
+          )
+        : []),
+    );
+    this.#clear.hidden = !this.multiple || values.length === 0;
 
     const list = this.#list;
 
     list.options = options;
     list.value = this.value;
+    list.multiple = this.multiple;
+    list.values = values;
     list.label = this.label;
     list.search =
       this.search === "always" ||

@@ -55,7 +55,7 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 
 The list opens under the select, growing from it, and is a bottom sheet below 600px wide. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
 
-Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SVG path data) and `data-description`. Or set `options` to `[{ "value", "label", "description", "icon", "group", "keywords" }]`. A hidden input carries the value in a form, and it fires `change`.
+Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SVG path data), `data-swatch` (a color shown as a dot) and `data-description`. Or set `options` to `[{ "value", "label", "description", "icon", "swatch", "group", "keywords" }]`. A hidden input carries the value in a form, and it fires `change`.
 
 | Attribute | What it does |
 | --- | --- |
@@ -63,6 +63,7 @@ Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SV
 | `placeholder` | Shown before anything's picked |
 | `search` | `auto` (from seven options), `always` or `never` |
 | `options` | The options, instead of `<option>` children |
+| `multiple` | Picks several, kept in `values` |
 | `inline-label` | Shows the label inside the trigger, before the value |
 | `label-hidden` | Hides the label but keeps it for assistive technology |
 
@@ -93,6 +94,21 @@ In a toolbar or a row of filters, a label above each select takes more room than
     <option value="name">Name</option>
   </gw-select>
 </Demo>
+
+### Several choices
+
+<Demo id="select-multiple">
+  <gw-select label="Language" inline-label multiple search="always">
+    <option value="typescript" data-swatch="#3178c6" selected>TypeScript</option>
+    <option value="python" data-swatch="#3572a5" selected>Python</option>
+    <option value="go" data-swatch="#00add8">Go</option>
+    <option value="rust" data-swatch="#dea584">Rust</option>
+  </gw-select>
+</Demo>
+
+`multiple` picks several, for filters. Each pick toggles an option in `values` and the list stays open, with every chosen option ticked. The trigger shows the first choice and how many more, such as "TypeScript +1", and a Clear button under the list empties it. Mark the starting choices with `selected` on their `<option>`s, or set `values` to a JSON array. A form gets one hidden input per value, and `change` fires on every pick.
+
+A `swatch` on an option draws a dot of that color before its label, such as a tag's or a language's color.
 
 ## Checkbox and switch
 

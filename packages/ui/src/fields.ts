@@ -216,6 +216,40 @@ export const fieldStyles = css`
     background: rgb(0 0 0 / 40%);
   }
 
+  /* With multiple, a full-width Clear under the list empties the choice */
+  gw-select .gw-select-clear {
+    display: block;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 var(--gw-space-3);
+    font: inherit;
+    font-size: var(--gw-font-size-s);
+    font-weight: var(--gw-font-weight-strong);
+    color: var(--gw-color-text-secondary);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-block-start: var(--gw-border-width) solid
+      var(--gw-color-border-quiet);
+    transition:
+      color var(--gw-motion-fast) var(--gw-motion-easing),
+      background-color var(--gw-motion-fast) var(--gw-motion-easing);
+  }
+
+  gw-select .gw-select-clear:hover {
+    color: var(--gw-color-text-strong);
+    background: var(--gw-color-fill-neutral-hovered);
+  }
+
+  gw-select .gw-select-clear:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: calc(var(--gw-focus-width) * -1);
+  }
+
+  gw-select .gw-select-clear[hidden] {
+    display: none;
+  }
+
   :where(gw-input, gw-select) :where(input, .gw-select-trigger):hover {
     border-color: var(--gw-color-border-loud);
   }

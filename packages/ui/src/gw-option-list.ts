@@ -22,6 +22,8 @@ export interface OptionItem {
   readonly keywords?: readonly string[];
   /** Colors shown as small swatches, such as a theme's palette. */
   readonly swatches?: readonly string[];
+  /** One color shown as a dot before the label, such as a tag's color. */
+  readonly swatch?: string;
 }
 
 // MDI's magnify and check
@@ -65,11 +67,16 @@ let lastList = 0;
  * End and Page Up or Down, and pick with Enter or a click; it fires `pick`
  * with the option's value. Call `reset()` each time it's shown.
  *
+ * With `multiple`, every value in `values` is marked as chosen and the list
+ * is announced as multi-select; the owner toggles `values` on each `pick`.
+ *
  * @element gw-option-list
  * @summary A searchable, windowed list of options.
  *
  * @attr {OptionItem[]} options - The options, as JSON.
  * @attr {string} value - The selected option's value.
+ * @attr {boolean} multiple - Marks every value in `values` as chosen, for picking several.
+ * @attr {string[]} values - The chosen values with `multiple`, as JSON.
  * @attr {string} label - The list's accessible name.
  * @attr {boolean} search - Shows a search field above the list.
  * @attr {string} placeholder - The search placeholder. Defaults to `Search`.
@@ -82,6 +89,8 @@ export class GwOptionList extends GwElement {
   static override properties = {
     options: { type: "json" },
     value: {},
+    multiple: { type: "boolean" },
+    values: { type: "json" },
     label: {},
     search: { type: "boolean", reflect: true },
     placeholder: {},
@@ -211,13 +220,21 @@ export class GwOptionList extends GwElement {
         flex: none;
       }
 
-      .swatches span {
+      .swatches span,
+      .swatch {
         width: 0.875rem;
         height: 0.875rem;
         margin-inline-start: -0.25rem;
         border: 1px solid
           color-mix(in oklab, var(--gw-color-text-primary) 20%, transparent);
         border-radius: 50%;
+      }
+
+      .swatch {
+        flex: none;
+        width: 0.625rem;
+        height: 0.625rem;
+        margin-inline: 0.125rem;
       }
 
       .none {
@@ -235,6 +252,8 @@ export class GwOptionList extends GwElement {
 
   declare options: readonly OptionItem[];
   declare value: string;
+  declare multiple: boolean;
+  declare values: readonly string[];
   declare label: string;
   declare search: boolean;
   declare placeholder: string;
@@ -276,9 +295,17 @@ export class GwOptionList extends GwElement {
     super();
     this.options = [];
     this.value = "";
+    this.multiple = false;
+    this.values = [];
     this.label = "";
     this.search = false;
     this.placeholder = "Search";
+  }
+
+  #isChosen(option: OptionItem) {
+    return this.multiple
+      ? Array.isArray(this.values) && this.values.includes(option.value)
+      : option.value === this.value;
   }
 
   /** The options left after the search, in order. */
@@ -296,7 +323,7 @@ export class GwOptionList extends GwElement {
     this.#build();
     this.#active = Math.max(
       0,
-      this.#filtered.findIndex((option) => option.value === this.value),
+      this.#filtered.findIndex((option) => this.#isChosen(option)),
     );
     (this.search ? this.#input : this.#listbox).focus({ preventScroll: true });
     this.#reveal(true);
@@ -420,8 +447,18 @@ export class GwOptionList extends GwElement {
     setAttribute(this.#input, "placeholder", this.placeholder);
     setAttribute(this.#input, "aria-label", this.label || this.placeholder);
     setAttribute(this.#listbox, "aria-label", this.label || null);
+    setAttribute(
+      this.#listbox,
+      "aria-multiselectable",
+      this.multiple ? "true" : null,
+    );
 
-    if (changed.has("options") || changed.has("value")) {
+    if (
+      changed.has("options") ||
+      changed.has("value") ||
+      changed.has("values") ||
+      changed.has("multiple")
+    ) {
       this.#build();
       this.#render();
     }
@@ -559,7 +596,7 @@ export class GwOptionList extends GwElement {
     }
 
     const { option, index } = row;
-    const selected = option.value === this.value;
+    const selected = this.#isChosen(option);
 
     const element = h(
       "div",
@@ -574,6 +611,7 @@ export class GwOptionList extends GwElement {
         "data-active": index === this.#active,
       },
       option.icon === undefined ? null : createIcon(option.icon),
+      option.swatch === undefined ? null : this.#swatch(option.swatch),
       h(
         "span",
         { class: "text" },
@@ -604,6 +642,14 @@ export class GwOptionList extends GwElement {
     element.style.height = `${this.#heightOf(row)}px`;
 
     return element;
+  }
+
+  #swatch(color: string) {
+    const swatch = h("span", { class: "swatch", "aria-hidden": "true" });
+
+    swatch.style.background = color;
+
+    return swatch;
   }
 }
 
