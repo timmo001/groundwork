@@ -40,7 +40,8 @@ const round = (value: number) => Math.round(value * 10) / 10;
  * with a `part`, or the component itself.
  * @attr {number} scale - How much larger to draw the component, 2 by default.
  * Wide components use 1.
- * @slot - The component to measure.
+ * @slot - The component to measure. It's made inert, since popovers can't
+ * follow the zoom.
  */
 export class GwAnatomy extends GwElement {
   static override properties = {
@@ -176,6 +177,15 @@ export class GwAnatomy extends GwElement {
   override connectedCallback() {
     super.connectedCallback();
     this.#resize.observe(this);
+
+    // Zoom draws the component large, but its popovers open in the top layer
+    // at their real size and position, away from it, so it's for looking at
+    // only; the demo above it is the one to use
+    this.specimen?.setAttribute("inert", "");
+
+    if (this.specimen !== null) this.#resize.observe(this.specimen);
+
+    void document.fonts.ready.then(() => requestAnimationFrame(() => this.draw()));
 
     const frame = this.closest("[data-gw-theme]");
 
