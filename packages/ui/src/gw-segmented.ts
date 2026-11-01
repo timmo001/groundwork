@@ -12,6 +12,8 @@ export interface Segment {
   readonly label: string;
   /** SVG path data for an icon beside, or instead of, the label. */
   readonly icon?: string;
+  /** A longer description, shown as the option's tooltip. */
+  readonly hint?: string;
 }
 
 /**
@@ -297,7 +299,8 @@ export class GwSegmented extends GwElement {
       setAttribute(
         label,
         "title",
-        option.icon && this.labels !== "show" ? option.label : null,
+        option.hint ??
+          (option.icon && this.labels !== "show" ? option.label : null),
       );
     }
 
