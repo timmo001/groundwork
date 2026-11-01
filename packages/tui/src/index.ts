@@ -73,7 +73,13 @@ export {
 
 export { surfaceBackground } from "./styles.ts";
 
-export { DEFAULT_THEME, loadTheme, themeFor, type Theme } from "./theme.ts";
+export {
+  DEFAULT_THEME,
+  loadTheme,
+  omarchyThemeFor,
+  themeFor,
+  type Theme,
+} from "./theme.ts";
 
 export { Tile, type TileOptions } from "./tile.ts";
 

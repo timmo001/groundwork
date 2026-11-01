@@ -11,12 +11,14 @@ Full-screen terminal apps use `@timmo001/groundwork-tui`: [OpenTUI](https://open
 
 ## Themes
 
-A TUI takes its colors from a core theme, picked by two environment variables:
+A TUI takes its colors from a core theme or the desktop's Omarchy theme, picked by two environment variables:
 
 | Variable | Values | Default |
 | --- | --- | --- |
-| `GW_THEME` | A core theme's id, such as `base` or `slate` | `base` |
-| `GW_MODE` | `light`, `dark` or `darker` | `dark` |
+| `GW_THEME` | A core theme's id, such as `base` or `slate`, or `omarchy` | `omarchy` where Omarchy is installed, otherwise `base` |
+| `GW_MODE` | `light`, `dark` or `darker` | The Omarchy theme's own mode, otherwise `dark` |
+
+The Omarchy theme is the one in use, read from `~/.local/state/omarchy/current/theme/colors.toml`. It has its own mode, plus Darker for a dark one, so a `GW_MODE` it doesn't have falls back to its own.
 
 ```ts
 import { Effect } from "effect";

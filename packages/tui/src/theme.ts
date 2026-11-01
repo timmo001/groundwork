@@ -1,12 +1,19 @@
 /**
  * Terminal colors from Groundwork's tokens: the roles of one theme and mode,
  * placed into the slots the terminal components use, and picked with
- * `GW_THEME` and `GW_MODE` (Base and dark by default).
+ * `GW_THEME` and `GW_MODE`. With no `GW_THEME`, it's the desktop's Omarchy
+ * theme where there is one, otherwise Base and dark.
  *
  * @module
  */
+import { readOmarchyTheme } from "@timmo001/groundwork-tokens/omarchy-current";
 import { opentuiThemes } from "@timmo001/groundwork-tokens/opentui";
-import { Config, Effect } from "effect";
+import {
+  hexModes,
+  omarchyTheme,
+  runtimeTheme,
+} from "@timmo001/groundwork-tokens/runtime";
+import { Config, Effect, Option, Result } from "effect";
 
 /** Semantic color slots for the TUI */
 export interface Theme {
@@ -44,26 +51,33 @@ export interface Theme {
 
 type ThemeId = keyof typeof opentuiThemes;
 
-type Roles = (typeof opentuiThemes)["base"]["dark"];
+type RoleName = keyof (typeof opentuiThemes)["base"]["dark"];
 
-/** Places a theme's terminal roles into the TUI's slots. */
-const fromRoles = (roles: Roles): Theme => ({
-  bg: roles["surface-lower"],
-  bgElevated: roles["surface-default"],
-  bgSelected: roles["fill-neutral-selected"],
-  bgInput: roles["surface-raised"],
-  accent: roles.accent,
-  accentFg: roles["on-accent"],
-  surface: roles["border-normal"],
-  fg: roles["text-primary"],
-  fgMuted: roles["text-secondary"],
-  fgSubtle: roles["text-disabled"],
-  fgGhost: roles["border-loud"],
-  green: roles.success,
-  red: roles.danger,
-  yellow: roles.warning,
-  transparent: false,
-});
+/**
+ * Places a theme's terminal roles into the TUI's slots. A theme solved at
+ * runtime has the same roles; Base's dark fills any it lacks.
+ */
+const fromRoles = (roles: Partial<Record<RoleName, string>>): Theme => {
+  const role = (name: RoleName) => roles[name] ?? opentuiThemes.base.dark[name];
+
+  return {
+    bg: role("surface-lower"),
+    bgElevated: role("surface-default"),
+    bgSelected: role("fill-neutral-selected"),
+    bgInput: role("surface-raised"),
+    accent: role("accent"),
+    accentFg: role("on-accent"),
+    surface: role("border-normal"),
+    fg: role("text-primary"),
+    fgMuted: role("text-secondary"),
+    fgSubtle: role("text-disabled"),
+    fgGhost: role("border-loud"),
+    green: role("success"),
+    red: role("danger"),
+    yellow: role("warning"),
+    transparent: false,
+  };
+};
 
 const isTheme = (id: string): id is ThemeId => id in opentuiThemes;
 
@@ -85,16 +99,52 @@ export const themeFor = (id: string, mode: string): Theme => {
 };
 
 /**
- * Loads the theme from `GW_THEME` (a core theme's id) and `GW_MODE` (`light`,
- * `dark` or `darker`), falling back to Base and dark.
+ * An Omarchy `colors.toml`'s slots in `mode`, or in the theme's own mode when
+ * it doesn't have that one. Undefined when the file doesn't map.
+ */
+export const omarchyThemeFor = (
+  colors: string,
+  mode?: string,
+): Theme | undefined => {
+  const parsed = omarchyTheme(colors);
+
+  if (Result.isFailure(parsed)) return undefined;
+
+  const modes = hexModes(runtimeTheme(parsed.success).theme);
+
+  const roles =
+    (mode === undefined ? undefined : modes[mode]) ??
+    modes[parsed.success.mode];
+
+  return roles === undefined ? undefined : fromRoles(roles);
+};
+
+/**
+ * Loads the theme from `GW_THEME` and `GW_MODE` (`light`, `dark` or
+ * `darker`). `GW_THEME` is a core theme's id, or `omarchy` for the desktop's
+ * Omarchy theme, which is also the default where Omarchy is installed. Base
+ * and dark are the fallback.
  */
 export const loadTheme: Effect.Effect<Theme> = Effect.gen(function* () {
-  const id = yield* Config.String("GW_THEME").pipe(Config.withDefault("base"));
+  const id = yield* Config.option(Config.String("GW_THEME"));
 
-  const mode = yield* Config.Literals(
-    ["light", "dark", "darker"],
-    "GW_MODE",
-  ).pipe(Config.withDefault("dark"));
+  const mode = yield* Config.option(
+    Config.Literals(["light", "dark", "darker"], "GW_MODE"),
+  );
 
-  return themeFor(id, mode);
+  if (Option.isNone(id) || id.value === "omarchy") {
+    const current = yield* Effect.promise(readOmarchyTheme);
+
+    const theme =
+      current === null
+        ? undefined
+        : omarchyThemeFor(current.colors, Option.getOrUndefined(mode));
+
+    if (theme !== undefined) return theme;
+  }
+
+  return themeFor(
+    Option.getOrElse(id, () => "base"),
+    Option.getOrElse(mode, () => "dark"),
+  );
 }).pipe(Effect.orElseSucceed(() => DEFAULT_THEME));

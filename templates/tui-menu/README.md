@@ -17,6 +17,6 @@ What it shows:
 - Nested submenus with a breadcrumb trail, and a popup for items with variants.
 - Commands run suspended (with the terminal handed over), silently in the background, or with toasts for progress and result.
 - Subcommands that resolve to menu items by greedy longest match.
-- Colors and the header, breadcrumb and help bar from Groundwork's terminal components (`@timmo001/groundwork-tui`), picked with `GW_THEME` and `GW_MODE`, Base and dark by default.
+- Colors and the header, breadcrumb and help bar from Groundwork's terminal components (`@timmo001/groundwork-tui`), picked with `GW_THEME` and `GW_MODE`. By default it's the desktop's Omarchy theme where there is one, otherwise Base and dark.
 
 Copy the folder, rename `tui-menu`, and replace the items in `src/menu.ts` with your tool's own.
