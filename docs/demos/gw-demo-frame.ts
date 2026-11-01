@@ -119,6 +119,14 @@ export class GwDemoFrame extends GwElement {
     this.event = "";
 
     this.addEventListener("click", (event) => {
+      // A toggle button is controlled, so the app flips it; the frame
+      // stands in for the app
+      const toggle = event
+        .composedPath()
+        .find((node) => node instanceof GwButton && node.toggle);
+
+      if (toggle instanceof GwButton) toggle.pressed = !toggle.pressed;
+
       const target = event
         .composedPath()
         .find(

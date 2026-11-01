@@ -40,6 +40,8 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @attr {string} icon - SVG path data for an icon before the text.
  * @attr {string} swatch - A CSS color, drawn as a small round dot in the icon's place, such as a tag's own color.
  * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not on narrow screens. Defaults to `show`.
+ * @attr {boolean} toggle - Makes it a toggle button, which assistive technology announces as pressed or not.
+ * @attr {boolean} pressed - Whether a toggle button is on. It shows the same tint as a current link.
  *
  * @slot - The text, or an `<a>` holding it, in place of `href`.
  * @slot icon - An icon before the text, in place of `icon`.
@@ -64,6 +66,8 @@ export class GwButton extends GwElement {
     icon: {},
     swatch: {},
     labels: { reflect: true },
+    toggle: { type: "boolean", reflect: true },
+    pressed: { type: "boolean", reflect: true },
   } as const;
 
   /** Focusing the element focuses its native button, such as from a dialog opening. */
@@ -208,10 +212,13 @@ export class GwButton extends GwElement {
       }
 
       :host([appearance="plain"]) .button.current,
-      :host([appearance="outlined"]) .button.current {
+      :host([appearance="outlined"]) .button.current,
+      :host([toggle][pressed]:is([appearance="plain"], [appearance="outlined"]))
+        .button {
         background: color-mix(in oklch, var(--gw-button-tone) 16%, transparent);
       }
 
+      :host([toggle][pressed][appearance="filled"]) .button,
       :host([appearance="filled"]) .button.current {
         background: color-mix(in oklch, var(--gw-button-tone) 32%, transparent);
       }
@@ -363,6 +370,10 @@ export class GwButton extends GwElement {
   declare swatch: string;
   /** Whether the text shows beside an icon: always, never, or not on narrow screens. */
   declare labels: "show" | "hide" | "auto";
+  /** Makes it a toggle button, announced as pressed or not. */
+  declare toggle: boolean;
+  /** Whether a toggle button is on. */
+  declare pressed: boolean;
 
   readonly #icon = createIcon("");
 
@@ -403,6 +414,8 @@ export class GwButton extends GwElement {
     this.icon = "";
     this.swatch = "";
     this.labels = "show";
+    this.toggle = false;
+    this.pressed = false;
     this.variant = "brand";
     this.appearance = "accent";
     this.size = "medium";
@@ -537,6 +550,11 @@ export class GwButton extends GwElement {
     } else if (control instanceof HTMLButtonElement) {
       control.type = this.type;
       control.disabled = this.disabled;
+      setAttribute(
+        control,
+        "aria-pressed",
+        this.toggle ? String(this.pressed) : null,
+      );
     }
   }
 }
