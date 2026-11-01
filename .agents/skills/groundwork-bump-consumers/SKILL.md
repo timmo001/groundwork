@@ -31,8 +31,8 @@ those afterwards.
 
 ## Order
 
-1. Publish the release and wait for npm to serve it; the install fails until it
-   does.
+1. Publish the release and verify npm serves it (the `groundwork-release`
+   skill's last check); the install fails until it does.
 2. Run with `--push` straight after every release. The rollout is automatic and
    doesn't wait for a go-ahead; report what landed afterwards. A site whose
    install or build fails isn't committed; the summary counts it and the
