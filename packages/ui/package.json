@@ -14,7 +14,7 @@
     "README.md",
     "LICENSE"
   ],
-  "customElements": ".manifest-check/custom-elements.json",
+  "customElements": "custom-elements.json",
   "sideEffects": true,
   "publishConfig": {
     "access": "public",
