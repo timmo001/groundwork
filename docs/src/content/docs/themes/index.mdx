@@ -27,6 +27,28 @@ On the web, load `themes.css` and set the theme and mode on any element:
 
 Leave `data-gw-mode` off to follow the system's light or dark setting. Darker is opt-in with `data-gw-mode="darker"`.
 
+### On a page
+
+`pageTheme` from `@timmo001/groundwork-tokens/page` runs a page's theme and mode for it: it keeps the visitor's pick in local storage, sets the attributes on `<html>`, imports their own theme or an Omarchy `colors.toml` under the id `custom`, and registers the [theme tools](/agents#theme-tools) where the browser offers WebMCP. The solver and the tools load only when a custom theme or an agent needs them, so a page that only switches built-in themes stays small. Pair it with a [theme picker](/components/actions/#theme-picker).
+
+```ts
+import { coreThemeChoices, pageTheme } from "@timmo001/groundwork-tokens/page";
+
+const page = pageTheme({
+  key: "my-site:theme",
+  themes: coreThemeChoices,
+  defaultTheme: "base",
+  defaultMode: "dark",
+});
+
+page.setMode("darker");
+const result = await page.importTheme(colorsToml);
+```
+
+A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too.
+
+`themeBootScript()` takes the same key and defaults and returns a script for an inline `<script>` in `<head>`. It applies the stored pick, and a custom theme's last solved CSS, before the first paint, so the page never flashes the default.
+
 ## Your own theme
 
 Themes aren't only the built-in set. A user can upload a theme file, or an agent can write one, and the app applies it at runtime. The document is the same one the core themes use, checked against the same [Schema](/themes/writing-a-theme), so an agent can write a valid one from that page alone.

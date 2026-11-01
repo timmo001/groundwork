@@ -38,12 +38,15 @@ registerThemeTools({
 
 The theme editor on [Themes](/themes) registers them, so an agent in a browser with WebMCP can design or import a theme there while you watch. In Chrome, turn on `chrome://flags/#enable-webmcp-testing` to try it.
 
+A page on [`pageTheme`](/themes/#on-a-page) gets them without this: it registers them itself when the browser offers WebMCP, and keeps an agent's pick with the visitor's own.
+
 ## In the apps
 
 | App | WebMCP tools | Stays in MCP |
 | --- | --- | --- |
 | System Bridge | The theme tools, `show-module`, `filter-processes` | Media, windows, audio and displays |
 | Triage | The theme tools, `filter-issues`, `open-issue` | Resolving, muting and merging, which ask the user first |
+| [timmo.dev](https://timmo.dev) | The theme tools, `filter-projects` | Nothing; it has no server of its own |
 
 Each app adds its tools in its own repository when it moves onto Groundwork.
 
