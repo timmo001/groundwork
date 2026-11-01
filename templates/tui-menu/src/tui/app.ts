@@ -10,6 +10,7 @@ import { menuItemsById, registerUpdates } from "../menu.js";
 import type { CommandRunnerService } from "../services/command-runner.js";
 import type { ItemsRunnerService } from "../services/items.js";
 import { ControlsView } from "./controls-view.js";
+import { GridView } from "./grid-view.js";
 import { MainMenu } from "./main-menu.js";
 import { SubmenuView } from "./submenu-view.js";
 
@@ -51,6 +52,7 @@ export class App {
   private mainMenu: MainMenu;
   private submenuView: SubmenuView;
   private controlsView: ControlsView;
+  private gridView: GridView;
   private variants: ChoiceDialog<MenuAction>;
   private activeView: ViewId = "main";
   private viewStack: ViewId[] = [];
@@ -86,6 +88,14 @@ export class App {
       onBack: () => this.popView(),
     });
 
+    this.gridView = new GridView(deps.renderer, deps.theme, {
+      title: this.appTitle,
+      list: () => this.itemsRunner.list(),
+      onApply: (id) =>
+        this.itemsRunner.apply(id).then(() => this.refreshUpdates()),
+      onBack: () => this.popView(),
+    });
+
     this.variants = new ChoiceDialog<MenuAction>(deps.renderer, {
       id: "variants",
       theme: deps.theme,
@@ -96,6 +106,7 @@ export class App {
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
     this.controlsView.setVisible(false);
+    this.gridView.setVisible(false);
 
     // --- Determine initial view ---
     const startView = options.initialView ?? "main";
@@ -165,6 +176,7 @@ export class App {
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
     this.controlsView.setVisible(false);
+    this.gridView.setVisible(false);
 
     this.activeView = viewId;
 
@@ -184,6 +196,11 @@ export class App {
         setTerminalTitle(`${this.appTitle} \u203A Controls`);
         this.controlsView.setVisible(true);
         this.controlsView.resetAndFocus();
+        break;
+      case "grid":
+        setTerminalTitle(`${this.appTitle} \u203A Grid`);
+        this.gridView.setVisible(true);
+        void this.gridView.resetAndFocus();
         break;
     }
   }
@@ -284,6 +301,9 @@ export class App {
       case "controls":
         this.controlsView.focus();
         break;
+      case "grid":
+        this.gridView.focus();
+        break;
     }
   }
 
@@ -298,6 +318,9 @@ export class App {
         break;
       case "controls":
         this.controlsView.blur();
+        break;
+      case "grid":
+        this.gridView.blur();
         break;
     }
   }

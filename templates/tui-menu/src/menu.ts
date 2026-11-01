@@ -132,6 +132,16 @@ const mainItems: readonly MenuItem[] = [
   ),
 
   item(
+    "grid",
+    "󰕰",
+    "Grid",
+    "The demo items as tiles in sections",
+    { type: "view", viewId: "grid" },
+    undefined,
+    ["tiles", "grid", "sections", ":grid"],
+  ),
+
+  item(
     "notify-example",
     "󰍡",
     "Notify Example",
