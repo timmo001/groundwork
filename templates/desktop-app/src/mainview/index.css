@@ -1,0 +1,17 @@
+/* The window's page: the theme's surface and type, with the app centered. */
+html {
+  background: var(--gw-color-surface-default);
+  color: var(--gw-color-text-primary);
+  font-family: var(--gw-font-sans);
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  box-sizing: border-box;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--gw-space-6) var(--gw-space-5);
+}

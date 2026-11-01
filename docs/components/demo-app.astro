@@ -3,38 +3,15 @@
  * `<DemoApp>`: the web demo of Groundwork's demo app, a `gw-demo-app` in a
  * demo frame with its theme and mode pickers. Used on the Demo page.
  */
+import "@timmo001/groundwork-demo/web.css";
 import Demo from "./demo.astro";
 ---
 
 <Demo id="app" layout="stack">
-  <gw-demo-app class="demo-app"></gw-demo-app>
+  <gw-demo-app></gw-demo-app>
 </Demo>
-
-<style is:global>
-  /* Global, since the app builds its parts from script */
-  .demo-app {
-    display: grid;
-    gap: var(--gw-space-4);
-    width: 100%;
-  }
-
-  .demo-app .demo-app-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--gw-space-2);
-  }
-
-  .demo-app .demo-app-list {
-    display: grid;
-    gap: var(--gw-space-3);
-  }
-
-  .demo-app .demo-app-status:empty {
-    display: none;
-  }
-</style>
 
 <script>
   // Only the Demo page runs the demo app, so it loads it alone.
-  import "../demos/gw-demo-app.ts";
+  import "@timmo001/groundwork-demo/web";
 </script>

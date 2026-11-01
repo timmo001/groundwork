@@ -12,7 +12,7 @@ Every target reads the same theme document and the same roles. What changes is t
 | Astro site | timmo.dev | CSS variables |
 | Docs site | The Blume sites | docs-kit's bridge onto Blume's variables |
 | Browser extension | Site Defluffer | CSS variables |
-| Desktop app | The multi-boot app on Windows | The web app inside a native shell |
+| Desktop app | The multi-boot app on Windows, the desktop demo | The web app's components in an [Electrobun](/desktop) window |
 | Terminal app | The OpenTUI TUIs, the OpenCode footer plugin | Resolved colors for OpenTUI |
 | CLI output | `dot up`, every SDK's CLI | Roles mapped onto the 16 ANSI colors |
 | Omarchy panel or widget | `timmo.updates`, System Bridge's plugin | The QML theme object and shared components |

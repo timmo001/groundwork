@@ -1,0 +1,31 @@
+{
+  "name": "desktop-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "electrobun dev --watch",
+    "start": "electrobun dev",
+    "build": "electrobun build --env=stable",
+    "lint": "oxlint .",
+    "typecheck": "electrobun prepare && tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@fontsource-variable/geist-mono": "5.3.0",
+    "@fontsource-variable/mona-sans": "5.3.0",
+    "@timmo001/groundwork-demo": "workspace:*",
+    "@timmo001/groundwork-tokens": "workspace:*",
+    "@timmo001/groundwork-ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.90.0",
+    "@timmo001/oxlint-rules": "0.6.3",
+    "@types/bun": "1.4.4",
+    "electrobun": "2.0.5",
+    "oxlint": "1.90.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

@@ -73,6 +73,7 @@
     "packages/demo": {
       "name": "@timmo001/groundwork-demo",
       "dependencies": {
+        "@timmo001/groundwork-ui": "workspace:*",
         "effect": "4.1.1",
       },
       "devDependencies": {
@@ -208,6 +209,26 @@
         "@oxlint/plugins": "1.90.0",
         "@timmo001/oxlint-rules": "0.6.3",
         "@types/bun": "1.4.4",
+        "oxlint": "1.90.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
+    "templates/desktop-app": {
+      "name": "desktop-app",
+      "dependencies": {
+        "@fontsource-variable/geist-mono": "5.3.0",
+        "@fontsource-variable/mona-sans": "5.3.0",
+        "@timmo001/groundwork-demo": "workspace:*",
+        "@timmo001/groundwork-tokens": "workspace:*",
+        "@timmo001/groundwork-ui": "workspace:*",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.90.0",
+        "@timmo001/oxlint-rules": "0.6.3",
+        "@types/bun": "1.4.4",
+        "electrobun": "2.0.5",
         "oxlint": "1.90.0",
         "oxlint-tsgolint": "7.0.2005",
         "prettier": "3.9.10",
@@ -1351,6 +1372,8 @@
 
     "dequal": ["dequal@2.0.3", "", {}, "sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA=="],
 
+    "desktop-app": ["desktop-app@workspace:templates/desktop-app"],
+
     "destr": ["destr@2.0.5", "", {}, "sha512-ugFTXCtDZunbzasqBxrK93Ik/DRYsO6S/fedkWEMKqt04xZ4csmnmwGDBAb07QWNaGMAmnTIemsYZCksjATwsA=="],
 
     "detect-libc": ["detect-libc@2.1.2", "", {}, "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ=="],
@@ -1388,6 +1411,8 @@
     "effect": ["effect@4.1.1", "", {}, "sha512-XYu65BrcmNqu5i7PPvP4dqL+R5ma37zIsfuSPjcn78mog+6e5PkilNg7Xo+pBpjXJYlWEIpH4j91tMrfW05CMw=="],
 
     "ejs": ["ejs@3.1.10", "", { "dependencies": { "jake": "^10.8.5" }, "bin": { "ejs": "bin/cli.js" } }, "sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA=="],
+
+    "electrobun": ["electrobun@2.0.5", "", { "bin": { "electrobun": "bin/electrobun.cjs" } }, "sha512-/4Vp0p6LgdD7bySSblnoqM0rtcQT5uYsGeqZPhsOESeSxMGeiKsfQkBjNwMnjFI5z4StJKXfs386ay2mpif1BA=="],
 
     "elkjs": ["elkjs@0.9.3", "", {}, "sha512-f/ZeWvW/BCXbhGEf1Ujp29EASo/lk1FDnETgNKwJrsVvGZhUWCZyg3xLJjAsxfOmt8KjswHmI5EwCQcPMpOYhQ=="],
 

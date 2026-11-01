@@ -11,3 +11,4 @@ description: What's done so far, by track.
 | Behavior and agents | [CLI and agent behavior](https://github.com/timmo001/groundwork/issues/37), [WebMCP](https://github.com/timmo001/groundwork/issues/42) |
 | Conventions and sync | [Repo kinds and label manifest](https://github.com/timmo001/groundwork/issues/47), [skills](https://github.com/timmo001/groundwork/issues/50), [sync](https://github.com/timmo001/groundwork/issues/38) |
 | Effect | [Effect docs section](/effect), with [built-in services](/effect/platform) and the skills to use |
+| Apps | [Apps on Groundwork](https://github.com/timmo001/groundwork/issues/45) |

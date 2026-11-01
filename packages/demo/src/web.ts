@@ -1,12 +1,11 @@
 /**
- * `gw-demo-app`: the web demo of Groundwork's demo app on the Demo page, an
- * update tool built from `gw-` components. It runs on the fixture `Items`
- * service from `@timmo001/groundwork-demo`, the same one the other targets
- * use, so nothing sits behind it and a reload resets it. Docs-only.
+ * `gw-demo-app`: Groundwork's demo app as an update tool built from `gw-`
+ * components, for the web demo on the Demo page and the desktop template. It
+ * runs on the fixture `Items` service, the same one the other targets use, so
+ * nothing sits behind it and a reload resets it. Load `web.css` with it.
  *
  * @module
  */
-import { Items, type Item } from "@timmo001/groundwork-demo";
 import {
   GwElement,
   h,
@@ -14,6 +13,8 @@ import {
   type GwDialog,
 } from "@timmo001/groundwork-ui";
 import { Effect, Exit, ManagedRuntime } from "effect";
+
+import { Items, type Item } from "./index.ts";
 
 // MDI's update, restart and check
 const icons = {
@@ -50,12 +51,22 @@ export class GwDemoApp extends GwElement {
     "The machine restarts to finish applying. Anything unsaved is lost.",
     h(
       "gw-button",
-      { slot: "actions", value: "cancel", variant: "neutral", appearance: "outlined" },
+      {
+        slot: "actions",
+        value: "cancel",
+        variant: "neutral",
+        appearance: "outlined",
+      },
       "Cancel",
     ),
     h(
       "gw-button",
-      { slot: "actions", value: "restart", variant: "danger", appearance: "filled" },
+      {
+        slot: "actions",
+        value: "restart",
+        variant: "danger",
+        appearance: "filled",
+      },
       "Restart",
     ),
   );
@@ -82,10 +93,16 @@ export class GwDemoApp extends GwElement {
         "gw-page-header",
         {
           heading: "Updates",
-          description: "What this machine has waiting, and what it's up to date on.",
+          description:
+            "What this machine has waiting, and what it's up to date on.",
           icon: icons.update,
         },
-        h("div", { slot: "actions", class: "demo-app-actions" }, this.#applyAll, restart),
+        h(
+          "div",
+          { slot: "actions", class: "demo-app-actions" },
+          this.#applyAll,
+          restart,
+        ),
       ),
       this.#status,
       h("gw-card", { heading: "Items" }, this.#list),
@@ -99,7 +116,8 @@ export class GwDemoApp extends GwElement {
   async #run<A>(effect: Effect.Effect<A, unknown, Items>) {
     const exit = await this.#runtime.runPromiseExit(effect);
 
-    if (Exit.isFailure(exit)) this.#show("danger", "That didn't work", String(exit.cause));
+    if (Exit.isFailure(exit))
+      this.#show("danger", "That didn't work", String(exit.cause));
 
     return exit;
   }
@@ -109,7 +127,9 @@ export class GwDemoApp extends GwElement {
   }
 
   async #refresh() {
-    const exit = await this.#run(Effect.flatMap(Items, (items) => items.list()));
+    const exit = await this.#run(
+      Effect.flatMap(Items, (items) => items.list()),
+    );
 
     if (Exit.isSuccess(exit)) this.#render(exit.value);
   }
@@ -123,7 +143,11 @@ export class GwDemoApp extends GwElement {
       ...items.map((item) => {
         const control = item.pending
           ? h("gw-button", { appearance: "outlined" }, "Apply")
-          : h("gw-badge", { tone: "success", size: "small", icon: icons.check }, "Up to date");
+          : h(
+              "gw-badge",
+              { tone: "success", size: "small", icon: icons.check },
+              "Up to date",
+            );
 
         control.addEventListener("click", () => void this.#apply([item]));
 
@@ -159,23 +183,35 @@ export class GwDemoApp extends GwElement {
     if (Exit.isSuccess(exit)) {
       const names = exit.value.map((item) => item.name).join(", ");
 
-      this.#show("success", `Applied ${exit.value.length}`, `${names}. Restart to finish.`);
+      this.#show(
+        "success",
+        `Applied ${exit.value.length}`,
+        `${names}. Restart to finish.`,
+      );
     }
 
     await this.#refresh();
   }
 
   async #applyPending() {
-    const exit = await this.#run(Effect.flatMap(Items, (items) => items.list()));
+    const exit = await this.#run(
+      Effect.flatMap(Items, (items) => items.list()),
+    );
 
     if (Exit.isSuccess(exit)) await this.#apply(exit.value);
   }
 
   async #restart() {
-    const exit = await this.#run(Effect.flatMap(Items, (items) => items.restart()));
+    const exit = await this.#run(
+      Effect.flatMap(Items, (items) => items.restart()),
+    );
 
     if (Exit.isSuccess(exit)) {
-      this.#show("info", "Restarting", "In the demo, nothing restarts. Reload the page to start over.");
+      this.#show(
+        "info",
+        "Restarting",
+        "In the demo, nothing restarts. Reload to start over.",
+      );
     }
   }
 }

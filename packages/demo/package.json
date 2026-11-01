@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./web": "./src/web.ts",
+    "./web.css": "./src/web.css"
   },
   "scripts": {
     "test": "bun test",
@@ -13,6 +15,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@timmo001/groundwork-ui": "workspace:*",
     "effect": "4.1.1"
   },
   "devDependencies": {
