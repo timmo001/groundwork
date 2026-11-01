@@ -67,7 +67,7 @@ export class GwPageHeader extends GwElement {
 
       .titles {
         display: flex;
-        flex: 1;
+        flex: 0 1 auto;
         flex-direction: column;
         gap: var(--gw-space-0-5);
         min-width: 0;
@@ -87,12 +87,14 @@ export class GwPageHeader extends GwElement {
         color: var(--gw-color-text-secondary);
       }
 
+      /* Takes the room the titles leave, and gives it up before them, down
+         to its items' smallest */
       .actions {
         display: flex;
-        flex: none;
+        flex: 1 1000 auto;
         gap: var(--gw-space-1);
         align-items: center;
-        margin-inline-start: auto;
+        justify-content: flex-end;
       }
 
       /* Centered on the tile when there is one */

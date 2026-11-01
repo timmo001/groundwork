@@ -1540,7 +1540,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } /* A one-column grid, so a hidden brand can fold its width to nothing and the nav slides over as it opens, rather than leaving a gap */ .brand { display: grid; flex: none; grid-template-columns: 1fr; align-items: center; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .brand > slot { display: flex; align-items: center; min-width: 0; overflow: clip; overflow-clip-margin: calc( var(--gw-focus-width) + var(--gw-focus-offset) ); } :host([reveal-after]:not([floating])) .brand { grid-template-columns: 0fr; margin-inline-end: calc(var(--gw-space-3) * -1); pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-slow) allow-discrete; } .nav { display: flex; flex: 1; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; margin-inline-start: auto; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } /* Below menu-below, which sets collapsed, the nav folds into a menu */ :host([collapsed]) .menu { display: inline-grid; } :host([collapsed]) .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([collapsed][menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } `, ]",
+              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } /* A one-column grid, so a hidden brand can fold its width to nothing and the nav slides over as it opens, rather than leaving a gap */ .brand { display: grid; flex: none; grid-template-columns: 1fr; align-items: center; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .brand > slot { display: flex; align-items: center; min-width: 0; overflow: clip; overflow-clip-margin: calc( var(--gw-focus-width) + var(--gw-focus-offset) ); } :host([reveal-after]:not([floating])) .brand { grid-template-columns: 0fr; margin-inline-end: calc(var(--gw-space-3) * -1); pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-slow) allow-discrete; } /* The nav keeps its room; the actions take the rest, which a theme picker fills or gives up by moving its controls into its popover */ .nav { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: 1 1 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } /* Below menu-below, which sets collapsed, the nav folds into a menu */ :host([collapsed]) .menu { display: inline-grid; } :host([collapsed]) .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([collapsed][menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13400,7 +13400,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: 3rem; height: 3rem; color: var(--gw-color-accent); background: var(--gw-color-fill-accent-quiet); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } h1 { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .actions { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; margin-inline-start: auto; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: 3rem; } `, ]",
+              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: 3rem; height: 3rem; color: var(--gw-color-accent); background: var(--gw-color-fill-accent-quiet); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 0 1 auto; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } h1 { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* Takes the room the titles leave, and gives it up before them, down to its items' smallest */ .actions { display: flex; flex: 1 1000 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: 3rem; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -19615,7 +19615,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A palette button for a page's look. It opens a popover with the mode\n(auto, light, dark or Darker), the theme, and buttons to import a theme\nfile (a Groundwork theme's `.json` or an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `popover`, the default, is the palette button\nand its popover. `cycle` is one button showing the mode in use, which steps\nto the next mode on each press, for an app bar. `inline` lays the controls\nout in place, in one wrapping row with Reset and Import, for a footer or a\nsettings page; set `justify-content` on it to align the row. `modes` picks which modes it offers, such as `light dark` without\nAuto.",
+          "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button, or from a more button once the mode and theme are out.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. `modes` picks which modes it offers, such as\n`light dark` without Auto.",
           "name": "GwThemePicker",
           "cssParts": [
             {
@@ -19652,7 +19652,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* One wrapping row: the controls, then Reset and Import. The host is the flex container, so a page can set its justify-content */ :host([layout=\"inline\"]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center; } :host([layout=\"inline\"]) .controls { flex-flow: row wrap; align-items: center; margin-block-start: 0; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } `, ]",
+              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* One wrapping row: the controls, then Reset and Import. The host is the flex container, so a page can set its justify-content */ :host([layout=\"inline\"]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center; } :host([layout=\"inline\"]) .controls { flex-flow: row wrap; align-items: center; margin-block-start: 0; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } /* Asks for the room to have all of it in place, but gives it up down to the button before a flex row's other items shrink */ :host([layout=\"auto\"]) { display: flex; flex: 0 1000 var(--gw-theme-picker-fit, auto); gap: var(--gw-space-1); align-items: center; min-width: 2.5rem; contain: inline-size; } :host([layout=\"auto\"]) > * { flex: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -19710,10 +19710,10 @@
               "kind": "field",
               "name": "layout",
               "type": {
-                "text": "\"popover\" | \"cycle\" | \"inline\""
+                "text": "\"auto\" | \"popover\" | \"cycle\" | \"inline\""
               },
-              "description": "How it shows: a button and popover, a button cycling the modes, or the controls in place.",
-              "default": "\"popover\""
+              "description": "How it shows: in place while it fits then in a popover, a button and popover, a button cycling the modes, or every control in place.",
+              "default": "\"auto\""
             },
             {
               "kind": "field",
@@ -19814,6 +19814,60 @@
                 }
               ],
               "description": "Puts the controls and their buttons in the popover, or in place for `inline`."
+            },
+            {
+              "kind": "method",
+              "name": "#arrange",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "With `auto`, moves the mode and theme in place or back into the popover, as `#fits` says."
+            },
+            {
+              "kind": "method",
+              "name": "#fit",
+              "privacy": "private",
+              "description": "With `auto`, measures the mode and theme in place, sizes the host to fit\nthem all, then keeps in place what the room it gets allows, the mode\nfirst. The rest go into the popover."
+            },
+            {
+              "kind": "field",
+              "name": "#fits",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ mode: false, theme: false }"
+            },
+            {
+              "kind": "field",
+              "name": "#fitting",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#measuring",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeObserver(() => { void this.#fit(); })"
             },
             {
               "kind": "method",
@@ -20179,9 +20233,9 @@
           "attributes": [
             {
               "type": {
-                "text": "\"popover\"|\"cycle\"|\"inline\""
+                "text": "\"auto\"|\"popover\"|\"cycle\"|\"inline\""
               },
-              "description": "How it shows: a button and popover, a button cycling the modes, or the controls in place. Defaults to `popover`.",
+              "description": "How it shows: in place while it fits then in a popover, a button and popover, a button cycling the modes, or every control in place. Defaults to `auto`.",
               "name": "layout"
             },
             {
@@ -20240,7 +20294,7 @@
           },
           "tagName": "gw-theme-picker",
           "customElement": true,
-          "summary": "A button opening the page's mode, theme and import."
+          "summary": "The page's mode, theme and import, in place or in a popover."
         }
       ],
       "exports": [

@@ -210,7 +210,9 @@ Options can carry an icon as path data. `labels="auto"` shows the text on wide s
   <gw-theme-picker theme="base" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"}]'></gw-theme-picker>
 </Demo>
 
-A palette button for the page's look, for an app bar's `actions` slot. It opens a popover with the mode (auto, light, dark or Darker), the theme, an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset. With fewer than two themes, such as a site with one theme of its own, the theme select hides until someone imports one.
+The page's look, for an app bar's `actions` slot: the mode (auto, light, dark or Darker), the theme, an Import button for a theme file (a Groundwork theme's `.json` or an Omarchy `colors.toml`) and Reset. With fewer than two themes, such as a site with one theme of its own, the theme select hides until someone imports one.
+
+While there's room, the mode shows in place as icons and the theme as a select, with Import and Reset behind a more button. As the room runs out, the theme moves into that button's popover first, then the mode, until only a palette button is left. Narrow the window to watch it in the [page header](/components/layout/#page-header-and-section-title), which keeps room for the title before the actions. `layout="popover"` keeps everything behind the palette button from the start.
 
 It only asks: it fires `mode`, `theme`, `import` (with the file's `text` and `name`) and `reset`, and the page applies them and sets `mode`, `theme` and `themes` back. Show an import's result, such as roles that miss their contrast target, in `status`. [`pageTheme`](/themes/#on-a-page) does the applying and keeping:
 
@@ -241,7 +243,7 @@ picker.addEventListener("import", async (event) => {
 });
 ```
 
-Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme-gallery) does, rather than a select:
+Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme-gallery) does, rather than a select. The cards always open from the palette button, with the mode in place beside it while it fits:
 
 <Demo id="theme-picker-gallery">
   <gw-theme-picker gallery theme="snag" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"},{"value":"slate","label":"Slate"},{"value":"bridge","label":"Bridge"},{"value":"snag","label":"Snag"}]'></gw-theme-picker>

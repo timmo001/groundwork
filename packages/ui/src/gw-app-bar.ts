@@ -141,9 +141,11 @@ export class GwAppBar extends GwElement {
           visibility var(--gw-motion-slow) allow-discrete;
       }
 
+      /* The nav keeps its room; the actions take the rest, which a theme
+         picker fills or gives up by moving its controls into its popover */
       .nav {
         display: flex;
-        flex: 1;
+        flex: none;
         gap: var(--gw-space-1);
         align-items: center;
         min-width: 0;
@@ -151,10 +153,10 @@ export class GwAppBar extends GwElement {
 
       .actions {
         display: flex;
-        flex: none;
+        flex: 1 1 auto;
         gap: var(--gw-space-1);
         align-items: center;
-        margin-inline-start: auto;
+        justify-content: flex-end;
       }
 
       .menu {
