@@ -70,10 +70,10 @@
     },
     "packages/docs-kit": {
       "name": "@timmo001/docs-kit",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.3.0",
-        "@timmo001/groundwork-ui": "0.3.0",
+        "@timmo001/groundwork-tokens": "0.3.1",
+        "@timmo001/groundwork-ui": "0.3.1",
         "sharp": "0.35.5",
       },
       "devDependencies": {
@@ -128,7 +128,7 @@
     },
     "packages/tokens": {
       "name": "@timmo001/groundwork-tokens",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "dependencies": {
         "culori": "4.0.2",
         "effect": "4.1.1",
@@ -147,7 +147,7 @@
     },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "devDependencies": {
         "@oxlint/plugins": "1.90.0",
         "@timmo001/oxlint-rules": "0.6.3",
