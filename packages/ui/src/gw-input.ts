@@ -1,4 +1,5 @@
 import { h, setAttribute } from "./element.js";
+import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 
 /** A labeled native `<input>`, with an optional hint and error. */
@@ -11,6 +12,7 @@ export class GwInput extends LightElement {
     placeholder: {},
     autocomplete: {},
     hint: {},
+    info: {},
     error: {},
     required: { type: "boolean" },
     disabled: { type: "boolean" },
@@ -23,6 +25,8 @@ export class GwInput extends LightElement {
   declare placeholder: string;
   declare autocomplete: string;
   declare hint: string;
+  /** Longer help, opened from an (i) button by the label. */
+  declare info: string;
   declare error: string;
   declare required: boolean;
   declare disabled: boolean;
@@ -30,6 +34,8 @@ export class GwInput extends LightElement {
   readonly #id = fieldId();
 
   readonly #label = h("label", { for: this.#id });
+
+  readonly #info = new FieldInfo(this.#label);
 
   readonly #input = h("input", { id: this.#id });
 
@@ -46,6 +52,7 @@ export class GwInput extends LightElement {
     this.placeholder = "";
     this.autocomplete = "";
     this.hint = "";
+    this.info = "";
     this.error = "";
     this.required = false;
     this.disabled = false;
@@ -55,7 +62,7 @@ export class GwInput extends LightElement {
     this.#input.addEventListener("input", () => {
       this.value = this.#input.value;
     });
-    root.append(this.#label, this.#input, this.#hint, this.#error);
+    root.append(this.#info.heading, this.#input, this.#hint, this.#error);
   }
 
   protected override update() {
@@ -69,6 +76,7 @@ export class GwInput extends LightElement {
       .trim();
 
     this.#label.textContent = this.label;
+    this.#info.update(this.label, this.info);
     input.type = this.type;
     setAttribute(input, "name", this.name || null);
     setAttribute(input, "placeholder", this.placeholder || null);

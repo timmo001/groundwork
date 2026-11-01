@@ -8,7 +8,7 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 ## Input
 
 <Demo id="input" layout="stack">
-  <gw-input label="Host" name="host" placeholder="192.168.1.20" hint="The address System Bridge listens on"></gw-input>
+  <gw-input label="Host" name="host" placeholder="192.168.1.20" hint="The address System Bridge listens on" info="Use the address of the machine running System Bridge on your network, such as 192.168.1.20 or desktop.local. Find it in System Bridge's settings, under Connection."></gw-input>
   <gw-input label="Port" name="port" type="number" value="9170" error="Port 9170 is already in use"></gw-input>
   <gw-input label="Token" name="token" type="password" autocomplete="current-password"></gw-input>
 </Demo>
@@ -17,7 +17,8 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 | --- | --- |
 | `label` | The visible label, linked to the input |
 | `type`, `name`, `value`, `placeholder`, `autocomplete` | Passed to the `<input>` |
-| `hint` | Help text under it, linked with `aria-describedby` |
+| `hint` | One line of help under it, linked with `aria-describedby` |
+| `info` | Longer help, opened from an (i) button by the label in a popover anchored to it |
 | `error` | An error under it; marks the input invalid |
 | `required`, `disabled` | Passed to the `<input>` |
 
@@ -50,7 +51,7 @@ Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SV
 
 | Attribute | What it does |
 | --- | --- |
-| `label`, `name`, `value`, `hint`, `disabled` | As on an input |
+| `label`, `name`, `value`, `hint`, `info`, `disabled` | As on an input |
 | `placeholder` | Shown before anything's picked |
 | `search` | `auto` (from seven options), `always` or `never` |
 | `options` | The options, instead of `<option>` children |

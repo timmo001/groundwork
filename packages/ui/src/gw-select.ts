@@ -1,4 +1,5 @@
 import { h, setAttribute } from "./element.js";
+import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 import "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
@@ -39,6 +40,7 @@ export class GwSelect extends LightElement {
     name: {},
     value: {},
     hint: {},
+    info: {},
     placeholder: {},
     search: {},
     disabled: { type: "boolean" },
@@ -50,6 +52,8 @@ export class GwSelect extends LightElement {
   declare name: string;
   declare value: string;
   declare hint: string;
+  /** Longer help, opened from an (i) button by the label. */
+  declare info: string;
   declare placeholder: string;
   /** `auto` shows a search field from seven options; `always` or `never` overrides that. */
   declare search: "auto" | "always" | "never";
@@ -60,6 +64,8 @@ export class GwSelect extends LightElement {
   readonly #id = fieldId();
 
   readonly #label = h("label", { id: `${this.#id}-label` });
+
+  readonly #info = new FieldInfo(this.#label);
 
   readonly #icon = createIcon("");
 
@@ -97,6 +103,7 @@ export class GwSelect extends LightElement {
     this.name = "";
     this.value = "";
     this.hint = "";
+    this.info = "";
     this.placeholder = "Choose";
     this.search = "auto";
     this.disabled = false;
@@ -256,7 +263,7 @@ export class GwSelect extends LightElement {
     });
 
     root.append(
-      this.#label,
+      this.#info.heading,
       this.#trigger,
       this.#input,
       this.#hint,
@@ -269,6 +276,7 @@ export class GwSelect extends LightElement {
     const selected = options.find((option) => option.value === this.value);
 
     this.#label.textContent = this.label;
+    this.#info.update(this.label, this.info);
     this.#text.textContent = selected?.label ?? this.placeholder;
     this.#text.toggleAttribute("data-placeholder", selected === undefined);
     setIconPath(this.#icon, selected?.icon ?? "");

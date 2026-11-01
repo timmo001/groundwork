@@ -202,9 +202,9 @@
     {
       "name": "gw-input",
       "kind": "element",
-      "description": "A labeled native input in light DOM",
-      "files": ["packages/ui/src/gw-input.ts"],
-      "needs": ["ui-base"]
+      "description": "A labeled native input in light DOM, with an optional (i) help popover",
+      "files": ["packages/ui/src/gw-input.ts", "packages/ui/src/field-info.ts"],
+      "needs": ["ui-base", "gw-popover"]
     },
     {
       "name": "gw-menu-button",
@@ -252,8 +252,8 @@
       "name": "gw-select",
       "kind": "element",
       "description": "A labeled select with a searchable, virtualized list that's a bottom sheet on phones",
-      "files": ["packages/ui/src/gw-select.ts", "packages/ui/src/gw-option-list.ts"],
-      "needs": ["ui-base"]
+      "files": ["packages/ui/src/gw-select.ts", "packages/ui/src/gw-option-list.ts", "packages/ui/src/field-info.ts"],
+      "needs": ["ui-base", "gw-popover"]
     },
     {
       "name": "gw-setting-row",

@@ -15,10 +15,53 @@ export const fieldStyles = css`
     color: var(--gw-color-text-primary);
   }
 
-  :where(gw-input, gw-select) > label {
+  :where(gw-input, gw-select) .gw-field-heading {
+    display: flex;
+    gap: var(--gw-space-1);
+    align-items: center;
+  }
+
+  :where(gw-input, gw-select) .gw-field-heading > label {
     font-size: var(--gw-font-size-s);
     font-weight: var(--gw-font-weight-strong);
     color: var(--gw-color-text-strong);
+  }
+
+  /* The (i) button by the label that opens a field's longer help */
+  :where(gw-input, gw-select) .gw-info {
+    display: inline-grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    color: var(--gw-color-text-secondary);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: var(--gw-radius-pill);
+    transition:
+      color var(--gw-motion-fast) var(--gw-motion-easing),
+      background-color var(--gw-motion-fast) var(--gw-motion-easing);
+  }
+
+  :where(gw-input, gw-select) .gw-info:hover {
+    color: var(--gw-color-text-strong);
+    background: var(--gw-color-fill-neutral-hovered);
+  }
+
+  :where(gw-input, gw-select) .gw-info:focus-visible {
+    outline: var(--gw-focus-width) solid var(--gw-color-focus);
+    outline-offset: var(--gw-focus-offset);
+  }
+
+  :where(gw-input, gw-select) .gw-info[hidden] {
+    display: none;
+  }
+
+  :where(gw-input, gw-select) .gw-info > .icon {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
   }
 
   :where(gw-input, gw-select) :where(input, .gw-select-trigger) {
