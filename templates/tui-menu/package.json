@@ -1,0 +1,31 @@
+{
+  "name": "tui-menu",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "tui-menu": "./src/index.ts"
+  },
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "build": "bun build src/index.ts --compile --outfile dist/tui-menu",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@opentui/core": "0.8.0",
+    "@timmo001/groundwork-tokens": "workspace:*",
+    "effect": "4.1.1",
+    "fuse.js": "7.3.0"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.90.0",
+    "@timmo001/oxlint-rules": "0.6.3",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.90.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}
