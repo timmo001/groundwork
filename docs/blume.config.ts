@@ -12,6 +12,7 @@ export default defineConfig(
       sidebar: [
         "/",
         "/principles",
+        "/agents",
         "/targets",
         "/behavior",
         "/sync",

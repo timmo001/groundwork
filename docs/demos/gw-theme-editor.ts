@@ -14,6 +14,7 @@ import {
   runtimeTheme,
   type ThemeStore,
 } from "@timmo001/groundwork-tokens/runtime";
+import { registerThemeTools } from "@timmo001/groundwork-tokens/webmcp";
 import {
   GwElement,
   h,
@@ -129,6 +130,8 @@ const labeled = (label: string, control: HTMLElement) =>
  */
 export class GwThemeEditor extends GwElement {
   static override shadow = false;
+
+  #tools: AbortController | undefined;
 
   readonly #name: GwInput = field("Name", "text");
 
@@ -262,7 +265,6 @@ export class GwThemeEditor extends GwElement {
 
     this.#preview?.prepend(labeled("Preview mode", this.#mode));
     this.#preview?.after(this.#status);
-    document.head.append(this.#style);
     // Starts on the starter, so the form is never empty while the store reads
     this.#load(JSON.stringify(starter));
     void store.load().then((text) => {
@@ -270,7 +272,24 @@ export class GwThemeEditor extends GwElement {
     });
   }
 
+  // The theme's style and the agent tools follow the editor on and off the
+  // page, since `create` only runs once
+  override connectedCallback() {
+    super.connectedCallback();
+    document.head.append(this.#style);
+
+    // In a browser with WebMCP, an agent can read, list and set the theme
+    // through the editor, so the user sees each change
+    this.#tools = new AbortController();
+    registerThemeTools({
+      store,
+      apply: ({ text }) => this.#load(text),
+      signal: this.#tools.signal,
+    });
+  }
+
   override disconnectedCallback() {
+    this.#tools?.abort();
     this.#style.remove();
   }
 

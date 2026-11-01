@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./runtime": "./src/runtime.ts",
+    "./webmcp": "./src/webmcp.ts",
     "./themes.css": "./generated/themes.css",
     "./themes.json": "./generated/themes.json"
   },
