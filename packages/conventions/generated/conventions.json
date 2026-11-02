@@ -912,6 +912,40 @@
       "labels": 37
     },
     {
+      "repo": "timmo001/upkeep",
+      "kind": "shared",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "shared"
+      ],
+      "areas": [
+        {
+          "name": "Worker",
+          "description": "Related to the worker that runs jobs and fixes what fails",
+          "color": "4f46e5"
+        },
+        {
+          "name": "Dashboard",
+          "description": "Related to the web dashboard",
+          "color": "006b75"
+        },
+        {
+          "name": "Bumps",
+          "description": "Related to rolling first-party releases out to their consumers",
+          "color": "fb923c"
+        },
+        {
+          "name": "Updates",
+          "description": "Related to third-party dependency updates",
+          "color": "c084fc"
+        }
+      ],
+      "labels": 34
+    },
+    {
       "repo": "timmo001/upnext",
       "kind": "personal",
       "discussions": false,
