@@ -11,6 +11,8 @@
  */
 import { join } from "node:path";
 
+import { Option, Schema } from "effect";
+
 import {
   readOmarchyTheme,
   watchOmarchyTheme,
@@ -56,7 +58,7 @@ interface MainWindow {
   on(name: "resize" | "move", handler: () => void): void;
   getFrame(): Frame;
   show(): void;
-  focus(): void;
+  activate(): void;
   unminimize(): void;
 }
 
@@ -167,8 +169,23 @@ interface SavedFile {
 
 const zoomSteps = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
 
-const detailUrl = ({ data }: WebviewEvent): string | undefined =>
-  data.detail instanceof Object ? data.detail.url : data.detail;
+const decodeNavigation = Schema.decodeUnknownOption(
+  Schema.fromJsonString(Schema.Struct({ url: Schema.String })),
+);
+
+// Navigation events send their detail as JSON text, `{"url", "allowed"}`;
+// others send the URL itself or an object
+const detailUrl = ({ data }: WebviewEvent): string | undefined => {
+  const { detail } = data;
+
+  if (detail instanceof Object) return detail.url;
+
+  return detail.startsWith("{")
+    ? Option.getOrUndefined(
+        Option.map(decodeNavigation(detail), ({ url }) => url),
+      )
+    : detail;
+};
 
 // GTK 3 only takes whole numbers in GDK_SCALE and drops the fraction, so on
 // Linux the page zoom makes up the rest: 1.6 renders at 1 and zooms by 1.6
@@ -304,7 +321,7 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
   const bringForward = () => {
     window?.unminimize();
     window?.show();
-    window?.focus();
+    window?.activate();
   };
 
   if (

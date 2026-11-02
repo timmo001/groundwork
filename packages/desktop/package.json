@@ -16,7 +16,8 @@
   },
   "dependencies": {
     "@timmo001/groundwork-tokens": "workspace:*",
-    "@timmo001/groundwork-ui": "workspace:*"
+    "@timmo001/groundwork-ui": "workspace:*",
+    "effect": "4.1.2"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.90.0",
