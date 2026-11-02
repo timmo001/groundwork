@@ -14,11 +14,11 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@effect/platform-node": "4.1.1",
+    "@effect/platform-node": "4.1.2",
     "@opentui/core": "0.8.1",
     "@timmo001/groundwork-demo": "workspace:*",
     "@timmo001/groundwork-tui": "workspace:*",
-    "effect": "4.1.1"
+    "effect": "4.1.2"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.90.0",
