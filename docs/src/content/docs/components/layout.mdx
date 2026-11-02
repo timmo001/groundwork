@@ -108,6 +108,18 @@ The page header holds the page's `<h1>`, with an optional `icon` tile and `descr
 
 `gap="s"` or `gap="l"` changes the gap of a stack, row or grid.
 
+### Aligning the children
+
+`justify` sets where a stack's or row's children sit along it: `start`, `center`, `end` or `between`. `align` sets where they sit across it: `start`, `center`, `end` or `stretch`. A row's children are centered across it and a stack's stretch across it by default. `center` and `end` keep children from being cut off at the start when they overflow, so a stack with a fixed height and `justify="center"` puts short content in the middle and still shows the top of tall content.
+
+<Demo id="alignment" layout="stack">
+  <gw-row justify="center"><gw-chip>Centered</gw-chip><gw-chip>along</gw-chip><gw-chip>the row</gw-chip></gw-row>
+  <gw-row justify="between"><gw-chip>Start</gw-chip><gw-chip>End</gw-chip></gw-row>
+  <gw-stack justify="center" align="center" style="height: 8rem; border: 1px dashed var(--gw-color-border-normal); border-radius: var(--gw-radius-panel)">
+    <gw-chip>In the middle</gw-chip>
+  </gw-stack>
+</Demo>
+
 ### Capping the columns
 
 On a wide screen a grid keeps adding columns. `max` (2 to 6) caps how many it shows, so the cards grow wider instead. Set `--gw-grid-max` for any other count. Narrow screens still drop to fewer columns at `--gw-grid-min`.

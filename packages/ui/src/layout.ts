@@ -72,6 +72,42 @@ const gaps = css`
   }
 `;
 
+/* Where the children sit along the line (`justify`) and across it (`align`).
+   `safe` keeps overflowing children from being cut off at the start. */
+const alignment = css`
+  :host([justify="start"]) {
+    justify-content: flex-start;
+  }
+
+  :host([justify="center"]) {
+    justify-content: safe center;
+  }
+
+  :host([justify="end"]) {
+    justify-content: safe flex-end;
+  }
+
+  :host([justify="between"]) {
+    justify-content: space-between;
+  }
+
+  :host([align="start"]) {
+    align-items: flex-start;
+  }
+
+  :host([align="center"]) {
+    align-items: safe center;
+  }
+
+  :host([align="end"]) {
+    align-items: safe flex-end;
+  }
+
+  :host([align="stretch"]) {
+    align-items: stretch;
+  }
+`;
+
 /** A layout element whose shadow root is a single slot. */
 class GwSlotted extends GwElement {
   protected override create(root: ShadowRoot) {
@@ -86,6 +122,8 @@ class GwSlotted extends GwElement {
  * @summary Children in a column.
  *
  * @attr {"s"|"l"} gap - A smaller or larger gap.
+ * @attr {"start"|"center"|"end"|"between"} justify - Where the children sit in the column's height, when it's taller than they are. `center` keeps them in the middle unless they overflow.
+ * @attr {"start"|"center"|"end"|"stretch"} align - Where the children sit across the column. Defaults to `stretch`.
  *
  * @slot - The children.
  *
@@ -95,6 +133,7 @@ export class GwStack extends GwSlotted {
   static override styles = [
     base,
     gaps,
+    alignment,
     css`
       :host {
         display: flex;
@@ -113,6 +152,8 @@ export class GwStack extends GwSlotted {
  *
  * @attr {"s"|"l"} gap - A smaller or larger gap.
  * @attr {boolean} nowrap - Keeps the children on one line.
+ * @attr {"start"|"center"|"end"|"between"} justify - Where the children sit along the row. Defaults to `start`.
+ * @attr {"start"|"center"|"end"|"stretch"} align - Where the children sit in the row's height. Defaults to `center`.
  *
  * @slot - The children.
  *
@@ -134,6 +175,7 @@ export class GwRow extends GwSlotted {
         flex-wrap: nowrap;
       }
     `,
+    alignment,
   ];
 }
 

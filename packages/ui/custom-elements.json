@@ -22810,7 +22810,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, gaps, css` :host { display: flex; flex-direction: column; gap: var(--gw-gap, var(--gw-space-3)); } `, ]",
+              "default": "[ base, gaps, alignment, css` :host { display: flex; flex-direction: column; gap: var(--gw-gap, var(--gw-space-3)); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -23148,6 +23148,20 @@
               },
               "description": "A smaller or larger gap.",
               "name": "gap"
+            },
+            {
+              "type": {
+                "text": "\"start\"|\"center\"|\"end\"|\"between\""
+              },
+              "description": "Where the children sit in the column's height, when it's taller than they are. `center` keeps them in the middle unless they overflow.",
+              "name": "justify"
+            },
+            {
+              "type": {
+                "text": "\"start\"|\"center\"|\"end\"|\"stretch\""
+              },
+              "description": "Where the children sit across the column. Defaults to `stretch`.",
+              "name": "align"
             }
           ],
           "superclass": {
@@ -23182,7 +23196,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, gaps, css` :host { display: flex; flex-wrap: wrap; gap: var(--gw-gap, var(--gw-space-2)); align-items: center; } :host([nowrap]) { flex-wrap: nowrap; } `, ]",
+              "default": "[ base, gaps, css` :host { display: flex; flex-wrap: wrap; gap: var(--gw-gap, var(--gw-space-2)); align-items: center; } :host([nowrap]) { flex-wrap: nowrap; } `, alignment, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -23527,6 +23541,20 @@
               },
               "description": "Keeps the children on one line.",
               "name": "nowrap"
+            },
+            {
+              "type": {
+                "text": "\"start\"|\"center\"|\"end\"|\"between\""
+              },
+              "description": "Where the children sit along the row. Defaults to `start`.",
+              "name": "justify"
+            },
+            {
+              "type": {
+                "text": "\"start\"|\"center\"|\"end\"|\"stretch\""
+              },
+              "description": "Where the children sit in the row's height. Defaults to `center`.",
+              "name": "align"
             }
           ],
           "superclass": {
