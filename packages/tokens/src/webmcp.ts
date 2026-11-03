@@ -13,7 +13,6 @@ import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
-import upkeep from "../themes/upkeep.json" with { type: "json" };
 import { omarchyTheme } from "./omarchy.ts";
 import {
   parseTheme,
@@ -74,7 +73,6 @@ export const coreThemes: readonly SolvedTheme[] = [
   slate,
   bridge,
   snag,
-  upkeep,
 ].map((document) => Schema.decodeUnknownSync(SolvedTheme)(document));
 
 export interface ThemeToolsOptions {

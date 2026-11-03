@@ -94,7 +94,7 @@ rail next to the content. The banner's full-width layout relies on these
 columns.
 
 Then import the Groundwork theme of the app the site documents, such as Base,
-Glazing, Survey, Slate, Bridge, Snag or Upkeep:
+Glazing, Survey, Slate, Bridge or Snag:
 
 ```css
 @import "@timmo001/docs-kit/blume/themes/bridge.css";

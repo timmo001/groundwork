@@ -65,7 +65,7 @@ One status source per system, read by the CLI, the bar and any panel, and notifi
 
 ## 9. Theme
 
-Pick one of the [themes](/themes) or [write one](/themes/writing-a-theme) for the app, so it doesn't look like the others, and one [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors: an agent asks for each one rather than picking. A new theme can start as a copy of another until it has a design of its own. Then switch everything that showed Base:
+Pick one of the [themes](/themes) or [write one](/themes/writing-a-theme) for the app, so it doesn't look like the others, and one [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors: an agent asks for each one rather than picking. Then switch everything that showed Base:
 
 - **Docs site:** import the theme's docs-kit stylesheet in `theme.css` in place of Base's, and load its fonts there. To keep a different font, override `--blume-font-body` and `--blume-font-display` after the import.
 - **Brand images:** set the theme's background and accent in `scripts/brand-images.ts`, run `bun run brand`, and upload the new social preview in the repository's settings, since GitHub has no API for it.

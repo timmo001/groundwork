@@ -15,7 +15,6 @@ import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
-import upkeep from "../themes/upkeep.json" with { type: "json" };
 import type { OmarchyCurrentTheme } from "./omarchy.ts";
 import type { ThemeStore } from "./runtime.ts";
 import type { Theme } from "./schema.ts";
@@ -86,7 +85,6 @@ export const coreThemeChoices: readonly ThemeChoice[] = [
   slate,
   bridge,
   snag,
-  upkeep,
 ].map(({ id, name }) => ({ id, name }));
 
 export interface PageThemeOptions {
