@@ -1335,7 +1335,7 @@ export const themes = [
       "Upkeep"
     ],
     "style": {
-      "font": "Inter",
+      "font": "Mona Sans",
       "mono": "Geist Mono",
       "radius": {
         "panel": 16,
@@ -1360,8 +1360,8 @@ export const themes = [
       "rows": "cards"
     },
     "properties": {
-      "font-sans": "\"Inter Variable\", \"Inter\", system-ui, sans-serif",
-      "font-figures": "\"Inter Variable\", \"Inter\", system-ui, sans-serif",
+      "font-sans": "\"Mona Sans Variable\", \"Mona Sans\", system-ui, sans-serif",
+      "font-figures": "\"Mona Sans Variable\", \"Mona Sans\", system-ui, sans-serif",
       "font-mono": "\"Geist Mono Variable\", \"Geist Mono\", ui-monospace, monospace",
       "font-weight-regular": "400",
       "font-weight-strong": "600",

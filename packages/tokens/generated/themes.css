@@ -1939,8 +1939,8 @@ gw-option-list:not(:defined) {
 }
 
 [data-gw-theme="upkeep"] {
-  --gw-font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
-  --gw-font-figures: "Inter Variable", "Inter", system-ui, sans-serif;
+  --gw-font-sans: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --gw-font-figures: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
   --gw-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
   --gw-font-weight-regular: 400;
   --gw-font-weight-strong: 600;

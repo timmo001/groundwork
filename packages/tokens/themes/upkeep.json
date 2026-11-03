@@ -7,7 +7,7 @@
   "background": "#1b1d29",
   "accent": "#749bee",
   "style": {
-    "font": "Inter",
+    "font": "Mona Sans",
     "mono": "Geist Mono",
     "radius": { "panel": 16, "control": 12, "chip": 10 },
     "border": { "width": 1, "strength": "hairline" },

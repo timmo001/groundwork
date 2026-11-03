@@ -4,8 +4,8 @@
 
 :root {
   --blume-radius: 16px;
-  --blume-font-body: "Inter Variable", "Inter", system-ui, sans-serif;
-  --blume-font-display: "Inter Variable", "Inter", system-ui, sans-serif;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
   --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
   --blume-background: oklch(97.5% 0.0118 277.09);
   --blume-foreground: oklch(37.06% 0.0093 277.09);
