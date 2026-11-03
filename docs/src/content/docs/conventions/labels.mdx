@@ -5,7 +5,7 @@ description: The label sets in Title Case, each with a description and a color d
 
 Labels are Title Case. Families use `Group: Value`. Every label has a one-line description in the same voice: types say what the change does, areas say "Related to ...", statuses say what they wait on. Every color in a repository is distinct, checked in OKLab, and families share a hue band. Brand labels (operating systems, languages, services) use the brand's color, and other labels move to keep clear of them.
 
-The label job renames a label listed under Renames rather than deleting it, so issues keep their labels. It never removes a label it doesn't know without asking.
+The label job renames a label listed under Renames rather than deleting it, so issues keep their labels. A label it doesn't know is deleted only when no issue or pull request uses it; one still in use stays and is listed in the run's log. A repository's `keep` list protects labels the job should leave alone.
 
 ## Every repository
 

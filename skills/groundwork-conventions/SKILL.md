@@ -25,7 +25,7 @@ Move a repository up a kind only when it's used more widely, and ask before movi
 1. Add or edit its file in `conventions/repos/<name>.yml`: `repo`, `kind`, the Renovate ecosystems it uses, any opt-in sets (`priority`, `os`, `tests`), `areas` and labels to `keep`. Private repositories go in `$XDG_CONFIG_HOME/groundwork/conventions/repos` instead, never in the public repository.
 2. Areas are the repository's own parts. Name them in Title Case and describe them as "Related to ...".
 3. Run `mise run check`. It fails on a description in the wrong voice or two colors in the repository closer than the OKLab threshold. Pick a new color in the family's hue band rather than loosening the check.
-4. Print the result with `bun run src/cli.ts labels <owner/repo>` in `packages/conventions`.
+4. Print the result with `bun run src/cli.ts labels <owner/repo>` in `packages/conventions`, or every repository's with `--all`.
 
 ## Label issues and pull requests
 

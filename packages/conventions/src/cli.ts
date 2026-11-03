@@ -201,40 +201,61 @@ const genCommand = Command.make(
   Command.withDescription("Write the conventions data the docs site reads"),
 );
 
+/** What the label job needs for one repository. */
+const labelsEntry = (manifest: Manifest, entry: Manifest["repos"][number]) => ({
+  repo: entry.repo,
+  kind: entry.kind,
+  labels: labelsFor(manifest, entry),
+  keep: entry.keep ?? [],
+});
+
 const labelsCommand = Command.make(
   "labels",
   {
     repo: Argument.String("repo").pipe(
       Argument.withDescription("The repository, as owner/name"),
+      Argument.optional,
+    ),
+    all: Flag.Boolean("all").pipe(
+      Flag.withDescription("Print every repository's labels, as a JSON array"),
+      Flag.withDefault(false),
     ),
     repos: reposFlag,
   },
-  Effect.fn("labels")(function* ({ repo, repos }) {
+  Effect.fn("labels")(function* ({ repo, all, repos }) {
     const manifest = yield* loadManifest(repos);
-    const entry = manifest.repos.find((item) => item.repo === repo);
 
-    if (entry === undefined) {
+    if (all) {
+      yield* Console.log(
+        JSON.stringify(
+          manifest.repos.map((entry) => labelsEntry(manifest, entry)),
+          null,
+          2,
+        ),
+      );
+
+      return;
+    }
+
+    if (Option.isNone(repo)) {
       return yield* new ConventionsError({
-        message: `${repo} has no repository file`,
+        message: "Give a repository, or --all for every one",
       });
     }
 
-    yield* Console.log(
-      JSON.stringify(
-        {
-          repo: entry.repo,
-          kind: entry.kind,
-          labels: labelsFor(manifest, entry),
-          keep: entry.keep ?? [],
-        },
-        null,
-        2,
-      ),
-    );
+    const entry = manifest.repos.find((item) => item.repo === repo.value);
+
+    if (entry === undefined) {
+      return yield* new ConventionsError({
+        message: `${repo.value} has no repository file`,
+      });
+    }
+
+    yield* Console.log(JSON.stringify(labelsEntry(manifest, entry), null, 2));
   }),
 ).pipe(
   Command.withDescription(
-    "Print the labels a repository should have, as JSON, for the label job",
+    "Print the labels a repository, or every one, should have, as JSON, for the label job",
   ),
 );
 
