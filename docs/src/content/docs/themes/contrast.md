@@ -97,6 +97,21 @@ Each role is measured with the WCAG 2 ratio against the raised surface, the lowe
 | Status: danger | 4.8 | 4.81 | 4.93 | 5.14 |
 | on-accent | 4.5 | 5.81 | 7.11 | 7.11 |
 
+## Upkeep
+
+| Role | Target | Light | Dark | Darker |
+| --- | --- | --- | --- | --- |
+| text-strong | 11 | 11.04 | 11.04 | 11.51 |
+| text-primary | 9 | 9.07 | 9.01 | 9.39 |
+| text-secondary | 4.6 | 4.60 | 4.63 | 4.82 |
+| accent | 5 | 5.00 | 5.12 | 5.34 |
+| Status: info | 4.8 | 4.82 | 4.95 | 5.16 |
+| Status: success | 4.8 | 4.80 | 4.94 | 5.15 |
+| Status: important | 4.8 | 4.81 | 4.93 | 5.14 |
+| Status: warning | 4.8 | 4.84 | 4.92 | 5.13 |
+| Status: danger | 4.8 | 4.82 | 4.97 | 5.18 |
+| on-accent | 4.5 | 5.79 | 7.18 | 7.18 |
+
 ## Catppuccin Frappé
 
 Optional. Mapped from its own palette, so it's reported rather than held to the targets.

@@ -277,7 +277,7 @@ picker.addEventListener("import", async (event) => {
 Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme-gallery) does, rather than a select. The cards always open from the palette button, with the mode in place beside it while it fits:
 
 <Demo id="theme-picker-gallery">
-  <gw-theme-picker gallery theme="snag" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"},{"value":"slate","label":"Slate"},{"value":"bridge","label":"Bridge"},{"value":"snag","label":"Snag"}]'></gw-theme-picker>
+  <gw-theme-picker gallery theme="snag" themes='[{"value":"base","label":"Base"},{"value":"glazing","label":"Glazing"},{"value":"survey","label":"Survey"},{"value":"slate","label":"Slate"},{"value":"bridge","label":"Bridge"},{"value":"snag","label":"Snag"},{"value":"upkeep","label":"Upkeep"}]'></gw-theme-picker>
 </Demo>
 
 ### Mode button and inline controls
@@ -305,7 +305,7 @@ A site can use both, with a mode button in its app bar and the full controls in 
 ## Theme gallery
 
 <Demo id="theme-gallery" layout="stack">
-  <gw-theme-gallery theme="catppuccin-mocha" themes='[{"value":"base","label":"Base","group":"Groundwork"},{"value":"glazing","label":"Glazing","group":"Groundwork"},{"value":"survey","label":"Survey","group":"Groundwork"},{"value":"slate","label":"Slate","group":"Groundwork"},{"value":"bridge","label":"Bridge","group":"Groundwork"},{"value":"snag","label":"Snag","group":"Groundwork"},{"value":"catppuccin-latte","label":"Latte","group":"Catppuccin"},{"value":"catppuccin-frappe","label":"Frappé","group":"Catppuccin"},{"value":"catppuccin-macchiato","label":"Macchiato","group":"Catppuccin"},{"value":"catppuccin-mocha","label":"Mocha","group":"Catppuccin"},{"value":"tokyo-night","label":"Tokyo Night","group":"Tokyo Night"}]'></gw-theme-gallery>
+  <gw-theme-gallery theme="catppuccin-mocha" themes='[{"value":"base","label":"Base","group":"Groundwork"},{"value":"glazing","label":"Glazing","group":"Groundwork"},{"value":"survey","label":"Survey","group":"Groundwork"},{"value":"slate","label":"Slate","group":"Groundwork"},{"value":"bridge","label":"Bridge","group":"Groundwork"},{"value":"snag","label":"Snag","group":"Groundwork"},{"value":"upkeep","label":"Upkeep","group":"Groundwork"},{"value":"catppuccin-latte","label":"Latte","group":"Catppuccin"},{"value":"catppuccin-frappe","label":"Frappé","group":"Catppuccin"},{"value":"catppuccin-macchiato","label":"Macchiato","group":"Catppuccin"},{"value":"catppuccin-mocha","label":"Mocha","group":"Catppuccin"},{"value":"tokyo-night","label":"Tokyo Night","group":"Tokyo Night"}]'></gw-theme-gallery>
 </Demo>
 
 Cards that each show a small app in a theme's colors: a rail, a panel and the status tones. It's for a settings page, or the theme picker's popover with `gallery`. Picking one fires `theme` with its `id`, as the picker does, so it pairs with [`pageTheme`](/themes/#on-a-page) the same way.

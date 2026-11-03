@@ -39,6 +39,7 @@ export default defineConfig(
             "/themes/slate",
             "/themes/bridge",
             "/themes/snag",
+            "/themes/upkeep",
             "/themes/optional",
             "/themes/contrast",
             "/themes/writing-a-theme",
