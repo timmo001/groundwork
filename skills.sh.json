@@ -1,0 +1,10 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Use",
+      "description": "Set up repositories and docs sites on Groundwork, and apply its conventions.",
+      "skills": ["groundwork-setup", "groundwork-conventions", "docs-kit"]
+    }
+  ]
+}

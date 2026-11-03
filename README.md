@@ -26,6 +26,7 @@ document attached to it.
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
 | [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |
 | [`skills/docs-kit`](skills/docs-kit/SKILL.md)                             | An agent skill for setting up or changing a site with docs-kit                          |
+| [`skills/groundwork-setup`](skills/groundwork-setup/SKILL.md)             | An agent skill for setting up a repository, step by step from the Setup page            |
 | [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                      |
 
 ## docs-kit
@@ -45,6 +46,12 @@ changing a docs site with the package. Install it with:
 
 ```sh
 npx skills add timmo001/groundwork
+```
+
+Or in Claude Code:
+
+```text
+/plugin install groundwork --marketplace timmo001/groundwork
 ```
 
 Or import the `skills/docs-kit/` directory unchanged into your skill collection.

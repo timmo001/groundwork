@@ -1,0 +1,14 @@
+{
+  "name": "groundwork",
+  "description": "Agent Skills for Groundwork",
+  "owner": { "name": "Aidan Timson", "url": "https://github.com/timmo001" },
+  "plugins": [
+    {
+      "name": "groundwork",
+      "description": "Set up repositories and docs sites on Groundwork, and apply its conventions",
+      "license": "Apache-2.0",
+      "source": "./skills",
+      "skills": "./"
+    }
+  ]
+}
