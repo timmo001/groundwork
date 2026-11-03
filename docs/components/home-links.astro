@@ -1,0 +1,63 @@
+---
+/** `<HomeLinks>`: the home page's cards for the first pages to read. */
+
+const links = [
+  {
+    href: "/demo",
+    title: "Demo",
+    description: "The demo app, live on every theme.",
+  },
+  {
+    href: "/principles",
+    title: "Principles",
+    description: "The rules every part follows.",
+  },
+  {
+    href: "/setup",
+    title: "Setup",
+    description: "A new repository on Groundwork, step by step.",
+  },
+];
+---
+
+<nav aria-label="Start here" class="links">
+  {
+    links.map((link) => (
+      <a class="card" href={link.href}>
+        <span class="title">{link.title} →</span>
+        <span class="description">{link.description}</span>
+      </a>
+    ))
+  }
+</nav>
+
+<style>
+  .links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+    margin-block: 1.5rem;
+  }
+
+  .card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid #8884;
+    border-radius: 12px;
+  }
+
+  .card:hover {
+    border-color: #888a;
+  }
+
+  .title {
+    font-weight: 600;
+  }
+
+  .description {
+    font-size: 0.875rem;
+  }
+</style>
