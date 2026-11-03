@@ -1,0 +1,14 @@
+{
+  "name": "cli-tool",
+  "description": "Agent Skills for cli-tool",
+  "owner": { "name": "Aidan Timson", "url": "https://github.com/timmo001" },
+  "plugins": [
+    {
+      "name": "cli-tool",
+      "description": "Check and apply cli-tool's items through its Code Mode tools, MCP server or CLI",
+      "license": "Apache-2.0",
+      "source": "./skills",
+      "skills": "./"
+    }
+  ]
+}

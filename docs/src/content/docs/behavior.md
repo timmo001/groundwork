@@ -24,7 +24,9 @@ Every system gets the same agent surface:
 | --- | --- |
 | Code Mode | A manifest from `<tool> agent tools --json`, the shape `dot` already prints |
 | MCP | A server on stdio from the same operations |
-| Skill | A tool-owned skill in the repository's `skills/` |
+| Skill | A tool-owned skill in the repository's `skills/`, published on skills.sh and as a Claude Code marketplace |
+
+An agent tries Code Mode first, then MCP, then the CLI with `--json`, and the skill says so.
 
 Each operation has one access class, which decides how agents may use it:
 
@@ -36,6 +38,25 @@ Each operation has one access class, which decides how agents may use it:
 | Power (reboot, shut down) | Write, always asks | Left out unless the server starts with `--allow-power` |
 
 Long commands run as jobs only, so an agent starts them and comes back for the result.
+
+### Publishing the skill
+
+Two files at the repository's root publish `skills/`, and the [`cli-tool` template](https://github.com/timmo001/groundwork/tree/main/templates/cli-tool) has both:
+
+| File | For |
+| --- | --- |
+| `skills.sh.json` | The [Skills CLI](https://skills.sh), grouping the skills into those for using the tool and those for working on it |
+| `.claude-plugin/marketplace.json` | Claude Code, with one plugin whose source is `./skills` |
+
+The docs site gets an Agents page listing each surface, every operation with its access, and how to install the skill:
+
+```bash
+npx skills add timmo001/<repo> --skill <tool>
+```
+
+```text
+/plugin install <tool> --marketplace timmo001/<repo>
+```
 
 ## Status and notifications
 

@@ -20,3 +20,4 @@ What it shows:
 - `restart` is a power operation: it asks on a terminal, needs `--yes` otherwise, and only reaches MCP with `--allow-power`.
 - `agent tools --json` prints the Code Mode manifest, and `mcp` serves the same operations over MCP, from one list in `src/operations.ts`.
 - `skill-template.md` is the tool-owned skill to adapt. Save it as `skills/<tool>/SKILL.md` in the new repository.
+- `skills.sh.json` and `.claude-plugin/marketplace.json` publish that skill on [skills.sh](https://skills.sh) and as a Claude Code marketplace. Move both to the new repository's root and rename `cli-tool`, then add an Agents page to its docs, as [Behavior](https://groundwork.timmo.dev/behavior#publishing-the-skill) describes.

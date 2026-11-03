@@ -1,0 +1,10 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    {
+      "title": "Use",
+      "description": "Check and apply cli-tool's items from an agent.",
+      "skills": ["cli-tool"]
+    }
+  ]
+}
