@@ -7,22 +7,55 @@ Groundwork is the shared starting point for designing and building the things in
 
 It isn't a web kit. The same design reaches web apps and sites, desktop apps, terminal apps and CLI output, Omarchy panels, Home Assistant cards and agents. Themes and tokens are written as data, and each target gets its own generator.
 
-<HomeLinks />
+<PageCards paths={["/demo", "/principles", "/setup"]} />
 
 <ThemeGrid />
 
-## Where to start
+## Try it
 
-- [Targets](/targets): how each kind of app gets the design.
-- [Foundations](/foundations): color roles, type, spacing, radius, motion and focus.
-- [Themes](/themes): Base and the five themes, each shown live in light, dark and Darker.
-- [Components](/components): Framework-free components on native elements, live on every theme.
+These are Groundwork's own components. Pick another theme or mode in the header and they follow it.
 
-## What's here
+<HomeSample />
 
-| Part | Where |
+## Sections
+
+<PageCards
+  level={3}
+  paths={[
+    "/agents",
+    "/targets",
+    "/behavior",
+    "/sync",
+    "/foundations",
+    "/themes",
+    "/conventions",
+    "/components",
+    "/terminal",
+    "/desktop",
+    "/effect",
+  ]}
+/>
+
+## Packages
+
+Published on npm at one shared version:
+
+| Package | What it is |
 | --- | --- |
-| Theme and token documents, the solver and every generator | [`packages/tokens`](https://github.com/timmo001/groundwork/tree/main/packages/tokens) |
-| Shared docs-site branding, layout and config | [`packages/docs-kit`](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit), published as `@timmo001/docs-kit` |
-| This site | [`docs`](https://github.com/timmo001/groundwork/tree/main/docs) |
+| [`@timmo001/groundwork-tokens`](https://www.npmjs.com/package/@timmo001/groundwork-tokens) | The theme schema, the OKLCH solver and every theme as CSS and JSON |
+| [`@timmo001/groundwork-ui`](https://www.npmjs.com/package/@timmo001/groundwork-ui) | Framework-free web components, styled by the `--gw-*` tokens |
+| [`@timmo001/groundwork-tui`](https://www.npmjs.com/package/@timmo001/groundwork-tui) | Terminal components: OpenTUI renderables on the terminal tokens |
+| [`@timmo001/docs-kit`](https://www.npmjs.com/package/@timmo001/docs-kit) | Shared branding, layout and config for docs sites, also on [JSR](https://jsr.io/@timmo001/docs-kit) |
+
+In the [repository](https://github.com/timmo001/groundwork) only:
+
+| Part | What it is |
+| --- | --- |
+| [`packages/conventions`](https://github.com/timmo001/groundwork/tree/main/packages/conventions) | Repository kinds and label sets, and the checks that keep them consistent |
+| [`packages/sync`](https://github.com/timmo001/groundwork/tree/main/packages/sync) | Copies registry items into apps and keeps the QML panel components in step |
+| [`packages/lit-effect`](https://github.com/timmo001/groundwork/tree/main/packages/lit-effect) | Effect for Lit apps: an atom controller and a Schema-checked router |
+| [`packages/demo`](https://github.com/timmo001/groundwork/tree/main/packages/demo) | The demo app every target shows |
+| [`packages/desktop`](https://github.com/timmo001/groundwork/tree/main/packages/desktop) | The Electrobun window and defaults for desktop apps |
+| [`templates`](https://github.com/timmo001/groundwork/tree/main/templates) | Starting points for a CLI tool, a terminal menu and a desktop app |
+| [`docs`](https://github.com/timmo001/groundwork/tree/main/docs) | This site |
 

@@ -1,0 +1,60 @@
+---
+/**
+ * `<PageCards>`: a `gw-card` linking to each of the given pages, with its
+ * title and description, in the theme picked in the header. Used on the home
+ * page.
+ */
+import data from "blume:data";
+
+interface Props {
+  /** The pages to link, as their paths, such as "/demo". */
+  paths: string[];
+  /** The cards' heading level, 2 by default. Use 3 under a section heading. */
+  level?: number;
+}
+
+const { paths, level = 2 } = Astro.props;
+
+const pages = paths.map((path) => {
+  const route = data.routes.find((item) => item.path === path);
+
+  if (route === undefined) throw new Error(`Unknown page: ${path}`);
+
+  return route;
+});
+---
+
+<div class="cards" data-page-theme>
+  {
+    pages.map((page) => (
+      <gw-card
+        heading={page.title}
+        description={page.description ?? undefined}
+        href={page.path}
+        level={level}
+      />
+    ))
+  }
+</div>
+
+<style>
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin-block: 1.5rem;
+    background: transparent;
+  }
+
+  /* Keep the room each card takes once it upgrades, so the page doesn't move */
+  gw-card:not(:defined) {
+    display: block;
+    min-block-size: 7rem;
+  }
+</style>
+
+<script>
+  // Registers the elements the cards use. Astro bundles this once per page.
+  import "../demos/index.ts";
+  import "../demos/page-theme.ts";
+</script>

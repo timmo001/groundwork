@@ -1,0 +1,69 @@
+---
+/**
+ * `<HomeSample>`: a few Groundwork components together on the home page, in
+ * the theme and mode picked in the header.
+ */
+---
+
+<div class="sample" data-page-theme>
+  <gw-card heading="Nightly backup" description="Last run 4 minutes ago" level={3}>
+    <gw-chip slot="actions" tone="success">Passing</gw-chip>
+    <div class="stack">
+      <gw-meter label="Disk" value="62" display="62 of 100 GB" high="80" critical="95"></gw-meter>
+      <gw-switch label="Run every night" checked></gw-switch>
+    </div>
+    <div class="row" slot="footer">
+      <gw-button appearance="filled">Run now</gw-button>
+      <gw-button variant="neutral" appearance="outlined">Settings</gw-button>
+    </div>
+  </gw-card>
+  <gw-card heading="Workshop" description="Hostname and boot target" level={3}>
+    <div class="stack">
+      <gw-input label="Hostname" value="workshop"></gw-input>
+      <div class="row">
+        <gw-chip>Linux</gw-chip>
+        <gw-chip tone="accent">Windows</gw-chip>
+        <gw-chip>Installer</gw-chip>
+      </div>
+      <gw-alert tone="warning" heading="Warning">The token expires in 2 days.</gw-alert>
+    </div>
+  </gw-card>
+</div>
+
+<style>
+  .sample {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--gw-space-4);
+    margin-block: 1.5rem;
+    padding: var(--gw-space-5);
+    font-family: var(--gw-font-sans);
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-default);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--gw-space-4);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gw-space-2);
+  }
+
+  /* Keep the room each card takes once it upgrades, so the page doesn't move */
+  gw-card:not(:defined) {
+    display: block;
+    min-block-size: 16rem;
+  }
+</style>
+
+<script>
+  // Registers the elements the sample uses. Astro bundles this once per page.
+  import "../demos/index.ts";
+  import "../demos/page-theme.ts";
+</script>
