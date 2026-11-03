@@ -65,7 +65,8 @@ One status source per system, read by the CLI, the bar and any panel, and notifi
 
 ## 9. Theme
 
-Pick one of the [themes](/themes) or [write one](/themes/writing-a-theme) for the app, so it doesn't look like the others, and one [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors: an agent asks for each one rather than picking. Then switch everything that showed Base:
+Apps don't get a theme of their own in Groundwork. Each one offers the [theme set](/themes): Base and the core themes, the [optional themes](/themes/optional) it opts in to, and [your own theme](/themes#your-own-theme), uploaded or written by an agent and applied at runtime. The owner picks which themes the app offers, its default and its [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors, so an agent asks for each one rather than choosing. Then switch everything that showed Base:
 
-- **Docs site:** import the theme's docs-kit stylesheet in `theme.css` in place of Base's, and load its fonts there. To keep a different font, override `--blume-font-body` and `--blume-font-display` after the import.
-- **Brand images:** set the theme's background and accent in `scripts/brand-images.ts`, run `bun run brand`, and upload the new social preview in the repository's settings, since GitHub has no API for it.
+- **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts.
+- **App:** offer the same themes with [`pageTheme`](/themes#on-a-page) and a [theme picker](/components/actions/#theme-picker), including importing your own theme.
+- **Brand images:** set the default theme's background and accent in `scripts/brand-images.ts` and run `bun run brand`. Then upload the new social preview in the repository's settings, since GitHub doesn't read it from the repository.
