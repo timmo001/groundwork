@@ -24,12 +24,14 @@ Keep a checklist of these steps on the repository's tracking issue, ticking each
 - hk hooks running the shared Markdown, YAML, Actions and shell lints before a push.
 - mise tasks for `format`, `check`, `test` and `build`, with dev servers as `serve:*` tasks through Pitchfork, each at `https://<daemon>.<repo>.localhost`.
 
-How packages are laid out inside the workspace, and which ones publish, is still being decided.
+How packages are laid out inside the workspace, and which ones publish, is still being decided in [#77](https://github.com/timmo001/groundwork/issues/77).
 
 ## 3. Agent files
 
 - `AGENTS.md`, saying what the repository is, its stack, how to run its checks and how changes roll out. Write it by hand and keep it short.
 - The shared skills it needs, synced into `.agents/skills/`, and the docs MCP servers for the libraries it builds on.
+
+What a repository lets agents do without asking is still being decided in [#78](https://github.com/timmo001/groundwork/issues/78).
 
 ## 4. CI
 
