@@ -9403,7 +9403,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0 var(--gw-space-2); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); background: var(--gw-color-fill-neutral-resting); border-radius: var(--gw-radius-chip); --gw-icon-size: 0.9rem; } .shown.filtering { color: var(--gw-color-on-accent, var(--gw-color-surface-default)); background: var(--gw-color-accent); } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } /* The heading row sits on the page's own surface, darker than the sheet, so each filter reads as a section */ .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); font-size: var(--gw-font-size-m); background: var(--gw-color-surface-default); border-block-start: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; } .shown[hidden] { display: none; } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -9512,13 +9512,8 @@
               "kind": "field",
               "name": "#shown",
               "privacy": "private",
-              "readonly": true
-            },
-            {
-              "kind": "field",
-              "name": "#shownText",
-              "privacy": "private",
-              "readonly": true
+              "readonly": true,
+              "description": "How many options show, out of all of them, as a chip."
             },
             {
               "kind": "field",
@@ -21056,7 +21051,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away.",
           "name": "GwTable",
           "cssParts": [
             {
@@ -21066,6 +21061,10 @@
             {
               "description": "Each row.",
               "name": "row"
+            },
+            {
+              "description": "Each group's heading row.",
+              "name": "group"
             }
           ],
           "slots": [
@@ -21082,7 +21081,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21095,7 +21094,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21128,6 +21127,14 @@
             {
               "kind": "field",
               "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "group",
               "type": {
                 "text": "string"
               },
@@ -21239,10 +21246,28 @@
               "name": "#shown",
               "privacy": "private",
               "type": {
-                "text": "readonly TableRow[]"
+                "text": "readonly Shown[]"
               },
               "default": "[]",
-              "description": "The sorted and searched rows, rebuilt only when what they depend on changes."
+              "description": "The group headings and sorted, searched rows the body draws, rebuilt\nonly when what they depend on changes."
+            },
+            {
+              "kind": "field",
+              "name": "#matched",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "How many rows there are after the search, without the headings."
+            },
+            {
+              "kind": "field",
+              "name": "#collapsed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "description": "The groups folded away, by their heading's key."
             },
             {
               "kind": "field",
@@ -21308,7 +21333,20 @@
               "kind": "method",
               "name": "#process",
               "privacy": "private",
-              "description": "Sorts and searches the rows through TanStack Table."
+              "description": "Sorts, searches and groups the rows through TanStack Table."
+            },
+            {
+              "kind": "method",
+              "name": "#toggleGroup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "key",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -21327,6 +21365,26 @@
               "kind": "method",
               "name": "#renderHead",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#renderGroup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "Extract<Shown, { readonly kind: \"group\" }>"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "A group's heading: a button that folds it, its name and a chip counting its rows."
             },
             {
               "kind": "method",
@@ -21699,6 +21757,13 @@
             },
             {
               "type": {
+                "text": "string"
+              },
+              "description": "The column whose values it groups the rows by, by id.",
+              "name": "group"
+            },
+            {
+              "type": {
                 "text": "\"auto\"|\"always\"|\"never\""
               },
               "description": "Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.",
@@ -21740,6 +21805,14 @@
           "tagName": "gw-table",
           "customElement": true,
           "summary": "Rows of data that sort and search, windowed for long lists."
+        },
+        {
+          "kind": "variable",
+          "name": "expanded",
+          "type": {
+            "text": "boolean"
+          },
+          "default": "!this.#collapsed.has(row.id)"
         }
       ],
       "exports": [

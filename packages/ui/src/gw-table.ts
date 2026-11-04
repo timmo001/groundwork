@@ -7,9 +7,11 @@
  */
 import {
   columnFilteringFeature,
+  columnGroupingFeature,
   constructTable,
   createColumnHelper,
   createFilteredRowModel,
+  createGroupedRowModel,
   createSortedRowModel,
   filterFn_includesString,
   globalFilteringFeature,
@@ -27,6 +29,7 @@ import {
   windowScroll,
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import "./gw-chip.js";
 import { base, createIcon } from "./styles.js";
 
 /** A value a cell holds, which sorting and search read. */
@@ -56,9 +59,14 @@ export interface TableColumn<T = TableRow> {
   readonly numeric?: boolean;
   /** Lets the cell wrap and take the spare width, for long text. */
   readonly wide?: boolean;
+  /** A group's name from its value, when `group` names this column. Defaults to the value. */
+  readonly groupLabel?: (value: TableValue) => string;
 }
 
-// MDI's arrow-up, arrow-down and magnify
+// MDI's chevron-right, arrow-up, arrow-down and magnify
+const chevronIcon =
+  "M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z";
+
 const upIcon =
   "M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z";
 
@@ -84,7 +92,20 @@ const features = tableFeatures({
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns: { includesString: filterFn_includesString },
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
 });
+
+/** A row the body draws: a group's heading, or one of the rows. */
+type Shown =
+  | {
+      readonly kind: "group";
+      readonly key: string;
+      readonly label: string;
+      readonly count: number;
+      readonly expanded: boolean;
+    }
+  | { readonly kind: "row"; readonly key: string; readonly row: TableRow };
 
 /**
  * Rows of data in a table that sorts by a header press and searches every
@@ -100,6 +121,10 @@ const features = tableFeatures({
  * search are the table's own, set from their attributes to start with; it
  * fires `change` when they change, so a page can keep them in its URL.
  *
+ * `group` gathers the rows under a heading for each value of a column, such
+ * as a state, with its name (from the column's `groupLabel`) and a chip
+ * counting its rows. Pressing a heading folds its rows away.
+ *
  * @element gw-table
  * @summary Rows of data that sort and search, windowed for long lists.
  *
@@ -109,6 +134,7 @@ const features = tableFeatures({
  * @attr {string} sort - The column it sorts by, by id.
  * @attr {boolean} descending - Sorts from the highest or latest first.
  * @attr {string} query - The search text.
+ * @attr {string} group - The column whose values it groups the rows by, by id.
  * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.
  * @attr {string} search-label - The search field's name and placeholder. Defaults to `Search`.
  * @attr {string} row-key - The row property that identifies each row.
@@ -119,6 +145,7 @@ const features = tableFeatures({
  *
  * @csspart table - The table.
  * @csspart row - Each row.
+ * @csspart group - Each group's heading row.
  *
  * @fires {Event} change - When the sort or search changes. Read `sort`, `descending` and `query`.
  */
@@ -128,6 +155,7 @@ export class GwTable extends GwElement {
     sort: { reflect: true },
     descending: { type: "boolean", reflect: true },
     query: {},
+    group: { reflect: true },
     search: {},
     searchLabel: { attribute: "search-label" },
     rowKey: { attribute: "row-key" },
@@ -271,6 +299,59 @@ export class GwTable extends GwElement {
         flex-direction: row-reverse;
       }
 
+      /* A group's heading sits on the page's own surface, darker than the
+         rows, so the groups read as sections */
+      tr.group td {
+        padding: 0;
+        font-size: var(--gw-font-size-m);
+        font-weight: var(--gw-font-weight-strong);
+        color: var(--gw-color-text-strong);
+        background: var(--gw-color-surface-default);
+        border-block-end: var(--gw-border-width) solid
+          var(--gw-color-border-normal);
+      }
+
+      tbody tr.group:hover {
+        background: none;
+      }
+
+      .group-toggle {
+        display: flex;
+        gap: var(--gw-space-2);
+        align-items: center;
+        width: 100%;
+        padding: var(--gw-space-3);
+        font: inherit;
+        color: inherit;
+        text-align: start;
+        cursor: pointer;
+        background: none;
+        border: 0;
+        --gw-icon-size: 1.35em;
+      }
+
+      .group-toggle:hover {
+        background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      .group-toggle:focus-visible {
+        outline: var(--gw-focus-width) solid var(--gw-color-focus);
+        outline-offset: calc(-1 * var(--gw-focus-width));
+      }
+
+      .group-toggle .icon {
+        color: var(--gw-color-accent);
+        transition: rotate var(--gw-motion-normal) var(--gw-motion-easing);
+      }
+
+      .group-toggle[aria-expanded="true"] .icon {
+        rotate: 90deg;
+      }
+
+      .group-toggle gw-chip {
+        margin-inline-start: auto;
+      }
+
       .none {
         padding: var(--gw-space-8) var(--gw-space-4);
         color: var(--gw-color-text-secondary);
@@ -287,6 +368,7 @@ export class GwTable extends GwElement {
   declare sort: string;
   declare descending: boolean;
   declare query: string;
+  declare group: string;
   declare search: "auto" | "always" | "never";
   declare searchLabel: string;
   declare rowKey: string;
@@ -319,8 +401,17 @@ export class GwTable extends GwElement {
 
   readonly #none = h("div", { class: "none" });
 
-  /** The sorted and searched rows, rebuilt only when what they depend on changes. */
-  #shown: readonly TableRow[] = [];
+  /**
+   * The group headings and sorted, searched rows the body draws, rebuilt
+   * only when what they depend on changes.
+   */
+  #shown: readonly Shown[] = [];
+
+  /** How many rows there are after the search, without the headings. */
+  #matched = 0;
+
+  /** The groups folded away, by their heading's key. */
+  readonly #collapsed = new Set<string>();
 
   readonly #virtualizer = new Virtualizer<Window, HTMLTableRowElement>({
     count: 0,
@@ -342,6 +433,7 @@ export class GwTable extends GwElement {
     this.sort = "";
     this.descending = false;
     this.query = "";
+    this.group = "";
     this.search = "auto";
     this.searchLabel = "Search";
     this.rowKey = "";
@@ -376,8 +468,9 @@ export class GwTable extends GwElement {
     return this.rowKey === "" ? String(index) : String(row[this.rowKey]);
   }
 
-  /** Sorts and searches the rows through TanStack Table. */
+  /** Sorts, searches and groups the rows through TanStack Table. */
   #process() {
+    const grouping = this.columns.find((column) => column.id === this.group);
     const helper = createColumnHelper<typeof features, TableRow>();
 
     const columns = helper.columns(
@@ -402,14 +495,53 @@ export class GwTable extends GwElement {
         this.columns.find((entry) => entry.id === column.id)?.searchable !==
         false,
       enableSortingRemoval: false,
+      groupedColumnMode: false,
       initialState: {
         sorting:
           this.sort === "" ? [] : [{ id: this.sort, desc: this.descending }],
         globalFilter: this.query,
+        grouping: grouping === undefined ? [] : [grouping.id],
       },
     });
 
-    this.#shown = table.getRowModel().rows.map((row) => row.original);
+    this.#matched = table.getFilteredRowModel().rows.length;
+
+    // Each group's heading, then its rows unless it's folded away
+    this.#shown = table.getRowModel().rows.flatMap((row): Shown[] => {
+      if (!row.getIsGrouped()) {
+        return [{ kind: "row", key: row.id, row: row.original }];
+      }
+
+      const value: TableValue = row.original[row.groupingColumnId ?? ""];
+      const expanded = !this.#collapsed.has(row.id);
+
+      const heading: Shown = {
+        kind: "group",
+        key: row.id,
+        label: grouping?.groupLabel?.(value) ?? String(value ?? ""),
+        count: row.subRows.length,
+        expanded,
+      };
+
+      if (!expanded) return [heading];
+
+      return [
+        heading,
+        ...row.subRows.map((sub): Shown => ({
+          kind: "row",
+          key: sub.id,
+          row: sub.original,
+        })),
+      ];
+    });
+  }
+
+  #toggleGroup(key: string) {
+    if (this.#collapsed.has(key)) this.#collapsed.delete(key);
+    else this.#collapsed.add(key);
+
+    this.#process();
+    this.requestUpdate("window");
   }
 
   #sortBy(column: TableColumn) {
@@ -460,17 +592,41 @@ export class GwTable extends GwElement {
     );
   }
 
+  /** A group's heading: a button that folds it, its name and a chip counting its rows. */
+  #renderGroup(
+    group: Extract<Shown, { readonly kind: "group" }>,
+    index: number,
+  ) {
+    const count = h("gw-chip", { size: "small" }, String(group.count));
+
+    const toggle = h(
+      "button",
+      {
+        type: "button",
+        class: "group-toggle",
+        "aria-expanded": String(group.expanded),
+      },
+      createIcon(chevronIcon),
+      h("span", {}, group.label),
+      count,
+    );
+
+    toggle.addEventListener("click", () => this.#toggleGroup(group.key));
+
+    return h(
+      "tr",
+      { class: "group", part: "group", "data-index": index },
+      h("td", { colspan: this.columns.length }, toggle),
+    );
+  }
+
   #renderBody() {
     const virtualizer = this.#virtualizer;
 
     virtualizer.setOptions({
       ...virtualizer.options,
       count: this.#shown.length,
-      getItemKey: (index) => {
-        const row = this.#shown[index];
-
-        return row === undefined ? index : this.#keyOf(row, index);
-      },
+      getItemKey: (index) => this.#shown[index]?.key ?? index,
       scrollMargin: this.#body.getBoundingClientRect().top + window.scrollY,
     });
 
@@ -489,10 +645,13 @@ export class GwTable extends GwElement {
       );
 
     const rows = items.flatMap((item) => {
-      const row = this.#shown[item.index];
+      const shown = this.#shown[item.index];
 
-      if (row === undefined) return [];
+      if (shown === undefined) return [];
 
+      if (shown.kind === "group") return [this.#renderGroup(shown, item.index)];
+
+      const { row } = shown;
       const tr = h("tr", { part: "row", "data-index": item.index });
 
       for (const column of this.columns) {
@@ -543,7 +702,15 @@ export class GwTable extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
-    const data = ["columns", "rows", "sort", "descending", "query", "rowKey"];
+    const data = [
+      "columns",
+      "rows",
+      "sort",
+      "descending",
+      "query",
+      "group",
+      "rowKey",
+    ];
 
     if (data.some((name) => changed.has(name))) this.#process();
 
@@ -565,7 +732,7 @@ export class GwTable extends GwElement {
       this.search === "never" ||
       (this.search !== "always" && this.rows.length < searchFrom);
 
-    this.#none.hidden = this.#shown.length > 0;
+    this.#none.hidden = this.#matched > 0;
     this.#none.textContent =
       this.rows.length === 0 ? this.emptyLabel : this.noMatchLabel;
 

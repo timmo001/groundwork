@@ -5,6 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
+import "./gw-chip.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
 /** One option of a filter. */
@@ -81,18 +82,22 @@ export class GwFilter extends GwElement {
         margin-inline: calc(-1 * var(--gw-filter-inset, 0rem));
       }
 
+      /* The heading row sits on the page's own surface, darker than the
+         sheet, so each filter reads as a section */
       .header {
         display: flex;
         align-items: center;
         min-height: 2.75rem;
         padding-inline: var(--gw-filter-inset, 0rem);
+        font-size: var(--gw-font-size-m);
+        background: var(--gw-color-surface-default);
         border-block-start: var(--gw-border-width) solid
-          var(--gw-color-border-quiet);
+          var(--gw-color-border-normal);
       }
 
       :host([expanded]) .header {
         border-block-end: var(--gw-border-width) solid
-          var(--gw-color-border-quiet);
+          var(--gw-color-border-normal);
       }
 
       .toggle {
@@ -134,22 +139,12 @@ export class GwFilter extends GwElement {
       }
 
       .shown {
-        display: inline-flex;
-        gap: var(--gw-space-1);
-        align-items: center;
-        padding: 0 var(--gw-space-2);
-        font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-regular);
         font-variant-numeric: tabular-nums;
-        color: var(--gw-color-text-secondary);
-        background: var(--gw-color-fill-neutral-resting);
-        border-radius: var(--gw-radius-chip);
-        --gw-icon-size: 0.9rem;
       }
 
-      .shown.filtering {
-        color: var(--gw-color-on-accent, var(--gw-color-surface-default));
-        background: var(--gw-color-accent);
+      .shown[hidden] {
+        display: none;
       }
 
       .clear {
@@ -286,9 +281,12 @@ export class GwFilter extends GwElement {
 
   readonly #name = h("span");
 
-  readonly #shown = h("span", { class: "shown" }, createIcon(shownIcon));
-
-  readonly #shownText = h("span");
+  /** How many options show, out of all of them, as a chip. */
+  readonly #shown = h("gw-chip", {
+    class: "shown",
+    size: "small",
+    icon: shownIcon,
+  });
 
   readonly #toggle = h(
     "button",
@@ -374,7 +372,6 @@ export class GwFilter extends GwElement {
       this.#query = this.#search.value;
       this.requestUpdate("options");
     });
-    this.#shown.append(this.#shownText);
     root.append(
       h("div", { class: "header", part: "header" }, this.#toggle, this.#clear),
       this.#body,
@@ -439,8 +436,8 @@ export class GwFilter extends GwElement {
     this.#kind.classList.add("kind");
     this.#kind.toggleAttribute("hidden", !this.icon);
     this.#name.textContent = this.label;
-    this.#shownText.textContent = `${shown}/${this.options.length}`;
-    this.#shown.classList.toggle("filtering", filtering);
+    this.#shown.textContent = `${shown}/${this.options.length}`;
+    setAttribute(this.#shown, "tone", filtering ? "accent" : "neutral");
     this.#shown.hidden = this.options.length === 0;
     setAttribute(this.#toggle, "aria-expanded", String(this.expanded));
     this.#clear.hidden = !filtering;

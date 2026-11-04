@@ -205,10 +205,17 @@ Rows of data that sort by a header press and search every column, built on TanSt
 | `rows` | The rows. A column reads the row property its `id` names |
 | `sort`, `descending` | The column it sorts by, and whether highest or latest comes first |
 | `query`, `search` | The search text, and whether there's a search field: `auto` (from 8 rows), `always` or `never` |
+| `group` | The column whose values it groups the rows by. Each group gets a heading with its name and a chip counting its rows, which folds it away when pressed |
 | `row-key` | The row property that identifies each row, so it keeps its place across updates |
 | `label`, `search-label`, `empty-label`, `no-match-label` | Its name, and the text it shows, for an app in another language |
 
-Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, and `cell` draws the cell as any node, such as a link or a chip. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort or search changes; read `sort`, `descending` and `query`, such as to keep them in the URL.
+Grouped by state:
+
+<Demo id="table-grouped" layout="stack">
+  <gw-table label="Issues" group="state" sort="seen" descending row-key="id" columns='[{"id":"title","header":"Issue","wide":true},{"id":"state","header":"State"},{"id":"host","header":"Host"},{"id":"seen","header":"Seen","numeric":true}]' rows='[{"id":"a","title":"waybar crashed on a monitor hotplug","state":"Regressed","host":"desktop","seen":14},{"id":"b","title":"pipewire lost its sink after suspend","state":"New","host":"laptop","seen":3},{"id":"c","title":"upkeep-worker.service failed","state":"New","host":"desktop","seen":1},{"id":"d","title":"Out of memory in the docs build","state":"Ongoing","host":"server","seen":27},{"id":"e","title":"ghostty crashed opening a tab","state":"Ongoing","host":"desktop","seen":6}]'></gw-table>
+</Demo>
+
+Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort or search changes; read `sort`, `descending` and `query`, such as to keep them in the URL.
 
 ```ts
 table.columns = [
