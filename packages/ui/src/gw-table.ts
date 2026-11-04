@@ -123,7 +123,8 @@ type Shown =
  *
  * `group` gathers the rows under a heading for each value of a column, such
  * as a state, with its name (from the column's `groupLabel`) and a chip
- * counting its rows. Pressing a heading folds its rows away.
+ * counting its rows. Pressing a heading folds its rows away. That column
+ * doesn't show, since each heading names its value.
  *
  * @element gw-table
  * @summary Rows of data that sort and search, windowed for long lists.
@@ -555,12 +556,17 @@ export class GwTable extends GwElement {
     this.#change();
   }
 
+  /** The columns it draws: all but the one it groups by, which each heading names. */
+  #drawn() {
+    return this.columns.filter((column) => column.id !== this.group);
+  }
+
   #renderHead() {
     this.#head.replaceChildren(
       h(
         "tr",
         {},
-        ...this.columns.map((column) => {
+        ...this.#drawn().map((column) => {
           const sorted = this.sort === column.id;
 
           const th = h("th", {
@@ -616,7 +622,7 @@ export class GwTable extends GwElement {
     return h(
       "tr",
       { class: "group", part: "group", "data-index": index },
-      h("td", { colspan: this.columns.length }, toggle),
+      h("td", { colspan: this.#drawn().length }, toggle),
     );
   }
 
@@ -633,13 +639,14 @@ export class GwTable extends GwElement {
     const items = virtualizer.getVirtualItems();
     const before = items[0]?.start ?? virtualizer.options.scrollMargin;
     const after = items.at(-1)?.end ?? before;
+    const drawn = this.#drawn();
 
     const spacer = (height: number) =>
       h(
         "tr",
         { class: "spacer", "aria-hidden": "true" },
         h("td", {
-          colspan: this.columns.length,
+          colspan: drawn.length,
           style: `height: ${Math.max(0, height)}px`,
         }),
       );
@@ -654,7 +661,7 @@ export class GwTable extends GwElement {
       const { row } = shown;
       const tr = h("tr", { part: "row", "data-index": item.index });
 
-      for (const column of this.columns) {
+      for (const column of drawn) {
         const cell =
           column.cell === undefined
             ? String(this.#valueOf(column, row) ?? "")
@@ -717,7 +724,8 @@ export class GwTable extends GwElement {
     if (
       changed.has("columns") ||
       changed.has("sort") ||
-      changed.has("descending")
+      changed.has("descending") ||
+      changed.has("group")
     ) {
       this.#renderHead();
     }

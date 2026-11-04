@@ -21051,7 +21051,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value.",
           "name": "GwTable",
           "cssParts": [
             {
@@ -21360,6 +21360,12 @@
                   }
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#drawn",
+              "privacy": "private",
+              "description": "The columns it draws: all but the one it groups by, which each heading names."
             },
             {
               "kind": "method",
