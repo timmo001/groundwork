@@ -14,6 +14,10 @@ export interface GwEventMap {
   "gw-expansion": {
     toggle: Event;
   };
+  "gw-filter": {
+    change: Event;
+    toggle: Event;
+  };
   "gw-menu-button": {
     select: CustomEvent<{ value: string }>;
     check: CustomEvent<{ value: string, checked: boolean }>;
@@ -38,6 +42,9 @@ export interface GwEventMap {
   };
   "gw-sheet": {
     close: Event;
+  };
+  "gw-table": {
+    change: Event;
   };
   "gw-theme-gallery": {
     theme: CustomEvent<{ id: string }>;

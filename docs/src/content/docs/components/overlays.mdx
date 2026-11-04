@@ -83,6 +83,30 @@ A panel of filters, settings or details that slides in from an edge over the pag
 
 It's on the Popover API, in the top layer. Esc, a click outside or the close button closes it, focus starts on the close button and goes back to where it was, and it fires `close`. Set `--gw-sheet-width` for the side edges and `--gw-sheet-height` for the bottom.
 
+## Filter
+
+<Demo id="filter">
+  <gw-button variant="neutral" appearance="outlined" data-opens="list-filters" icon="M6,13H18V11H6M3,6V8H21V6M10,18H14V16H10V18Z">Filters</gw-button>
+  <gw-sheet id="list-filters" heading="Filters" style="--gw-filter-inset: var(--gw-space-4)">
+    <gw-filter label="State" options='[{"value":"regressed","label":"Regressed","description":"Fixed once, failing again","count":3},{"value":"new","label":"New","description":"Seen for the first time","count":12},{"value":"ongoing","label":"Ongoing","description":"Still happening","count":40},{"value":"quiet","label":"Quiet","description":"Not seen lately","count":7}]' value='["regressed","new","ongoing"]' default-value='["regressed","new","ongoing"]'></gw-filter>
+    <gw-filter label="Host" options='[{"value":"desktop","label":"desktop","count":38},{"value":"laptop","label":"laptop","count":17},{"value":"server","label":"server","count":7}]'></gw-filter>
+  </gw-sheet>
+</Demo>
+
+One filter of a list, such as its state or where it came from, to stack in a `gw-sheet`. Its header opens and closes it and counts the options showing, in the accent while the filter narrows the list, with a button that clears it back to its default. Each option is a checkbox with an optional description and count. An item shows when it has any ticked value; ticking nothing, the same as ticking everything, shows it all, so the last ticked option can't be unticked. From 8 options it gets a search field.
+
+| Attribute | What it does |
+| --- | --- |
+| `label`, `icon` | The filter's name, and icon path data before it |
+| `options` | The options, as JSON: `value`, `label`, and an optional `description` and `count` |
+| `value` | The ticked values, as JSON. Empty shows everything |
+| `default-value` | What clearing it goes back to, as JSON. Defaults to everything |
+| `expanded` | Whether the options show |
+| `search` | `auto` (the default), `always` or `never` |
+| `clear-label`, `search-label` | The clear button's and search field's names, for an app in another language |
+
+It fires `change` when the ticked options change and `toggle` when it opens or closes; read `value` and `expanded`. In a sheet, set `--gw-filter-inset` to the sheet's padding, so each filter's dividers run edge to edge.
+
 ## Dialog
 
 <Demo id="dialog">

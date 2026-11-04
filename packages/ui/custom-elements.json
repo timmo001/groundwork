@@ -9366,6 +9366,662 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-filter.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "One filter of a list, such as its state or where it came from: a header\nthat opens and closes it, then its options to tick, each with an optional\ndescription and count. An item shows when it has any ticked value, and\nticking nothing, the same as ticking everything, shows it all, so the last\nticked option can't be unticked. The header counts how many options show,\nin the accent while the filter narrows the list, with a button to clear it\nback to `default-value`. Long lists get a search field. Stack several in a\n`gw-sheet`, edge to edge.",
+          "name": "GwFilter",
+          "cssParts": [
+            {
+              "description": "The row with the name and the clear button.",
+              "name": "header"
+            },
+            {
+              "description": "The options' list.",
+              "name": "options"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, icon: {}, options: { type: \"json\" }, value: { type: \"json\" }, defaultValue: { type: \"json\", attribute: \"default-value\" }, expanded: { type: \"boolean\", reflect: true }, search: {}, clearLabel: { attribute: \"clear-label\" }, searchLabel: { attribute: \"search-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0 var(--gw-space-2); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); background: var(--gw-color-fill-neutral-resting); border-radius: var(--gw-radius-chip); --gw-icon-size: 0.9rem; } .shown.filtering { color: var(--gw-color-on-accent, var(--gw-color-surface-default)); background: var(--gw-color-accent); } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "type": {
+                "text": "readonly FilterOption[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "defaultValue",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "true"
+            },
+            {
+              "kind": "field",
+              "name": "search",
+              "type": {
+                "text": "\"auto\" | \"always\" | \"never\""
+              },
+              "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Clear\""
+            },
+            {
+              "kind": "field",
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "#query",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#chevron",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#kind",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#name",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#shown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#shownText",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#toggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#clear",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#search",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#list",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#isTicked",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "No values means no filter, so every option counts as ticked."
+            },
+            {
+              "kind": "method",
+              "name": "#isFiltering",
+              "privacy": "private",
+              "description": "Whether the ticked options differ from the default."
+            },
+            {
+              "kind": "method",
+              "name": "#change",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#tick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "option",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "checked",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#renderOptions",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the ticked options change. Read `value`."
+            },
+            {
+              "name": "toggle",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the options open or close. Read `expanded`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The filter's name, in its header.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for an icon before the name.",
+              "name": "icon"
+            },
+            {
+              "type": {
+                "text": "FilterOption[]"
+              },
+              "description": "The options, as JSON.",
+              "name": "options"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The ticked options' values, as JSON. Empty shows everything.",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "What clearing it goes back to, as JSON. Defaults to everything.",
+              "name": "default-value"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the options show. Defaults to `true`.",
+              "name": "expanded"
+            },
+            {
+              "type": {
+                "text": "\"auto\"|\"always\"|\"never\""
+              },
+              "description": "Whether the options have a search field; `auto` adds one from 8 options. Defaults to `auto`.",
+              "name": "search"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The clear button's name, for an app in another language. Defaults to `Clear`.",
+              "name": "clear-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The search field's name. Defaults to `Search`.",
+              "name": "search-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-filter",
+          "customElement": true,
+          "summary": "One filter of a list, as options to tick."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwFilter",
+          "declaration": {
+            "name": "GwFilter",
+            "module": "src/gw-filter.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-gauge.ts",
       "declarations": [
         {
@@ -20396,6 +21052,709 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-table.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.",
+          "name": "GwTable",
+          "cssParts": [
+            {
+              "description": "The table.",
+              "name": "table"
+            },
+            {
+              "description": "Each row.",
+              "name": "row"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Controls beside the search field, such as a Filters button.",
+              "name": "toolbar"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "sort",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "descending",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "query",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "search",
+              "type": {
+                "text": "\"auto\" | \"always\" | \"never\""
+              },
+              "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "rowKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "emptyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Nothing to show\""
+            },
+            {
+              "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No rows match the search\""
+            },
+            {
+              "kind": "field",
+              "name": "columns",
+              "type": {
+                "text": "readonly TableColumn[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "rows",
+              "type": {
+                "text": "readonly TableRow[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#search",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#toolbar",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#head",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#table",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#none",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#shown",
+              "privacy": "private",
+              "type": {
+                "text": "readonly TableRow[]"
+              },
+              "default": "[]",
+              "description": "The sorted and searched rows, rebuilt only when what they depend on changes."
+            },
+            {
+              "kind": "field",
+              "name": "#virtualizer",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Virtualizer<Window, HTMLTableRowElement>({ count: 0, getScrollElement: () => window, estimateSize: () => 41, overscan: 10, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })"
+            },
+            {
+              "kind": "field",
+              "name": "#cleanup",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#change",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#valueOf",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "TableColumn"
+                  }
+                },
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "TableRow"
+                  }
+                }
+              ],
+              "description": "A cell's value: its column's `value`, or the row's property by the column's id."
+            },
+            {
+              "kind": "method",
+              "name": "#keyOf",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "TableRow"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "What identifies a row, so it keeps its place across updates."
+            },
+            {
+              "kind": "method",
+              "name": "#process",
+              "privacy": "private",
+              "description": "Sorts and searches the rows through TanStack Table."
+            },
+            {
+              "kind": "method",
+              "name": "#sortBy",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "column",
+                  "type": {
+                    "text": "TableColumn"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#renderHead",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#renderBody",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the sort or search changes. Read `sort`, `descending` and `query`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "TableColumn[]"
+              },
+              "description": "The columns, as JSON or a property. Functions (`value`, `cell`) only work set as a property.",
+              "name": "columns"
+            },
+            {
+              "type": {
+                "text": "object[]"
+              },
+              "description": "The rows, as JSON or a property.",
+              "name": "rows"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The table's accessible name.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The column it sorts by, by id.",
+              "name": "sort"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Sorts from the highest or latest first.",
+              "name": "descending"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The search text.",
+              "name": "query"
+            },
+            {
+              "type": {
+                "text": "\"auto\"|\"always\"|\"never\""
+              },
+              "description": "Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.",
+              "name": "search"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The search field's name and placeholder. Defaults to `Search`.",
+              "name": "search-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The row property that identifies each row.",
+              "name": "row-key"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says with no rows. Defaults to `Nothing to show`.",
+              "name": "empty-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says when the search matches nothing. Defaults to `No rows match the search`.",
+              "name": "no-match-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-table",
+          "customElement": true,
+          "summary": "Rows of data that sort and search, windowed for long lists."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwTable",
+          "declaration": {
+            "name": "GwTable",
+            "module": "src/gw-table.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-theme-gallery.ts",
       "declarations": [
         {
@@ -22237,6 +23596,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-filter.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-fade-in.js"
           }
         },
@@ -22374,6 +23741,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-spinner.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-table.js"
           }
         },
         {

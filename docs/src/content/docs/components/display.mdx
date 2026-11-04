@@ -191,6 +191,33 @@ A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it tur
 
 A reading on a dial. The arc fills to `value` between `min` and `max` and glides when it changes. It turns warning at `warning` (75) and danger at `danger` (90); `inverted` makes lower readings worse, for a battery. `display` replaces the number, `unit` (`%`) sits under it, and `caption` goes under the label. Set its size with `--gw-gauge-size`.
 
+## Table
+
+<Demo id="table" layout="stack">
+  <gw-table label="Processes" sort="cpu" descending row-key="pid" columns='[{"id":"name","header":"Name","wide":true},{"id":"pid","header":"PID","numeric":true},{"id":"cpu","header":"CPU %","numeric":true},{"id":"memory","header":"Memory MB","numeric":true}]' rows='[{"pid":1204,"name":"firefox","cpu":12.4,"memory":1840},{"pid":981,"name":"Hyprland","cpu":3.1,"memory":212},{"pid":2210,"name":"opencode","cpu":8.7,"memory":640},{"pid":1450,"name":"pipewire","cpu":0.6,"memory":38},{"pid":3301,"name":"bun","cpu":21.9,"memory":410},{"pid":2875,"name":"waybar","cpu":0.4,"memory":64},{"pid":1777,"name":"ghostty","cpu":1.2,"memory":180},{"pid":3020,"name":"node","cpu":4.8,"memory":290}]'></gw-table>
+</Demo>
+
+Rows of data that sort by a header press and search every column, built on TanStack Table. Only the rows on screen are drawn, by TanStack Virtual against the window's scroll, so thousands of rows stay quick, and rows can be any height.
+
+| Attribute | What it does |
+| --- | --- |
+| `columns` | The columns: `id`, `header`, and `numeric`, `wide`, `sortable` or `searchable` |
+| `rows` | The rows. A column reads the row property its `id` names |
+| `sort`, `descending` | The column it sorts by, and whether highest or latest comes first |
+| `query`, `search` | The search text, and whether there's a search field: `auto` (from 8 rows), `always` or `never` |
+| `row-key` | The row property that identifies each row, so it keeps its place across updates |
+| `label`, `search-label`, `empty-label`, `no-match-label` | Its name, and the text it shows, for an app in another language |
+
+Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, and `cell` draws the cell as any node, such as a link or a chip. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort or search changes; read `sort`, `descending` and `query`, such as to keep them in the URL.
+
+```ts
+table.columns = [
+  { id: "name", header: "Job", wide: true, cell: (job) => link(job) },
+  { id: "last", header: "Last run", value: (job) => job.lastRun?.at ?? 0 },
+];
+table.rows = jobs;
+```
+
 ## References
 
 - Home Assistant: [Badge](https://contributors.home-assistant.io/design/components/badge/), [Alert](https://contributors.home-assistant.io/design/components/alert/), [Gauge](https://contributors.home-assistant.io/design/components/gauge/), [Expansion panel](https://contributors.home-assistant.io/design/components/expansion-panel/) · Code: [badge](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-badge.ts), [alert](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-alert.ts), [gauge](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-gauge.ts), [expansion panel](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-expansion-panel.ts)

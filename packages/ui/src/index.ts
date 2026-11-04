@@ -47,6 +47,8 @@ export * from "./gw-expansion.js";
 
 export * from "./gw-facts.js";
 
+export * from "./gw-filter.js";
+
 export * from "./gw-fade-in.js";
 
 export * from "./gw-gauge.js";
@@ -82,6 +84,8 @@ export * from "./gw-sheet.js";
 export * from "./gw-skeleton.js";
 
 export * from "./gw-spinner.js";
+
+export * from "./gw-table.js";
 
 export * from "./gw-theme-gallery.js";
 

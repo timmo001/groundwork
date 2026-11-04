@@ -42,5 +42,9 @@
     "oxlint-tsgolint": "7.0.2005",
     "prettier": "3.9.10",
     "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "@tanstack/table-core": "9.3.1",
+    "@tanstack/virtual-core": "3.19.10"
   }
 }
