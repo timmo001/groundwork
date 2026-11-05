@@ -46,7 +46,8 @@ go-ahead needed. Before the session ends, once `mise run check` passes:
    sessions' work alone, and push.
 2. When `packages/tokens`, `packages/ui`, `packages/tui` or `packages/docs-kit`
    changed, release them together with the `groundwork-release` skill, which
-   bumps the shared version, publishes and rolls it out to consumers.
+   bumps the shared version and publishes it. Upkeep rolls each release out to
+   its consumers.
 3. When a registry item changed, run `mise run sync` and push each app.
 4. Report what landed and anything flagged.
 

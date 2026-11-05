@@ -47,4 +47,3 @@ const Status = Tool.make("status", {
 | [`cli-tool` template](https://github.com/timmo001/groundwork/tree/main/templates/cli-tool) | `status`, `apply`, `restart` and `mcp`, the [CLI demo](/demo) |
 | `conventions` | `check`, `gen` and `labels` for the [conventions](/conventions) |
 | `sync` | Copies registry items into apps, see [Sync](/sync) |
-| `bump-consumers` | Rolls a docs-kit release out to the sites that use it |

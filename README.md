@@ -24,7 +24,6 @@ document attached to it.
 | [`packages/sync`](packages/sync)                                          | Copies items into apps and carries QML edits back                                       |
 | [`packages/conventions`](packages/conventions)                            | Checks the manifest and prints each repository's labels                                 |
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
-| [`packages/bump-consumers`](packages/bump-consumers)                      | Rolls a docs-kit release out to the sites that use it                                   |
 | [`skills/docs-kit`](skills/docs-kit/SKILL.md)                             | An agent skill for setting up or changing a site with docs-kit                          |
 | [`skills/groundwork-setup`](skills/groundwork-setup/SKILL.md)             | An agent skill for setting up a repository, step by step from the Setup page            |
 | [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                      |
@@ -97,11 +96,6 @@ exactly, such as `0.1.0`. The release workflow checks the tag against both
 versions, validates the package and publishes it to npm with provenance and to
 JSR.
 
-Once npm serves the release, roll it out to the sites that use it:
-
-```sh
-mise run bump-consumers -- --push
-```
-
-This pins the new version in each site, builds it, and commits and pushes only
-the sites that build.
+[Upkeep](https://github.com/timmo001/upkeep) picks up each release and rolls it
+out to the sites that use it: it pins the new version in each one, runs its
+checks, and pushes only the sites that pass.

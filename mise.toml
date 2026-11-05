@@ -134,12 +134,6 @@ run = "pitchfork restart docs"
 description = "Stop the background docs dev server"
 run = "pitchfork stop docs"
 
-[tasks."bump-consumers"]
-description = "Bump @timmo001/docs-kit in consuming repositories"
-depends = ["install"]
-dir = "packages/bump-consumers"
-run = "bun run src/bump-consumers.ts"
-
 [tasks.sync]
 description = "Carry QML edits back from the apps, then copy changed items out to them"
 depends = ["install"]

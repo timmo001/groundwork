@@ -1,6 +1,6 @@
 ---
 name: groundwork-release
-description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui and @timmo001/docs-kit, then roll it out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
+description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui and @timmo001/docs-kit, for Upkeep to roll out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
 license: Apache-2.0
 compatibility: Requires mise, Bun, npm and the GitHub CLI from the groundwork repository root.
 ---
@@ -15,8 +15,8 @@ is there, and docs-kit goes to npm and JSR once tokens and ui are there, since
 they pin them. tokens, ui and tui are npm only; JSR rejects the global tag-map
 augmentation in ui and tokens.
 
-The repository's `AGENTS.md` Rollout section authorises the release, its push
-and the consumer rollout whenever `packages/docs-kit` changed. Otherwise
+The repository's `AGENTS.md` Rollout section authorises the release and its
+push whenever `packages/docs-kit` changed. Otherwise
 release only when asked.
 
 ## 1. Start clean
@@ -103,11 +103,10 @@ or start the rollout, until all five serve it.
 
 ## 6. Roll out
 
-The last step, once publication is verified: run
-`mise run bump-consumers -- --push`, which pins the new docs-kit in every docs
-site and builds each one. The `groundwork-bump-consumers` skill covers its
-flags and failures. When a registry item changed in the release, also run
-`mise run sync` and push each app.
+Upkeep's `bump` job picks up the release by itself and rolls the new packages
+out to every consumer, checking each one before it pushes; its run for the
+release shows what landed and what failed. When a registry item changed in the
+release, run `mise run sync` and push each app.
 
 Report the release URL, the version commit, each registry's result and what
-the rollout landed or flagged.
+the sync landed or flagged.

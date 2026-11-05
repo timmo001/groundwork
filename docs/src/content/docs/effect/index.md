@@ -9,7 +9,7 @@ Every system built on Groundwork uses [Effect](https://effect.website), on its l
 | --- | --- | --- |
 | [Services](/effect/services) | A system's data and actions behind one service, with a layer for each backend | The demo app's `Items`, used by every [demo](/demo) |
 | [Schema](/effect/schema) | Documents and inputs decoded once, at the edge | Theme documents, the conventions manifest, router params |
-| [CLI and agents](/effect/cli-and-agents) | One command tree for the CLI, Code Mode and MCP | The `cli-tool` template, `conventions`, `sync` and `bump-consumers` |
+| [CLI and agents](/effect/cli-and-agents) | One command tree for the CLI, Code Mode and MCP | The `cli-tool` template, `conventions` and `sync` |
 | [Lit](/effect/lit) | App state in atoms, read by components, with the URL as an atom | The `lit-effect` sync item |
 | [Built-in services](/effect/platform) | Commands, files, the terminal, HTTP, sockets, SQL and more, before writing a wrapper | Reference |
 

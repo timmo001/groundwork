@@ -13,7 +13,6 @@ Anything that comes from outside (a file, a URL, a tool call, local storage) is 
 | Repository kinds and labels | `KindsDocument`, `LabelsDocument`, `Repo` | `conventions check` and `conventions gen` |
 | Demo items | `Item` | Every demo target, and the MCP tools' results |
 | Routes | Each route's params and search | `lit-effect`'s router, which drops search params that don't decode |
-| GitHub responses | `RepositoryInfo`, `Commit` | `bump-consumers` |
 
 ## Patterns
 
