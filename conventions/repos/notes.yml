@@ -4,3 +4,7 @@ kind: library
 renovate:
   - GitHub Actions
   - JavaScript
+areas:
+  - name: Capture
+    description: Related to the capture Worker and its web app
+    color: "0e7490"

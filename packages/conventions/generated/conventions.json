@@ -695,8 +695,14 @@
         "status",
         "resolution"
       ],
-      "areas": [],
-      "labels": 28
+      "areas": [
+        {
+          "name": "Capture",
+          "description": "Related to the capture Worker and its web app",
+          "color": "0e7490"
+        }
+      ],
+      "labels": 29
     },
     {
       "repo": "timmo001/omarchy-clock",
