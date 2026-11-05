@@ -11,7 +11,9 @@ import { base } from "./styles.js";
  * A heading that opens and closes the content under it, on a native
  * `<details>`, so find-in-page and the keyboard work as they do anywhere. The
  * content glides open and shut rather than jumping, and the chevron turns
- * with it. `open` reflects its state and it fires `toggle`.
+ * with it. `open` reflects its state and it fires `toggle`. Controls in
+ * `actions` sit in the summary row before the chevron, and pressing them
+ * doesn't open or close it.
  *
  * @element gw-expansion
  * @summary A heading that opens and closes the content under it.
@@ -22,11 +24,13 @@ import { base } from "./styles.js";
  *
  * @slot - The content.
  * @slot icon - An icon before the heading.
+ * @slot actions - Buttons in the summary row, before the chevron.
  *
  * @csspart details - The native `<details>`.
  * @csspart summary - The summary row.
  * @csspart heading - The heading.
  * @csspart description - The line under the heading.
+ * @csspart actions - The actions' wrapper.
  * @csspart content - The content's wrapper.
  *
  * @fires {Event} toggle - When it opens or closes.
@@ -88,11 +92,13 @@ export class GwExpansion extends GwElement {
         border-end-end-radius: 0;
       }
 
-      summary:hover {
+      /* Hovering or pressing an action leaves the row alone, since it won't
+         toggle */
+      summary:not(:has(.actions:hover)):hover {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      summary:active {
+      summary:not(:has(.actions:active)):active {
         background: var(--gw-color-fill-neutral-pressed);
       }
 
@@ -133,12 +139,25 @@ export class GwExpansion extends GwElement {
           var(--gw-motion-easing);
       }
 
-      summary:hover .toggle {
+      summary:not(:has(.actions:hover)):hover .toggle {
         background: var(--gw-color-fill-neutral-pressed);
       }
 
-      summary:active .toggle {
+      summary:not(:has(.actions:active)):active .toggle {
         background: var(--gw-color-fill-neutral-selected);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--gw-space-2);
+        align-items: center;
+        cursor: auto;
+        user-select: text;
+      }
+
+      .actions[hidden] {
+        display: none;
       }
 
       .chevron {
@@ -178,6 +197,14 @@ export class GwExpansion extends GwElement {
     part: "description",
   });
 
+  readonly #actionsSlot = h("slot", { name: "actions" });
+
+  readonly #actions = h(
+    "span",
+    { class: "actions", part: "actions", hidden: "" },
+    this.#actionsSlot,
+  );
+
   readonly #details: HTMLDetailsElement = h(
     "details",
     { part: "details" },
@@ -186,6 +213,7 @@ export class GwExpansion extends GwElement {
       { part: "summary" },
       h("slot", { name: "icon" }),
       h("span", { class: "text" }, this.#heading, this.#description),
+      this.#actions,
       h(
         "span",
         { class: "toggle", "aria-hidden": "true" },
@@ -207,7 +235,35 @@ export class GwExpansion extends GwElement {
     this.dispatchEvent(new Event("toggle", { bubbles: true, composed: true }));
   };
 
+  /**
+   * A click in the actions that no control of its own takes, such as on the
+   * gap between them or a menu item that isn't a button, would toggle the
+   * summary, so it's cancelled. A click a control does take never reaches
+   * the summary's toggle, so it's left alone.
+   */
+  readonly #onActionsClick = (event: Event) => {
+    const path = event.composedPath();
+    const own = path.slice(0, path.indexOf(this.#actions));
+
+    if (
+      !own.some(
+        (node) =>
+          node instanceof HTMLElement &&
+          node.matches(
+            "a[href], area[href], button, input, select, textarea, label",
+          ),
+      )
+    ) {
+      event.preventDefault();
+    }
+  };
+
   protected override create(root: ShadowRoot) {
+    this.#actionsSlot.addEventListener("slotchange", () => {
+      this.#actions.hidden =
+        this.#actionsSlot.assignedNodes({ flatten: true }).length === 0;
+    });
+    this.#actions.addEventListener("click", this.#onActionsClick);
     this.#details.addEventListener("toggle", this.#onToggle);
     root.append(this.#details);
   }

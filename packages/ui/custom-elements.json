@@ -8016,7 +8016,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A heading that opens and closes the content under it, on a native\n`<details>`, so find-in-page and the keyboard work as they do anywhere. The\ncontent glides open and shut rather than jumping, and the chevron turns\nwith it. `open` reflects its state and it fires `toggle`.",
+          "description": "A heading that opens and closes the content under it, on a native\n`<details>`, so find-in-page and the keyboard work as they do anywhere. The\ncontent glides open and shut rather than jumping, and the chevron turns\nwith it. `open` reflects its state and it fires `toggle`. Controls in\n`actions` sit in the summary row before the chevron, and pressing them\ndoesn't open or close it.",
           "name": "GwExpansion",
           "cssParts": [
             {
@@ -8036,6 +8036,10 @@
               "name": "description"
             },
             {
+              "description": "The actions' wrapper.",
+              "name": "actions"
+            },
+            {
               "description": "The content's wrapper.",
               "name": "content"
             }
@@ -8048,6 +8052,10 @@
             {
               "description": "An icon before the heading.",
               "name": "icon"
+            },
+            {
+              "description": "Buttons in the summary row, before the chevron.",
+              "name": "actions"
             }
           ],
           "members": [
@@ -8071,7 +8079,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3rem; padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width)); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } summary:hover { background: var(--gw-color-fill-neutral-hovered); } summary:active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:active .toggle { background: var(--gw-color-fill-neutral-selected); } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } `, ]",
+              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3rem; padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width)); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } /* Hovering or pressing an action leaves the row alone, since it won't toggle */ summary:not(:has(.actions:hover)):hover { background: var(--gw-color-fill-neutral-hovered); } summary:not(:has(.actions:active)):active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:not(:has(.actions:hover)):hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:not(:has(.actions:active)):active .toggle { background: var(--gw-color-fill-neutral-selected); } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; cursor: auto; user-select: text; } .actions[hidden] { display: none; } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8115,6 +8123,18 @@
             },
             {
               "kind": "field",
+              "name": "#actionsSlot",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#actions",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#details",
               "privacy": "private",
               "type": {
@@ -8127,6 +8147,13 @@
               "name": "#onToggle",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onActionsClick",
+              "privacy": "private",
+              "readonly": true,
+              "description": "A click in the actions that no control of its own takes, such as on the\ngap between them or a menu item that isn't a button, would toggle the\nsummary, so it's cancelled. A click a control does take never reaches\nthe summary's toggle, so it's left alone."
             },
             {
               "kind": "method",

@@ -74,9 +74,13 @@ An `href` link lives in the card's shadow root, so it isn't in the page's HTML a
   <gw-expansion heading="Advanced" description="Logging and diagnostics">
     <p>Log level, crash reports and the debug endpoint.</p>
   </gw-expansion>
+  <gw-expansion heading="Backups" description="Nightly, kept for 30 days">
+    <gw-button slot="actions" size="xs" appearance="plain">Back up now</gw-button>
+    <p>The last backup finished at 03:12.</p>
+  </gw-expansion>
 </Demo>
 
-A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`.
+A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`, and buttons in `actions` to keep them in the summary row, where pressing them doesn't open or close it.
 
 <Demo id="expansion-anatomy" layout="stack">
   <gw-anatomy scale="1" target="[part=summary]">
