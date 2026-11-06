@@ -10,6 +10,8 @@
     "./page": "./src/page.ts",
     "./webmcp": "./src/webmcp.ts",
     "./omarchy-current": "./src/omarchy-current.ts",
+    "./desktop-themes": "./src/desktop-themes.ts",
+    "./translate": "./src/translate.ts",
     "./opentui": "./generated/opentui.ts",
     "./themes.css": "./generated/themes.css",
     "./themes.json": "./generated/themes.json",

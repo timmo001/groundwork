@@ -42,5 +42,18 @@ import {
 } from "@timmo001/groundwork-tokens/omarchy-current";
 ```
 
+The `translate` export maps a terminal palette (Ghostty, kitty, Alacritty,
+foot or an Omarchy `colors.toml`) onto the roles as a mapped theme, and
+works in the browser. The `desktop-themes` export finds a machine's
+installed Omarchy and terminal themes on disk and translates them;
+`distinctThemes` drops the ones an app already offers:
+
+```ts
+import {
+  distinctThemes,
+  readDesktopThemes,
+} from "@timmo001/groundwork-tokens/desktop-themes";
+```
+
 The themes, their roles and contrast targets are documented at
 [groundwork.timmo.dev/themes](https://groundwork.timmo.dev/themes).
