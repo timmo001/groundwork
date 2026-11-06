@@ -9,7 +9,7 @@ Everything Groundwork makes reaches what uses it on its own, as soon as it chang
 - QML panel components reach apps as copies. Each app owns its copy, and the sync keeps it current and carries edits back.
 - Until the web packages publish, web components and token files travel as copies too.
 
-Today the sync runs with `mise run sync`. Running it on every push is part of [#38](https://github.com/timmo001/groundwork/issues/38).
+[Upkeep](https://upkeep.timmo.dev/running/#sync) runs the sync every hour over every app with a `sync.json`: it carries edits back, copies changes out, checks and pushes each repository, and hands a flagged copy to an agent. Run `mise run sync` to sync straight away.
 
 ## Files
 
