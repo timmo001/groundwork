@@ -136,6 +136,7 @@ type Shown =
  * @attr {boolean} descending - Sorts from the highest or latest first.
  * @attr {string} query - The search text.
  * @attr {string} group - The column whose values it groups the rows by, by id.
+ * @attr {boolean} groups-collapsed - Starts with every group folded away, for long lists.
  * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.
  * @attr {string} search-label - The search field's name and placeholder. Defaults to `Search`.
  * @attr {string} row-key - The row property that identifies each row.
@@ -157,6 +158,7 @@ export class GwTable extends GwElement {
     descending: { type: "boolean", reflect: true },
     query: {},
     group: { reflect: true },
+    groupsCollapsed: { type: "boolean", attribute: "groups-collapsed" },
     search: {},
     searchLabel: { attribute: "search-label" },
     rowKey: { attribute: "row-key" },
@@ -370,6 +372,7 @@ export class GwTable extends GwElement {
   declare descending: boolean;
   declare query: string;
   declare group: string;
+  declare groupsCollapsed: boolean;
   declare search: "auto" | "always" | "never";
   declare searchLabel: string;
   declare rowKey: string;
@@ -411,8 +414,11 @@ export class GwTable extends GwElement {
   /** How many rows there are after the search, without the headings. */
   #matched = 0;
 
-  /** The groups folded away, by their heading's key. */
-  readonly #collapsed = new Set<string>();
+  /**
+   * The groups toggled from how they start, by their heading's key: folded
+   * away, or opened with `groupsCollapsed`.
+   */
+  readonly #toggled = new Set<string>();
 
   readonly #virtualizer = new Virtualizer<Window, HTMLTableRowElement>({
     count: 0,
@@ -435,6 +441,7 @@ export class GwTable extends GwElement {
     this.descending = false;
     this.query = "";
     this.group = "";
+    this.groupsCollapsed = false;
     this.search = "auto";
     this.searchLabel = "Search";
     this.rowKey = "";
@@ -514,7 +521,7 @@ export class GwTable extends GwElement {
       }
 
       const value: TableValue = row.original[row.groupingColumnId ?? ""];
-      const expanded = !this.#collapsed.has(row.id);
+      const expanded = this.#toggled.has(row.id) === this.groupsCollapsed;
 
       const heading: Shown = {
         kind: "group",
@@ -538,8 +545,8 @@ export class GwTable extends GwElement {
   }
 
   #toggleGroup(key: string) {
-    if (this.#collapsed.has(key)) this.#collapsed.delete(key);
-    else this.#collapsed.add(key);
+    if (this.#toggled.has(key)) this.#toggled.delete(key);
+    else this.#toggled.add(key);
 
     this.#process();
     this.requestUpdate("window");
@@ -716,8 +723,12 @@ export class GwTable extends GwElement {
       "descending",
       "query",
       "group",
+      "groupsCollapsed",
       "rowKey",
     ];
+
+    // A new starting state starts every group from it again
+    if (changed.has("groupsCollapsed")) this.#toggled.clear();
 
     if (data.some((name) => changed.has(name))) this.#process();
 

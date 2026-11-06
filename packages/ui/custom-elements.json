@@ -21108,7 +21108,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21166,6 +21166,14 @@
                 "text": "string"
               },
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "groupsCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
             },
             {
               "kind": "field",
@@ -21290,11 +21298,11 @@
             },
             {
               "kind": "field",
-              "name": "#collapsed",
+              "name": "#toggled",
               "privacy": "private",
               "readonly": true,
               "default": "new Set<string>()",
-              "description": "The groups folded away, by their heading's key."
+              "description": "The groups toggled from how they start, by their heading's key: folded\naway, or opened with `groupsCollapsed`."
             },
             {
               "kind": "field",
@@ -21797,6 +21805,13 @@
             },
             {
               "type": {
+                "text": "boolean"
+              },
+              "description": "Starts with every group folded away, for long lists.",
+              "name": "groups-collapsed"
+            },
+            {
+              "type": {
                 "text": "\"auto\"|\"always\"|\"never\""
               },
               "description": "Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.",
@@ -21841,11 +21856,7 @@
         },
         {
           "kind": "variable",
-          "name": "expanded",
-          "type": {
-            "text": "boolean"
-          },
-          "default": "!this.#collapsed.has(row.id)"
+          "name": "expanded"
         }
       ],
       "exports": [
@@ -22422,7 +22433,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22506,6 +22517,15 @@
               },
               "description": "The modes to offer, in order and separated by spaces.",
               "default": "\"auto light dark darker\""
+            },
+            {
+              "kind": "field",
+              "name": "noImport",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves Import out, so only the themes in `themes` are offered.",
+              "default": "false"
             },
             {
               "kind": "field",
@@ -23075,6 +23095,13 @@
               },
               "description": "The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.",
               "name": "label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.",
+              "name": "no-import"
             }
           ],
           "superclass": {

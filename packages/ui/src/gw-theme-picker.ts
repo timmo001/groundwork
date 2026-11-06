@@ -80,6 +80,7 @@ const moreIcon =
  * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
  * @attr {string} status - A line under the controls, such as an import's result.
  * @attr {string} label - The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.
+ * @attr {boolean} no-import - Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.
  *
  * @csspart gallery - The theme gallery, with `gallery`.
  * @csspart controls - The mode, theme and status.
@@ -100,6 +101,7 @@ export class GwThemePicker extends GwElement {
     label: {},
     layout: { reflect: true },
     modes: {},
+    noImport: { attribute: "no-import", type: "boolean", reflect: true },
   } as const;
 
   static override styles = [
@@ -200,6 +202,8 @@ export class GwThemePicker extends GwElement {
   declare layout: "auto" | "popover" | "cycle" | "inline";
   /** The modes to offer, in order and separated by spaces. */
   declare modes: string;
+  /** Leaves Import out, so only the themes in `themes` are offered. */
+  declare noImport: boolean;
 
   readonly #button = h("gw-button", {
     variant: "neutral",
@@ -268,6 +272,7 @@ export class GwThemePicker extends GwElement {
     this.label = "Theme";
     this.layout = "auto";
     this.modes = "auto light dark darker";
+    this.noImport = false;
   }
 
   /** The modes on offer, in the order `modes` gives them. */
@@ -571,6 +576,19 @@ export class GwThemePicker extends GwElement {
     this.#gallery.mode = this.mode === "auto" ? "" : this.mode;
     this.#status.textContent = this.status;
     this.#status.hidden = !this.status;
+    this.#import.hidden = this.noImport;
+
+    if (changed.has("noImport")) {
+      this.#menu.setAttribute(
+        "items",
+        JSON.stringify([
+          { value: "reset", label: "Reset" },
+          ...(this.noImport
+            ? []
+            : [{ value: "import", label: "Import a theme file" }]),
+        ]),
+      );
+    }
 
     if (root === null) return;
 
