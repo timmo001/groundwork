@@ -293,10 +293,11 @@
     {
       "name": "lit-effect",
       "kind": "lit",
-      "description": "AtomController, the registry context and a typed router",
+      "description": "AtomController, the registry context, a typed router and the @storage decorator",
       "files": [
         "packages/lit-effect/src/atom-controller.ts",
-        "packages/lit-effect/src/router.ts"
+        "packages/lit-effect/src/router.ts",
+        "packages/lit-effect/src/storage.ts"
       ]
     }
   ]
