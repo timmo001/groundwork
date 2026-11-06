@@ -922,6 +922,11 @@
           "color": "4f46e5"
         },
         {
+          "name": "Server",
+          "description": "Related to the server that schedules jobs, keeps their state and serves the dashboard",
+          "color": "a16207"
+        },
+        {
           "name": "Dashboard",
           "description": "Related to the web dashboard",
           "color": "006b75"
@@ -937,7 +942,7 @@
           "color": "c084fc"
         }
       ],
-      "labels": 34
+      "labels": 35
     },
     {
       "repo": "timmo001/upnext",
