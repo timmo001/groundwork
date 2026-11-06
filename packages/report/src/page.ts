@@ -7,7 +7,8 @@
  */
 import type { MappedTheme } from "@timmo001/groundwork-tokens";
 import type { OmarchyCurrentTheme } from "@timmo001/groundwork-tokens/runtime";
-import { themeBootScript } from "@timmo001/groundwork-tokens/page";
+// From `choices`, not `page`, so a CLI without the DOM lib type-checks it
+import { themeBootScript } from "@timmo001/groundwork-tokens/choices";
 
 import { html, raw, type Content } from "./html.ts";
 import { reportCss } from "./styles.ts";

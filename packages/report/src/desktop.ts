@@ -14,7 +14,7 @@ import { Result, Schema } from "effect";
 
 import { readDesktopThemes } from "@timmo001/groundwork-tokens/desktop-themes";
 import { readOmarchyTheme } from "@timmo001/groundwork-tokens/omarchy-current";
-import { optionalThemeDocuments } from "@timmo001/groundwork-tokens/page";
+import { optionalThemeDocuments } from "@timmo001/groundwork-tokens/choices";
 import {
   omarchyTheme,
   type OmarchyCurrentTheme,

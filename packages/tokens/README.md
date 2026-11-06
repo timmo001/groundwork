@@ -55,5 +55,16 @@ import {
 } from "@timmo001/groundwork-tokens/desktop-themes";
 ```
 
+The `choices` export holds the built-in themes as choices, the optional
+themes' documents and `themeBootScript`, with no DOM types, for a server or
+CLI that writes a page. The `page` export re-exports it beside `pageTheme`:
+
+```ts
+import {
+  optionalThemeChoices,
+  themeBootScript,
+} from "@timmo001/groundwork-tokens/choices";
+```
+
 The themes, their roles and contrast targets are documented at
 [groundwork.timmo.dev/themes](https://groundwork.timmo.dev/themes).

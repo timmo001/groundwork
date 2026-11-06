@@ -9,48 +9,42 @@
  *
  * @module
  */
-import base from "../themes/base.json" with { type: "json" };
-import bridge from "../themes/bridge.json" with { type: "json" };
-import catppuccinFrappe from "../themes/catppuccin-frappe.json" with { type: "json" };
-import catppuccinLatte from "../themes/catppuccin-latte.json" with { type: "json" };
-import catppuccinMacchiato from "../themes/catppuccin-macchiato.json" with { type: "json" };
-import catppuccinMocha from "../themes/catppuccin-mocha.json" with { type: "json" };
-import githubDimmed from "../themes/github-dimmed.json" with { type: "json" };
-import githubHighContrast from "../themes/github-high-contrast.json" with { type: "json" };
-import github from "../themes/github.json" with { type: "json" };
-import glazing from "../themes/glazing.json" with { type: "json" };
-import slate from "../themes/slate.json" with { type: "json" };
-import snag from "../themes/snag.json" with { type: "json" };
-import survey from "../themes/survey.json" with { type: "json" };
-import tokyoNightDay from "../themes/tokyo-night-day.json" with { type: "json" };
-import tokyoNightMoon from "../themes/tokyo-night-moon.json" with { type: "json" };
-import tokyoNightStorm from "../themes/tokyo-night-storm.json" with { type: "json" };
-import tokyoNight from "../themes/tokyo-night.json" with { type: "json" };
+import {
+  customThemeId,
+  customThemeStyleId,
+  omarchyStorageKeys,
+  omarchyThemeId,
+  omarchyThemeStyleId,
+  themeCovers,
+  themeStorageKeys,
+  type ThemeBootOptions,
+  type ThemeChoice,
+  type ThemeMode,
+  type ThemeScheme,
+} from "./choices.ts";
 import type { OmarchyCurrentTheme } from "./omarchy.ts";
 import type { ThemeStore } from "./runtime.ts";
 import type { Theme } from "./schema.ts";
 // Only for `document.modelContext`'s type; the tools themselves load lazily
 import type {} from "./webmcp.ts";
 
-/** How light the page is: `auto` follows the system. */
-export type ThemeMode = "auto" | "light" | "dark" | "darker";
-
-/** The theme id a visitor's own theme is solved under. */
-export const customThemeId = "custom";
-
-/** The id of the `<style>` holding a custom theme's CSS. */
-export const customThemeStyleId = "gw-custom-theme";
-
-/** The theme id the desktop's Omarchy theme is solved under. */
-export const omarchyThemeId = "omarchy";
-
-/** The id of the `<style>` holding the Omarchy theme's CSS. */
-export const omarchyThemeStyleId = "gw-omarchy-theme";
+export {
+  coreThemeChoices,
+  customThemeId,
+  customThemeStyleId,
+  omarchyThemeId,
+  omarchyThemeStyleId,
+  optionalThemeChoices,
+  optionalThemeDocuments,
+  themeBootScript,
+  themeCovers,
+  type ThemeBootOptions,
+  type ThemeChoice,
+  type ThemeMode,
+  type ThemeScheme,
+} from "./choices.ts";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
-
-/** Light or dark: the side of a mode a theme has to cover. Darker is dark. */
-export type ThemeScheme = "light" | "dark";
 
 export interface PageThemeState {
   readonly mode: ThemeMode;
@@ -73,73 +67,7 @@ export type ImportResult =
     }
   | { readonly ok: false; readonly error: string };
 
-/**
- * A theme to offer, by id and name. A `Theme` document is one. `mode` marks
- * a theme with only one scheme, such as Catppuccin Latte: it's offered and
- * kept for that scheme alone, beside a pick for the other.
- */
-export interface ThemeChoice {
-  readonly id: string;
-  readonly name: string;
-  readonly mode?: ThemeScheme | undefined;
-  /** The palette an optional theme comes from, such as `Catppuccin`. */
-  readonly family?: string | undefined;
-}
-
-/** Whether `choice` can show in `scheme`. */
-export const themeCovers = (choice: ThemeChoice, scheme: ThemeScheme) =>
-  choice.mode === undefined || choice.mode === scheme;
-
-/** The core themes by id and name, in the order the docs list them. */
-export const coreThemeChoices: readonly ThemeChoice[] = [
-  base,
-  glazing,
-  survey,
-  slate,
-  bridge,
-  snag,
-].map(({ id, name }) => ({ id, name }));
-
-/**
- * The optional themes' documents, by family and then from light to dark.
- * They're bundled with the module, so an app compiled to one binary has them
- * without reading `node_modules`. Decode one with the `MappedTheme` Schema.
- */
-export const optionalThemeDocuments = [
-  catppuccinLatte,
-  catppuccinFrappe,
-  catppuccinMacchiato,
-  catppuccinMocha,
-  tokyoNightDay,
-  tokyoNight,
-  tokyoNightStorm,
-  tokyoNightMoon,
-  github,
-  githubDimmed,
-  githubHighContrast,
-] as const;
-
-/**
- * The optional themes, mapped from other palettes, by family and then from
- * light to dark. One with a single mode is offered for that scheme alone;
- * one with both, such as GitHub's, for either.
- */
-export const optionalThemeChoices: readonly ThemeChoice[] =
-  optionalThemeDocuments.map((theme) => ({
-    id: theme.id,
-    name: theme.name,
-    family: theme.family,
-    mode:
-      "otherPalette" in theme
-        ? undefined
-        : theme.mode === "light"
-          ? "light"
-          : "dark",
-  }));
-
-export interface PageThemeOptions {
-  /** The local storage key prefix, such as `my-site:theme`. */
-  readonly key: string;
+export interface PageThemeOptions extends ThemeBootOptions {
   /** The built-in themes to offer, their CSS already on the page. */
   readonly themes: readonly ThemeChoice[];
   /**
@@ -147,16 +75,6 @@ export interface PageThemeOptions {
    * register. Defaults to the core themes.
    */
   readonly documents?: () => Promise<readonly Theme[]>;
-  /** The theme id to start with. */
-  readonly defaultTheme: string;
-  /** The mode to start with. Defaults to `auto`. */
-  readonly defaultMode?: ThemeMode;
-  /**
-   * Whether the Omarchy theme takes over while the visitor hasn't picked
-   * one. With `false` it's only offered, and `defaultTheme` stays in use.
-   * Defaults to `true`.
-   */
-  readonly followOmarchy?: boolean;
   /** The element the attributes go on. Defaults to `<html>`. */
   readonly root?: HTMLElement;
   /**
@@ -195,22 +113,6 @@ export interface PageTheme {
   readonly subscribe: (listener: (state: PageThemeState) => void) => () => void;
 }
 
-const keys = (key: string) => ({
-  mode: `${key}:mode`,
-  theme: `${key}:id`,
-  dark: `${key}:id-dark`,
-  document: `${key}:custom`,
-  css: `${key}:custom-css`,
-  name: `${key}:custom-name`,
-});
-
-/** The Omarchy theme's cache, kept apart so a reset doesn't drop it. */
-const omarchyKeys = (key: string) => ({
-  css: `${key}:omarchy-css`,
-  name: `${key}:omarchy-name`,
-  mode: `${key}:omarchy-mode`,
-});
-
 const read = (key: string) => {
   try {
     return localStorage.getItem(key);
@@ -226,34 +128,6 @@ const write = (key: string, value: string | null) => {
   } catch {
     // Blocked or full: the pick still applies until the page closes
   }
-};
-
-/**
- * An inline script that applies the stored mode, theme and any custom or
- * Omarchy theme's cached CSS before the first paint. Takes the same key and
- * defaults as `pageTheme`.
- */
-export const themeBootScript = (
-  options: Pick<
-    PageThemeOptions,
-    "key" | "defaultTheme" | "defaultMode" | "followOmarchy"
-  >,
-) => {
-  const config = JSON.stringify({
-    keys: keys(options.key),
-    omarchy: omarchyKeys(options.key),
-    theme: options.defaultTheme,
-    mode: options.defaultMode ?? "auto",
-    follow: options.followOmarchy !== false,
-    custom: customThemeId,
-    style: customThemeStyleId,
-    omarchyId: omarchyThemeId,
-    omarchyStyle: omarchyThemeStyleId,
-  });
-
-  // With nothing picked, a cached Omarchy theme for the scheme is the
-  // default, unless it's only offered
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);const o=g(c.omarchy.css);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??(c.follow&&o&&g(c.omarchy.mode)===(d?"dark":"light")?c.omarchyId:c.theme);if(t===c.custom){const css=g(c.keys.css);if(css)a(c.style,css);else t=c.theme}else if(t===c.omarchyId){if(o)a(c.omarchyStyle,o);else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
 
 /** Reads a theme from JSON text or an Omarchy `colors.toml`. */
@@ -274,8 +148,8 @@ const readTheme = async (text: string) => {
  * and registers the WebMCP theme tools where the browser offers them.
  */
 export const pageTheme = (options: PageThemeOptions): PageTheme => {
-  const stored = keys(options.key);
-  const storedOmarchy = omarchyKeys(options.key);
+  const stored = themeStorageKeys(options.key);
+  const storedOmarchy = omarchyStorageKeys(options.key);
   const root = options.root ?? document.documentElement;
   const defaultMode = options.defaultMode ?? "auto";
   const listeners = new Set<(state: PageThemeState) => void>();
