@@ -14,7 +14,9 @@ import { expect, test, type Page } from "@playwright/test";
 const content = join(import.meta.dirname, "../src/content/docs");
 
 const routes = globSync("**/*.{md,mdx}", { cwd: content })
-  .map((file) => `/${file}`.replace(/\.mdx?$/, "").replace(/\/?index$/, "") || "/")
+  .map(
+    (file) => `/${file}`.replace(/\.mdx?$/, "").replace(/\/?index$/, "") || "/",
+  )
   .toSorted();
 
 const modes = ["light", "dark", "darker"] as const;
@@ -89,12 +91,16 @@ for (const route of routes) {
           await page.reload();
           await settle(page);
 
-          const expected = await channels(page, theme.modes[mode]["surface-default"]);
+          const colors = theme.modes[mode];
+          if (!colors) throw new Error(`${theme.id} has no ${mode} mode`);
+          const expected = await channels(page, colors["surface-default"]);
           const actual = await channels(page, await pageBackground(page));
 
           expect
             .soft(
-              actual.every((value, index) => Math.abs(value - (expected[index] ?? 0)) <= 2),
+              actual.every(
+                (value, index) => Math.abs(value - (expected[index] ?? 0)) <= 2,
+              ),
               `${mode} background ${actual.join(",")} should be ${expected.join(",")}`,
             )
             .toBe(true);

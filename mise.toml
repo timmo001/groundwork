@@ -164,8 +164,14 @@ depends = ["install"]
 dir = "docs"
 run = "bun scripts/frame.ts"
 
+[tasks."docs:check"]
+description = "Check the docs site's pages, links and types, isolated from a running dev server"
+depends = ["install"]
+dir = "docs"
+run = "bun run check -- --isolated"
+
 [tasks.check]
-description = "Lint, type-check, test, verify formatting, generated files, contrast and conventions"
+description = "Lint, type-check, test, verify formatting, generated files, contrast, conventions and the docs site"
 depends = [
   "lint",
   "typecheck",
@@ -174,4 +180,5 @@ depends = [
   "gen:check",
   "contrast",
   "conventions",
+  "docs:check",
 ]
