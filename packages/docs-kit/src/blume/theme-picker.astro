@@ -5,17 +5,42 @@
  * with it. Theme choices need `@timmo001/docs-kit/blume/themes/all.css`.
  * The controls are Groundwork's `gw-select` and `gw-segmented`, styled by the
  * Groundwork theme tokens imported here.
+ *
+ * Themes are listed in the order given, under their `family`, or `group` for
+ * those without one. A theme with one `mode`, such as Catppuccin Latte, keeps
+ * the page in that scheme while it's picked, and the other modes can't be
+ * picked.
  */
 import "@timmo001/groundwork-tokens/themes.css";
 
 interface Props {
-  /** Themes to offer, in order. Leave out to offer the mode only. */
-  themes?: readonly { id: string; name: string }[];
+  /**
+   * Themes to offer, in order: usually the site's own theme, then any other
+   * Groundwork themes, then the optional ones. Leave out to offer the mode
+   * only.
+   */
+  themes?: readonly {
+    id: string;
+    name: string;
+    /** The palette an optional theme comes from, such as `Catppuccin`. */
+    family?: string | undefined;
+    /** The one scheme a theme covers, such as `light` for Catppuccin Latte. */
+    mode?: "light" | "dark" | undefined;
+  }[];
+  /** The heading for themes without a `family`. Defaults to `Groundwork`. */
+  group?: string;
   /** The theme the site's own `theme.css` imports, shown when none is picked. */
   defaultTheme?: string;
 }
 
-const { themes = [], defaultTheme = "base" } = Astro.props;
+const { themes = [], group = "Groundwork", defaultTheme = "base" } = Astro.props;
+
+const grouped = themes.some((theme) => theme.family !== undefined);
+
+/** Each one-scheme theme's scheme, by id. */
+const only = Object.fromEntries(
+  themes.flatMap((theme) => (theme.mode === undefined ? [] : [[theme.id, theme.mode]])),
+);
 
 // MDI's sunny, waning crescent and night icons
 const modes = [
@@ -37,7 +62,7 @@ const modes = [
 ];
 ---
 
-<script is:inline>
+<script is:inline define:vars={{ only, defaultTheme }}>
   (() => {
     const root = document.documentElement;
 
@@ -54,6 +79,19 @@ const modes = [
 
       if (theme) root.dataset.gwDocsTheme = theme;
       else delete root.dataset.gwDocsTheme;
+
+      // A theme with one scheme keeps the page in it, before the first paint
+      const scheme = only[theme ?? defaultTheme];
+
+      if (scheme !== undefined && root.dataset.theme !== scheme) {
+        root.dataset.theme = scheme;
+
+        try {
+          localStorage.setItem("blume-theme", scheme);
+        } catch {
+          // Blocked: it still applies to this page
+        }
+      }
 
       if (read("gw-darker") === "1" && root.dataset.theme === "dark") {
         root.setAttribute("data-gw-darker", "");
@@ -72,6 +110,7 @@ const modes = [
   data-gw-theme-picker
   data-default-theme={defaultTheme}
   data-gw-theme={defaultTheme}
+  data-only={JSON.stringify(only)}
 >
   {
     themes.length > 0 && (
@@ -80,7 +119,14 @@ const modes = [
         label="Theme"
         inline-label
         search="never"
-        options={JSON.stringify(themes.map((theme) => ({ value: theme.id, label: theme.name })))}
+        options={JSON.stringify(
+          themes.map((theme) => ({
+            value: theme.id,
+            label: theme.name,
+            // Headings only once there's more than one group
+            group: grouped ? (theme.family ?? group) : undefined,
+          })),
+        )}
       />
     )
   }
@@ -88,6 +134,7 @@ const modes = [
     data-gw-mode-select
     label="Color mode"
     labels="hide"
+    data-modes={JSON.stringify(modes)}
     options={JSON.stringify(modes)}></gw-segmented>
 </div>
 
@@ -113,12 +160,25 @@ const modes = [
         ? "darker"
         : "dark";
 
+  type Scheme = "light" | "dark";
+
+  /** The one scheme `theme` covers, from the picker's `data-only`, if it has one. */
+  const onlyFor = (picker: HTMLElement, theme: string): Scheme | undefined => {
+    const only: Record<string, Scheme> = JSON.parse(picker.dataset.only ?? "{}");
+
+    return only[theme];
+  };
+
+  const allowed = (scheme: Scheme | undefined, mode: string) =>
+    scheme === undefined || (scheme === "light" ? mode === "light" : mode !== "light");
+
   const sync = () => {
     for (const picker of document.querySelectorAll("div[data-gw-theme-picker]")) {
       if (!(picker instanceof HTMLElement)) continue;
 
       const theme = root.dataset.gwDocsTheme ?? picker.dataset.defaultTheme ?? "";
       const mode = currentMode();
+      const scheme = onlyFor(picker, theme);
 
       // The controls are Groundwork components, so the picker carries the
       // page's theme and mode for them to follow
@@ -126,8 +186,23 @@ const modes = [
       picker.dataset.gwMode = mode;
 
       for (const control of picker.querySelectorAll("gw-select, gw-segmented")) {
-        if (control instanceof GwSegmented) control.value = mode;
-        else if (control instanceof GwSelect) control.value = theme;
+        if (control instanceof GwSegmented) {
+          const modes: { value: string; label: string; icon: string }[] = JSON.parse(
+            control.dataset.modes ?? "[]",
+          );
+
+          // The modes the theme doesn't come in show, but can't be picked
+          control.options = modes.map((option) =>
+            allowed(scheme, option.value)
+              ? option
+              : {
+                  ...option,
+                  disabled: true,
+                  hint: `${option.label} isn't available: this theme is ${scheme} only`,
+                },
+          );
+          control.value = mode;
+        } else if (control instanceof GwSelect) control.value = theme;
       }
     }
   };
@@ -146,9 +221,21 @@ const modes = [
       else document.startViewTransition(change).ready.catch(() => undefined);
     };
 
+    const picker = target.closest("[data-gw-theme-picker]");
+
+    if (!(picker instanceof HTMLElement)) return;
+
     if (target.matches("[data-gw-mode-select]")) {
       const dark = target.value !== "light";
       const value = target.value;
+      const theme = root.dataset.gwDocsTheme ?? picker.dataset.defaultTheme ?? "";
+
+      // A mode the theme doesn't come in is disabled, so this only guards
+      if (!allowed(onlyFor(picker, theme), value)) {
+        sync();
+
+        return;
+      }
 
       transition(() => {
         root.dataset.theme = dark ? "dark" : "light";
@@ -161,17 +248,46 @@ const modes = [
 
     if (target.matches("[data-gw-theme-select]")) {
       const value = target.value;
+      const scheme = onlyFor(picker, value);
 
+      // A theme with one scheme moves the page into it
       transition(() => {
         root.dataset.gwDocsTheme = value;
+
+        if (scheme !== undefined) {
+          root.dataset.theme = scheme;
+
+          if (scheme === "light") root.removeAttribute("data-gw-darker");
+        }
       });
 
       save("gw-docs-theme", value);
+
+      if (scheme !== undefined) {
+        save("blume-theme", scheme);
+
+        if (scheme === "light") save("gw-darker", null);
+      }
     }
   });
 
-  // Blume's toggle flips data-theme; going light ends Darker.
+  // Blume's toggle flips data-theme; going light ends Darker, and a theme
+  // with one scheme flips it back.
   new MutationObserver(() => {
+    const picker = document.querySelector("div[data-gw-theme-picker]");
+
+    const scheme =
+      picker instanceof HTMLElement
+        ? onlyFor(picker, root.dataset.gwDocsTheme ?? picker.dataset.defaultTheme ?? "")
+        : undefined;
+
+    if (scheme !== undefined && root.dataset.theme !== scheme) {
+      root.dataset.theme = scheme;
+      save("blume-theme", scheme);
+
+      return;
+    }
+
     if (root.dataset.theme !== "dark" && root.hasAttribute("data-gw-darker")) {
       root.removeAttribute("data-gw-darker");
       save("gw-darker", null);

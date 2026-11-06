@@ -109,24 +109,36 @@ its own.
 `HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
 Light, Dark and Darker. To let readers pick the theme as well, import every
 theme after the site's default and pass the themes to `HeaderSearch` from a
-wrapper component:
+wrapper component. `all.css` has the core and optional themes.
 
 ```css
 @import "@timmo001/docs-kit/blume/themes/base.css";
 @import "@timmo001/docs-kit/blume/themes/all.css";
 ```
 
+List the site's own theme first, then any other Groundwork themes, then the
+optional ones. The choices from `@timmo001/groundwork-tokens/choices` carry
+each optional theme's `family`, which groups it in the select, and `mode` for
+one that comes in one scheme only, such as Catppuccin Latte. Picking that
+theme moves the page into its scheme, and the other modes can't be picked
+while it's in use. Themes without a family go under `group`, which defaults
+to Groundwork.
+
 ```astro
 ---
+import {
+  coreThemeChoices,
+  optionalThemeChoices,
+} from "@timmo001/groundwork-tokens/choices";
 import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
 
 const themes = [
-  { id: "base", name: "Base" },
-  { id: "bridge", name: "Bridge" },
+  ...coreThemeChoices.filter((theme) => theme.id === "bridge"),
+  ...optionalThemeChoices,
 ];
 ---
 
-<HeaderSearch {...Astro.props} themes={themes} defaultTheme="base" />
+<HeaderSearch {...Astro.props} themes={themes} defaultTheme="bridge" />
 ```
 
 Set these in `theme.css` to change the banner:

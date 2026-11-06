@@ -1,15 +1,20 @@
 ---
 /**
- * The header's search box with docs-kit's theme picker, fed the core themes
- * so demos follow the theme the reader picks.
+ * The header's search box with docs-kit's theme picker, so demos follow the
+ * theme the reader picks. The site's own theme, Base, comes first, then the
+ * optional themes by family. The other core themes belong to the apps that
+ * use them, so they aren't offered here.
  */
-import tokens from "@timmo001/groundwork-tokens/themes.json";
+import {
+  coreThemeChoices,
+  optionalThemeChoices,
+} from "@timmo001/groundwork-tokens/choices";
 import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
 
-/** The core themes, for the header's theme picker. */
-const themes = tokens.themes
-  .filter((theme) => !theme.optional)
-  .map((theme) => ({ id: theme.id, name: theme.name }));
+const themes = [
+  ...coreThemeChoices.filter((theme) => theme.id === "base"),
+  ...optionalThemeChoices,
+];
 ---
 
 <HeaderSearch {...Astro.props} themes={themes} defaultTheme="base" />

@@ -5,10 +5,10 @@ import data from "blume:data";
 import ThemePicker from "./theme-picker.astro";
 
 /**
- * `themes` and `defaultTheme` go to the theme picker; everything else Blume
- * passes goes to its search.
+ * `themes`, `group` and `defaultTheme` go to the theme picker; everything
+ * else Blume passes goes to its search.
  */
-const { themes, defaultTheme, ...searchProps } = Astro.props;
+const { themes, group, defaultTheme, ...searchProps } = Astro.props;
 
 const repoUrl = data.config.repoUrl;
 
@@ -16,7 +16,7 @@ const github = SOCIAL_ICONS.github;
 ---
 
 <Search {...searchProps} />
-<ThemePicker themes={themes} defaultTheme={defaultTheme} />
+<ThemePicker themes={themes} group={group} defaultTheme={defaultTheme} />
 {
   repoUrl && (
     <a

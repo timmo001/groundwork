@@ -473,3 +473,677 @@
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
 }
+
+:root[data-gw-docs-theme="catppuccin-frappe"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+}
+
+:root[data-gw-docs-theme="catppuccin-frappe"][data-theme="dark"] {
+  --blume-background: oklch(32.91% 0.0324 274.76);
+  --blume-foreground: oklch(86.19% 0.0526 273.35);
+  --blume-muted: oklch(30.05% 0.0324 274.76);
+  --blume-muted-foreground: oklch(75.24% 0.0483 274.47);
+  --blume-border: oklch(46.01% 0.0367 272.97);
+  --blume-accent: oklch(76.48% 0.1108 311.74);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(86.19% 0.0526 273.35);
+  --blume-action-foreground: oklch(32.91% 0.0324 274.76);
+  --blume-code-background: oklch(39.49% 0.0342 275.9);
+  --blume-code-highlight: oklch(74.2% 0.1044 265.66 / 0.14);
+  --blume-code-highlight-border: oklch(74.2% 0.1044 265.66 / 0.45);
+  --blume-code-add: oklch(81.24% 0.1071 133.39 / 0.14);
+  --blume-code-add-border: oklch(81.24% 0.1071 133.39 / 0.45);
+  --blume-code-remove: oklch(71.71% 0.1244 19.39 / 0.14);
+  --blume-code-remove-border: oklch(71.71% 0.1244 19.39 / 0.45);
+  --blume-code-error: oklch(71.71% 0.1244 19.39 / 0.14);
+  --blume-code-error-border: oklch(71.71% 0.1244 19.39 / 0.45);
+  --blume-code-warning: oklch(84.43% 0.0795 83.47 / 0.14);
+  --blume-code-warning-border: oklch(84.43% 0.0795 83.47 / 0.45);
+  --blume-code-word: oklch(74.2% 0.1044 265.66 / 0.14);
+  --blume-code-word-border: oklch(74.2% 0.1044 265.66 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-frappe"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(28.41% 0.0324 274.76);
+  --blume-foreground: oklch(86.19% 0.0526 273.35);
+  --blume-muted: oklch(25.55% 0.0324 274.76);
+  --blume-muted-foreground: oklch(75.24% 0.0483 274.47);
+  --blume-border: oklch(54.01% 0.0367 272.97);
+  --blume-accent: oklch(76.48% 0.1108 311.74);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(86.19% 0.0526 273.35);
+  --blume-action-foreground: oklch(28.41% 0.0324 274.76);
+  --blume-code-background: oklch(34.99% 0.0342 275.9);
+  --blume-code-highlight: oklch(74.2% 0.1044 265.66 / 0.14);
+  --blume-code-highlight-border: oklch(74.2% 0.1044 265.66 / 0.45);
+  --blume-code-add: oklch(81.24% 0.1071 133.39 / 0.14);
+  --blume-code-add-border: oklch(81.24% 0.1071 133.39 / 0.45);
+  --blume-code-remove: oklch(71.71% 0.1244 19.39 / 0.14);
+  --blume-code-remove-border: oklch(71.71% 0.1244 19.39 / 0.45);
+  --blume-code-error: oklch(71.71% 0.1244 19.39 / 0.14);
+  --blume-code-error-border: oklch(71.71% 0.1244 19.39 / 0.45);
+  --blume-code-warning: oklch(84.43% 0.0795 83.47 / 0.14);
+  --blume-code-warning-border: oklch(84.43% 0.0795 83.47 / 0.45);
+  --blume-code-word: oklch(74.2% 0.1044 265.66 / 0.14);
+  --blume-code-word-border: oklch(74.2% 0.1044 265.66 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-latte"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(95.78% 0.0058 264.53);
+  --blume-foreground: oklch(43.55% 0.043 279.33);
+  --blume-muted: oklch(93.19% 0.0058 264.53);
+  --blume-muted-foreground: oklch(54.71% 0.0343 279.08);
+  --blume-border: oklch(80.83% 0.0174 271.2);
+  --blume-accent: oklch(55.47% 0.2503 297.02);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(43.55% 0.043 279.33);
+  --blume-action-foreground: oklch(95.78% 0.0058 264.53);
+  --blume-code-background: oklch(93.35% 0.0087 264.52);
+  --blume-code-highlight: oklch(55.86% 0.2255 262.09 / 0.14);
+  --blume-code-highlight-border: oklch(55.86% 0.2255 262.09 / 0.45);
+  --blume-code-add: oklch(62.5% 0.1772 140.44 / 0.14);
+  --blume-code-add-border: oklch(62.5% 0.1772 140.44 / 0.45);
+  --blume-code-remove: oklch(55.05% 0.2155 19.81 / 0.14);
+  --blume-code-remove-border: oklch(55.05% 0.2155 19.81 / 0.45);
+  --blume-code-error: oklch(55.05% 0.2155 19.81 / 0.14);
+  --blume-code-error-border: oklch(55.05% 0.2155 19.81 / 0.45);
+  --blume-code-warning: oklch(71.4% 0.1494 67.78 / 0.14);
+  --blume-code-warning-border: oklch(71.4% 0.1494 67.78 / 0.45);
+  --blume-code-word: oklch(55.86% 0.2255 262.09 / 0.14);
+  --blume-code-word-border: oklch(55.86% 0.2255 262.09 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-macchiato"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+}
+
+:root[data-gw-docs-theme="catppuccin-macchiato"][data-theme="dark"] {
+  --blume-background: oklch(27.88% 0.0353 276.94);
+  --blume-foreground: oklch(87.08% 0.0481 273.67);
+  --blume-muted: oklch(24.88% 0.0353 276.94);
+  --blume-muted-foreground: oklch(75.13% 0.0441 273.53);
+  --blume-border: oklch(42.59% 0.0385 276.95);
+  --blume-accent: oklch(77.15% 0.1259 303.9);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(87.08% 0.0481 273.67);
+  --blume-action-foreground: oklch(27.88% 0.0353 276.94);
+  --blume-code-background: oklch(35.38% 0.0369 275.99);
+  --blume-code-highlight: oklch(74.97% 0.1101 263.81 / 0.14);
+  --blume-code-highlight-border: oklch(74.97% 0.1101 263.81 / 0.45);
+  --blume-code-add: oklch(83.5% 0.1079 138.15 / 0.14);
+  --blume-code-add-border: oklch(83.5% 0.1079 138.15 / 0.45);
+  --blume-code-remove: oklch(73.7% 0.1252 11.19 / 0.14);
+  --blume-code-remove-border: oklch(73.7% 0.1252 11.19 / 0.45);
+  --blume-code-error: oklch(73.7% 0.1252 11.19 / 0.14);
+  --blume-code-error-border: oklch(73.7% 0.1252 11.19 / 0.45);
+  --blume-code-warning: oklch(87.9% 0.0744 84.75 / 0.14);
+  --blume-code-warning-border: oklch(87.9% 0.0744 84.75 / 0.45);
+  --blume-code-word: oklch(74.97% 0.1101 263.81 / 0.14);
+  --blume-code-word-border: oklch(74.97% 0.1101 263.81 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-macchiato"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(23.38% 0.0353 276.94);
+  --blume-foreground: oklch(87.08% 0.0481 273.67);
+  --blume-muted: oklch(20.38% 0.0353 276.94);
+  --blume-muted-foreground: oklch(75.13% 0.0441 273.53);
+  --blume-border: oklch(50.59% 0.0385 276.95);
+  --blume-accent: oklch(77.15% 0.1259 303.9);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(87.08% 0.0481 273.67);
+  --blume-action-foreground: oklch(23.38% 0.0353 276.94);
+  --blume-code-background: oklch(30.88% 0.0369 275.99);
+  --blume-code-highlight: oklch(74.97% 0.1101 263.81 / 0.14);
+  --blume-code-highlight-border: oklch(74.97% 0.1101 263.81 / 0.45);
+  --blume-code-add: oklch(83.5% 0.1079 138.15 / 0.14);
+  --blume-code-add-border: oklch(83.5% 0.1079 138.15 / 0.45);
+  --blume-code-remove: oklch(73.7% 0.1252 11.19 / 0.14);
+  --blume-code-remove-border: oklch(73.7% 0.1252 11.19 / 0.45);
+  --blume-code-error: oklch(73.7% 0.1252 11.19 / 0.14);
+  --blume-code-error-border: oklch(73.7% 0.1252 11.19 / 0.45);
+  --blume-code-warning: oklch(87.9% 0.0744 84.75 / 0.14);
+  --blume-code-warning-border: oklch(87.9% 0.0744 84.75 / 0.45);
+  --blume-code-word: oklch(74.97% 0.1101 263.81 / 0.14);
+  --blume-code-word-border: oklch(74.97% 0.1101 263.81 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-mocha"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+}
+
+:root[data-gw-docs-theme="catppuccin-mocha"][data-theme="dark"] {
+  --blume-background: oklch(24.29% 0.0304 283.91);
+  --blume-foreground: oklch(87.87% 0.0426 272.28);
+  --blume-muted: oklch(21.28% 0.0304 283.91);
+  --blume-muted-foreground: oklch(75.1% 0.0396 273.93);
+  --blume-border: oklch(40.37% 0.032 280.15);
+  --blume-accent: oklch(78.71% 0.1187 304.77);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(87.87% 0.0426 272.28);
+  --blume-action-foreground: oklch(24.29% 0.0304 283.91);
+  --blume-code-background: oklch(32.4% 0.0319 281.98);
+  --blume-code-highlight: oklch(76.64% 0.1113 259.88 / 0.14);
+  --blume-code-highlight-border: oklch(76.64% 0.1113 259.88 / 0.45);
+  --blume-code-add: oklch(85.77% 0.1092 142.72 / 0.14);
+  --blume-code-add-border: oklch(85.77% 0.1092 142.72 / 0.45);
+  --blume-code-remove: oklch(75.56% 0.1297 2.76 / 0.14);
+  --blume-code-remove-border: oklch(75.56% 0.1297 2.76 / 0.45);
+  --blume-code-error: oklch(75.56% 0.1297 2.76 / 0.14);
+  --blume-code-error-border: oklch(75.56% 0.1297 2.76 / 0.45);
+  --blume-code-warning: oklch(91.93% 0.0704 86.53 / 0.14);
+  --blume-code-warning-border: oklch(91.93% 0.0704 86.53 / 0.45);
+  --blume-code-word: oklch(76.64% 0.1113 259.88 / 0.14);
+  --blume-code-word-border: oklch(76.64% 0.1113 259.88 / 0.45);
+}
+
+:root[data-gw-docs-theme="catppuccin-mocha"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(19.79% 0.0304 283.91);
+  --blume-foreground: oklch(87.87% 0.0426 272.28);
+  --blume-muted: oklch(16.78% 0.0304 283.91);
+  --blume-muted-foreground: oklch(75.1% 0.0396 273.93);
+  --blume-border: oklch(48.37% 0.032 280.15);
+  --blume-accent: oklch(78.71% 0.1187 304.77);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(87.87% 0.0426 272.28);
+  --blume-action-foreground: oklch(19.79% 0.0304 283.91);
+  --blume-code-background: oklch(27.9% 0.0319 281.98);
+  --blume-code-highlight: oklch(76.64% 0.1113 259.88 / 0.14);
+  --blume-code-highlight-border: oklch(76.64% 0.1113 259.88 / 0.45);
+  --blume-code-add: oklch(85.77% 0.1092 142.72 / 0.14);
+  --blume-code-add-border: oklch(85.77% 0.1092 142.72 / 0.45);
+  --blume-code-remove: oklch(75.56% 0.1297 2.76 / 0.14);
+  --blume-code-remove-border: oklch(75.56% 0.1297 2.76 / 0.45);
+  --blume-code-error: oklch(75.56% 0.1297 2.76 / 0.14);
+  --blume-code-error-border: oklch(75.56% 0.1297 2.76 / 0.45);
+  --blume-code-warning: oklch(91.93% 0.0704 86.53 / 0.14);
+  --blume-code-warning-border: oklch(91.93% 0.0704 86.53 / 0.45);
+  --blume-code-word: oklch(76.64% 0.1113 259.88 / 0.14);
+  --blume-code-word-border: oklch(76.64% 0.1113 259.88 / 0.45);
+}
+
+:root[data-gw-docs-theme="github"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(100% 0 0);
+  --blume-foreground: oklch(25.42% 0.0111 254.04);
+  --blume-muted: oklch(98.91% 0 0);
+  --blume-muted-foreground: oklch(53.1% 0.0172 251.29);
+  --blume-border: oklch(87.58% 0.0123 247.97);
+  --blume-accent: oklch(53.99% 0.1906 257.48);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(25.42% 0.0111 254.04);
+  --blume-action-foreground: oklch(100% 0 0);
+  --blume-code-background: oklch(97.82% 0.0034 247.86);
+  --blume-code-highlight: oklch(53.99% 0.1906 257.48 / 0.14);
+  --blume-code-highlight-border: oklch(53.99% 0.1906 257.48 / 0.45);
+  --blume-code-add: oklch(52.44% 0.1401 148.04 / 0.14);
+  --blume-code-add-border: oklch(52.44% 0.1401 148.04 / 0.45);
+  --blume-code-remove: oklch(55.17% 0.2051 24.53 / 0.14);
+  --blume-code-remove-border: oklch(55.17% 0.2051 24.53 / 0.45);
+  --blume-code-error: oklch(55.17% 0.2051 24.53 / 0.14);
+  --blume-code-error-border: oklch(55.17% 0.2051 24.53 / 0.45);
+  --blume-code-warning: oklch(55.42% 0.1169 75.01 / 0.14);
+  --blume-code-warning-border: oklch(55.42% 0.1169 75.01 / 0.45);
+  --blume-code-word: oklch(53.99% 0.1906 257.48 / 0.14);
+  --blume-code-word-border: oklch(53.99% 0.1906 257.48 / 0.45);
+}
+
+:root[data-gw-docs-theme="github"][data-theme="dark"] {
+  --blume-background: oklch(17.63% 0.014 258.36);
+  --blume-foreground: oklch(94.25% 0.0111 243.66);
+  --blume-muted: oklch(14.01% 0.014 258.36);
+  --blume-muted-foreground: oklch(61.37% 0.0191 256.32);
+  --blume-border: oklch(33% 0.0149 252.31);
+  --blume-accent: oklch(61.82% 0.1935 258.33);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(94.25% 0.0111 243.66);
+  --blume-action-foreground: oklch(17.63% 0.014 258.36);
+  --blume-code-background: oklch(22.02% 0.0157 256.82);
+  --blume-code-highlight: oklch(61.82% 0.1935 258.33 / 0.14);
+  --blume-code-highlight-border: oklch(61.82% 0.1935 258.33 / 0.45);
+  --blume-code-add: oklch(69.51% 0.1809 145.62 / 0.14);
+  --blume-code-add-border: oklch(69.51% 0.1809 145.62 / 0.45);
+  --blume-code-remove: oklch(66.51% 0.2046 26.96 / 0.14);
+  --blume-code-remove-border: oklch(66.51% 0.2046 26.96 / 0.45);
+  --blume-code-error: oklch(66.51% 0.2046 26.96 / 0.14);
+  --blume-code-error-border: oklch(66.51% 0.2046 26.96 / 0.45);
+  --blume-code-warning: oklch(71.96% 0.1401 79.91 / 0.14);
+  --blume-code-warning-border: oklch(71.96% 0.1401 79.91 / 0.45);
+  --blume-code-word: oklch(61.82% 0.1935 258.33 / 0.14);
+  --blume-code-word-border: oklch(61.82% 0.1935 258.33 / 0.45);
+}
+
+:root[data-gw-docs-theme="github"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(13.13% 0.014 258.36);
+  --blume-foreground: oklch(94.25% 0.0111 243.66);
+  --blume-muted: oklch(9.51% 0.014 258.36);
+  --blume-muted-foreground: oklch(61.37% 0.0191 256.32);
+  --blume-border: oklch(41% 0.0149 252.31);
+  --blume-accent: oklch(61.82% 0.1935 258.33);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(94.25% 0.0111 243.66);
+  --blume-action-foreground: oklch(13.13% 0.014 258.36);
+  --blume-code-background: oklch(17.52% 0.0157 256.82);
+  --blume-code-highlight: oklch(61.82% 0.1935 258.33 / 0.14);
+  --blume-code-highlight-border: oklch(61.82% 0.1935 258.33 / 0.45);
+  --blume-code-add: oklch(69.51% 0.1809 145.62 / 0.14);
+  --blume-code-add-border: oklch(69.51% 0.1809 145.62 / 0.45);
+  --blume-code-remove: oklch(66.51% 0.2046 26.96 / 0.14);
+  --blume-code-remove-border: oklch(66.51% 0.2046 26.96 / 0.45);
+  --blume-code-error: oklch(66.51% 0.2046 26.96 / 0.14);
+  --blume-code-error-border: oklch(66.51% 0.2046 26.96 / 0.45);
+  --blume-code-warning: oklch(71.96% 0.1401 79.91 / 0.14);
+  --blume-code-warning-border: oklch(71.96% 0.1401 79.91 / 0.45);
+  --blume-code-word: oklch(61.82% 0.1935 258.33 / 0.14);
+  --blume-code-word-border: oklch(61.82% 0.1935 258.33 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-dimmed"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(100% 0 0);
+  --blume-foreground: oklch(25.42% 0.0111 254.04);
+  --blume-muted: oklch(98.91% 0 0);
+  --blume-muted-foreground: oklch(53.1% 0.0172 251.29);
+  --blume-border: oklch(87.58% 0.0123 247.97);
+  --blume-accent: oklch(53.99% 0.1906 257.48);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(25.42% 0.0111 254.04);
+  --blume-action-foreground: oklch(100% 0 0);
+  --blume-code-background: oklch(97.82% 0.0034 247.86);
+  --blume-code-highlight: oklch(53.99% 0.1906 257.48 / 0.14);
+  --blume-code-highlight-border: oklch(53.99% 0.1906 257.48 / 0.45);
+  --blume-code-add: oklch(52.44% 0.1401 148.04 / 0.14);
+  --blume-code-add-border: oklch(52.44% 0.1401 148.04 / 0.45);
+  --blume-code-remove: oklch(55.17% 0.2051 24.53 / 0.14);
+  --blume-code-remove-border: oklch(55.17% 0.2051 24.53 / 0.45);
+  --blume-code-error: oklch(55.17% 0.2051 24.53 / 0.14);
+  --blume-code-error-border: oklch(55.17% 0.2051 24.53 / 0.45);
+  --blume-code-warning: oklch(55.42% 0.1169 75.01 / 0.14);
+  --blume-code-warning-border: oklch(55.42% 0.1169 75.01 / 0.45);
+  --blume-code-word: oklch(53.99% 0.1906 257.48 / 0.14);
+  --blume-code-word-border: oklch(53.99% 0.1906 257.48 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-dimmed"][data-theme="dark"] {
+  --blume-background: oklch(27.08% 0.0149 256.8);
+  --blume-foreground: oklch(78.29% 0.0235 248.13);
+  --blume-muted: oklch(25.83% 0.0149 256.8);
+  --blume-muted-foreground: oklch(60.38% 0.025 248.24);
+  --blume-border: oklch(41.32% 0.0197 254.06);
+  --blume-accent: oklch(68.41% 0.152 255.12);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(78.29% 0.0235 248.13);
+  --blume-action-foreground: oklch(27.08% 0.0149 256.8);
+  --blume-code-background: oklch(31.86% 0.0165 255.64);
+  --blume-code-highlight: oklch(68.41% 0.152 255.12 / 0.14);
+  --blume-code-highlight-border: oklch(68.41% 0.152 255.12 / 0.45);
+  --blume-code-add: oklch(66.87% 0.1421 144.47 / 0.14);
+  --blume-code-add-border: oklch(66.87% 0.1421 144.47 / 0.45);
+  --blume-code-remove: oklch(63.74% 0.1829 26.71 / 0.14);
+  --blume-code-remove-border: oklch(63.74% 0.1829 26.71 / 0.45);
+  --blume-code-error: oklch(63.74% 0.1829 26.71 / 0.14);
+  --blume-code-error-border: oklch(63.74% 0.1829 26.71 / 0.45);
+  --blume-code-warning: oklch(68.88% 0.1313 79.12 / 0.14);
+  --blume-code-warning-border: oklch(68.88% 0.1313 79.12 / 0.45);
+  --blume-code-word: oklch(68.41% 0.152 255.12 / 0.14);
+  --blume-code-word-border: oklch(68.41% 0.152 255.12 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-dimmed"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(22.58% 0.0149 256.8);
+  --blume-foreground: oklch(78.29% 0.0235 248.13);
+  --blume-muted: oklch(21.33% 0.0149 256.8);
+  --blume-muted-foreground: oklch(60.38% 0.025 248.24);
+  --blume-border: oklch(49.32% 0.0197 254.06);
+  --blume-accent: oklch(68.41% 0.152 255.12);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(78.29% 0.0235 248.13);
+  --blume-action-foreground: oklch(22.58% 0.0149 256.8);
+  --blume-code-background: oklch(27.36% 0.0165 255.64);
+  --blume-code-highlight: oklch(68.41% 0.152 255.12 / 0.14);
+  --blume-code-highlight-border: oklch(68.41% 0.152 255.12 / 0.45);
+  --blume-code-add: oklch(66.87% 0.1421 144.47 / 0.14);
+  --blume-code-add-border: oklch(66.87% 0.1421 144.47 / 0.45);
+  --blume-code-remove: oklch(63.74% 0.1829 26.71 / 0.14);
+  --blume-code-remove-border: oklch(63.74% 0.1829 26.71 / 0.45);
+  --blume-code-error: oklch(63.74% 0.1829 26.71 / 0.14);
+  --blume-code-error-border: oklch(63.74% 0.1829 26.71 / 0.45);
+  --blume-code-warning: oklch(68.88% 0.1313 79.12 / 0.14);
+  --blume-code-warning-border: oklch(68.88% 0.1313 79.12 / 0.45);
+  --blume-code-word: oklch(68.41% 0.152 255.12 / 0.14);
+  --blume-code-word-border: oklch(68.41% 0.152 255.12 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-high-contrast"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(100% 0 0);
+  --blume-foreground: oklch(17.67% 0.0114 260.64);
+  --blume-muted: oklch(100% 0 0);
+  --blume-muted-foreground: oklch(17.67% 0.0114 260.64);
+  --blume-border: oklch(26.25% 0.015 256.8);
+  --blume-accent: oklch(44.1% 0.1809 260.43);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(17.67% 0.0114 260.64);
+  --blume-action-foreground: oklch(100% 0 0);
+  --blume-code-background: oklch(100% 0 0);
+  --blume-code-highlight: oklch(44.1% 0.1809 260.43 / 0.14);
+  --blume-code-highlight-border: oklch(44.1% 0.1809 260.43 / 0.45);
+  --blume-code-add: oklch(41.78% 0.1209 147.16 / 0.14);
+  --blume-code-add-border: oklch(41.78% 0.1209 147.16 / 0.45);
+  --blume-code-remove: oklch(45.17% 0.1733 24.29 / 0.14);
+  --blume-code-remove-border: oklch(45.17% 0.1733 24.29 / 0.45);
+  --blume-code-error: oklch(45.17% 0.1733 24.29 / 0.14);
+  --blume-code-error-border: oklch(45.17% 0.1733 24.29 / 0.45);
+  --blume-code-warning: oklch(43.6% 0.0963 66.95 / 0.14);
+  --blume-code-warning-border: oklch(43.6% 0.0963 66.95 / 0.45);
+  --blume-code-word: oklch(44.1% 0.1809 260.43 / 0.14);
+  --blume-code-word-border: oklch(44.1% 0.1809 260.43 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-high-contrast"][data-theme="dark"] {
+  --blume-background: oklch(15.4% 0.0092 264.28);
+  --blume-foreground: oklch(96.27% 0.0051 247.88);
+  --blume-muted: oklch(12.9% 0.0092 264.28);
+  --blume-muted-foreground: oklch(96.27% 0.0051 247.88);
+  --blume-border: oklch(60.4% 0.0205 258.37);
+  --blume-accent: oklch(76.25% 0.1261 250.42);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(96.27% 0.0051 247.88);
+  --blume-action-foreground: oklch(15.4% 0.0092 264.28);
+  --blume-code-background: oklch(28.85% 0.0157 264.29);
+  --blume-code-highlight: oklch(76.25% 0.1261 250.42 / 0.14);
+  --blume-code-highlight-border: oklch(76.25% 0.1261 250.42 / 0.45);
+  --blume-code-add: oklch(74.22% 0.2143 146.17 / 0.14);
+  --blume-code-add-border: oklch(74.22% 0.2143 146.17 / 0.45);
+  --blume-code-remove: oklch(71% 0.1825 23.29 / 0.14);
+  --blume-code-remove-border: oklch(71% 0.1825 23.29 / 0.45);
+  --blume-code-error: oklch(71% 0.1825 23.29 / 0.14);
+  --blume-code-error-border: oklch(71% 0.1825 23.29 / 0.45);
+  --blume-code-warning: oklch(81.05% 0.1541 83.76 / 0.14);
+  --blume-code-warning-border: oklch(81.05% 0.1541 83.76 / 0.45);
+  --blume-code-word: oklch(76.25% 0.1261 250.42 / 0.14);
+  --blume-code-word-border: oklch(76.25% 0.1261 250.42 / 0.45);
+}
+
+:root[data-gw-docs-theme="github-high-contrast"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(10.9% 0.0092 264.28);
+  --blume-foreground: oklch(96.27% 0.0051 247.88);
+  --blume-muted: oklch(8.4% 0.0092 264.28);
+  --blume-muted-foreground: oklch(96.27% 0.0051 247.88);
+  --blume-border: oklch(68.4% 0.0205 258.37);
+  --blume-accent: oklch(76.25% 0.1261 250.42);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(96.27% 0.0051 247.88);
+  --blume-action-foreground: oklch(10.9% 0.0092 264.28);
+  --blume-code-background: oklch(24.35% 0.0157 264.29);
+  --blume-code-highlight: oklch(76.25% 0.1261 250.42 / 0.14);
+  --blume-code-highlight-border: oklch(76.25% 0.1261 250.42 / 0.45);
+  --blume-code-add: oklch(74.22% 0.2143 146.17 / 0.14);
+  --blume-code-add-border: oklch(74.22% 0.2143 146.17 / 0.45);
+  --blume-code-remove: oklch(71% 0.1825 23.29 / 0.14);
+  --blume-code-remove-border: oklch(71% 0.1825 23.29 / 0.45);
+  --blume-code-error: oklch(71% 0.1825 23.29 / 0.14);
+  --blume-code-error-border: oklch(71% 0.1825 23.29 / 0.45);
+  --blume-code-warning: oklch(81.05% 0.1541 83.76 / 0.14);
+  --blume-code-warning-border: oklch(81.05% 0.1541 83.76 / 0.45);
+  --blume-code-word: oklch(76.25% 0.1261 250.42 / 0.14);
+  --blume-code-word-border: oklch(76.25% 0.1261 250.42 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(91.35% 0.0068 277.16);
+  --blume-foreground: oklch(51.21% 0.1563 264.1);
+  --blume-muted: oklch(89.34% 0.0068 277.16);
+  --blume-muted-foreground: oklch(56.53% 0.0983 271.32);
+  --blume-border: oklch(83.52% 0.0254 275.85);
+  --blume-accent: oklch(59.99% 0.1804 257.53);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(51.21% 0.1563 264.1);
+  --blume-action-foreground: oklch(91.35% 0.0068 277.16);
+  --blume-code-background: oklch(93.52% 0.0054 286.3);
+  --blume-code-highlight: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-highlight-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --blume-code-add: oklch(52.49% 0.0929 130.28 / 0.14);
+  --blume-code-add-border: oklch(52.49% 0.0929 130.28 / 0.45);
+  --blume-code-remove: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-remove-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-error: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-error-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-warning: oklch(55.27% 0.0749 75.19 / 0.14);
+  --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
+  --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night"][data-theme="dark"] {
+  --blume-background: oklch(22.63% 0.0214 280.49);
+  --blume-foreground: oklch(84.56% 0.0611 274.76);
+  --blume-muted: oklch(21.51% 0.0214 280.49);
+  --blume-muted-foreground: oklch(76.66% 0.0537 275.49);
+  --blume-border: oklch(38.67% 0.0537 273.88);
+  --blume-accent: oklch(71.9% 0.1322 264.2);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(84.56% 0.0611 274.76);
+  --blume-action-foreground: oklch(22.63% 0.0214 280.49);
+  --blume-code-background: oklch(30.56% 0.0369 273.23);
+  --blume-code-highlight: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-highlight-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --blume-code-add: oklch(79.53% 0.1395 130.14 / 0.14);
+  --blume-code-add-border: oklch(79.53% 0.1395 130.14 / 0.45);
+  --blume-code-remove: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-remove-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-error: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-error-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-warning: oklch(78.39% 0.1057 75.43 / 0.14);
+  --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
+  --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(18.13% 0.0214 280.49);
+  --blume-foreground: oklch(84.56% 0.0611 274.76);
+  --blume-muted: oklch(17.01% 0.0214 280.49);
+  --blume-muted-foreground: oklch(76.66% 0.0537 275.49);
+  --blume-border: oklch(46.67% 0.0537 273.88);
+  --blume-accent: oklch(71.9% 0.1322 264.2);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(84.56% 0.0611 274.76);
+  --blume-action-foreground: oklch(18.13% 0.0214 280.49);
+  --blume-code-background: oklch(26.06% 0.0369 273.23);
+  --blume-code-highlight: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-highlight-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --blume-code-add: oklch(79.53% 0.1395 130.14 / 0.14);
+  --blume-code-add-border: oklch(79.53% 0.1395 130.14 / 0.45);
+  --blume-code-remove: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-remove-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-error: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-error-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-warning: oklch(78.39% 0.1057 75.43 / 0.14);
+  --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
+  --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-moon"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(91.35% 0.0068 277.16);
+  --blume-foreground: oklch(51.21% 0.1563 264.1);
+  --blume-muted: oklch(89.34% 0.0068 277.16);
+  --blume-muted-foreground: oklch(56.53% 0.0983 271.32);
+  --blume-border: oklch(83.52% 0.0254 275.85);
+  --blume-accent: oklch(59.99% 0.1804 257.53);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(51.21% 0.1563 264.1);
+  --blume-action-foreground: oklch(91.35% 0.0068 277.16);
+  --blume-code-background: oklch(93.52% 0.0054 286.3);
+  --blume-code-highlight: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-highlight-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --blume-code-add: oklch(52.49% 0.0929 130.28 / 0.14);
+  --blume-code-add-border: oklch(52.49% 0.0929 130.28 / 0.45);
+  --blume-code-remove: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-remove-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-error: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-error-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-warning: oklch(55.27% 0.0749 75.19 / 0.14);
+  --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
+  --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-moon"][data-theme="dark"] {
+  --blume-background: oklch(26.69% 0.0337 278.96);
+  --blume-foreground: oklch(86.94% 0.0486 271.21);
+  --blume-muted: oklch(25.81% 0.0337 278.96);
+  --blume-muted-foreground: oklch(64.63% 0.0682 275.56);
+  --blume-border: oklch(38.67% 0.0537 273.88);
+  --blume-accent: oklch(74.41% 0.1311 264.28);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(86.94% 0.0486 271.21);
+  --blume-action-foreground: oklch(26.69% 0.0337 278.96);
+  --blume-code-background: oklch(32.94% 0.0464 276.83);
+  --blume-code-highlight: oklch(74.41% 0.1311 264.28 / 0.14);
+  --blume-code-highlight-border: oklch(74.41% 0.1311 264.28 / 0.45);
+  --blume-code-add: oklch(88.37% 0.1236 126.81 / 0.14);
+  --blume-code-add-border: oklch(88.37% 0.1236 126.81 / 0.45);
+  --blume-code-remove: oklch(72.88% 0.1683 17.8 / 0.14);
+  --blume-code-remove-border: oklch(72.88% 0.1683 17.8 / 0.45);
+  --blume-code-error: oklch(72.88% 0.1683 17.8 / 0.14);
+  --blume-code-error-border: oklch(72.88% 0.1683 17.8 / 0.45);
+  --blume-code-warning: oklch(86.33% 0.1168 75.04 / 0.14);
+  --blume-code-warning-border: oklch(86.33% 0.1168 75.04 / 0.45);
+  --blume-code-word: oklch(74.41% 0.1311 264.28 / 0.14);
+  --blume-code-word-border: oklch(74.41% 0.1311 264.28 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-moon"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(22.19% 0.0337 278.96);
+  --blume-foreground: oklch(86.94% 0.0486 271.21);
+  --blume-muted: oklch(21.31% 0.0337 278.96);
+  --blume-muted-foreground: oklch(64.63% 0.0682 275.56);
+  --blume-border: oklch(46.67% 0.0537 273.88);
+  --blume-accent: oklch(74.41% 0.1311 264.28);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(86.94% 0.0486 271.21);
+  --blume-action-foreground: oklch(22.19% 0.0337 278.96);
+  --blume-code-background: oklch(28.44% 0.0464 276.83);
+  --blume-code-highlight: oklch(74.41% 0.1311 264.28 / 0.14);
+  --blume-code-highlight-border: oklch(74.41% 0.1311 264.28 / 0.45);
+  --blume-code-add: oklch(88.37% 0.1236 126.81 / 0.14);
+  --blume-code-add-border: oklch(88.37% 0.1236 126.81 / 0.45);
+  --blume-code-remove: oklch(72.88% 0.1683 17.8 / 0.14);
+  --blume-code-remove-border: oklch(72.88% 0.1683 17.8 / 0.45);
+  --blume-code-error: oklch(72.88% 0.1683 17.8 / 0.14);
+  --blume-code-error-border: oklch(72.88% 0.1683 17.8 / 0.45);
+  --blume-code-warning: oklch(86.33% 0.1168 75.04 / 0.14);
+  --blume-code-warning-border: oklch(86.33% 0.1168 75.04 / 0.45);
+  --blume-code-word: oklch(74.41% 0.1311 264.28 / 0.14);
+  --blume-code-word-border: oklch(74.41% 0.1311 264.28 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-storm"] {
+  --blume-radius: 10px;
+  --blume-font-body: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-display: "Mona Sans Variable", "Mona Sans", system-ui, sans-serif;
+  --blume-font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, monospace;
+  --blume-background: oklch(91.35% 0.0068 277.16);
+  --blume-foreground: oklch(51.21% 0.1563 264.1);
+  --blume-muted: oklch(89.34% 0.0068 277.16);
+  --blume-muted-foreground: oklch(56.53% 0.0983 271.32);
+  --blume-border: oklch(83.52% 0.0254 275.85);
+  --blume-accent: oklch(59.99% 0.1804 257.53);
+  --blume-accent-foreground: oklch(100% 0 0);
+  --blume-action: oklch(51.21% 0.1563 264.1);
+  --blume-action-foreground: oklch(91.35% 0.0068 277.16);
+  --blume-code-background: oklch(93.52% 0.0054 286.3);
+  --blume-code-highlight: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-highlight-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --blume-code-add: oklch(52.49% 0.0929 130.28 / 0.14);
+  --blume-code-add-border: oklch(52.49% 0.0929 130.28 / 0.45);
+  --blume-code-remove: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-remove-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-error: oklch(63.37% 0.2326 11.57 / 0.14);
+  --blume-code-error-border: oklch(63.37% 0.2326 11.57 / 0.45);
+  --blume-code-warning: oklch(55.27% 0.0749 75.19 / 0.14);
+  --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
+  --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
+  --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-storm"][data-theme="dark"] {
+  --blume-background: oklch(28.19% 0.0355 274.75);
+  --blume-foreground: oklch(84.56% 0.0611 274.76);
+  --blume-muted: oklch(27.14% 0.0355 274.75);
+  --blume-muted-foreground: oklch(76.66% 0.0537 275.49);
+  --blume-border: oklch(38.67% 0.0537 273.88);
+  --blume-accent: oklch(71.9% 0.1322 264.2);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(84.56% 0.0611 274.76);
+  --blume-action-foreground: oklch(28.19% 0.0355 274.75);
+  --blume-code-background: oklch(30.56% 0.0369 273.23);
+  --blume-code-highlight: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-highlight-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --blume-code-add: oklch(79.53% 0.1395 130.14 / 0.14);
+  --blume-code-add-border: oklch(79.53% 0.1395 130.14 / 0.45);
+  --blume-code-remove: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-remove-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-error: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-error-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-warning: oklch(78.39% 0.1057 75.43 / 0.14);
+  --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
+  --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+}
+
+:root[data-gw-docs-theme="tokyo-night-storm"][data-theme="dark"][data-gw-darker] {
+  --blume-background: oklch(23.69% 0.0355 274.75);
+  --blume-foreground: oklch(84.56% 0.0611 274.76);
+  --blume-muted: oklch(22.64% 0.0355 274.75);
+  --blume-muted-foreground: oklch(76.66% 0.0537 275.49);
+  --blume-border: oklch(46.67% 0.0537 273.88);
+  --blume-accent: oklch(71.9% 0.1322 264.2);
+  --blume-accent-foreground: oklch(15% 0 0);
+  --blume-action: oklch(84.56% 0.0611 274.76);
+  --blume-action-foreground: oklch(23.69% 0.0355 274.75);
+  --blume-code-background: oklch(26.06% 0.0369 273.23);
+  --blume-code-highlight: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-highlight-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --blume-code-add: oklch(79.53% 0.1395 130.14 / 0.14);
+  --blume-code-add-border: oklch(79.53% 0.1395 130.14 / 0.45);
+  --blume-code-remove: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-remove-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-error: oklch(72.27% 0.1589 10.28 / 0.14);
+  --blume-code-error-border: oklch(72.27% 0.1589 10.28 / 0.45);
+  --blume-code-warning: oklch(78.39% 0.1057 75.43 / 0.14);
+  --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
+  --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
+  --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+}
