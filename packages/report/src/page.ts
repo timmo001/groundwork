@@ -104,7 +104,7 @@ export const reportPage = (options: ReportPageOptions) => {
         />
         <title>${options.title}</title>
         <script>
-          ${raw(inline(themeBootScript({ key, defaultTheme, followOmarchy: false }) + desktopBootScript(key), "script"))};
+          ${raw(inline(themeBootScript({ key, defaultTheme }) + desktopBootScript(key), "script"))};
         </script>
         <style>
           ${raw(inline(options.assets.css, "style"))}

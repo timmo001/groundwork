@@ -53,11 +53,11 @@ Text is escaped. `html` marks a template as markup and `raw` a string. Only the 
 
 ## Themes
 
-The picker offers the [core themes](/themes), then the [optional ones](/themes/optional) by family, then a Desktop group. The Import item is hidden (`no-import` on `gw-theme-picker`), since the desktop's themes come in on their own. A report starts on Glazing until one is picked.
+The picker offers the report's own theme, then the other [core themes](/themes), then the [optional ones](/themes/optional) by family, then a Desktop group. The Import item is hidden (`no-import` on `gw-theme-picker`), since the desktop's themes come in on their own. A report starts on Glazing until one is picked.
 
 `readReportThemes` reads the machine where the report is made:
 
-- The Omarchy theme in use, offered as Omarchy, and kept only as a choice: the report doesn't follow it (`followOmarchy: false`).
+- The Omarchy theme in use, offered as Omarchy, and kept only as a choice: the report starts on its own theme, never the Omarchy one.
 - Every installed Omarchy theme, from its `colors.toml`, or its Alacritty, Ghostty or kitty file in older themes.
 - The terminals' own themes: Ghostty, kitty, Alacritty and foot.
 

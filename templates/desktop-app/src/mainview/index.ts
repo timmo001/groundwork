@@ -12,7 +12,9 @@ import "@timmo001/groundwork-demo/web";
 import {
   coreThemeChoices,
   customThemeId,
+  optionalThemeChoices,
   pageTheme,
+  themeOptions as pickerOptions,
   type ThemeMode,
 } from "@timmo001/groundwork-tokens/page";
 import { on } from "@timmo001/groundwork-ui";
@@ -27,18 +29,33 @@ import { themeOptions } from "./theme.ts";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
 
-const page = pageTheme({ ...themeOptions, themes: coreThemeChoices });
+// The app's own theme first, then the other core themes, then the optional
+// ones by family. Trim or extend the list to suit the app
+const themes = [
+  ...coreThemeChoices.filter(({ id }) => id === themeOptions.defaultTheme),
+  ...coreThemeChoices.filter(({ id }) => id !== themeOptions.defaultTheme),
+  ...optionalThemeChoices,
+];
+
+const page = pageTheme({ ...themeOptions, themes });
 const picker = document.querySelector("gw-theme-picker");
 
 if (picker !== null) {
   const render = () => {
-    const { mode, theme, custom, omarchy } = page.state();
+    const { mode, theme, only, custom, omarchy } = page.state();
     picker.mode = mode;
     picker.theme = theme;
+    picker.scheme = only ?? "";
+    // The desktop's Omarchy theme and an imported one are offered, never
+    // the default
     picker.themes = [
-      ...coreThemeChoices.map(({ id, name }) => ({ value: id, label: name })),
-      ...(omarchy === null ? [] : [{ value: omarchy.id, label: omarchy.name }]),
-      ...(custom === null ? [] : [{ value: customThemeId, label: custom }]),
+      ...pickerOptions(themes),
+      ...(omarchy === null
+        ? []
+        : [{ value: omarchy.id, label: omarchy.name, group: "Desktop" }]),
+      ...(custom === null
+        ? []
+        : [{ value: customThemeId, label: custom, group: "Imported" }]),
     ];
   };
 

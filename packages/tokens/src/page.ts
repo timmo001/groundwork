@@ -15,7 +15,7 @@ import {
   omarchyStorageKeys,
   omarchyThemeId,
   omarchyThemeStyleId,
-  themeCovers,
+  themeAllows,
   themeStorageKeys,
   type ThemeBootOptions,
   type ThemeChoice,
@@ -36,8 +36,10 @@ export {
   omarchyThemeStyleId,
   optionalThemeChoices,
   optionalThemeDocuments,
+  themeAllows,
   themeBootScript,
   themeCovers,
+  themeOptions,
   type ThemeBootOptions,
   type ThemeChoice,
   type ThemeMode,
@@ -50,8 +52,14 @@ export interface PageThemeState {
   readonly mode: ThemeMode;
   /** The scheme in use, with `auto` resolved from the system. */
   readonly scheme: ThemeScheme;
-  /** The theme id in use: a built-in one, or `custom`. */
+  /** The theme id in use: a built-in one, `omarchy` or `custom`. */
   readonly theme: string;
+  /**
+   * The one scheme the theme in use covers, such as `light` for Catppuccin
+   * Latte, or `null` when it has both. Pass it to the picker's `scheme`, so
+   * the other modes can't be picked.
+   */
+  readonly only: ThemeScheme | null;
   /** The visitor's own theme's name, when they've imported one. */
   readonly custom: string | null;
   /** The desktop's Omarchy theme as a choice, when the app passed one. */
@@ -94,7 +102,9 @@ export interface PageThemeOptions extends ThemeBootOptions {
 
 export interface PageTheme {
   readonly state: () => PageThemeState;
+  /** Sets the mode, unless the theme in use doesn't come in it. */
   readonly setMode: (mode: ThemeMode) => void;
+  /** Picks a theme, moving to its scheme when it has only one. */
   readonly setTheme: (id: string) => void;
   /** Solves a theme document's JSON or an Omarchy `colors.toml` and applies it. */
   readonly importTheme: (text: string) => Promise<ImportResult>;
@@ -102,9 +112,9 @@ export interface PageTheme {
   readonly reset: () => void;
   /**
    * Offers the Omarchy theme the app runs under, or drops it with `null`.
-   * It's used for its scheme until the visitor picks another, and a theme
-   * switch on the desktop follows through while it's picked. Apps that can
-   * read it, such as desktop apps, pass it on start and on every switch.
+   * It's only ever a choice, never the default; while it's picked, a theme
+   * switch on the desktop follows through. Apps that can read it, such as
+   * desktop apps, pass it on start and on every switch.
    */
   readonly setOmarchyTheme: (
     theme: OmarchyCurrentTheme | null,
@@ -143,9 +153,17 @@ const readTheme = async (text: string) => {
   return omarchyTheme(text);
 };
 
+const schemeValue = (value: string | null): ThemeScheme | undefined =>
+  value === "light" || value === "dark" ? value : undefined;
+
 /**
  * Sets up the page's theme from what's stored, falling back to the defaults,
  * and registers the WebMCP theme tools where the browser offers them.
+ *
+ * There's one pick. A theme with one scheme keeps the page in it, so its
+ * other modes can't be set. An imported or Omarchy theme is offered once
+ * there is one, but is only used when it's picked: the default is always
+ * `defaultTheme`.
  */
 export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const stored = themeStorageKeys(options.key);
@@ -155,10 +173,6 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const listeners = new Set<(state: PageThemeState) => void>();
 
   const known = (id: string) => options.themes.some((theme) => theme.id === id);
-
-  const storedMode = read(stored.mode);
-  const customName = read(stored.name);
-  const customCss = read(stored.css);
 
   const setStyle = (id: string, css: string | null) => {
     let style = document.getElementById(id);
@@ -184,13 +198,9 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   {
     const css = read(storedOmarchy.css);
     const name = read(storedOmarchy.name);
-    const mode = read(storedOmarchy.mode);
+    const mode = schemeValue(read(storedOmarchy.mode));
 
-    if (
-      css !== null &&
-      name !== null &&
-      (mode === "light" || mode === "dark")
-    ) {
+    if (css !== null && name !== null && mode !== undefined) {
       omarchy = { id: omarchyThemeId, name, mode };
 
       // The boot script may have put it on already
@@ -200,8 +210,24 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     }
   }
 
-  const choices = () =>
-    omarchy === null ? options.themes : [...options.themes, omarchy];
+  /** The visitor's own theme as a choice, when there's one. */
+  let custom: ThemeChoice | null =
+    read(stored.css) === null
+      ? null
+      : {
+          id: customThemeId,
+          name: read(stored.name) ?? "Custom",
+          mode: schemeValue(read(stored.scheme)),
+        };
+
+  const choiceOf = (id: string | null) =>
+    id === null
+      ? undefined
+      : [
+          ...options.themes,
+          ...(omarchy === null ? [] : [omarchy]),
+          ...(custom === null ? [] : [custom]),
+        ].find((theme) => theme.id === id);
 
   const system = matchMedia("(prefers-color-scheme: dark)");
 
@@ -212,59 +238,46 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         ? "light"
         : "dark";
 
-  /** Whether `id` can be the pick for `scheme`. */
-  const fits = (id: string | null, scheme: ThemeScheme, custom: boolean) =>
-    id !== null &&
-    ((id === customThemeId && custom) ||
-      choices().some((theme) => theme.id === id && themeCovers(theme, scheme)));
+  /** `mode`, or the theme's own scheme when it doesn't come in `mode`. */
+  const fit = (choice: ThemeChoice | undefined, mode: ThemeMode): ThemeMode =>
+    choice === undefined || themeAllows(choice, mode)
+      ? mode
+      : (choice.mode ?? mode);
 
-  // The Omarchy theme comes first where it covers the scheme, so the app
-  // matches the desktop until the visitor picks another, unless it's only
-  // offered
-  const fallback = (scheme: ThemeScheme) =>
-    options.followOmarchy !== false &&
-    omarchy !== null &&
-    themeCovers(omarchy, scheme)
-      ? omarchy.id
-      : options.themes.some(
-            (theme) =>
-              theme.id === options.defaultTheme && themeCovers(theme, scheme),
-          )
-        ? options.defaultTheme
-        : (options.themes.find((theme) => themeCovers(theme, scheme))?.id ??
-          options.defaultTheme);
+  const resolve = (theme: string, mode: ThemeMode): PageThemeState => {
+    const choice = choiceOf(theme);
+    const fitted = fit(choice, mode);
 
-  const storedLight = read(stored.theme);
-  const storedDark = read(stored.dark) ?? storedLight;
-
-  /** The theme kept for each scheme. */
-  let picks: Record<ThemeScheme, string> = {
-    light: fits(storedLight, "light", customCss !== null)
-      ? (storedLight ?? options.defaultTheme)
-      : fallback("light"),
-    dark: fits(storedDark, "dark", customCss !== null)
-      ? (storedDark ?? options.defaultTheme)
-      : fallback("dark"),
+    return {
+      mode: fitted,
+      scheme: schemeOf(fitted),
+      theme,
+      only: choice?.mode ?? null,
+      custom: custom?.name ?? null,
+      omarchy,
+    };
   };
 
-  const savePicks = () => {
-    write(stored.theme, picks.light);
-    write(stored.dark, picks.dark);
-  };
+  /** The default, as `reset` and a vanished pick go back to. */
+  const fallback = () => resolve(options.defaultTheme, defaultMode);
 
-  const resolve = (mode: ThemeMode, custom: string | null): PageThemeState => {
-    const scheme = schemeOf(mode);
+  let state: PageThemeState = (() => {
+    const theme = read(stored.theme);
+    const mode = modes.find((entry) => entry === read(stored.mode));
 
-    return { mode, scheme, theme: picks[scheme], custom, omarchy };
-  };
+    return theme !== null && choiceOf(theme) !== undefined
+      ? resolve(theme, mode ?? defaultMode)
+      : resolve(options.defaultTheme, mode ?? defaultMode);
+  })();
 
-  let state: PageThemeState = resolve(
-    modes.find((mode) => mode === storedMode) ?? defaultMode,
-    customCss === null ? null : customName,
-  );
-
-  const commit = (next: PageThemeState) => {
+  const commit = (next: PageThemeState, save = true) => {
     state = next;
+
+    if (save) {
+      write(stored.theme, state.theme);
+      write(stored.mode, state.mode);
+    }
+
     root.setAttribute("data-gw-theme", state.theme);
 
     if (state.mode === "auto") root.removeAttribute("data-gw-mode");
@@ -273,8 +286,15 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     for (const listener of listeners) listener(state);
   };
 
-  /** Solves a document under the custom id, applies it and keeps it. */
-  const applyCustom = async (document: Theme, text: string, keep = true) => {
+  /**
+   * Solves a document under the custom id and keeps it. `pick` uses it,
+   * as an import does; a theme from the store is only offered.
+   */
+  const applyCustom = async (
+    document: Theme,
+    text: string,
+    { pick, keep }: { pick: boolean; keep: boolean },
+  ) => {
     const { appTonesCss, runtimeTheme } = await import("./runtime.ts");
     const runtime = runtimeTheme(document, customThemeId);
 
@@ -283,13 +303,26 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         ? runtime.css
         : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
 
+    const scheme =
+      runtime.theme.modes.light === undefined
+        ? "dark"
+        : runtime.theme.modes.dark === undefined
+          ? "light"
+          : undefined;
+
     setStyle(customThemeStyleId, css);
     write(stored.document, text);
     write(stored.css, css);
     write(stored.name, document.name);
-    picks = { light: customThemeId, dark: customThemeId };
-    savePicks();
-    commit(resolve(state.mode, document.name));
+    write(stored.scheme, scheme ?? null);
+    custom = { id: customThemeId, name: document.name, mode: scheme };
+
+    commit(
+      resolve(
+        pick || state.theme === customThemeId ? customThemeId : state.theme,
+        state.mode,
+      ),
+    );
 
     if (keep) await options.store?.save(text).catch(() => undefined);
 
@@ -301,45 +334,41 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
       );
   };
 
-  const setTheme = (id: string) => {
-    if (id === customThemeId) {
-      if (state.custom === null) return;
+  /** Drops the visitor's own theme, leaving it if it was in use. */
+  const dropCustom = () => {
+    setStyle(customThemeStyleId, null);
 
-      picks = { light: id, dark: id };
-    } else {
-      const choice = choices().find((theme) => theme.id === id);
-
-      if (choice === undefined) return;
-
-      picks =
-        choice.mode === undefined
-          ? { light: id, dark: id }
-          : { ...picks, [choice.mode]: id };
-
-      // Picking a light-only theme in dark, or the reverse, shows it
-      if (choice.mode !== undefined && choice.mode !== state.scheme) {
-        savePicks();
-        write(stored.mode, choice.mode);
-        commit(resolve(choice.mode, state.custom));
-
-        return;
-      }
+    for (const key of [
+      stored.document,
+      stored.css,
+      stored.name,
+      stored.scheme,
+    ]) {
+      write(key, null);
     }
 
-    savePicks();
-    commit(resolve(state.mode, state.custom));
+    custom = null;
   };
 
-  // A system change moves `auto` between the light and dark picks
+  const setTheme = (id: string) => {
+    if (choiceOf(id) === undefined) return;
+
+    commit(resolve(id, state.mode));
+  };
+
+  // A system change moves `auto` between light and dark
   system.addEventListener("change", () => {
-    if (state.mode === "auto") commit(resolve(state.mode, state.custom));
+    if (state.mode === "auto") commit(resolve(state.theme, state.mode), false);
   });
 
   const page: PageTheme = {
     state: () => state,
     setMode: (mode) => {
-      write(stored.mode, mode);
-      commit(resolve(mode, state.custom));
+      const choice = choiceOf(state.theme);
+
+      if (choice !== undefined && !themeAllows(choice, mode)) return;
+
+      commit(resolve(state.theme, mode));
     },
     setTheme,
     importTheme: async (text) => {
@@ -353,32 +382,22 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         };
       }
 
-      const misses = await applyCustom(parsed.success, text);
+      const misses = await applyCustom(parsed.success, text, {
+        pick: true,
+        keep: true,
+      });
 
       return { ok: true, name: parsed.success.name, misses };
     },
     reset: () => {
-      setStyle(customThemeStyleId, null);
-
-      for (const key of Object.values(stored)) write(key, null);
-
-      picks = { light: fallback("light"), dark: fallback("dark") };
-      commit(resolve(defaultMode, null));
+      dropCustom();
+      write(stored.theme, null);
+      write(stored.mode, null);
+      commit(fallback(), false);
       void options.store?.clear().catch(() => undefined);
     },
     setOmarchyTheme: async (theme) => {
-      // Stored as well as in use, so it's picked again when it comes back
-      const followed = [
-        picks.light,
-        picks.dark,
-        read(stored.theme),
-        read(stored.dark),
-      ].includes(omarchyThemeId);
-
-      const unpicked =
-        options.followOmarchy !== false && read(stored.theme) === null;
-
-      let mode: ThemeScheme | undefined;
+      let next: ThemeChoice | null = null;
 
       if (theme !== null) {
         const { Result } = await import("effect");
@@ -397,42 +416,32 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
               ? runtime.css
               : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
 
-          mode = parsed.success.mode;
           setStyle(omarchyThemeStyleId, css);
           write(storedOmarchy.css, css);
           write(storedOmarchy.name, name);
-          write(storedOmarchy.mode, mode);
-          omarchy = { id: omarchyThemeId, name, mode };
+          write(storedOmarchy.mode, parsed.success.mode);
+          next = { id: omarchyThemeId, name, mode: parsed.success.mode };
         }
       }
 
-      if (mode === undefined) {
-        // Gone, or a colors.toml that doesn't map: back off it, keeping the
-        // pick so it comes back with the theme
+      if (next === null) {
+        // Gone, or a colors.toml that doesn't map
         setStyle(omarchyThemeStyleId, null);
 
         for (const key of Object.values(storedOmarchy)) write(key, null);
-
-        omarchy = null;
-        picks = {
-          light:
-            picks.light === omarchyThemeId ? fallback("light") : picks.light,
-          dark: picks.dark === omarchyThemeId ? fallback("dark") : picks.dark,
-        };
-      } else if (followed || unpicked) {
-        // A switch between a light and a dark Omarchy theme moves it across
-        const keep = (scheme: ThemeScheme) =>
-          picks[scheme] === omarchyThemeId ? fallback(scheme) : picks[scheme];
-
-        picks =
-          mode === "dark"
-            ? { light: keep("light"), dark: omarchyThemeId }
-            : { light: omarchyThemeId, dark: keep("dark") };
-
-        if (!unpicked) savePicks();
       }
 
-      commit(resolve(state.mode, state.custom));
+      omarchy = next;
+
+      // While it's picked, a switch between a light and a dark Omarchy
+      // theme moves the page across; once it's gone, the default takes over
+      commit(
+        state.theme !== omarchyThemeId
+          ? resolve(state.theme, state.mode)
+          : next === null
+            ? fallback()
+            : resolve(omarchyThemeId, state.mode),
+      );
     },
     subscribe: (listener) => {
       listeners.add(listener);
@@ -443,10 +452,14 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     },
   };
 
-  commit(state);
+  // A stored pick is saved back, in case its mode had to move to fit the
+  // theme; with nothing stored, the defaults stay unsaved so a new default
+  // reaches the visitor
+  commit(state, read(stored.theme) !== null);
 
-  // The store's theme wins over this browser's: another client may have
-  // changed or dropped it
+  // The store's theme wins over this browser's, since another client may
+  // have changed or dropped it. It's offered, and used only when this
+  // browser had the visitor's own theme picked
   if (options.store !== undefined) {
     void options.store
       .load()
@@ -454,19 +467,12 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         if (text === read(stored.document)) return;
 
         if (text === null) {
-          setStyle(customThemeStyleId, null);
-
-          for (const key of [stored.document, stored.css, stored.name]) {
-            write(key, null);
-          }
-
-          picks = {
-            light:
-              picks.light === customThemeId ? fallback("light") : picks.light,
-            dark: picks.dark === customThemeId ? fallback("dark") : picks.dark,
-          };
-          savePicks();
-          commit(resolve(state.mode, null));
+          dropCustom();
+          commit(
+            state.theme === customThemeId
+              ? fallback()
+              : resolve(state.theme, state.mode),
+          );
 
           return;
         }
@@ -475,7 +481,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         const parsed = await readTheme(text);
 
         if (Result.isSuccess(parsed)) {
-          await applyCustom(parsed.success, text, false);
+          await applyCustom(parsed.success, text, { pick: false, keep: false });
         }
       })
       .catch(() => undefined);
@@ -502,7 +508,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
           },
           apply: ({ document: theme, text }) => {
             if (documents.includes(theme)) setTheme(theme.id);
-            else void applyCustom(theme, text);
+            else void applyCustom(theme, text, { pick: true, keep: true });
           },
         });
       },

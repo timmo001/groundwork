@@ -138,17 +138,17 @@ On Linux, WebKitGTK takes the mode from GTK 3, not from the desktop's color sche
 
 ### Omarchy theme
 
-Where Omarchy is installed, the app matches its theme. The main process reads the theme in use from `~/.local/state/omarchy/current/theme/colors.toml` and passes it to the view, then again on every theme switch. Pass it to `pageTheme` in the view:
+Where Omarchy is installed, the app offers its theme. The main process reads the theme in use from `~/.local/state/omarchy/current/theme/colors.toml` and passes it to the view, then again on every theme switch. Pass it to `pageTheme` in the view:
 
 ```ts
-const page = pageTheme({ ...themeOptions, themes: coreThemeChoices });
+const page = pageTheme({ ...themeOptions, themes });
 
 await connectDesktop<AppRequests>(createRPC, {
   onOmarchyTheme: (theme) => void page.setOmarchyTheme(theme),
 });
 ```
 
-`page.state().omarchy` is then a theme choice, such as "Omarchy (Tokyo Night)", to list in the theme picker. It covers the Omarchy theme's own scheme, light or dark. Until someone picks another theme it's the one in use, and while it's picked a switch on the desktop follows through. The boot script keeps the last one, so it applies before the first paint. Set `omarchyTheme: false` in `desktop.config.ts` to leave it out.
+`page.state().omarchy` is then a theme choice, such as "Omarchy (Tokyo Night)", to list in the theme picker. It covers the Omarchy theme's own scheme, light or dark. It's never the default: the app starts on its own theme, and once someone picks the Omarchy one, a switch on the desktop follows through. The boot script keeps the last one, so it applies before the first paint. Set `omarchyTheme: false` in `desktop.config.ts` to leave it out.
 
 ## Scaling
 

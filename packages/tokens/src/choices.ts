@@ -19,7 +19,6 @@ import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
-import tokyoNightDay from "../themes/tokyo-night-day.json" with { type: "json" };
 import tokyoNightMoon from "../themes/tokyo-night-moon.json" with { type: "json" };
 import tokyoNightStorm from "../themes/tokyo-night-storm.json" with { type: "json" };
 import tokyoNight from "../themes/tokyo-night.json" with { type: "json" };
@@ -44,8 +43,8 @@ export const omarchyThemeStyleId = "gw-omarchy-theme";
 
 /**
  * A theme to offer, by id and name. A `Theme` document is one. `mode` marks
- * a theme with only one scheme, such as Catppuccin Latte: it's offered and
- * kept for that scheme alone, beside a pick for the other.
+ * a theme with only one scheme, such as Catppuccin Latte: while it's picked,
+ * the page stays in that scheme.
  */
 export interface ThemeChoice {
   readonly id: string;
@@ -58,6 +57,31 @@ export interface ThemeChoice {
 /** Whether `choice` can show in `scheme`. */
 export const themeCovers = (choice: ThemeChoice, scheme: ThemeScheme) =>
   choice.mode === undefined || choice.mode === scheme;
+
+/**
+ * Whether `mode` can be used with `choice`: any for a theme with both
+ * schemes, and only its own for one with one. Auto could land on the other
+ * scheme, so it's left out too.
+ */
+export const themeAllows = (choice: ThemeChoice, mode: ThemeMode) =>
+  choice.mode === undefined ||
+  (mode !== "auto" && themeCovers(choice, mode === "light" ? "light" : "dark"));
+
+/**
+ * Choices as a picker's options, grouped: a choice's `family`, or `group`
+ * for those without one. Order the choices as the picker should list them,
+ * usually the app's own theme, then the other core themes, then the optional
+ * ones.
+ */
+export const themeOptions = (
+  choices: readonly ThemeChoice[],
+  group = "Groundwork",
+) =>
+  choices.map(({ id, name, family }) => ({
+    value: id,
+    label: name,
+    group: family ?? group,
+  }));
 
 /** The core themes by id and name, in the order the docs list them. */
 export const coreThemeChoices: readonly ThemeChoice[] = [
@@ -79,7 +103,6 @@ export const optionalThemeDocuments = [
   catppuccinFrappe,
   catppuccinMacchiato,
   catppuccinMocha,
-  tokyoNightDay,
   tokyoNight,
   tokyoNightStorm,
   tokyoNightMoon,
@@ -114,22 +137,16 @@ export interface ThemeBootOptions {
   readonly defaultTheme: string;
   /** The mode to start with. Defaults to `auto`. */
   readonly defaultMode?: ThemeMode;
-  /**
-   * Whether the Omarchy theme takes over while the visitor hasn't picked
-   * one. With `false` it's only offered, and `defaultTheme` stays in use.
-   * Defaults to `true`.
-   */
-  readonly followOmarchy?: boolean;
 }
 
 /** The local storage keys a pick is kept under. */
 export const themeStorageKeys = (key: string) => ({
   mode: `${key}:mode`,
   theme: `${key}:id`,
-  dark: `${key}:id-dark`,
   document: `${key}:custom`,
   css: `${key}:custom-css`,
   name: `${key}:custom-name`,
+  scheme: `${key}:custom-mode`,
 });
 
 /** The Omarchy theme's cache, kept apart so a reset doesn't drop it. */
@@ -142,7 +159,8 @@ export const omarchyStorageKeys = (key: string) => ({
 /**
  * An inline script that applies the stored mode, theme and any custom or
  * Omarchy theme's cached CSS before the first paint. Takes the same key and
- * defaults as `pageTheme`.
+ * defaults as `pageTheme`. Picking a theme stores the mode it needs, so the
+ * two stay in step.
  */
 export const themeBootScript = (options: ThemeBootOptions) => {
   const config = JSON.stringify({
@@ -150,14 +168,13 @@ export const themeBootScript = (options: ThemeBootOptions) => {
     omarchy: omarchyStorageKeys(options.key),
     theme: options.defaultTheme,
     mode: options.defaultMode ?? "auto",
-    follow: options.followOmarchy !== false,
     custom: customThemeId,
     style: customThemeStyleId,
     omarchyId: omarchyThemeId,
     omarchyStyle: omarchyThemeStyleId,
   });
 
-  // With nothing picked, a cached Omarchy theme for the scheme is the
-  // default, unless it's only offered
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);const o=g(c.omarchy.css);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??(c.follow&&o&&g(c.omarchy.mode)===(d?"dark":"light")?c.omarchyId:c.theme);if(t===c.custom){const css=g(c.keys.css);if(css)a(c.style,css);else t=c.theme}else if(t===c.omarchyId){if(o)a(c.omarchyStyle,o);else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  // An imported or Omarchy theme only applies once it's been picked, and
+  // falls back to the default when its CSS has gone
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};let m=g(c.keys.mode)??c.mode;let t=g(c.keys.theme)??c.theme;const o=t===c.custom?g(c.keys.css):t===c.omarchyId?g(c.omarchy.css):null;if(t===c.custom||t===c.omarchyId){if(o)a(t===c.custom?c.style:c.omarchyStyle,o);else{t=c.theme;m=c.mode}}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };

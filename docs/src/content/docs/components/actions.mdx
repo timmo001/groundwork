@@ -248,18 +248,28 @@ While there's room, the mode shows in place as icons and the theme as a select, 
 It only asks: it fires `mode`, `theme`, `import` (with the file's `text` and `name`) and `reset`, and the page applies them and sets `mode`, `theme` and `themes` back. Show an import's result, such as roles that miss their contrast target, in `status`. [`pageTheme`](/themes/#on-a-page) does the applying and keeping:
 
 ```ts
-import { coreThemeChoices, customThemeId, pageTheme } from "@timmo001/groundwork-tokens/page";
+import {
+  coreThemeChoices,
+  customThemeId,
+  optionalThemeChoices,
+  pageTheme,
+  themeOptions,
+} from "@timmo001/groundwork-tokens/page";
 
-const page = pageTheme({ key: "my-site:theme", themes: coreThemeChoices, defaultTheme: "base" });
+// The site's own theme first, then the optional ones by family
+const themes = [...coreThemeChoices.filter(({ id }) => id === "base"), ...optionalThemeChoices];
+
+const page = pageTheme({ key: "my-site:theme", themes, defaultTheme: "base" });
 const picker = document.querySelector("gw-theme-picker")!;
 
 const render = () => {
-  const { mode, theme, custom } = page.state();
+  const { mode, theme, only, custom } = page.state();
   picker.mode = mode;
   picker.theme = theme;
+  picker.scheme = only ?? "";
   picker.themes = [
-    ...coreThemeChoices.map(({ id, name }) => ({ value: id, label: name })),
-    ...(custom === null ? [] : [{ value: customThemeId, label: custom }]),
+    ...themeOptions(themes),
+    ...(custom === null ? [] : [{ value: customThemeId, label: custom, group: "Imported" }]),
   ];
 };
 
@@ -273,6 +283,12 @@ picker.addEventListener("import", async (event) => {
   picker.status = result.ok ? `Using ${result.name}` : result.error;
 });
 ```
+
+A theme that comes in one scheme only, such as Catppuccin Latte, sets `scheme` to it. The modes it doesn't have still show, but can't be picked, and `cycle` skips them:
+
+<Demo id="theme-picker-scheme">
+  <gw-theme-picker layout="inline" theme="catppuccin-latte" mode="light" scheme="light" themes='[{"value":"base","label":"Base","group":"Groundwork"},{"value":"catppuccin-latte","label":"Catppuccin Latte","group":"Catppuccin"},{"value":"catppuccin-mocha","label":"Catppuccin Mocha","group":"Catppuccin"}]'></gw-theme-picker>
+</Demo>
 
 Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme-gallery) does, rather than a select. The cards always open from the palette button, with the mode in place beside it while it fits:
 

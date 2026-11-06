@@ -5,7 +5,18 @@ description: Base and five themes, each a small data document solved into light,
 
 A theme is a small data document: a background, an accent and a style. The style covers shape, density, type, borders and surface accents. Every role is solved to the same contrast targets, so every theme reads the same however it looks.
 
-Apps offer light, dark and follow system, with separate light and dark picks. Each app sets its default theme and opts in to the others.
+Apps offer light, dark and follow system. Each app sets its default theme and opts in to the others.
+
+## Choosing an app's themes
+
+Most apps and docs sites start from one theme and build from there. That theme is one of:
+
+- A core theme from Groundwork, such as Glazing or Bridge.
+- An [optional theme](/themes/optional) mapped from another palette, such as Catppuccin or GitHub.
+- A theme from elsewhere, written as a theme document.
+- The app's own, written from scratch or starting from another theme, as [Writing a theme](/themes/writing-a-theme) shows.
+
+Its theme picker lists that theme first, then any other Groundwork themes it offers, then the optional ones by family. The list is the app's to shape: it can leave groups out or add its own. A theme the visitor imports, or the desktop's Omarchy theme, is offered beside them where it makes sense, but never the default.
 
 <ThemeGrid />
 
@@ -32,26 +43,38 @@ Leave `data-gw-mode` off to follow the system's light or dark setting. Darker is
 `pageTheme` from `@timmo001/groundwork-tokens/page` runs a page's theme and mode for it: it keeps the visitor's pick in local storage, sets the attributes on `<html>`, imports their own theme or an Omarchy `colors.toml` under the id `custom`, and registers the [theme tools](/agents#theme-tools) where the browser offers WebMCP. The solver and the tools load only when a custom theme or an agent needs them, so a page that only switches built-in themes stays small. Pair it with a [theme picker](/components/actions/#theme-picker).
 
 ```ts
-import { coreThemeChoices, pageTheme } from "@timmo001/groundwork-tokens/page";
+import {
+  coreThemeChoices,
+  optionalThemeChoices,
+  pageTheme,
+  themeOptions,
+} from "@timmo001/groundwork-tokens/page";
+
+// The site's own theme first, then the optional ones by family
+const themes = [
+  ...coreThemeChoices.filter((theme) => theme.id === "base"),
+  ...optionalThemeChoices,
+];
 
 const page = pageTheme({
   key: "my-site:theme",
-  themes: coreThemeChoices,
+  themes,
   defaultTheme: "base",
   defaultMode: "dark",
 });
 
+picker.themes = themeOptions(themes);
 page.setMode("darker");
 const result = await page.importTheme(colorsToml);
 ```
 
-A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too.
+`themeOptions` turns the choices into the picker's options, in the order given, grouped by family, with the rest under Groundwork. A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too.
 
-A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "light"` or `mode: "dark"` in its choice. `pageTheme` keeps a pick for light and one for dark, so a visitor can pair Latte with Mocha and `auto` moves between them with the system. Picking a light-only theme while the page is dark switches the mode to light, so the pick always shows. `state().scheme` says which side is in use.
+A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "light"` or `mode: "dark"` in its choice. While it's picked, the page stays in that scheme: picking Latte while the page is dark moves it to light, and dark, Darker and Auto can't be set until another theme is picked. `state().only` names that scheme, for the picker's `scheme`, which disables the other modes. `state().scheme` says which side is in use.
 
 `themeBootScript()` takes the same key and defaults and returns a script for an inline `<script>` in `<head>`. It applies the stored pick, and a custom theme's last solved CSS, before the first paint, so the page never flashes the default.
 
-Where the page is given the desktop's Omarchy theme, it follows that theme until the visitor picks another. `followOmarchy: false`, on both `pageTheme` and `themeBootScript`, keeps the Omarchy theme as one choice among the rest and starts on `defaultTheme` instead, as [reports](/reports) do.
+Where the page is given the desktop's Omarchy theme, it's offered as one choice among the rest, and used only once the visitor picks it. The page always starts on `defaultTheme`.
 
 ## Your own theme
 
@@ -81,7 +104,7 @@ const store: ThemeStore = localThemeStore("my-app:theme");
 const text = await store.load();
 ```
 
-A page on `pageTheme` takes the store as `store`. Its theme replaces the browser's own on load, so a change made on another client shows up here, and importing or resetting writes through to it. Local storage still caches the solved CSS, so the theme applies before the first paint:
+A page on `pageTheme` takes the store as `store`. Its theme replaces the browser's own on load, so a change made on another client shows up here, and importing or resetting writes through to it. It's offered, and only used where the visitor has picked their own theme. Local storage still caches the solved CSS, so the theme applies before the first paint:
 
 ```ts
 pageTheme({ key: "my-app:theme", themes, defaultTheme: "bridge", store: hostStore });

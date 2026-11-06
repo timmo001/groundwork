@@ -12,6 +12,7 @@ import {
   coreThemeChoices,
   optionalThemeChoices,
   pageTheme,
+  themeOptions,
   type ThemeChoice,
   type ThemeMode,
 } from "@timmo001/groundwork-tokens/page";
@@ -44,7 +45,6 @@ const page = pageTheme({
   key: config.key,
   themes: [...coreThemeChoices, ...optionalThemeChoices, ...desktopChoices],
   defaultTheme: config.defaultTheme,
-  followOmarchy: false,
 });
 
 // A desktop theme is solved the first time it's picked, then cached so the
@@ -97,23 +97,22 @@ page.subscribe((state) => applyDesktop(state.theme));
 const picker = document.querySelector("gw-theme-picker");
 
 if (picker !== null) {
+  // The report's own theme first, then the other core themes, then the
+  // optional ones grouped by the palette they come from, such as Catppuccin
+  const builtIn = themeOptions([
+    ...coreThemeChoices.filter(({ id }) => id === config.defaultTheme),
+    ...coreThemeChoices.filter(({ id }) => id !== config.defaultTheme),
+    ...optionalThemeChoices,
+  ]);
+
   const render = () => {
-    const { mode, theme, omarchy } = page.state();
+    const { mode, theme, only, omarchy } = page.state();
 
     picker.mode = mode;
     picker.theme = theme;
+    picker.scheme = only ?? "";
     picker.themes = [
-      ...coreThemeChoices.map(({ id, name }) => ({
-        value: id,
-        label: name,
-        group: "Core",
-      })),
-      // Grouped by the palette they come from, such as Catppuccin
-      ...optionalThemeChoices.map(({ id, name, family }) => ({
-        value: id,
-        label: name,
-        group: family ?? "More themes",
-      })),
+      ...builtIn,
       // Themes translated from the machine the page was made on: the Omarchy
       // theme in use, which reads `Omarchy (Tokyo Night)`, then the rest,
       // such as `Nord (Omarchy)` or `Ghostty (Ghostty)`
