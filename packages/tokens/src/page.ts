@@ -11,10 +11,21 @@
  */
 import base from "../themes/base.json" with { type: "json" };
 import bridge from "../themes/bridge.json" with { type: "json" };
+import catppuccinFrappe from "../themes/catppuccin-frappe.json" with { type: "json" };
+import catppuccinLatte from "../themes/catppuccin-latte.json" with { type: "json" };
+import catppuccinMacchiato from "../themes/catppuccin-macchiato.json" with { type: "json" };
+import catppuccinMocha from "../themes/catppuccin-mocha.json" with { type: "json" };
+import githubDimmed from "../themes/github-dimmed.json" with { type: "json" };
+import githubHighContrast from "../themes/github-high-contrast.json" with { type: "json" };
+import github from "../themes/github.json" with { type: "json" };
 import glazing from "../themes/glazing.json" with { type: "json" };
 import slate from "../themes/slate.json" with { type: "json" };
 import snag from "../themes/snag.json" with { type: "json" };
 import survey from "../themes/survey.json" with { type: "json" };
+import tokyoNightDay from "../themes/tokyo-night-day.json" with { type: "json" };
+import tokyoNightMoon from "../themes/tokyo-night-moon.json" with { type: "json" };
+import tokyoNightStorm from "../themes/tokyo-night-storm.json" with { type: "json" };
+import tokyoNight from "../themes/tokyo-night.json" with { type: "json" };
 import type { OmarchyCurrentTheme } from "./omarchy.ts";
 import type { ThemeStore } from "./runtime.ts";
 import type { Theme } from "./schema.ts";
@@ -71,6 +82,8 @@ export interface ThemeChoice {
   readonly id: string;
   readonly name: string;
   readonly mode?: ThemeScheme | undefined;
+  /** The palette an optional theme comes from, such as `Catppuccin`. */
+  readonly family?: string | undefined;
 }
 
 /** Whether `choice` can show in `scheme`. */
@@ -87,6 +100,35 @@ export const coreThemeChoices: readonly ThemeChoice[] = [
   snag,
 ].map(({ id, name }) => ({ id, name }));
 
+/**
+ * The optional themes, mapped from other palettes, by family and then from
+ * light to dark. One with a single mode is offered for that scheme alone;
+ * one with both, such as GitHub's, for either.
+ */
+export const optionalThemeChoices: readonly ThemeChoice[] = [
+  catppuccinLatte,
+  catppuccinFrappe,
+  catppuccinMacchiato,
+  catppuccinMocha,
+  tokyoNightDay,
+  tokyoNight,
+  tokyoNightStorm,
+  tokyoNightMoon,
+  github,
+  githubDimmed,
+  githubHighContrast,
+].map((theme) => ({
+  id: theme.id,
+  name: theme.name,
+  family: theme.family,
+  mode:
+    "otherPalette" in theme
+      ? undefined
+      : theme.mode === "light"
+        ? "light"
+        : "dark",
+}));
+
 export interface PageThemeOptions {
   /** The local storage key prefix, such as `my-site:theme`. */
   readonly key: string;
@@ -101,6 +143,12 @@ export interface PageThemeOptions {
   readonly defaultTheme: string;
   /** The mode to start with. Defaults to `auto`. */
   readonly defaultMode?: ThemeMode;
+  /**
+   * Whether the Omarchy theme takes over while the visitor hasn't picked
+   * one. With `false` it's only offered, and `defaultTheme` stays in use.
+   * Defaults to `true`.
+   */
+  readonly followOmarchy?: boolean;
   /** The element the attributes go on. Defaults to `<html>`. */
   readonly root?: HTMLElement;
   /**
@@ -178,21 +226,26 @@ const write = (key: string, value: string | null) => {
  * defaults as `pageTheme`.
  */
 export const themeBootScript = (
-  options: Pick<PageThemeOptions, "key" | "defaultTheme" | "defaultMode">,
+  options: Pick<
+    PageThemeOptions,
+    "key" | "defaultTheme" | "defaultMode" | "followOmarchy"
+  >,
 ) => {
   const config = JSON.stringify({
     keys: keys(options.key),
     omarchy: omarchyKeys(options.key),
     theme: options.defaultTheme,
     mode: options.defaultMode ?? "auto",
+    follow: options.followOmarchy !== false,
     custom: customThemeId,
     style: customThemeStyleId,
     omarchyId: omarchyThemeId,
     omarchyStyle: omarchyThemeStyleId,
   });
 
-  // With nothing picked, a cached Omarchy theme for the scheme is the default
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);const o=g(c.omarchy.css);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??(o&&g(c.omarchy.mode)===(d?"dark":"light")?c.omarchyId:c.theme);if(t===c.custom){const css=g(c.keys.css);if(css)a(c.style,css);else t=c.theme}else if(t===c.omarchyId){if(o)a(c.omarchyStyle,o);else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  // With nothing picked, a cached Omarchy theme for the scheme is the
+  // default, unless it's only offered
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};const m=g(c.keys.mode)??c.mode;const d=m==="dark"||m==="darker"||(m==="auto"&&matchMedia("(prefers-color-scheme: dark)").matches);const o=g(c.omarchy.css);let t=(d?g(c.keys.dark):null)??g(c.keys.theme)??(c.follow&&o&&g(c.omarchy.mode)===(d?"dark":"light")?c.omarchyId:c.theme);if(t===c.custom){const css=g(c.keys.css);if(css)a(c.style,css);else t=c.theme}else if(t===c.omarchyId){if(o)a(c.omarchyStyle,o);else t=c.theme}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
 
 /** Reads a theme from JSON text or an Omarchy `colors.toml`. */
@@ -284,9 +337,12 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
       choices().some((theme) => theme.id === id && themeCovers(theme, scheme)));
 
   // The Omarchy theme comes first where it covers the scheme, so the app
-  // matches the desktop until the visitor picks another
+  // matches the desktop until the visitor picks another, unless it's only
+  // offered
   const fallback = (scheme: ThemeScheme) =>
-    omarchy !== null && themeCovers(omarchy, scheme)
+    options.followOmarchy !== false &&
+    omarchy !== null &&
+    themeCovers(omarchy, scheme)
       ? omarchy.id
       : options.themes.some(
             (theme) =>
@@ -437,7 +493,9 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
         read(stored.dark),
       ].includes(omarchyThemeId);
 
-      const unpicked = read(stored.theme) === null;
+      const unpicked =
+        options.followOmarchy !== false && read(stored.theme) === null;
+
       let mode: ThemeScheme | undefined;
 
       if (theme !== null) {

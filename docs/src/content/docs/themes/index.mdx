@@ -51,6 +51,8 @@ A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "lig
 
 `themeBootScript()` takes the same key and defaults and returns a script for an inline `<script>` in `<head>`. It applies the stored pick, and a custom theme's last solved CSS, before the first paint, so the page never flashes the default.
 
+Where the page is given the desktop's Omarchy theme, it follows that theme until the visitor picks another. `followOmarchy: false`, on both `pageTheme` and `themeBootScript`, keeps the Omarchy theme as one choice among the rest and starts on `defaultTheme` instead, as [reports](/reports) do.
+
 ## Your own theme
 
 Themes aren't only the built-in set. A user can upload a theme file, or an agent can write one, and the app applies it at runtime. The document is the same one the core themes use, checked against the same [Schema](/themes/writing-a-theme), so an agent can write a valid one from that page alone.
@@ -146,6 +148,6 @@ Pass the same colors to `pageTheme` as `tones`, and a theme a visitor imports ge
 
 ## More
 
-- [Optional themes](/themes/optional): Catppuccin and Tokyo Night.
+- [Optional themes](/themes/optional): Catppuccin, Tokyo Night and GitHub.
 - [Contrast report](/themes/contrast): every role against its target.
 - [Writing a theme](/themes/writing-a-theme): the document format.
