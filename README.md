@@ -26,6 +26,7 @@ document attached to it.
 | [`packages/docs-kit`](packages/docs-kit)                                  | `@timmo001/docs-kit`, published on npm and JSR                                          |
 | [`skills/docs-kit`](skills/docs-kit/SKILL.md)                             | An agent skill for setting up or changing a site with docs-kit                          |
 | [`skills/groundwork-setup`](skills/groundwork-setup/SKILL.md)             | An agent skill for setting up a repository, step by step from the Setup page            |
+| [`skills/groundwork-themes`](skills/groundwork-themes/SKILL.md)           | An agent skill for choosing, comparing or writing an app's theme and the themes it offers |
 | [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                      |
 
 ## docs-kit
