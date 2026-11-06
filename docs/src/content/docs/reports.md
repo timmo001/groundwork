@@ -3,11 +3,7 @@ title: Reports
 description: The report page from @timmo001/groundwork-report, one self-contained HTML file built from blocks, with every theme and the desktop's own.
 ---
 
-A report is one HTML file that a tool writes, such as a weekly migration report or a review summary. `@timmo001/groundwork-report` builds it from blocks on Groundwork's elements and tokens, so every report has the same header, sections, tables and states, and every theme. The file carries its CSS and script inline, so it opens from disk, a mail or an attachment, with no server.
-
-![The sample report's summary on Glazing, light](/screenshots/report/summary-glazing-light.png)
-
-![Its tables and states on GitHub Dimmed, dark](/screenshots/report/tables-github-dimmed-dark.png)
+A report is one HTML file that a tool writes, such as a weekly migration report or a review summary. `@timmo001/groundwork-report` builds it from blocks on Groundwork's elements and tokens, so every report has the same header, sections, tables and states, and every theme. The file carries its CSS and script inline, so it opens from disk, a mail or an attachment, with no server. The [Report template](/templates/report) runs the sample report here.
 
 ## Layout
 
@@ -65,7 +61,7 @@ Each is translated onto the roles with `translatePalette` from `@timmo001/ground
 
 ## Building
 
-`reportAssets` bundles the page script and reads the themes' CSS. It needs Bun and the package's source, so an app compiled to one binary calls it at build time, as a Bun macro. `templates/report` is a sample report on made-up data and a starting point:
+`reportAssets` bundles the page script and reads the themes' CSS. It needs Bun and the package's source, so an app compiled to one binary calls it at build time, as a Bun macro. [`templates/report`](/templates/report) is a sample report on made-up data and a starting point:
 
 ```sh
 mise run report:dev

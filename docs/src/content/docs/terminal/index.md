@@ -51,7 +51,7 @@ OpenTUI has no Effect integration, so the components are plain renderables. Effe
 
 ## Demo
 
-`templates/tui-menu` is the TUI demo and a starting point for a new app. It runs on the shared `Items` service, like every [demo](/demo):
+`templates/tui-menu` is the TUI demo and a starting point for a new app. It runs on the shared `Items` service, like every [demo](/templates):
 
 ```sh
 mise run demo:tui

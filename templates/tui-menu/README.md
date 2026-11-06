@@ -1,6 +1,6 @@
 # tui-menu template
 
-A starting point for a terminal menu app, built with [OpenTUI](https://github.com/sst/opentui), [Effect](https://effect.website) and [Fuse.js](https://www.fusejs.io/), on Groundwork's terminal tokens. It moved here from timmo001/starter-tui-menu, and becomes the TUI target of Groundwork's [demo app](https://groundwork.timmo.dev/demo).
+A starting point for a terminal menu app, built with [OpenTUI](https://github.com/sst/opentui), [Effect](https://effect.website) and [Fuse.js](https://www.fusejs.io/), on Groundwork's terminal tokens. It moved here from timmo001/starter-tui-menu, and becomes the TUI target of Groundwork's [demo app](https://groundwork.timmo.dev/templates/app).
 
 ```sh
 bun src/index.ts                     # the main menu

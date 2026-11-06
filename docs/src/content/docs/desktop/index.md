@@ -25,7 +25,7 @@ Qt Quick, Wails, Slint, Tauri and Electron were compared against it in [#41](htt
 
 ## Demo
 
-The desktop demo runs `gw-demo-app` from `@timmo001/groundwork-demo/web`, the same element as the [web demo](/demo), on the shared `Items` service:
+The desktop demo runs `gw-demo-app` from `@timmo001/groundwork-demo/web`, the same element as the [web demo](/templates/app), on the shared `Items` service:
 
 ```sh
 mise run demo:desktop

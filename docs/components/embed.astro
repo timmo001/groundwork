@@ -1,0 +1,38 @@
+---
+/**
+ * `<Embed>`: a whole page, such as the sample report, in a framed window on
+ * a docs page, with a link to open it on its own. Used on the template pages.
+ */
+interface Props {
+  /** The page to show, such as "/embeds/report.html". */
+  src: string;
+  /** Names the frame for screen readers. */
+  title: string;
+}
+
+const { src, title } = Astro.props;
+---
+
+<figure class="embed">
+  <iframe src={src} title={title} loading="lazy"></iframe>
+  <figcaption><a href={src} target="_blank">Open {title} on its own</a></figcaption>
+</figure>
+
+<style>
+  .embed {
+    margin-block: 1.5rem;
+  }
+
+  iframe {
+    display: block;
+    inline-size: 100%;
+    block-size: min(48rem, 80vh);
+    border: 1px solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+  }
+
+  figcaption {
+    margin-block-start: 0.5rem;
+    font-size: 0.875rem;
+  }
+</style>

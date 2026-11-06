@@ -1,6 +1,6 @@
 # desktop-app template
 
-A starting point for a desktop app on [Electrobun](https://github.com/blackboardsh/electrobun). It's also the desktop target of Groundwork's [demo app](https://groundwork.timmo.dev/demo): `gw-demo-app` from `@timmo001/groundwork-demo/web` in a native window, on the demo's shared `Items` service. `mise run demo:desktop` runs it from the repository root.
+A starting point for a desktop app on [Electrobun](https://github.com/blackboardsh/electrobun). It's also the desktop target of Groundwork's [demo app](https://groundwork.timmo.dev/templates/app): `gw-demo-app` from `@timmo001/groundwork-demo/web` in a native window, on the demo's shared `Items` service. `mise run demo:desktop` runs it from the repository root.
 
 Copy the folder, rename `desktop-app` in `package.json` and the app's name and identifier in `electrobun.config.ts`, then replace `gw-demo-app` in `src/mainview/` with your own view. Drop the `@timmo001/groundwork-demo` dependency.
 

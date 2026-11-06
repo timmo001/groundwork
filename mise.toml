@@ -92,9 +92,9 @@ description = "Start the docs dev server in the background through Pitchfork"
 run = "pitchfork start docs"
 
 [tasks."demo:web"]
-description = "Run the web demo: the docs dev server, with the demo at /demo"
+description = "Run the web demo: the docs dev server, with the demo at /templates/app"
 depends = ["serve:docs"]
-run = "echo 'The web demo is at https://docs.groundwork.localhost/demo'"
+run = "echo 'The web demo is at https://docs.groundwork.localhost/templates/app'"
 
 [tasks."demo:cli"]
 description = "Run the CLI demo; pass a command after --, such as status"

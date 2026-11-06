@@ -8,10 +8,10 @@ export default defineConfig(
       "The groundwork for designing and building apps, sites, CLIs, terminal UIs, Omarchy panels and agents.",
     site: "groundwork.timmo.dev",
     github: { owner: "timmo001", repo: "groundwork" },
+    redirects: [{ from: "/demo", to: "/templates/app" }],
     navigation: {
       sidebar: [
         "/",
-        "/demo",
         "/principles",
         "/setup",
         "/agents",
@@ -19,6 +19,11 @@ export default defineConfig(
         "/behavior",
         "/sync",
         "/reports",
+        {
+          label: "Templates",
+          root: "/templates",
+          items: ["/templates/app", "/templates/report"],
+        },
         {
           label: "Foundations",
           root: "/foundations",

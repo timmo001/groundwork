@@ -1,0 +1,19 @@
+---
+title: Report
+description: The report template's sample report, a weekly migration report on made-up data, running here as the page a tool writes.
+---
+
+`templates/report` writes one sample report, a weekly migration report on made-up data, with [`@timmo001/groundwork-report`](/reports). This is that file, as a reader opens it. Pick a theme, sort, search, group and filter the tables, and fold the sections away. Here it has every built-in theme; a report built on your machine adds its desktop's themes too.
+
+<Embed src="/embeds/report.html" title="the sample report" />
+
+## Starting from it
+
+`src/sample.ts` builds the page from blocks, and `src/build.ts` writes it out. Swap the sample data for your own and arrange the blocks however your content reads best; [Reports](/reports) covers each block, the tables and the themes.
+
+```sh
+mise run report:dev
+mise run report:build
+```
+
+`report:dev` serves the report and reloads it on a change. `report:build` writes it to `templates/report/dist/report.html`.

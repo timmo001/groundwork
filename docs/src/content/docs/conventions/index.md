@@ -63,7 +63,7 @@ Every app with a UI ships a demo of each target it has, and hosts the web one in
 - **Every other target the same way:** the CLI, TUI, desktop and panel demos run the same fixture data, and each runs from a mise task such as `mise run demo:tui`.
 - **One service between the UI and the data:** the app's data and actions sit behind one service, with a fixture implementation beside the real one. A demo swaps in the fixture in one place, and a change to the service reaches every target.
 
-Groundwork's own [Demo](/demo) is the reference.
+Groundwork's own [demo app](/templates/app) is the reference.
 
 ## The manifest
 

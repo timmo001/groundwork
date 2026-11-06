@@ -1,6 +1,6 @@
 # omarchy-panel template
 
-The Omarchy panel target of Groundwork's [demo app](https://groundwork.timmo.dev/demo): a bar button with the pending count, opening a keyboard panel that lists the fixture items, built from Omarchy's own `Panel`, `KeyboardPanel` and `CursorSurface` and Groundwork's shared panel components in `qml/`.
+The Omarchy panel target of Groundwork's [demo app](https://groundwork.timmo.dev/templates/app): a bar button with the pending count, opening a keyboard panel that lists the fixture items, built from Omarchy's own `Panel`, `KeyboardPanel` and `CursorSurface` and Groundwork's shared panel components in `qml/`.
 
 ```sh
 mise run demo:panel     # publish it to the bar through Pitchfork

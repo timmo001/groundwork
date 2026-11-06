@@ -2,7 +2,7 @@
  * The demo app every target shows: a small update tool with items to apply
  * and a system to restart. Its data and actions sit behind the `Items`
  * service, with fixture data here, so each target swaps in a real backend in
- * one place. Docs: https://groundwork.timmo.dev/demo
+ * one place. Docs: https://groundwork.timmo.dev/templates/app
  *
  * @packageDocumentation
  */

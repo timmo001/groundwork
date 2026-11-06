@@ -1,5 +1,7 @@
 # build output
 dist/
+# the sample report, written by scripts/report.ts
+public/embeds/
 # generated types
 .astro/
 .blume/

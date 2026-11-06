@@ -7,7 +7,7 @@ A system's data and actions sit behind one service. Its interface is what every 
 
 ## The demo's Items
 
-`@timmo001/groundwork-demo` defines the service every [demo](/demo) runs on:
+`@timmo001/groundwork-demo` defines the service every [demo](/templates) runs on:
 
 ```ts
 export class Items extends Context.Service<
