@@ -126,10 +126,12 @@ One status source per system, read by the CLI, the bar and any panel, and notifi
 
 ## 9. Theme
 
-Apps don't get a theme of their own in Groundwork. Each one offers the [theme set](/themes): Base and the core themes, the [optional themes](/themes/optional) it opts in to, and [your own theme](/themes#your-own-theme), uploaded or written by an agent and applied at runtime. The owner picks which themes the app offers, one or many, its default, whether users can upload their own, and its [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors, so an agent asks for each one rather than choosing.
+Each app starts from one theme, as [Choosing an app's themes](/themes#choosing-an-apps-themes) sets out: a core theme, an [optional theme](/themes/optional), one from elsewhere, or the app's own, kept in the app rather than added to Groundwork's set. Its picker lists that theme first, then any other Groundwork themes and the optional ones it offers. Users can bring [their own theme](/themes#your-own-theme) at runtime, offered beside the rest but never the default. The `groundwork-themes` skill walks an agent through it.
+
+The owner picks the starting theme, which others the app offers, whether users can upload their own, and its [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors, so an agent asks for each one rather than choosing.
 
 An app that can't switch themes yet, such as one with no UI or no `pageTheme`, plans this for later instead: an issue for choosing the themes on offer, uploads and the icon set, linked from the tracking issue, with the docs site on a single theme until then. Once the choices are made, switch everything that showed Base:
 
-- **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts.
+- **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts. docs-kit only has Groundwork's own themes, so a site for an app with its own theme stays on the theme it started from.
 - **App:** offer the same themes with [`pageTheme`](/themes#on-a-page) and a [theme picker](/components/actions/#theme-picker), including importing your own theme.
 - **Brand images:** set the default theme's background and accent in `scripts/brand-images.ts` and run `bun run brand`. Then upload the new social preview in the repository's settings, since GitHub doesn't read it from the repository.
