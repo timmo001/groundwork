@@ -126,6 +126,24 @@
         "typescript": "7.0.2",
       },
     },
+    "packages/report": {
+      "name": "@timmo001/groundwork-report",
+      "version": "0.9.37",
+      "dependencies": {
+        "@timmo001/groundwork-tokens": "0.9.37",
+        "@timmo001/groundwork-ui": "0.9.37",
+        "effect": "4.1.2",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.91.0",
+        "@timmo001/oxlint-rules": "0.6.4",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.91.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/sync": {
       "name": "@timmo001/groundwork-sync",
       "bin": {
@@ -235,6 +253,23 @@
         "@timmo001/oxlint-rules": "0.6.4",
         "@types/bun": "1.4.4",
         "electrobun": "2.0.6",
+        "oxlint": "1.91.0",
+        "oxlint-tsgolint": "7.0.2005",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
+    "templates/report": {
+      "name": "report",
+      "dependencies": {
+        "@timmo001/groundwork-report": "workspace:*",
+        "@timmo001/groundwork-tokens": "workspace:*",
+        "@timmo001/groundwork-ui": "workspace:*",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.91.0",
+        "@timmo001/oxlint-rules": "0.6.4",
+        "@types/bun": "1.4.4",
         "oxlint": "1.91.0",
         "oxlint-tsgolint": "7.0.2005",
         "prettier": "3.9.10",
@@ -930,6 +965,8 @@
     "@timmo001/groundwork-desktop": ["@timmo001/groundwork-desktop@workspace:packages/desktop"],
 
     "@timmo001/groundwork-lit-effect": ["@timmo001/groundwork-lit-effect@workspace:packages/lit-effect"],
+
+    "@timmo001/groundwork-report": ["@timmo001/groundwork-report@workspace:packages/report"],
 
     "@timmo001/groundwork-sync": ["@timmo001/groundwork-sync@workspace:packages/sync"],
 
@@ -2008,6 +2045,8 @@
     "regex-recursion": ["regex-recursion@6.0.2", "", { "dependencies": { "regex-utilities": "^2.3.0" } }, "sha512-0YCaSCq2VRIebiaUviZNs0cBz1kg5kVS2UKUfNIx8YVs1cN3AV7NTctO5FOKBA+UT2BPJIWZauYHPqJODG50cg=="],
 
     "regex-utilities": ["regex-utilities@2.3.0", "", {}, "sha512-8VhliFJAWRaUiVvREIiW2NXXTmHs4vMNnSzuJVhscgmGav3g9VDxLrQndI3dZZVVdp0ZO/5v0xmX516/7M9cng=="],
+
+    "report": ["report@workspace:templates/report"],
 
     "request-light": ["request-light@0.7.0", "", {}, "sha512-lMbBMrDoxgsyO+yB3sDcrDuX85yYt7sS8BfQd11jtbW/z5ZWgLZRcEGLsLoYw7I0WSUGQBs8CC8ScIxkTX1+6Q=="],
 

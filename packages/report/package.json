@@ -1,0 +1,51 @@
+{
+  "name": "@timmo001/groundwork-report",
+  "version": "0.9.37",
+  "description": "Groundwork's report page: one self-contained HTML file built from blocks, with every theme and the desktop's Omarchy theme",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./assets": "./src/assets.ts",
+    "./desktop": "./src/desktop.ts",
+    "./client": "./src/client.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": [
+    "./src/client.ts"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/report"
+  },
+  "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@timmo001/groundwork-tokens": "0.9.37",
+    "@timmo001/groundwork-ui": "0.9.37",
+    "effect": "4.1.2"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.91.0",
+    "@timmo001/oxlint-rules": "0.6.4",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.91.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

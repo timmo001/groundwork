@@ -1,0 +1,27 @@
+{
+  "name": "report",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/serve.ts",
+    "build": "bun run src/build.ts",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@timmo001/groundwork-report": "workspace:*",
+    "@timmo001/groundwork-tokens": "workspace:*",
+    "@timmo001/groundwork-ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.91.0",
+    "@timmo001/oxlint-rules": "0.6.4",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.91.0",
+    "oxlint-tsgolint": "7.0.2005",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

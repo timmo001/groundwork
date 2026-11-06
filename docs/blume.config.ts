@@ -18,6 +18,7 @@ export default defineConfig(
         "/targets",
         "/behavior",
         "/sync",
+        "/reports",
         {
           label: "Foundations",
           root: "/foundations",

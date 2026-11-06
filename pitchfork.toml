@@ -8,6 +8,14 @@ ready_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 health_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 retry = true
 
+# Serves the report template's sample report, reloading open pages on a change.
+[daemons.report]
+run = 'exec mise run report:dev'
+port = { expect = [7360], bump = 10 }
+ready_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
+health_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
+retry = true
+
 # Publishes the Omarchy panel demo into the local plugins folder while it
 # runs, and restores the folder when it stops.
 [daemons.panel]
