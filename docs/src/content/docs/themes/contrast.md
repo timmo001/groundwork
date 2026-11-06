@@ -222,33 +222,16 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 7.61 ✗ | 8.91 ✗ |
-| text-primary | 9 | n/a | 7.61 ✗ | 8.91 ✗ |
-| text-secondary | 4.6 | n/a | 5.82 | 6.81 |
-| accent | 5 | n/a | 4.88 ✗ | 5.71 |
-| Status: info | 4.8 | n/a | 4.88 | 5.71 |
-| Status: success | 4.8 | n/a | 6.73 | 7.87 |
-| Status: important | 4.8 | n/a | 5.31 | 6.22 |
-| Status: warning | 4.8 | n/a | 6.15 | 7.19 |
-| Status: danger | 4.8 | n/a | 4.65 ✗ | 5.44 |
-| on-accent | 4.5 | n/a | 7.82 | 7.82 |
-
-## Tokyo Night Day
-
-Optional. Mapped from its own palette, so it's reported rather than held to the targets.
-
-| Role | Target | Light | Dark | Darker |
-| --- | --- | --- | --- | --- |
-| text-strong | 11 | 3.99 ✗ | n/a | n/a |
-| text-primary | 9 | 3.99 ✗ | n/a | n/a |
-| text-secondary | 4.6 | 3.15 ✗ | n/a | n/a |
-| accent | 5 | 2.74 ✗ | n/a | n/a |
-| Status: info | 4.8 | 2.74 ✗ | n/a | n/a |
-| Status: success | 4.8 | 3.56 ✗ | n/a | n/a |
-| Status: important | 4.8 | 2.94 ✗ | n/a | n/a |
-| Status: warning | 4.8 | 3.30 ✗ | n/a | n/a |
-| Status: danger | 4.8 | 2.65 ✗ | n/a | n/a |
-| on-accent | 4.5 | 4.02 ✗ | n/a | n/a |
+| text-strong | 11 | 3.99 ✗ | 7.61 ✗ | 8.91 ✗ |
+| text-primary | 9 | 3.99 ✗ | 7.61 ✗ | 8.91 ✗ |
+| text-secondary | 4.6 | 3.15 ✗ | 5.82 | 6.81 |
+| accent | 5 | 2.74 ✗ | 4.88 ✗ | 5.71 |
+| Status: info | 4.8 | 2.74 ✗ | 4.88 | 5.71 |
+| Status: success | 4.8 | 3.56 ✗ | 6.73 | 7.87 |
+| Status: important | 4.8 | 2.94 ✗ | 5.31 | 6.22 |
+| Status: warning | 4.8 | 3.30 ✗ | 6.15 | 7.19 |
+| Status: danger | 4.8 | 2.65 ✗ | 4.65 ✗ | 5.44 |
+| on-accent | 4.5 | 4.02 ✗ | 7.82 | 7.82 |
 
 ## Tokyo Night Moon
 
@@ -256,16 +239,16 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 7.56 ✗ | 8.90 ✗ |
-| text-primary | 9 | n/a | 7.56 ✗ | 8.90 ✗ |
-| text-secondary | 4.6 | n/a | 3.40 ✗ | 4.00 ✗ |
-| accent | 5 | n/a | 4.90 ✗ | 5.78 |
-| Status: info | 4.8 | n/a | 4.90 | 5.78 |
-| Status: success | 4.8 | n/a | 8.18 | 9.63 |
-| Status: important | 4.8 | n/a | 4.96 | 5.84 |
-| Status: warning | 4.8 | n/a | 7.34 | 8.65 |
-| Status: danger | 4.8 | n/a | 4.35 ✗ | 5.12 |
-| on-accent | 4.5 | n/a | 8.57 | 8.57 |
+| text-strong | 11 | 3.99 ✗ | 7.56 ✗ | 8.90 ✗ |
+| text-primary | 9 | 3.99 ✗ | 7.56 ✗ | 8.90 ✗ |
+| text-secondary | 4.6 | 3.15 ✗ | 3.40 ✗ | 4.00 ✗ |
+| accent | 5 | 2.74 ✗ | 4.90 ✗ | 5.78 |
+| Status: info | 4.8 | 2.74 ✗ | 4.90 | 5.78 |
+| Status: success | 4.8 | 3.56 ✗ | 8.18 | 9.63 |
+| Status: important | 4.8 | 2.94 ✗ | 4.96 | 5.84 |
+| Status: warning | 4.8 | 3.30 ✗ | 7.34 | 8.65 |
+| Status: danger | 4.8 | 2.65 ✗ | 4.35 ✗ | 5.12 |
+| on-accent | 4.5 | 4.02 ✗ | 8.57 | 8.57 |
 
 ## Tokyo Night Storm
 
@@ -273,13 +256,13 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 
 | Role | Target | Light | Dark | Darker |
 | --- | --- | --- | --- | --- |
-| text-strong | 11 | n/a | 7.61 ✗ | 8.91 ✗ |
-| text-primary | 9 | n/a | 7.61 ✗ | 8.91 ✗ |
-| text-secondary | 4.6 | n/a | 5.82 | 6.81 |
-| accent | 5 | n/a | 4.88 ✗ | 5.71 |
-| Status: info | 4.8 | n/a | 4.88 | 5.71 |
-| Status: success | 4.8 | n/a | 6.73 | 7.87 |
-| Status: important | 4.8 | n/a | 5.31 | 6.22 |
-| Status: warning | 4.8 | n/a | 6.15 | 7.19 |
-| Status: danger | 4.8 | n/a | 4.65 ✗ | 5.44 |
-| on-accent | 4.5 | n/a | 7.82 | 7.82 |
+| text-strong | 11 | 3.99 ✗ | 7.61 ✗ | 8.91 ✗ |
+| text-primary | 9 | 3.99 ✗ | 7.61 ✗ | 8.91 ✗ |
+| text-secondary | 4.6 | 3.15 ✗ | 5.82 | 6.81 |
+| accent | 5 | 2.74 ✗ | 4.88 ✗ | 5.71 |
+| Status: info | 4.8 | 2.74 ✗ | 4.88 | 5.71 |
+| Status: success | 4.8 | 3.56 ✗ | 6.73 | 7.87 |
+| Status: important | 4.8 | 2.94 ✗ | 5.31 | 6.22 |
+| Status: warning | 4.8 | 3.30 ✗ | 6.15 | 7.19 |
+| Status: danger | 4.8 | 2.65 ✗ | 4.65 ✗ | 5.44 |
+| on-accent | 4.5 | 4.02 ✗ | 7.82 | 7.82 |

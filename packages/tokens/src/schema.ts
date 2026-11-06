@@ -108,8 +108,9 @@ export interface Palette extends Schema.Schema.Type<typeof Palette> {}
 
 /**
  * An optional theme mapped from an existing palette, such as Catppuccin, so it
- * stays faithful. It takes Base's style. Most flavors are one mode; one that
- * comes in both, such as GitHub's, also gives the other mode's palette.
+ * stays faithful. It takes Base's style. Some flavors are one mode, such as
+ * Catppuccin's; one that comes in both, such as GitHub's or Tokyo Night's,
+ * also gives the other mode's palette.
  */
 export const MappedTheme = Schema.Struct({
   kind: Schema.tag("mapped"),

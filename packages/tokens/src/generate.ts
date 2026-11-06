@@ -536,17 +536,17 @@ export const blumeTheme = (theme: ResolvedTheme) =>
   ].join("\n\n") + "\n";
 
 /**
- * Every core theme as Blume's tokens, each under `data-gw-docs-theme`, for a
- * site that lets readers pick one with the theme picker.
+ * Every theme, core and optional, as Blume's tokens, each under
+ * `data-gw-docs-theme`, for a site that lets readers pick one with the theme
+ * picker. An optional theme with one scheme has rules for that scheme only;
+ * the picker keeps the page in it.
  */
 export const blumeThemes = (themes: readonly ResolvedTheme[]) =>
   [
     `/* ${header} */`,
-    ...themes
-      .filter((theme) => !theme.optional)
-      .flatMap((theme) =>
-        blumeRules(theme, `:root[data-gw-docs-theme="${theme.id}"]`),
-      ),
+    ...themes.flatMap((theme) =>
+      blumeRules(theme, `:root[data-gw-docs-theme="${theme.id}"]`),
+    ),
   ].join("\n\n") + "\n";
 
 const hexRoles = (roles: Roles) =>
@@ -761,7 +761,7 @@ export const optionalPage = (themes: readonly ResolvedTheme[]) => {
     "",
     `{/* ${header} */}`,
     "",
-    "Most flavors are one mode of their palette, and GitHub's cover both light and dark. Each is mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
+    "Catppuccin's flavors are one mode each, so an app in one stays in its scheme. GitHub's cover both light and dark, and so do Tokyo Night's, each taking Day as its light side. Each is mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
     "",
     ...families.flatMap((family) => [
       `## ${family}`,
