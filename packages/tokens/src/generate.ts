@@ -756,12 +756,12 @@ export const optionalPage = (themes: readonly ResolvedTheme[]) => {
   return [
     "---",
     "title: Optional themes",
-    "description: Catppuccin and Tokyo Night, mapped onto the roles so they stay faithful to their palettes. Apps opt in.",
+    "description: Catppuccin, Tokyo Night and GitHub, mapped onto the roles so they stay faithful to their palettes. Apps opt in.",
     "---",
     "",
     `{/* ${header} */}`,
     "",
-    "Each flavor is one mode of its palette, mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
+    "Most flavors are one mode of their palette, and GitHub's cover both light and dark. Each is mapped straight onto the roles rather than solved, so it looks the way the palette's authors intended. They take Base's style. The [contrast report](/themes/contrast) shows where a palette sits below the core targets.",
     "",
     ...families.flatMap((family) => [
       `## ${family}`,

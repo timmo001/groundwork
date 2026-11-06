@@ -165,6 +165,57 @@ Optional. Mapped from its own palette, so it's reported rather than held to the 
 | Status: danger | 4.8 | n/a | 4.96 | 5.84 |
 | on-accent | 4.5 | n/a | 9.69 | 9.69 |
 
+## GitHub
+
+Optional. Mapped from its own palette, so it's reported rather than held to the targets.
+
+| Role | Target | Light | Dark | Darker |
+| --- | --- | --- | --- | --- |
+| text-strong | 11 | 13.83 | 13.70 | 15.34 |
+| text-primary | 9 | 13.83 | 13.70 | 15.34 |
+| text-secondary | 4.6 | 4.59 ✗ | 4.34 ✗ | 4.86 |
+| accent | 5 | 4.54 ✗ | 4.32 ✗ | 4.84 ✗ |
+| Status: info | 4.8 | 4.54 ✗ | 4.32 ✗ | 4.84 |
+| Status: success | 4.8 | 4.45 ✗ | 6.37 | 7.14 |
+| Status: important | 4.8 | 4.42 ✗ | 6.42 | 7.20 |
+| Status: warning | 4.8 | 4.26 ✗ | 6.41 | 7.18 |
+| Status: danger | 4.8 | 4.69 ✗ | 4.83 | 5.41 |
+| on-accent | 4.5 | 5.19 | 5.25 | 5.25 |
+
+## GitHub Dimmed
+
+Optional. Mapped from its own palette, so it's reported rather than held to the targets.
+
+| Role | Target | Light | Dark | Darker |
+| --- | --- | --- | --- | --- |
+| text-strong | 11 | 13.83 | 5.89 ✗ | 6.93 ✗ |
+| text-primary | 9 | 13.83 | 5.89 ✗ | 6.93 ✗ |
+| text-secondary | 4.6 | 4.59 ✗ | 3.00 ✗ | 3.53 ✗ |
+| accent | 5 | 4.54 ✗ | 4.09 ✗ | 4.81 ✗ |
+| Status: info | 4.8 | 4.54 ✗ | 4.09 ✗ | 4.81 |
+| Status: success | 4.8 | 4.45 ✗ | 4.09 ✗ | 4.81 |
+| Status: important | 4.8 | 4.42 ✗ | 4.07 ✗ | 4.79 ✗ |
+| Status: warning | 4.8 | 4.26 ✗ | 4.11 ✗ | 4.84 |
+| Status: danger | 4.8 | 4.69 ✗ | 3.14 ✗ | 3.70 ✗ |
+| on-accent | 4.5 | 5.19 | 6.91 | 6.91 |
+
+## GitHub High Contrast
+
+Optional. Mapped from its own palette, so it's reported rather than held to the targets.
+
+| Role | Target | Light | Dark | Darker |
+| --- | --- | --- | --- | --- |
+| text-strong | 11 | 17.65 | 11.71 | 13.62 |
+| text-primary | 9 | 17.65 | 11.71 | 13.62 |
+| text-secondary | 4.6 | 17.65 | 11.71 | 13.62 |
+| accent | 5 | 7.49 | 6.16 | 7.16 |
+| Status: info | 4.8 | 7.49 | 6.16 | 7.16 |
+| Status: success | 4.8 | 7.56 | 6.16 | 7.17 |
+| Status: important | 4.8 | 7.52 | 6.13 | 7.13 |
+| Status: warning | 4.8 | 7.56 | 7.16 | 8.32 |
+| Status: danger | 4.8 | 7.55 | 4.67 ✗ | 5.43 |
+| on-accent | 4.5 | 8.03 | 9.30 | 9.30 |
+
 ## Tokyo Night
 
 Optional. Mapped from its own palette, so it's reported rather than held to the targets.

@@ -75,3 +75,5 @@ Optional themes map an existing palette straight onto the roles, one mode per fi
 ```
 
 Their contrast is reported but not enforced, so they stay faithful to the palette.
+
+A palette that comes in both modes, such as the GitHub themes, keeps them in one file: `mode` names the side `palette` is for, and `otherPalette` holds the other, with the same twelve colors. The theme then solves to light, dark and Darker like a core theme, and its choice in the picker has no `mode`, so it stays picked when the mode changes.

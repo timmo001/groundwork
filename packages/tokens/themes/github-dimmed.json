@@ -1,0 +1,35 @@
+{
+  "kind": "mapped",
+  "id": "github-dimmed",
+  "name": "GitHub Dimmed",
+  "family": "GitHub",
+  "mode": "light",
+  "palette": {
+    "lower": "#f6f8fa",
+    "background": "#ffffff",
+    "raised": "#f6f8fa",
+    "border": "#d0d7de",
+    "text": "#1f2328",
+    "muted": "#656d76",
+    "accent": "#0969da",
+    "info": "#0969da",
+    "success": "#1a7f37",
+    "important": "#8250df",
+    "warning": "#9a6700",
+    "danger": "#cf222e"
+  },
+  "otherPalette": {
+    "lower": "#1c2128",
+    "background": "#22272e",
+    "raised": "#2d333b",
+    "border": "#444c56",
+    "text": "#adbac7",
+    "muted": "#768390",
+    "accent": "#539bf5",
+    "info": "#539bf5",
+    "success": "#57ab5a",
+    "important": "#b083f0",
+    "warning": "#c69026",
+    "danger": "#e5534b"
+  }
+}

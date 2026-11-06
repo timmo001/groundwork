@@ -108,15 +108,19 @@ export interface Palette extends Schema.Schema.Type<typeof Palette> {}
 
 /**
  * An optional theme mapped from an existing palette, such as Catppuccin, so it
- * stays faithful. Each flavor is one mode, and it takes Base's style.
+ * stays faithful. It takes Base's style. Most flavors are one mode; one that
+ * comes in both, such as GitHub's, also gives the other mode's palette.
  */
 export const MappedTheme = Schema.Struct({
   kind: Schema.tag("mapped"),
   id: Schema.String,
   name: Schema.String,
   family: Schema.String,
+  /** The mode `palette` is for. */
   mode: Schema.Literals(["light", "dark"]),
   palette: Palette,
+  /** The other mode's palette, for a theme that covers both. */
+  otherPalette: Schema.optionalKey(Palette),
 });
 
 export interface MappedTheme extends Schema.Schema.Type<typeof MappedTheme> {}

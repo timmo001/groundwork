@@ -1,0 +1,35 @@
+{
+  "kind": "mapped",
+  "id": "github-high-contrast",
+  "name": "GitHub High Contrast",
+  "family": "GitHub",
+  "mode": "light",
+  "palette": {
+    "lower": "#ffffff",
+    "background": "#ffffff",
+    "raised": "#ffffff",
+    "border": "#20252c",
+    "text": "#0e1116",
+    "muted": "#0e1116",
+    "accent": "#0349b4",
+    "info": "#0349b4",
+    "success": "#055d20",
+    "important": "#622cbc",
+    "warning": "#744500",
+    "danger": "#a0111f"
+  },
+  "otherPalette": {
+    "lower": "#010409",
+    "background": "#0a0c10",
+    "raised": "#272b33",
+    "border": "#7a828e",
+    "text": "#f0f3f6",
+    "muted": "#f0f3f6",
+    "accent": "#71b7ff",
+    "info": "#71b7ff",
+    "success": "#26cd4d",
+    "important": "#cb9eff",
+    "warning": "#f0b72f",
+    "danger": "#ff6a69"
+  }
+}

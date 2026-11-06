@@ -14,7 +14,7 @@ import {
   withLightness,
   type Oklch,
 } from "./color.ts";
-import type { MappedTheme, SolvedTheme, Style, Theme } from "./schema.ts";
+import type { Palette, SolvedTheme, Style, Theme } from "./schema.ts";
 
 export const statuses = [
   "info",
@@ -261,18 +261,17 @@ const darker = (dark: Roles, by = 0.045) => {
   };
 };
 
-const mappedRoles = (theme: MappedTheme) => {
+const mappedRoles = (source: Palette, dark: boolean) => {
   const palette = {
-    lower: fromHex(theme.palette.lower),
-    background: fromHex(theme.palette.background),
-    raised: fromHex(theme.palette.raised),
-    border: fromHex(theme.palette.border),
-    text: fromHex(theme.palette.text),
-    muted: fromHex(theme.palette.muted),
-    accent: fromHex(theme.palette.accent),
+    lower: fromHex(source.lower),
+    background: fromHex(source.background),
+    raised: fromHex(source.raised),
+    border: fromHex(source.border),
+    text: fromHex(source.text),
+    muted: fromHex(source.muted),
+    accent: fromHex(source.accent),
   };
 
-  const dark = theme.mode === "dark";
   const away = dark ? 1 : -1;
 
   const surfaces = {
@@ -281,11 +280,11 @@ const mappedRoles = (theme: MappedTheme) => {
   };
 
   const seeds: Record<Status, Oklch> = {
-    info: fromHex(theme.palette.info),
-    success: fromHex(theme.palette.success),
-    important: fromHex(theme.palette.important),
-    warning: fromHex(theme.palette.warning),
-    danger: fromHex(theme.palette.danger),
+    info: fromHex(source.info),
+    success: fromHex(source.success),
+    important: fromHex(source.important),
+    warning: fromHex(source.warning),
+    danger: fromHex(source.danger),
   };
 
   return {
@@ -338,7 +337,20 @@ const mappedStyle = (base: Style): Style => ({
 /** Resolve a theme into roles. Mapped themes take `baseStyle`, Base's style. */
 export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
   if (theme.kind === "mapped") {
-    const roles = mappedRoles(theme);
+    // `palette` is for its own mode, `otherPalette` for the opposite one
+    const light = theme.mode === "light" ? theme.palette : theme.otherPalette;
+
+    const dark = theme.mode === "dark" ? theme.palette : theme.otherPalette;
+    const modes: Partial<Record<Mode, Roles>> = {};
+
+    if (light !== undefined) modes.light = mappedRoles(light, false);
+
+    if (dark !== undefined) {
+      const roles = mappedRoles(dark, true);
+
+      modes.dark = roles;
+      modes.darker = darker(roles);
+    }
 
     return {
       id: theme.id,
@@ -348,10 +360,7 @@ export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
       family: theme.family,
       examples: [],
       style: mappedStyle(baseStyle),
-      modes:
-        theme.mode === "dark"
-          ? { dark: roles, darker: darker(roles) }
-          : { light: roles },
+      modes,
     };
   }
 
