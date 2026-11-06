@@ -165,10 +165,13 @@ dir = "docs"
 run = "bun scripts/frame.ts"
 
 [tasks."docs:check"]
-description = "Check the docs site's pages, links and types, isolated from a running dev server"
+description = "Check the docs site's pages, links and types without disturbing a running dev server"
 depends = ["install"]
 dir = "docs"
-run = "bun run check -- --isolated"
+# The tsconfig reads Blume's generated types from .blume/. When it exists a dev
+# server may be using it, so check in --isolated's .blume-verify/ and keep
+# reading those types; in a fresh checkout such as CI, generate .blume/ itself.
+run = "if [ -d .blume ]; then bun run check -- --isolated; else bun run check; fi"
 
 [tasks.check]
 description = "Lint, type-check, test, verify formatting, generated files, contrast, conventions and the docs site"
