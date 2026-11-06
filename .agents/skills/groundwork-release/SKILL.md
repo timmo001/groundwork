@@ -1,6 +1,6 @@
 ---
 name: groundwork-release
-description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui and @timmo001/docs-kit, for Upkeep to roll out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
+description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui, @timmo001/groundwork-report and @timmo001/docs-kit, for Upkeep to roll out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
 license: Apache-2.0
 compatibility: Requires mise, Bun, npm and the GitHub CLI from the groundwork repository root.
 ---
@@ -8,12 +8,17 @@ compatibility: Requires mise, Bun, npm and the GitHub CLI from the groundwork re
 # Releasing groundwork
 
 One version covers `@timmo001/groundwork-tokens`, `@timmo001/groundwork-ui`,
-`@timmo001/groundwork-tui` and `@timmo001/docs-kit`, and the release tag is
-that version with no `v` prefix. Publishing a GitHub release runs
-`.github/workflows/release.yml`: tokens and ui go to npm, then tui once tokens
-is there, and docs-kit goes to npm and JSR once tokens and ui are there, since
-they pin them. tokens, ui and tui are npm only; JSR rejects the global tag-map
-augmentation in ui and tokens.
+`@timmo001/groundwork-tui`, `@timmo001/groundwork-report` and
+`@timmo001/docs-kit`, and the release tag is that version with no `v` prefix.
+Publishing a GitHub release runs `.github/workflows/release.yml`: tokens and ui
+go to npm, then tui once tokens is there, and report and docs-kit once tokens
+and ui are there, since they pin them; docs-kit also goes to JSR. tokens, ui,
+tui and report are npm only; JSR rejects the global tag-map augmentation in ui
+and tokens.
+
+A package new to npm needs its first publish set up before the release that
+adds it, with the `npm-jsr-first-publish` skill: the release's npm job can't
+create a package.
 
 The repository's `AGENTS.md` Rollout section authorises the release and its
 push whenever `packages/docs-kit` changed. Otherwise
@@ -48,6 +53,8 @@ Set the same version in:
 - `packages/ui/package.json`
 - `packages/tui/package.json`, and its `@timmo001/groundwork-tokens`
   dependency, pinned exactly
+- `packages/report/package.json`, and its `@timmo001/groundwork-tokens` and
+  `@timmo001/groundwork-ui` dependencies, pinned exactly
 - `packages/docs-kit/package.json` and `packages/docs-kit/jsr.json`
 - docs-kit's `@timmo001/groundwork-tokens` and `@timmo001/groundwork-ui`
   dependencies in `packages/docs-kit/package.json`, pinned exactly
@@ -56,7 +63,7 @@ Run `bun install` to refresh `bun.lock`, then `mise run check` again and the
 publish dry runs:
 
 ```sh
-npm pack --dry-run          # in each of packages/tokens, ui, tui and docs-kit
+npm pack --dry-run          # in each of packages/tokens, ui, tui, report and docs-kit
 bunx jsr@0.14.3 publish --dry-run --allow-dirty   # in packages/docs-kit
 ```
 
@@ -70,7 +77,8 @@ Check the packed file lists: ui must ship `custom-elements.json`.
    lists merged pull requests and misses the direct commits. Read the commits
    since the last tag and follow the `writing-style` skill and earlier releases:
    a line on anything new about the release itself, then one bullet per
-   package, prefixed `**tokens**:`, `**ui**:`, `**tui**:` or `**docs-kit**:`,
+   package, prefixed `**tokens**:`, `**ui**:`, `**tui**:`, `**report**:` or
+   `**docs-kit**:`,
    saying what changed for someone using it. A package with nothing new gets
    "released at the same version, with no changes". Leave out repository-only
    work such as skills, CI and demos. Save them to the release's scratch
@@ -82,8 +90,8 @@ Check the packed file lists: ui must ship `custom-elements.json`.
    gh release create <version> --target <sha> --notes-file <notes.md>
    ```
 
-4. Watch that release's Release workflow run. All five publish jobs must pass:
-   npm tokens, npm ui, npm tui, npm docs-kit and JSR docs-kit.
+4. Watch that release's Release workflow run. All six publish jobs must pass:
+   npm tokens, npm ui, npm tui, npm report, npm docs-kit and JSR docs-kit.
 
 ## 5. Verify publication
 
@@ -94,12 +102,13 @@ registry serves it:
 npm view @timmo001/groundwork-tokens@<version> version
 npm view @timmo001/groundwork-ui@<version> version
 npm view @timmo001/groundwork-tui@<version> version
+npm view @timmo001/groundwork-report@<version> version
 npm view @timmo001/docs-kit@<version> version
 curl -fsS https://jsr.io/@timmo001/docs-kit/meta.json   # lists <version>
 ```
 
 Retry after a short wait while one is missing. Don't report the release done,
-or start the rollout, until all five serve it.
+or start the rollout, until all six serve it.
 
 ## 6. Roll out
 
