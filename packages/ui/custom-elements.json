@@ -16772,7 +16772,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons, as Home Assistant's toggles do. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons on narrow ones.",
+          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons, as Home Assistant's toggles do. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons on narrow ones. An option with\n`disabled` shows but can't be picked.",
           "name": "GwSegmented",
           "cssProperties": [
             {
@@ -16815,7 +16815,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"segmented\"), css` :host { --gw-size: var(--gw-segmented-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; /* 32px options in a 40px track at medium, matching fields and buttons */ height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: calc(var(--gw-font-size-s) * var(--gw-size)); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: calc(1.125rem * var(--gw-scale)); } :host([labels=\"hide\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"hide\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"auto\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } label:hover { background: var(--gw-color-fill-neutral-hovered); } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } `, ]",
+              "default": "[ base, controlSizes(\"segmented\"), css` :host { --gw-size: var(--gw-segmented-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; /* 32px options in a 40px track at medium, matching fields and buttons */ height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: calc(var(--gw-font-size-s) * var(--gw-size)); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: calc(1.125rem * var(--gw-scale)); } :host([labels=\"hide\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"hide\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } @media (width < 40rem) { :host([labels=\"auto\"]) label.has-icon { padding-inline: var(--gw-space-2); } :host([labels=\"auto\"]) label.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } input:disabled { cursor: not-allowed; } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22409,7 +22409,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button. Once the mode and theme are in place and only Reset and\nImport are left, they're a ⋮ menu instead.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. With `gallery`, the cards take a row of their own\nunder it. `modes` picks which modes it offers, such as\n`light dark` without Auto.",
+          "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button. Once the mode and theme are in place and only Reset and\nImport are left, they're a ⋮ menu instead.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. With `gallery`, the cards take a row of their own\nunder it. `modes` picks which modes it offers, such as\n`light dark` without Auto.\n\nA theme that comes in one scheme only, such as Catppuccin Latte, sets\n`scheme`: the modes outside it, Auto among them, show but can't be picked,\nand `cycle` skips them.",
           "name": "GwThemePicker",
           "cssParts": [
             {
@@ -22433,7 +22433,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22517,6 +22517,15 @@
               },
               "description": "The modes to offer, in order and separated by spaces.",
               "default": "\"auto light dark darker\""
+            },
+            {
+              "kind": "field",
+              "name": "scheme",
+              "type": {
+                "text": "\"\" | \"light\" | \"dark\""
+              },
+              "description": "The one scheme the theme in use covers, or empty for both.",
+              "default": "\"\""
             },
             {
               "kind": "field",
@@ -22604,6 +22613,20 @@
               "name": "#offered",
               "privacy": "private",
               "description": "The modes on offer, in the order `modes` gives them."
+            },
+            {
+              "kind": "method",
+              "name": "#allowed",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Whether `mode` can be picked with the theme in use."
             },
             {
               "kind": "method",
@@ -23095,6 +23118,13 @@
               },
               "description": "The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.",
               "name": "label"
+            },
+            {
+              "type": {
+                "text": "\"light\"|\"dark\""
+              },
+              "description": "The one scheme the theme in use covers, such as `light` for Catppuccin Latte. The other modes are disabled. Leave it out for a theme with both.",
+              "name": "scheme"
             },
             {
               "type": {

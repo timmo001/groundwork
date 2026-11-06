@@ -14,6 +14,8 @@ export interface Segment {
   readonly icon?: string;
   /** A longer description, shown as the option's tooltip. */
   readonly hint?: string;
+  /** Shows the option but stops it being picked. Say why in its `hint`. */
+  readonly disabled?: boolean;
 }
 
 /**
@@ -23,7 +25,8 @@ export interface Segment {
  * Options can carry icons, as Home Assistant's toggles do. `labels` decides
  * whether their text shows: `show` (the default), `hide` (icons only, with
  * the text as a tooltip and accessible name) or `auto`, which shows the text
- * on wide screens and only the icons on narrow ones.
+ * on wide screens and only the icons on narrow ones. An option with
+ * `disabled` shows but can't be picked.
  *
  * @element gw-segmented
  * @summary Picks one of a few options, as a row of radio buttons.
@@ -136,6 +139,16 @@ export class GwSegmented extends GwElement {
 
       label:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      label:has(input:disabled) {
+        color: var(--gw-color-text-disabled);
+        cursor: not-allowed;
+        background: transparent;
+      }
+
+      input:disabled {
+        cursor: not-allowed;
       }
 
       input {
@@ -296,6 +309,7 @@ export class GwSegmented extends GwElement {
     for (const { label, input, option } of this.#segments) {
       input.name = this.name;
       input.checked = option.value === this.value;
+      input.disabled = option.disabled === true;
       setAttribute(
         label,
         "title",

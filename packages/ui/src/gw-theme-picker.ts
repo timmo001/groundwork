@@ -69,6 +69,10 @@ const moreIcon =
  * under it. `modes` picks which modes it offers, such as
  * `light dark` without Auto.
  *
+ * A theme that comes in one scheme only, such as Catppuccin Latte, sets
+ * `scheme`: the modes outside it, Auto among them, show but can't be picked,
+ * and `cycle` skips them.
+ *
  * @element gw-theme-picker
  * @summary The page's mode, theme and import, in place or in a popover.
  *
@@ -80,6 +84,7 @@ const moreIcon =
  * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
  * @attr {string} status - A line under the controls, such as an import's result.
  * @attr {string} label - The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.
+ * @attr {"light"|"dark"} scheme - The one scheme the theme in use covers, such as `light` for Catppuccin Latte. The other modes are disabled. Leave it out for a theme with both.
  * @attr {boolean} no-import - Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.
  *
  * @csspart gallery - The theme gallery, with `gallery`.
@@ -101,6 +106,7 @@ export class GwThemePicker extends GwElement {
     label: {},
     layout: { reflect: true },
     modes: {},
+    scheme: { reflect: true },
     noImport: { attribute: "no-import", type: "boolean", reflect: true },
   } as const;
 
@@ -202,6 +208,8 @@ export class GwThemePicker extends GwElement {
   declare layout: "auto" | "popover" | "cycle" | "inline";
   /** The modes to offer, in order and separated by spaces. */
   declare modes: string;
+  /** The one scheme the theme in use covers, or empty for both. */
+  declare scheme: "" | "light" | "dark";
   /** Leaves Import out, so only the themes in `themes` are offered. */
   declare noImport: boolean;
 
@@ -272,6 +280,7 @@ export class GwThemePicker extends GwElement {
     this.label = "Theme";
     this.layout = "auto";
     this.modes = "auto light dark darker";
+    this.scheme = "";
     this.noImport = false;
   }
 
@@ -283,6 +292,15 @@ export class GwThemePicker extends GwElement {
     return offered.length > 0 ? offered : allModes;
   }
 
+  /** Whether `mode` can be picked with the theme in use. */
+  #allowed(mode: string) {
+    if (this.scheme === "light") return mode === "light";
+
+    if (this.scheme === "dark") return mode === "dark" || mode === "darker";
+
+    return true;
+  }
+
   /** Opens the popover under the button, or with `cycle`, steps to the next mode. */
   show() {
     if (this.layout === "inline") return;
@@ -290,9 +308,13 @@ export class GwThemePicker extends GwElement {
     if (this.layout === "cycle") {
       const offered = this.#offered();
       const at = offered.findIndex(({ value }) => value === this.mode);
-      const next = offered[(at + 1) % offered.length];
 
-      if (next !== undefined) {
+      // The next mode the theme has, skipping the ones it doesn't
+      const next = offered
+        .map((_, step) => offered[(at + 1 + step) % offered.length])
+        .find((entry) => entry !== undefined && this.#allowed(entry.value));
+
+      if (next !== undefined && next.value !== this.mode) {
         this.mode = next.value;
         this.dispatchEvent(this.#detail("mode", { mode: this.mode }));
       }
@@ -560,11 +582,17 @@ export class GwThemePicker extends GwElement {
     this.#popover.heading = this.label;
     this.#menu.label = this.label;
     this.#mode.label = "Mode";
-    this.#mode.options = offered.map(({ value, label, icon }) => ({
-      value,
-      label,
-      icon,
-    }));
+    this.#mode.options = offered.map(({ value, label, icon }) =>
+      this.#allowed(value)
+        ? { value, label, icon }
+        : {
+            value,
+            label,
+            icon,
+            disabled: true,
+            hint: `${label} isn't available: this theme is ${this.scheme} only`,
+          },
+    );
     this.#mode.value = this.mode;
     this.#theme.options = Array.isArray(this.themes) ? this.themes : [];
     this.#theme.value = this.theme;
@@ -596,7 +624,7 @@ export class GwThemePicker extends GwElement {
 
     // Measures again for the select's new value or the new set of controls
     if (
-      ["layout", "modes", "theme", "themes", "gallery"].some((name) =>
+      ["layout", "modes", "scheme", "theme", "themes", "gallery"].some((name) =>
         changed.has(name),
       )
     ) {
