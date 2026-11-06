@@ -118,13 +118,14 @@ const modes = [
         data-gw-theme-select
         label="Theme"
         inline-label
-        search="never"
         options={JSON.stringify(
           themes.map((theme) => ({
             value: theme.id,
             label: theme.name,
             // Headings only once there's more than one group
             group: grouped ? (theme.family ?? group) : undefined,
+            // So a search for light or dark finds the themes that have it
+            keywords: theme.mode === undefined ? ["light", "dark"] : [theme.mode],
           })),
         )}
       />

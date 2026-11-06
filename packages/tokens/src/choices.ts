@@ -69,7 +69,8 @@ export const themeAllows = (choice: ThemeChoice, mode: ThemeMode) =>
 
 /**
  * Choices as a picker's options, grouped: a choice's `family`, or `group`
- * for those without one. Order the choices as the picker should list them,
+ * for those without one. Each carries the schemes it covers as search
+ * keywords. Order the choices as the picker should list them,
  * usually the app's own theme, then the other core themes, then the optional
  * ones.
  */
@@ -77,10 +78,12 @@ export const themeOptions = (
   choices: readonly ThemeChoice[],
   group = "Groundwork",
 ) =>
-  choices.map(({ id, name, family }) => ({
+  choices.map(({ id, name, family, mode }) => ({
     value: id,
     label: name,
     group: family ?? group,
+    // So a search for light or dark finds the themes that have it
+    keywords: mode === undefined ? ["light", "dark"] : [mode],
   }));
 
 /** The core themes by id and name, in the order the docs list them. */

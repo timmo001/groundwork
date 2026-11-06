@@ -122,7 +122,8 @@ each optional theme's `family`, which groups it in the select, and `mode` for
 one that comes in one scheme only, such as Catppuccin Latte. Picking that
 theme moves the page into its scheme, and the other modes can't be picked
 while it's in use. Themes without a family go under `group`, which defaults
-to Groundwork.
+to Groundwork. From seven themes the select has a search field, which also
+finds themes by family, or by `light` or `dark`.
 
 ```astro
 ---
