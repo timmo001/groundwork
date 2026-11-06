@@ -17,21 +17,82 @@ Keep a checklist of these steps on the repository's tracking issue, ticking each
 ## 2. Tools and workspace
 
 - Pin every tool with mise, including Bun and the linters, and commit `mise.lock`.
-- A Bun workspace, with each part as its own package under `packages/<name>/` and the docs site in `docs/`. Pin every dependency to an exact version (`bun add -E`).
+- Bun, with the [package layout](#package-layout) that fits the repository. Pin every dependency to an exact version (`bun add -E`).
 - Effect v4 for the code, following [Effect](/effect).
 - The shared Oxlint preset from `@timmo001/oxlint-rules`, with type-aware rules and type checking on, in each package.
 - Prettier for formatting. It skips `AGENTS.md`, synced skills, lockfiles and generated output.
 - hk hooks running the shared Markdown, YAML, Actions and shell lints before a push.
 - mise tasks for `format`, `check`, `test` and `build`, with dev servers as `serve:*` tasks through Pitchfork, each at `https://<daemon>.<repo>.localhost`.
 
-How packages are laid out inside the workspace, and which ones publish, is still being decided in [#77](https://github.com/timmo001/groundwork/issues/77).
+### Package layout
+
+The layout is the repository's choice. Pick the shape that fits what it holds:
+
+- **One part:** a single package at the root, with no workspace.
+- **One app and the libraries it publishes:** the app at the root with its binary, and each library in `packages/<name>/`.
+- **Several runnable parts,** such as a CLI, a server and a dashboard: the root is only a workspace, and every part, the app included, is a package in `packages/<name>/`.
+
+The docs site lives in `docs/` in every shape. The root holds the tool pins, mise tasks, Prettier, hk, Renovate and the lockfile. A package with its own runtime or its own entry point carries its own `package.json` scripts, `oxlint.config.ts` and `tsconfig.json`.
+
+Every package is in the `@timmo001` scope. Published ones are named for what they are, such as `@timmo001/groundwork-ui` or `@timmo001/effect-triage`. Private ones are `@timmo001/<repo>-<name>` with `private: true`.
+
+Only libraries that other repositories consume publish. Apps ship as binaries and Arch packages, not on npm. A published package needs:
+
+- npm and JSR, with trusted publishing and provenance from GitHub Actions. The `npm-jsr-first-publish` skill sets up a new name.
+- An Apache 2.0 license, its own README for the npm and JSR pages, and `repository.directory` pointing at its folder.
+- `effect` and other shared libraries as caret `peerDependencies`, with the exact pin in `devDependencies`.
 
 ## 3. Agent files
 
 - `AGENTS.md`, saying what the repository is, its stack, how to run its checks and how changes roll out. Write it by hand and keep it short.
 - The shared skills it needs, synced into `.agents/skills/`, and the docs MCP servers for the libraries it builds on.
+- The [agent permissions](#agent-permissions) below, confirmed with the owner before they're committed.
 
-What a repository lets agents do without asking is still being decided in [#78](https://github.com/timmo001/groundwork/issues/78).
+### Agent permissions
+
+Repositories are public, so they only carry rules that hold for anyone working on them, with no paths. Everything personal stays in the user's own config.
+
+| What                                                                         | Default | Where                                         |
+| ---------------------------------------------------------------------------- | ------- | --------------------------------------------- |
+| Edits inside the repository                                                  | Allowed | Each agent's default, so nothing to set       |
+| GitHub writes to the repository, and to any repository its rollout writes to | Allowed | The repository                                |
+| Deletes                                                                      | Ask     | The repository                                |
+| Directories outside the repository                                           | Not set | The user's config                             |
+| Generated files                                                              | Not set | `mise run check` already fails on a hand edit |
+
+For OpenCode, a root `opencode.json`, written by hand. The generated `.opencode/opencode.jsonc` stays untouched:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permissions": [
+    {
+      "action": "gh.write *",
+      "resource": "gh_* timmo001/<repo>*",
+      "effect": "allow"
+    },
+    {
+      "action": "gh.write *",
+      "resource": "gh_*delete* timmo001/<repo>*",
+      "effect": "ask"
+    }
+  ]
+}
+```
+
+For Claude Code, a committed `.claude/settings.json` with only the deletes. Its `gh` rules can't be limited to one repository, so allowing GitHub writes stays in the user's settings. Ask rules win over allow rules, so the deletes still ask:
+
+```json
+{
+  "permissions": {
+    "ask": ["Bash(gh * delete *)", "Bash(gh api * -X DELETE *)"]
+  }
+}
+```
+
+One-off approvals go in `.claude/settings.local.json`, which stays out of git.
+
+Copilot CLI has no repository-level permissions: approvals live in `~/.copilot/` and in its launch flags, so the repository only gives it `AGENTS.md`.
 
 ## 4. CI
 
@@ -48,7 +109,7 @@ What a repository lets agents do without asking is still being decided in [#78](
 
 ## 6. README and GitHub
 
-- One README, at the root: the social preview as its banner, what the repository is, and a link to the docs. Packages and the docs site don't get their own.
+- One README, at the root: the social preview as its banner, what the repository is, and a link to the docs. Only published packages get their own, for their npm and JSR pages.
 - The repository's website set to the docs site, topics for its stack and purpose, and the social preview uploaded in its settings. GitHub's API can't upload it, so that's done by hand.
 
 ## 7. Agent surface

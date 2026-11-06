@@ -2,7 +2,7 @@
 
 A starting point for a CLI built to the Groundwork [behavior conventions](https://groundwork.timmo.dev/behavior). It's also the CLI target of Groundwork's [demo app](https://groundwork.timmo.dev/demo), running on the demo's shared `Items` service; `mise run demo:cli -- status` runs it from the repository root.
 
-Copy the folder, rename `cli-tool`, and in `src/operations.ts` replace the re-export of `@timmo001/groundwork-demo` with your own `Items` service, with your system's SDK behind it and a `fixture` layer for your tool's demo. Drop the `@timmo001/groundwork-demo` dependency from `package.json`.
+Copy the folder to where the [package layout](https://groundwork.timmo.dev/setup#package-layout) puts the app: the repository root for a single part or an app with its libraries, or `packages/cli/` when the root is only a workspace. Then rename `cli-tool` (to `@timmo001/<repo>-cli` in a workspace), and in `src/operations.ts` replace the re-export of `@timmo001/groundwork-demo` with your own `Items` service, with your system's SDK behind it and a `fixture` layer for your tool's demo. Drop the `@timmo001/groundwork-demo` dependency from `package.json`.
 
 ```sh
 bun src/cli.ts status
