@@ -101,11 +101,11 @@ export const coreThemeChoices: readonly ThemeChoice[] = [
 ].map(({ id, name }) => ({ id, name }));
 
 /**
- * The optional themes, mapped from other palettes, by family and then from
- * light to dark. One with a single mode is offered for that scheme alone;
- * one with both, such as GitHub's, for either.
+ * The optional themes' documents, by family and then from light to dark.
+ * They're bundled with the module, so an app compiled to one binary has them
+ * without reading `node_modules`. Decode one with the `MappedTheme` Schema.
  */
-export const optionalThemeChoices: readonly ThemeChoice[] = [
+export const optionalThemeDocuments = [
   catppuccinLatte,
   catppuccinFrappe,
   catppuccinMacchiato,
@@ -117,17 +117,25 @@ export const optionalThemeChoices: readonly ThemeChoice[] = [
   github,
   githubDimmed,
   githubHighContrast,
-].map((theme) => ({
-  id: theme.id,
-  name: theme.name,
-  family: theme.family,
-  mode:
-    "otherPalette" in theme
-      ? undefined
-      : theme.mode === "light"
-        ? "light"
-        : "dark",
-}));
+] as const;
+
+/**
+ * The optional themes, mapped from other palettes, by family and then from
+ * light to dark. One with a single mode is offered for that scheme alone;
+ * one with both, such as GitHub's, for either.
+ */
+export const optionalThemeChoices: readonly ThemeChoice[] =
+  optionalThemeDocuments.map((theme) => ({
+    id: theme.id,
+    name: theme.name,
+    family: theme.family,
+    mode:
+      "otherPalette" in theme
+        ? undefined
+        : theme.mode === "light"
+          ? "light"
+          : "dark",
+  }));
 
 export interface PageThemeOptions {
   /** The local storage key prefix, such as `my-site:theme`. */

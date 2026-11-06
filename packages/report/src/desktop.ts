@@ -10,17 +10,16 @@
  *
  * @module
  */
-import { Result } from "effect";
+import { Result, Schema } from "effect";
 
 import { readDesktopThemes } from "@timmo001/groundwork-tokens/desktop-themes";
 import { readOmarchyTheme } from "@timmo001/groundwork-tokens/omarchy-current";
-import { optionalThemeChoices } from "@timmo001/groundwork-tokens/page";
+import { optionalThemeDocuments } from "@timmo001/groundwork-tokens/page";
 import {
   omarchyTheme,
-  parseTheme,
   type OmarchyCurrentTheme,
 } from "@timmo001/groundwork-tokens/runtime";
-import type { MappedTheme } from "@timmo001/groundwork-tokens";
+import { MappedTheme } from "@timmo001/groundwork-tokens";
 
 /** What `readReportThemes` found, to spread into `reportPage`'s options. */
 export interface ReportThemes {
@@ -28,26 +27,18 @@ export interface ReportThemes {
   readonly desktop: readonly MappedTheme[];
 }
 
-/** The optional themes' documents, to drop desktop themes that match them. */
-const optionalThemes = async () => {
-  const documents: MappedTheme[] = [];
+const decodeMapped = Schema.decodeUnknownResult(MappedTheme);
 
-  for (const { id } of optionalThemeChoices) {
-    const file = await Bun.file(
-      Bun.fileURLToPath(
-        import.meta.resolve(`@timmo001/groundwork-tokens/themes/${id}.json`),
-      ),
-    ).text();
+/**
+ * The optional themes' documents, to drop desktop themes that match them.
+ * They come bundled rather than read from disk, so this works in an app
+ * compiled to one binary.
+ */
+const optionalThemes = optionalThemeDocuments.flatMap((document) => {
+  const decoded = decodeMapped(document);
 
-    const parsed = parseTheme(file);
-
-    if (Result.isSuccess(parsed) && parsed.success.kind === "mapped") {
-      documents.push(parsed.success);
-    }
-  }
-
-  return documents;
-};
+  return Result.isSuccess(decoded) ? [decoded.success] : [];
+});
 
 /**
  * Reads the Omarchy theme in use and every other theme on the machine, the
@@ -55,18 +46,15 @@ const optionalThemes = async () => {
  * terminal following Omarchy doesn't show twice.
  */
 export const readReportThemes = async (): Promise<ReportThemes> => {
-  const [omarchy, optional] = await Promise.all([
-    readOmarchyTheme(),
-    optionalThemes(),
-  ]);
+  const omarchy = await readOmarchyTheme();
 
   const current =
     omarchy === null ? undefined : omarchyTheme(omarchy.colors, omarchy.name);
 
   const existing =
     current !== undefined && Result.isSuccess(current)
-      ? [...optional, current.success]
-      : optional;
+      ? [...optionalThemes, current.success]
+      : optionalThemes;
 
   return {
     omarchy,
