@@ -2,21 +2,17 @@
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import { Command, Flag } from "effect/cli";
+import { build, type Build } from "./build.ts";
 import {
-  ansi,
   blumeTheme,
   blumeThemes,
   contrastPage,
-  css,
-  json,
-  opentui,
+  header,
   optionalPage,
-  qml,
   themePage,
-  typescript,
 } from "./generate.ts";
 import { Theme } from "./schema.ts";
-import { check, resolve, type ResolvedTheme } from "./solve.ts";
+import { check } from "./solve.ts";
 
 class TokensError extends Schema.TaggedError<TokensError>()("TokensError", {
   message: Schema.String,
@@ -66,14 +62,20 @@ const loadThemes = Effect.fn("loadThemes")(function* () {
     return index === -1 ? order.length : index;
   };
 
-  return themes
-    .map((theme) => resolve(theme, base.style))
-    .toSorted((a, b) => rank(a.id) - rank(b.id) || a.id.localeCompare(b.id));
+  // The same build an app runs on its own themes, with this repo's note
+  return build(
+    themes.toSorted(
+      (a, b) => rank(a.id) - rank(b.id) || a.id.localeCompare(b.id),
+    ),
+    {
+      baseStyle: base.style,
+      note: header,
+      targets: ["css", "json", "typescript", "qml", "opentui", "ansi"],
+    },
+  );
 });
 
-const outputs = Effect.fn("outputs")(function* (
-  themes: readonly ResolvedTheme[],
-) {
+const outputs = Effect.fn("outputs")(function* ({ themes, files }: Build) {
   const path = yield* Path.Path;
   const root = yield* packageRoot;
   const generated = (file: string) => path.join(root, "generated", file);
@@ -97,12 +99,9 @@ const outputs = Effect.fn("outputs")(function* (
     ),
     output(docsKit("all.css"), blumeThemes(themes)),
     output(docs("optional.mdx"), optionalPage(themes)),
-    output(generated("themes.css"), css(themes)),
-    output(generated("themes.json"), json(themes)),
-    output(generated("themes.ts"), typescript(themes)),
-    output(generated("Themes.qml"), qml(themes)),
-    output(generated("opentui.ts"), opentui(themes)),
-    output(generated("ansi.json"), ansi()),
+    ...Object.entries(files).map(([file, contents]) =>
+      output(generated(file), contents),
+    ),
     output(docs("contrast.md"), contrastPage(themes)),
   ];
 });
@@ -157,7 +156,7 @@ const contrast = Command.make(
   "contrast",
   {},
   Effect.fn("contrast")(function* () {
-    const themes = yield* loadThemes();
+    const { themes } = yield* loadThemes();
 
     const results = themes.flatMap((theme) =>
       check(theme).map((result) => ({ ...result, optional: theme.optional })),
