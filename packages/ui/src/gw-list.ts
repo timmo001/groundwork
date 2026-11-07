@@ -518,15 +518,25 @@ export class GwList<T extends object = object> extends GwElement {
     this.#after.style.height = `${Math.max(0, virtualizer.getTotalSize() - (after - margin))}px`;
 
     const next = [this.#before, ...rows, this.#after];
-    const { children } = this.#body;
+    const wanted = new Set<Element>(next);
 
-    // Rows stay put when the same ones are in view, so what's in them isn't
-    // taken off the page and put back on every scroll
-    if (
-      next.length !== children.length ||
-      next.some((row, index) => children[index] !== row)
-    ) {
-      this.#body.replaceChildren(...next);
+    // Only the rows coming into view or leaving it are added or taken off:
+    // moving the rest too makes the browser style and lay them all out again,
+    // which drops frames as it scrolls
+    const leaving = [...this.#body.children].filter(
+      (child) => !wanted.has(child),
+    );
+
+    for (const child of leaving) child.remove();
+
+    let at = this.#body.firstElementChild;
+
+    for (const row of next) {
+      if (at === row) {
+        at = row.nextElementSibling;
+      } else {
+        this.#body.insertBefore(row, at);
+      }
     }
 
     // Measured a frame later, once what's in the rows has drawn: measured at
