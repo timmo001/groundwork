@@ -177,7 +177,10 @@ export class GwElement extends HTMLElement {
     });
   }
 
-  /** Adds the property accessors, then defines the element. */
+  /**
+   * Adds the property accessors, then defines the element. A tag another
+   * class already holds is left to it, with a console warning.
+   */
   static define(tag: string) {
     for (const [name, options] of Object.entries(this.properties)) {
       if (Object.hasOwn(this.prototype, name)) continue;
@@ -194,7 +197,13 @@ export class GwElement extends HTMLElement {
       });
     }
 
-    if (!customElements.get(tag)) customElements.define(tag, this);
+    const taken = customElements.get(tag);
+
+    if (taken === undefined) customElements.define(tag, this);
+    else if (taken !== this)
+      console.warn(
+        `<${tag}> is already defined by another class, so ${this.name} isn't registered. Two copies of @timmo001/groundwork-ui, or an app element with the same tag, can cause this.`,
+      );
 
     followPageScroll();
   }
