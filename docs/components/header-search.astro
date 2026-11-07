@@ -1,9 +1,8 @@
 ---
 /**
  * The header's search box with docs-kit's theme picker, so demos follow the
- * theme the reader picks. The site's own theme, Base, comes first, then the
- * optional themes by family. The other core themes belong to the apps that
- * use them, so they aren't offered here.
+ * theme the reader picks: every core theme, Base first, then the optional
+ * themes by family.
  */
 import {
   coreThemeChoices,
@@ -13,6 +12,7 @@ import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
 
 const themes = [
   ...coreThemeChoices.filter((theme) => theme.id === "base"),
+  ...coreThemeChoices.filter((theme) => theme.id !== "base"),
   ...optionalThemeChoices,
 ];
 ---
