@@ -144,7 +144,7 @@ export class GwMarkdown extends GwElement {
         max-height: var(--gw-markdown-code-max-height, 24rem);
         padding: var(--gw-space-3);
         overflow: auto;
-        overscroll-behavior: contain;
+        overscroll-behavior-x: contain;
         background: var(
           --gw-color-surface-lower,
           var(--gw-color-surface-default)

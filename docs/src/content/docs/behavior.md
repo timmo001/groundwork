@@ -98,7 +98,7 @@ Expansion panels, and the groups in a table or list.
 
 ### Long content
 
-Anything that can grow past a screen, such as a table, a list, a feed or a diff, draws only the part in view. Inside a fold or a panel, it scrolls in its own frame up to a maximum height (`contained`), rather than stretching the page.
+Anything that can grow past a screen, such as a table, a list, a feed or a diff, draws only the part in view. Inside a fold or a panel, it scrolls in its own frame up to a maximum height (`contained`), rather than stretching the page. Scrolling past either end of the frame scrolls the page, and so does scrolling over a frame with nothing more to show.
 
 ### Respond first
 

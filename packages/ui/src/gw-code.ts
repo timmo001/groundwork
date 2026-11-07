@@ -59,7 +59,7 @@ export class GwCode extends GwElement {
         margin: 0;
         padding: var(--gw-space-3) 0;
         overflow: auto;
-        overscroll-behavior: contain;
+        overscroll-behavior-x: contain;
         font-family: var(--gw-font-mono);
         font-size: var(--gw-font-size-s);
         line-height: 1.5;
