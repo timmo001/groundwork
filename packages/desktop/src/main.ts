@@ -462,10 +462,12 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
       const path =
         data.detail instanceof Object ? data.detail.path : data.detail;
 
+      const heading = config.labels.downloadFinished;
+
       notify(
         path === undefined || path === ""
-          ? { heading: "Download finished", tone: "success" }
-          : { heading: "Download finished", body: path, tone: "success" },
+          ? { heading, tone: "success" }
+          : { heading, body: path, tone: "success" },
       );
     });
   }
@@ -491,9 +493,13 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
     });
 
     tray.setMenu([
-      { type: "normal", label: `Show ${options.title}`, action: "show" },
+      {
+        type: "normal",
+        label: config.labels.show ?? `Show ${options.title}`,
+        action: "show",
+      },
       { type: "divider" },
-      { type: "normal", label: "Quit", action: "quit" },
+      { type: "normal", label: config.labels.quit, action: "quit" },
     ]);
     electrobun.events.on(`tray-clicked-${tray.id}`, ({ data }) => {
       if (data.action === "quit") Utils.quit(0);

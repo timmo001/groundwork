@@ -12,6 +12,47 @@ export interface TrayConfig {
   readonly title?: string;
 }
 
+/**
+ * The text the desktop defaults show, for an app in another language or
+ * voice. Each defaults to the English below.
+ */
+export interface DesktopLabels {
+  /** The in-app notices' region. Defaults to `Notifications`. */
+  readonly notifications?: string;
+  /** The find field's label. Defaults to `Find in page`. */
+  readonly find?: string;
+  /** The find field's placeholder. Defaults to `Find`. */
+  readonly findPlaceholder?: string;
+  /** Defaults to `Previous match`. */
+  readonly previousMatch?: string;
+  /** Defaults to `Next match`. */
+  readonly nextMatch?: string;
+  /** Defaults to `Close find`. */
+  readonly closeFind?: string;
+  /** Defaults to `Cut`. */
+  readonly cut?: string;
+  /** Defaults to `Copy`. */
+  readonly copy?: string;
+  /** Defaults to `Paste`. */
+  readonly paste?: string;
+  /** Defaults to `Select all`. */
+  readonly selectAll?: string;
+  /** Defaults to `Copy link`. */
+  readonly copyLink?: string;
+  /** Defaults to `Open link in browser`. */
+  readonly openLink?: string;
+  /** The tray's item that shows the window. Defaults to `Show <title>`. */
+  readonly show?: string;
+  /** The tray's quit item. Defaults to `Quit`. */
+  readonly quit?: string;
+  /** The notice when a download finishes. Defaults to `Download finished`. */
+  readonly downloadFinished?: string;
+}
+
+/** The labels with their defaults, `show` left to the window's title. */
+export type ResolvedDesktopLabels = Required<Omit<DesktopLabels, "show">> &
+  Pick<DesktopLabels, "show">;
+
 /** What a desktop app turns on, all optional. */
 export interface DesktopConfig {
   /** A tray icon that shows the window and quits. On by default. */
@@ -54,6 +95,8 @@ export interface DesktopConfig {
    * theme is picked.
    */
   readonly omarchyTheme?: boolean;
+  /** The text the defaults show. English by default. */
+  readonly labels?: DesktopLabels;
 }
 
 /** Every option filled in. */
@@ -76,6 +119,7 @@ export interface ResolvedDesktopConfig {
   readonly spellcheck: boolean;
   readonly deepLinks: boolean;
   readonly omarchyTheme: boolean;
+  readonly labels: ResolvedDesktopLabels;
 }
 
 /** Types a config in the app's `desktop.config.ts`. */
@@ -115,6 +159,23 @@ export const resolveConfig = (
     spellcheck: config.spellcheck ?? true,
     deepLinks: config.deepLinks ?? true,
     omarchyTheme: config.omarchyTheme ?? true,
+    labels: {
+      notifications: "Notifications",
+      find: "Find in page",
+      findPlaceholder: "Find",
+      previousMatch: "Previous match",
+      nextMatch: "Next match",
+      closeFind: "Close find",
+      cut: "Cut",
+      copy: "Copy",
+      paste: "Paste",
+      selectAll: "Select all",
+      copyLink: "Copy link",
+      openLink: "Open link in browser",
+      quit: "Quit",
+      downloadFinished: "Download finished",
+      ...config.labels,
+    },
   };
 };
 

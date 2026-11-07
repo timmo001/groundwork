@@ -61,6 +61,7 @@ export default defineDesktopConfig({ tray: false });
 | `spellcheck` | On | The system spell checker in text fields |
 | `deepLinks` | On | Passes the app's deep links (`urlSchemes`) to the view |
 | `omarchyTheme` | On | Passes the desktop's Omarchy theme to the view, and every switch |
+| `labels` | English | The text the find bar, right-click menu, tray, notices region and download notice show, such as `{ quit: "Beenden" }`. The tray's show item defaults to "Show" and the window's title |
 
 Notices in the app sit in the bottom end corner, the find bar in the top end corner, and neither moves the page. The window's size, place and zoom are kept in `desktop-state.json` in the app's data folder.
 

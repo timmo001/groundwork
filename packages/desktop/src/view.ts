@@ -262,7 +262,6 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
   const notices = element("div", {
     class: "gw-desktop-notices",
     role: "region",
-    "aria-label": "Notifications",
   });
 
   const showNotice = ({ heading, body, tone = "neutral" }: Notice) => {
@@ -294,6 +293,9 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
 
   const request: Client<DesktopRequests> = rpc.request;
   const { config, dev } = await request.config();
+  const { labels } = config;
+
+  notices.setAttribute("aria-label", labels.notifications);
 
   if (config.omarchyTheme && options.onOmarchyTheme !== undefined) {
     const { onOmarchyTheme } = options;
@@ -320,9 +322,9 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
   });
 
   const findField = element("gw-input", {
-    label: "Find in page",
+    label: labels.find,
     "label-hidden": "",
-    placeholder: "Find",
+    placeholder: labels.findPlaceholder,
     icon: icons.search,
     size: "small",
     autocomplete: "off",
@@ -383,9 +385,9 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
 
   findBar.append(
     findField,
-    findButton("Previous match", icons.up, () => void search(false)),
-    findButton("Next match", icons.down, () => void search(true)),
-    findButton("Close find", icons.close, closeFind),
+    findButton(labels.previousMatch, icons.up, () => void search(false)),
+    findButton(labels.nextMatch, icons.down, () => void search(true)),
+    findButton(labels.closeFind, icons.close, closeFind),
   );
   findField.addEventListener("input", () =>
     findText() === "" ? void request.stopFind() : void search(true),
@@ -490,25 +492,25 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
       if (editable !== undefined && config.clipboard) {
         items.push(
           [
-            "Cut",
+            labels.cut,
             async () => {
               await copy(selectedText(editable));
               insertText(editable, "");
             },
           ],
-          ["Copy", () => copy(selectedText(editable))],
+          [labels.copy, () => copy(selectedText(editable))],
           [
-            "Paste",
+            labels.paste,
             async () => insertText(editable, await request.clipboardRead()),
           ],
         );
       } else if (text !== "" && config.clipboard) {
-        items.push(["Copy", () => copy(text)]);
+        items.push([labels.copy, () => copy(text)]);
       }
 
       if (editable !== undefined) {
         items.push([
-          "Select all",
+          labels.selectAll,
           () => {
             editable.focus();
 
@@ -521,9 +523,9 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
       if (link !== undefined) {
         if (items.length > 0) items.push("divider");
 
-        if (config.clipboard) items.push(["Copy link", () => copy(link)]);
+        if (config.clipboard) items.push([labels.copyLink, () => copy(link)]);
         items.push([
-          "Open link in browser",
+          labels.openLink,
           () => request.openExternal({ url: link }),
         ]);
       }
