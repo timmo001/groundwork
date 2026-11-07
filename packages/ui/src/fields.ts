@@ -110,13 +110,13 @@ export const fieldStyles = css`
 
   /* An icon inside the field, before the text, with the text moved clear of
      it */
-  gw-input .gw-input-control {
+  :where(gw-input) .gw-input-control {
     position: relative;
     display: flex;
     align-items: center;
   }
 
-  gw-input .gw-input-control > .icon {
+  :where(gw-input) .gw-input-control > .icon {
     position: absolute;
     inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1));
     width: calc(1.125rem * var(--gw-field-scale, 1));
@@ -126,11 +126,11 @@ export const fieldStyles = css`
     fill: currentColor;
   }
 
-  gw-input .gw-input-control > .icon[hidden] {
+  :where(gw-input) .gw-input-control > .icon[hidden] {
     display: none;
   }
 
-  gw-input .gw-input-control > .icon:not([hidden]) + input {
+  :where(gw-input) .gw-input-control > .icon:not([hidden]) + input {
     padding-inline-start: calc(
       (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1)
     );
@@ -138,7 +138,7 @@ export const fieldStyles = css`
 
   /* A textarea keeps the field's padding on every side and grows by its
      corner, never sideways out of the layout */
-  gw-input textarea {
+  :where(gw-input) textarea {
     display: block;
     /* Pill-shaped controls would make a tall box a stadium, so it rounds no
        more than a panel */
@@ -148,22 +148,22 @@ export const fieldStyles = css`
     resize: vertical;
   }
 
-  gw-input[monospace] :where(input, textarea) {
+  :where(gw-input[monospace]) :is(input, textarea) {
     font-family: var(--gw-font-mono);
   }
 
-  gw-input .gw-optional {
+  :where(gw-input) .gw-optional {
     font-weight: var(--gw-font-weight-regular);
     color: var(--gw-color-text-secondary);
   }
 
-  gw-input .gw-optional[hidden] {
+  :where(gw-input) .gw-optional[hidden] {
     display: none;
   }
 
   /* The show and hide button sits inside the end of a password field, with
      the text kept clear of it */
-  gw-input .gw-reveal {
+  :where(gw-input) .gw-reveal {
     position: absolute;
     inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1));
     display: grid;
@@ -181,32 +181,32 @@ export const fieldStyles = css`
       background-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
-  gw-input .gw-reveal:hover:not(:disabled) {
+  :where(gw-input) .gw-reveal:hover:not(:disabled) {
     color: var(--gw-color-text-strong);
     background: var(--gw-color-fill-neutral-hovered);
   }
 
-  gw-input .gw-reveal:focus-visible {
+  :where(gw-input) .gw-reveal:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: calc(var(--gw-focus-width) * -1);
   }
 
-  gw-input .gw-reveal:disabled {
+  :where(gw-input) .gw-reveal:disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
-  gw-input .gw-reveal[hidden] {
+  :where(gw-input) .gw-reveal[hidden] {
     display: none;
   }
 
-  gw-input .gw-reveal > .icon {
+  :where(gw-input) .gw-reveal > .icon {
     width: calc(1.125rem * var(--gw-field-scale, 1));
     height: calc(1.125rem * var(--gw-field-scale, 1));
     fill: currentColor;
   }
 
-  gw-input .gw-input-control:has(> .gw-reveal:not([hidden])) > input {
+  :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input {
     padding-inline-end: calc(
       (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1)
     );
@@ -214,7 +214,7 @@ export const fieldStyles = css`
 
   /* The trigger shows the chosen option, with its icon, and a chevron with
      room around it that turns over while the list is open */
-  gw-select .gw-select-trigger {
+  :where(gw-select) .gw-select-trigger {
     display: flex;
     gap: calc(var(--gw-space-2) * var(--gw-field-size));
     align-items: center;
@@ -223,7 +223,7 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
-  gw-select .gw-select-value {
+  :where(gw-select) .gw-select-value {
     flex: 1;
     min-width: 0;
     overflow: hidden;
@@ -233,11 +233,11 @@ export const fieldStyles = css`
 
   /* With an inline label the select sits among toolbar controls, so it's a
      pill that fits its content, like the toggles and buttons beside it */
-  gw-select[inline-label] {
+  :where(gw-select[inline-label]) {
     display: inline-flex;
   }
 
-  gw-select[inline-label] .gw-select-trigger {
+  :where(gw-select[inline-label]) .gw-select-trigger {
     width: auto;
     padding-inline: calc(var(--gw-space-4) * var(--gw-field-size))
       calc(var(--gw-space-3) * var(--gw-field-size));
@@ -245,42 +245,42 @@ export const fieldStyles = css`
   }
 
   /* An inline label reads as a quiet prefix to the value */
-  gw-select .gw-select-inline-label {
+  :where(gw-select) .gw-select-inline-label {
     flex: none;
     color: var(--gw-color-text-secondary);
   }
 
-  gw-select .gw-select-inline-label[hidden] {
+  :where(gw-select) .gw-select-inline-label[hidden] {
     display: none;
   }
 
-  gw-select .gw-select-value[data-placeholder] {
+  :where(gw-select) .gw-select-value[data-placeholder] {
     color: var(--gw-color-text-secondary);
   }
 
-  gw-select .gw-select-trigger > .icon {
+  :where(gw-select) .gw-select-trigger > .icon {
     flex: none;
     width: var(--gw-icon-size, 1.25rem);
     height: var(--gw-icon-size, 1.25rem);
     fill: currentColor;
   }
 
-  gw-select .gw-select-trigger > .icon:last-child {
+  :where(gw-select) .gw-select-trigger > .icon:last-child {
     color: var(--gw-color-text-secondary);
     transition: rotate var(--gw-motion-normal) var(--gw-motion-easing);
   }
 
-  gw-select[open] .gw-select-trigger > .icon:last-child {
+  :where(gw-select[open]) .gw-select-trigger > .icon:last-child {
     rotate: 180deg;
   }
 
-  gw-select .gw-select-trigger > .icon[hidden] {
+  :where(gw-select) .gw-select-trigger > .icon[hidden] {
     display: none;
   }
 
   /* The list opens under the trigger, growing from it, or as a bottom sheet
      sliding up on phones */
-  gw-select .gw-select-popup {
+  :where(gw-select) .gw-select-popup {
     position: fixed;
     inset: unset;
     box-sizing: border-box;
@@ -304,23 +304,23 @@ export const fieldStyles = css`
       overlay var(--gw-motion-normal) allow-discrete;
   }
 
-  gw-select .gw-select-popup[data-placement="above"] {
+  :where(gw-select) .gw-select-popup[data-placement="above"] {
     transform-origin: bottom;
   }
 
-  gw-select .gw-select-popup:popover-open {
+  :where(gw-select) .gw-select-popup:popover-open {
     opacity: 1;
     scale: 1;
   }
 
   @starting-style {
-    gw-select .gw-select-popup:popover-open {
+    :where(gw-select) .gw-select-popup:popover-open {
       opacity: 0;
       scale: 1 0.96;
     }
   }
 
-  gw-select .gw-select-popup[data-placement="sheet"] {
+  :where(gw-select) .gw-select-popup[data-placement="sheet"] {
     inset: auto 0 0;
     width: 100%;
     max-width: none;
@@ -332,22 +332,22 @@ export const fieldStyles = css`
     --gw-option-list-height: 60vh;
   }
 
-  gw-select .gw-select-popup[data-placement="sheet"]:popover-open {
+  :where(gw-select) .gw-select-popup[data-placement="sheet"]:popover-open {
     translate: 0 0;
   }
 
   @starting-style {
-    gw-select .gw-select-popup[data-placement="sheet"]:popover-open {
+    :where(gw-select) .gw-select-popup[data-placement="sheet"]:popover-open {
       translate: 0 100%;
     }
   }
 
-  gw-select .gw-select-popup[data-placement="sheet"]::backdrop {
+  :where(gw-select) .gw-select-popup[data-placement="sheet"]::backdrop {
     background: rgb(0 0 0 / 40%);
   }
 
   /* With multiple, a full-width Clear under the list empties the choice */
-  gw-select .gw-select-clear {
+  :where(gw-select) .gw-select-clear {
     display: block;
     width: 100%;
     min-height: 2.5rem;
@@ -366,17 +366,17 @@ export const fieldStyles = css`
       background-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
-  gw-select .gw-select-clear:hover {
+  :where(gw-select) .gw-select-clear:hover {
     color: var(--gw-color-text-strong);
     background: var(--gw-color-fill-neutral-hovered);
   }
 
-  gw-select .gw-select-clear:focus-visible {
+  :where(gw-select) .gw-select-clear:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: calc(var(--gw-focus-width) * -1);
   }
 
-  gw-select .gw-select-clear[hidden] {
+  :where(gw-select) .gw-select-clear[hidden] {
     display: none;
   }
 
@@ -433,14 +433,14 @@ export const fieldStyles = css`
     white-space: nowrap;
   }
 
-  gw-checkbox input {
+  :where(gw-checkbox) input {
     width: 1.125rem;
     height: 1.125rem;
     margin: 0;
     accent-color: var(--gw-color-fill-accent-resting);
   }
 
-  gw-switch input {
+  :where(gw-switch) input {
     position: relative;
     flex: none;
     width: 2.5rem;
@@ -456,7 +456,7 @@ export const fieldStyles = css`
       border-color var(--gw-motion-normal) var(--gw-motion-easing);
   }
 
-  gw-switch input::after {
+  :where(gw-switch) input::after {
     position: absolute;
     inset-block-start: 0.1875rem;
     inset-inline-start: 0.1875rem;
@@ -470,21 +470,21 @@ export const fieldStyles = css`
       background-color var(--gw-motion-normal) var(--gw-motion-easing);
   }
 
-  gw-switch input:checked {
+  :where(gw-switch) input:checked {
     background: var(--gw-color-fill-accent-resting);
     border-color: transparent;
   }
 
-  gw-switch input:checked::after {
+  :where(gw-switch) input:checked::after {
     translate: 1rem 0;
     background: var(--gw-color-on-accent);
   }
 
-  gw-switch input:disabled {
+  :where(gw-switch) input:disabled {
     opacity: 0.5;
   }
 
-  gw-range {
+  :where(gw-range) {
     display: flex;
     flex-direction: column;
     gap: var(--gw-space-2);
@@ -493,19 +493,19 @@ export const fieldStyles = css`
     color: var(--gw-color-text-primary);
   }
 
-  gw-range > label {
+  :where(gw-range) > label {
     font-size: var(--gw-font-size-s);
     font-weight: var(--gw-font-weight-strong);
     color: var(--gw-color-text-strong);
   }
 
-  gw-range .gw-range-row {
+  :where(gw-range) .gw-range-row {
     display: flex;
     gap: var(--gw-space-3);
     align-items: center;
   }
 
-  gw-range .gw-range-control {
+  :where(gw-range) .gw-range-control {
     position: relative;
     display: block;
     flex: 1;
@@ -513,7 +513,7 @@ export const fieldStyles = css`
   }
 
   /* The value beside the track, with readout */
-  gw-range .gw-range-readout {
+  :where(gw-range) .gw-range-readout {
     min-width: 5ch;
     font-size: var(--gw-font-size-s);
     font-variant-numeric: tabular-nums;
@@ -522,11 +522,11 @@ export const fieldStyles = css`
     white-space: nowrap;
   }
 
-  gw-range .gw-range-readout[hidden] {
+  :where(gw-range) .gw-range-readout[hidden] {
     display: none;
   }
 
-  gw-range input {
+  :where(gw-range) input {
     display: block;
     width: 100%;
     margin: 0;
@@ -534,18 +534,18 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
-  gw-range input:focus-visible {
+  :where(gw-range) input:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
   }
 
-  gw-range input:disabled {
+  :where(gw-range) input:disabled {
     cursor: not-allowed;
     opacity: 0.5;
   }
 
   /* The value above the thumb while it's held */
-  gw-range .gw-range-bubble {
+  :where(gw-range) .gw-range-bubble {
     position: absolute;
     bottom: calc(100% + var(--gw-space-1));
     padding: var(--gw-space-1) var(--gw-space-2);
@@ -560,17 +560,17 @@ export const fieldStyles = css`
     translate: -50% 0;
   }
 
-  gw-range .gw-range-bubble[hidden] {
+  :where(gw-range) .gw-range-bubble[hidden] {
     display: none;
   }
 
-  gw-range .gw-hint {
+  :where(gw-range) .gw-hint {
     margin: 0;
     font-size: var(--gw-font-size-xs);
     color: var(--gw-color-text-secondary);
   }
 
-  gw-range .gw-visually-hidden {
+  :where(gw-range) .gw-visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
