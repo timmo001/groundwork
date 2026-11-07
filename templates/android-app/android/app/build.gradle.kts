@@ -6,12 +6,12 @@
 plugins { id("com.android.application") }
 
 android {
-  namespace = "io.github.timmo001.groundwork.demo"
+  namespace = "dev.timmo.groundwork.demo"
   compileSdk { version = release(37) { minorApiLevel = 2 } }
   buildToolsVersion = "37.0.0"
 
   defaultConfig {
-    applicationId = "io.github.timmo001.groundwork.demo"
+    applicationId = "dev.timmo.groundwork.demo"
     minSdk = 34
     targetSdk = 37
     versionCode = 1

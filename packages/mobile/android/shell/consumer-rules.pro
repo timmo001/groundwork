@@ -1,2 +1,2 @@
 # Apps subclass ShellActivity and register their own bridge handlers by name.
--keep class io.github.timmo001.groundwork.shell.** { public protected *; }
+-keep class dev.timmo.groundwork.shell.** { public protected *; }

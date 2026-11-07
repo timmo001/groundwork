@@ -37,7 +37,7 @@
     </activity>
 
     <service
-      android:name="io.github.timmo001.groundwork.shell.ShellTileService"
+      android:name="dev.timmo.groundwork.shell.ShellTileService"
       android:exported="true"
       android:icon="@drawable/ic_launcher"
       android:label="@string/tile_label"

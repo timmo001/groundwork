@@ -12,7 +12,7 @@
 
   <application>
     <service
-      android:name="io.github.timmo001.groundwork.shell.ShellPushService"
+      android:name="dev.timmo.groundwork.shell.ShellPushService"
       android:exported="false">
       <intent-filter>
         <action android:name="org.unifiedpush.android.connector.PUSH_EVENT" />

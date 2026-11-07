@@ -6,7 +6,7 @@
 plugins { id("com.android.library") }
 
 android {
-  namespace = "io.github.timmo001.groundwork.shell"
+  namespace = "dev.timmo.groundwork.shell"
   compileSdk { version = release(37) { minorApiLevel = 2 } }
   buildToolsVersion = "37.0.0"
 
