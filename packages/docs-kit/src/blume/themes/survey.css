@@ -29,6 +29,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(52.9% 0.1603 349.67);
 }
 
 :root[data-theme="dark"] {
@@ -54,6 +55,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(71.31% 0.1603 349.67);
 }
 
 :root[data-theme="dark"][data-gw-darker] {
@@ -79,4 +81,5 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(71.31% 0.1603 349.67);
 }

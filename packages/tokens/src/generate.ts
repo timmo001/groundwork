@@ -475,19 +475,27 @@ const blumeRoles = {
   "code-word-border": "border-info",
 };
 
-/** Blume's color tokens from a theme's roles in one mode. */
+/**
+ * Blume's color tokens from a theme's roles in one mode, plus the link color
+ * docs-kit's `theme.css` gives prose links, as Blume has no token for it.
+ */
 const blumeColors = (roles: Roles) =>
   Object.fromEntries(
-    Object.entries(blumeRoles).flatMap(([token, role]) => {
+    [
+      ...Object.entries(blumeRoles).map(
+        ([token, role]) => [`--blume-${token}`, role] as const,
+      ),
+      ["--gw-docs-link", "link"] as const,
+    ].flatMap(([property, role]) => {
       const color = roles[role];
 
-      return color === undefined ? [] : [[token, toCss(color)]];
+      return color === undefined ? [] : [[property, toCss(color)]];
     }),
   );
 
 const blumeDeclarations = (properties: Record<string, string>) =>
   Object.entries(properties)
-    .map(([name, value]) => `  --blume-${name}: ${value};`)
+    .map(([name, value]) => `  ${name}: ${value};`)
     .join("\n");
 
 /**
@@ -498,10 +506,10 @@ const blumeRules = (theme: ResolvedTheme, root: string) => {
   const { light, dark, darker } = theme.modes;
 
   const style = {
-    radius: `${theme.style.radius.panel}px`,
-    "font-body": fontStack(theme.style.font),
-    "font-display": fontStack(theme.style.font),
-    "font-mono": fontStack(theme.style.mono),
+    "--blume-radius": `${theme.style.radius.panel}px`,
+    "--blume-font-body": fontStack(theme.style.font),
+    "--blume-font-display": fontStack(theme.style.font),
+    "--blume-font-mono": fontStack(theme.style.mono),
   };
 
   const lightTokens: Record<string, string> =

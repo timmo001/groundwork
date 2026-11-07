@@ -27,6 +27,7 @@
   --blume-code-warning-border: oklch(52.21% 0.1084 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(31.86% 0.0043 260.69);
 }
 
 :root[data-gw-docs-theme="base"][data-theme="dark"] {
@@ -52,6 +53,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(91.9% 0.0043 260.69);
 }
 
 :root[data-gw-docs-theme="base"][data-theme="dark"][data-gw-darker] {
@@ -77,6 +79,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(91.9% 0.0043 260.69);
 }
 
 :root[data-gw-docs-theme="glazing"] {
@@ -106,6 +109,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(51.18% 0.13 264.2);
 }
 
 :root[data-gw-docs-theme="glazing"][data-theme="dark"] {
@@ -131,6 +135,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(69.64% 0.13 264.2);
 }
 
 :root[data-gw-docs-theme="glazing"][data-theme="dark"][data-gw-darker] {
@@ -156,6 +161,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(69.64% 0.13 264.2);
 }
 
 :root[data-gw-docs-theme="survey"] {
@@ -185,6 +191,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(52.9% 0.1603 349.67);
 }
 
 :root[data-gw-docs-theme="survey"][data-theme="dark"] {
@@ -210,6 +217,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(71.31% 0.1603 349.67);
 }
 
 :root[data-gw-docs-theme="survey"][data-theme="dark"][data-gw-darker] {
@@ -235,6 +243,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(71.31% 0.1603 349.67);
 }
 
 :root[data-gw-docs-theme="slate"] {
@@ -264,6 +273,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.7% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.7% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(52.13% 0.1205 310.02);
 }
 
 :root[data-gw-docs-theme="slate"][data-theme="dark"] {
@@ -289,6 +299,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(70.51% 0.1205 310.02);
 }
 
 :root[data-gw-docs-theme="slate"][data-theme="dark"][data-gw-darker] {
@@ -314,6 +325,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(70.51% 0.1205 310.02);
 }
 
 :root[data-gw-docs-theme="bridge"] {
@@ -343,6 +355,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(52.42% 0.1592 293.54);
 }
 
 :root[data-gw-docs-theme="bridge"][data-theme="dark"] {
@@ -368,6 +381,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(70.9% 0.1592 293.54);
 }
 
 :root[data-gw-docs-theme="bridge"][data-theme="dark"][data-gw-darker] {
@@ -393,6 +407,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(70.9% 0.1592 293.54);
 }
 
 :root[data-gw-docs-theme="snag"] {
@@ -422,6 +437,7 @@
   --blume-code-warning-border: oklch(52.09% 0.1082 80 / 0.45);
   --blume-code-word: oklch(51.8% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(51.8% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(51.15% 0.1082 75.57);
 }
 
 :root[data-gw-docs-theme="snag"][data-theme="dark"] {
@@ -447,6 +463,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(69.53% 0.1239 75.57);
 }
 
 :root[data-gw-docs-theme="snag"][data-theme="dark"][data-gw-darker] {
@@ -472,6 +489,7 @@
   --blume-code-warning-border: oklch(68.66% 0.1299 80 / 0.45);
   --blume-code-word: oklch(68.29% 0.1197 249.65 / 0.14);
   --blume-code-word-border: oklch(68.29% 0.1197 249.65 / 0.45);
+  --gw-docs-link: oklch(69.53% 0.1239 75.57);
 }
 
 :root[data-gw-docs-theme="catppuccin-frappe"] {
@@ -504,6 +522,7 @@
   --blume-code-warning-border: oklch(84.43% 0.0795 83.47 / 0.45);
   --blume-code-word: oklch(74.2% 0.1044 265.66 / 0.14);
   --blume-code-word-border: oklch(74.2% 0.1044 265.66 / 0.45);
+  --gw-docs-link: oklch(80.77% 0.1108 311.74);
 }
 
 :root[data-gw-docs-theme="catppuccin-frappe"][data-theme="dark"][data-gw-darker] {
@@ -529,6 +548,7 @@
   --blume-code-warning-border: oklch(84.43% 0.0795 83.47 / 0.45);
   --blume-code-word: oklch(74.2% 0.1044 265.66 / 0.14);
   --blume-code-word-border: oklch(74.2% 0.1044 265.66 / 0.45);
+  --gw-docs-link: oklch(80.77% 0.1108 311.74);
 }
 
 :root[data-gw-docs-theme="catppuccin-latte"] {
@@ -558,6 +578,7 @@
   --blume-code-warning-border: oklch(71.4% 0.1494 67.78 / 0.45);
   --blume-code-word: oklch(55.86% 0.2255 262.09 / 0.14);
   --blume-code-word-border: oklch(55.86% 0.2255 262.09 / 0.45);
+  --gw-docs-link: oklch(51.03% 0.2503 297.02);
 }
 
 :root[data-gw-docs-theme="catppuccin-macchiato"] {
@@ -590,6 +611,7 @@
   --blume-code-warning-border: oklch(87.9% 0.0744 84.75 / 0.45);
   --blume-code-word: oklch(74.97% 0.1101 263.81 / 0.14);
   --blume-code-word-border: oklch(74.97% 0.1101 263.81 / 0.45);
+  --gw-docs-link: oklch(77.15% 0.1259 303.9);
 }
 
 :root[data-gw-docs-theme="catppuccin-macchiato"][data-theme="dark"][data-gw-darker] {
@@ -615,6 +637,7 @@
   --blume-code-warning-border: oklch(87.9% 0.0744 84.75 / 0.45);
   --blume-code-word: oklch(74.97% 0.1101 263.81 / 0.14);
   --blume-code-word-border: oklch(74.97% 0.1101 263.81 / 0.45);
+  --gw-docs-link: oklch(77.15% 0.1259 303.9);
 }
 
 :root[data-gw-docs-theme="catppuccin-mocha"] {
@@ -647,6 +670,7 @@
   --blume-code-warning-border: oklch(91.93% 0.0704 86.53 / 0.45);
   --blume-code-word: oklch(76.64% 0.1113 259.88 / 0.14);
   --blume-code-word-border: oklch(76.64% 0.1113 259.88 / 0.45);
+  --gw-docs-link: oklch(78.71% 0.1187 304.77);
 }
 
 :root[data-gw-docs-theme="catppuccin-mocha"][data-theme="dark"][data-gw-darker] {
@@ -672,6 +696,7 @@
   --blume-code-warning-border: oklch(91.93% 0.0704 86.53 / 0.45);
   --blume-code-word: oklch(76.64% 0.1113 259.88 / 0.14);
   --blume-code-word-border: oklch(76.64% 0.1113 259.88 / 0.45);
+  --gw-docs-link: oklch(78.71% 0.1187 304.77);
 }
 
 :root[data-gw-docs-theme="github"] {
@@ -701,6 +726,7 @@
   --blume-code-warning-border: oklch(55.42% 0.1169 75.01 / 0.45);
   --blume-code-word: oklch(53.99% 0.1906 257.48 / 0.14);
   --blume-code-word-border: oklch(53.99% 0.1906 257.48 / 0.45);
+  --gw-docs-link: oklch(53.52% 0.1906 257.48);
 }
 
 :root[data-gw-docs-theme="github"][data-theme="dark"] {
@@ -726,6 +752,7 @@
   --blume-code-warning-border: oklch(71.96% 0.1401 79.91 / 0.45);
   --blume-code-word: oklch(61.82% 0.1935 258.33 / 0.14);
   --blume-code-word-border: oklch(61.82% 0.1935 258.33 / 0.45);
+  --gw-docs-link: oklch(63.84% 0.1935 258.33);
 }
 
 :root[data-gw-docs-theme="github"][data-theme="dark"][data-gw-darker] {
@@ -751,6 +778,7 @@
   --blume-code-warning-border: oklch(71.96% 0.1401 79.91 / 0.45);
   --blume-code-word: oklch(61.82% 0.1935 258.33 / 0.14);
   --blume-code-word-border: oklch(61.82% 0.1935 258.33 / 0.45);
+  --gw-docs-link: oklch(63.84% 0.1935 258.33);
 }
 
 :root[data-gw-docs-theme="github-dimmed"] {
@@ -780,6 +808,7 @@
   --blume-code-warning-border: oklch(55.42% 0.1169 75.01 / 0.45);
   --blume-code-word: oklch(53.99% 0.1906 257.48 / 0.14);
   --blume-code-word-border: oklch(53.99% 0.1906 257.48 / 0.45);
+  --gw-docs-link: oklch(53.52% 0.1906 257.48);
 }
 
 :root[data-gw-docs-theme="github-dimmed"][data-theme="dark"] {
@@ -805,6 +834,7 @@
   --blume-code-warning-border: oklch(68.88% 0.1313 79.12 / 0.45);
   --blume-code-word: oklch(68.41% 0.152 255.12 / 0.14);
   --blume-code-word-border: oklch(68.41% 0.152 255.12 / 0.45);
+  --gw-docs-link: oklch(71.39% 0.1515 255.12);
 }
 
 :root[data-gw-docs-theme="github-dimmed"][data-theme="dark"][data-gw-darker] {
@@ -830,6 +860,7 @@
   --blume-code-warning-border: oklch(68.88% 0.1313 79.12 / 0.45);
   --blume-code-word: oklch(68.41% 0.152 255.12 / 0.14);
   --blume-code-word-border: oklch(68.41% 0.152 255.12 / 0.45);
+  --gw-docs-link: oklch(71.39% 0.1515 255.12);
 }
 
 :root[data-gw-docs-theme="github-high-contrast"] {
@@ -859,6 +890,7 @@
   --blume-code-warning-border: oklch(43.6% 0.0963 66.95 / 0.45);
   --blume-code-word: oklch(44.1% 0.1809 260.43 / 0.14);
   --blume-code-word-border: oklch(44.1% 0.1809 260.43 / 0.45);
+  --gw-docs-link: oklch(44.1% 0.1809 260.43);
 }
 
 :root[data-gw-docs-theme="github-high-contrast"][data-theme="dark"] {
@@ -884,6 +916,7 @@
   --blume-code-warning-border: oklch(81.05% 0.1541 83.76 / 0.45);
   --blume-code-word: oklch(76.25% 0.1261 250.42 / 0.14);
   --blume-code-word-border: oklch(76.25% 0.1261 250.42 / 0.45);
+  --gw-docs-link: oklch(76.25% 0.1261 250.42);
 }
 
 :root[data-gw-docs-theme="github-high-contrast"][data-theme="dark"][data-gw-darker] {
@@ -909,6 +942,7 @@
   --blume-code-warning-border: oklch(81.05% 0.1541 83.76 / 0.45);
   --blume-code-word: oklch(76.25% 0.1261 250.42 / 0.14);
   --blume-code-word-border: oklch(76.25% 0.1261 250.42 / 0.45);
+  --gw-docs-link: oklch(76.25% 0.1261 250.42);
 }
 
 :root[data-gw-docs-theme="tokyo-night"] {
@@ -938,6 +972,7 @@
   --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
   --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
   --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --gw-docs-link: oklch(45.8% 0.1763 257.53);
 }
 
 :root[data-gw-docs-theme="tokyo-night"][data-theme="dark"] {
@@ -963,6 +998,7 @@
   --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
   --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
   --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --gw-docs-link: oklch(71.9% 0.1322 264.2);
 }
 
 :root[data-gw-docs-theme="tokyo-night"][data-theme="dark"][data-gw-darker] {
@@ -988,6 +1024,7 @@
   --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
   --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
   --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --gw-docs-link: oklch(71.9% 0.1322 264.2);
 }
 
 :root[data-gw-docs-theme="tokyo-night-moon"] {
@@ -1017,6 +1054,7 @@
   --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
   --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
   --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --gw-docs-link: oklch(45.8% 0.1763 257.53);
 }
 
 :root[data-gw-docs-theme="tokyo-night-moon"][data-theme="dark"] {
@@ -1042,6 +1080,7 @@
   --blume-code-warning-border: oklch(86.33% 0.1168 75.04 / 0.45);
   --blume-code-word: oklch(74.41% 0.1311 264.28 / 0.14);
   --blume-code-word-border: oklch(74.41% 0.1311 264.28 / 0.45);
+  --gw-docs-link: oklch(74.41% 0.1311 264.28);
 }
 
 :root[data-gw-docs-theme="tokyo-night-moon"][data-theme="dark"][data-gw-darker] {
@@ -1067,6 +1106,7 @@
   --blume-code-warning-border: oklch(86.33% 0.1168 75.04 / 0.45);
   --blume-code-word: oklch(74.41% 0.1311 264.28 / 0.14);
   --blume-code-word-border: oklch(74.41% 0.1311 264.28 / 0.45);
+  --gw-docs-link: oklch(74.41% 0.1311 264.28);
 }
 
 :root[data-gw-docs-theme="tokyo-night-storm"] {
@@ -1096,6 +1136,7 @@
   --blume-code-warning-border: oklch(55.27% 0.0749 75.19 / 0.45);
   --blume-code-word: oklch(59.99% 0.1804 257.53 / 0.14);
   --blume-code-word-border: oklch(59.99% 0.1804 257.53 / 0.45);
+  --gw-docs-link: oklch(45.8% 0.1763 257.53);
 }
 
 :root[data-gw-docs-theme="tokyo-night-storm"][data-theme="dark"] {
@@ -1121,6 +1162,7 @@
   --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
   --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
   --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --gw-docs-link: oklch(71.9% 0.1322 264.2);
 }
 
 :root[data-gw-docs-theme="tokyo-night-storm"][data-theme="dark"][data-gw-darker] {
@@ -1146,4 +1188,5 @@
   --blume-code-warning-border: oklch(78.39% 0.1057 75.43 / 0.45);
   --blume-code-word: oklch(71.9% 0.1322 264.2 / 0.14);
   --blume-code-word-border: oklch(71.9% 0.1322 264.2 / 0.45);
+  --gw-docs-link: oklch(71.9% 0.1322 264.2);
 }

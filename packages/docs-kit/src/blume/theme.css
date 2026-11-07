@@ -36,6 +36,13 @@
   }
 }
 
+/* Color prose links with the theme's link role, accent or strong text by its
+   style. Blume colors them with the foreground and has no token for it. Card
+   links keep Blume's own rule. */
+.prose :where(a:not([data-blume-card])) {
+  color: var(--gw-docs-link, var(--blume-foreground));
+}
+
 /* Blume's own thin scrollbars bring back the arrow buttons; let the
    Groundwork ones from themes.css show instead, squaring off at the ends */
 @supports selector(::-webkit-scrollbar) {
