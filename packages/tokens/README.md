@@ -31,6 +31,10 @@ their own:
 import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
 ```
 
+`blumeThemeCss` from the same export renders a solved theme as Blume's tokens,
+for a docs site on `@timmo001/docs-kit` whose app has its own theme. The
+[docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#theme) shows the site script.
+
 The `omarchy-current` export reads and watches the Omarchy theme a machine
 is using, for apps outside a browser, such as a desktop app's main process or
 a terminal UI. `pageTheme`'s `setOmarchyTheme` offers it in the view:

@@ -106,6 +106,31 @@ so load the theme's font files in `theme.css` too, for example with
 `@import "@fontsource-variable/inter";`. Use Base until the app has a theme of
 its own.
 
+An app whose own theme isn't in Groundwork's set keeps its theme document in
+the app and renders the stylesheet from a site script with `blumeThemeCss` from
+`@timmo001/groundwork-tokens/runtime`, then imports that file in place of a
+docs-kit theme. Fail the script on a missed contrast check, so a theme that
+reads badly never ships:
+
+```ts
+import {
+  blumeThemeCss,
+  parseTheme,
+  runtimeTheme,
+} from "@timmo001/groundwork-tokens/runtime";
+
+const parsed = parseTheme(await Bun.file("theme.json").text());
+
+if (parsed._tag === "Failure") throw new Error(String(parsed.failure));
+
+const { theme, checks } = runtimeTheme(parsed.success);
+const misses = checks.filter((check) => !check.passes);
+
+if (misses.length > 0) throw new Error(`Contrast misses: ${misses.length}`);
+
+await Bun.write("theme-app.css", `${blumeThemeCss(theme)}\n`);
+```
+
 `HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
 Light, Dark and Darker. To let readers pick the theme as well, import every
 theme after the site's default and pass the themes to `HeaderSearch` from a

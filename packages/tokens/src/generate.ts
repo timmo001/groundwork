@@ -525,14 +525,18 @@ const blumeRules = (theme: ResolvedTheme, root: string) => {
 };
 
 /**
- * One theme as Blume's tokens, for docs-kit. Fonts are stacks, so the site
- * loads the files.
+ * One theme as Blume's tokens on `:root`, in each of its modes. Fonts are
+ * stacks, so the site loads the files.
  */
+export const blumeThemeCss = (theme: ResolvedTheme) =>
+  blumeRules(theme, ":root").join("\n\n");
+
+/** One theme's docs-kit stylesheet. */
 export const blumeTheme = (theme: ResolvedTheme) =>
   [
     `/* ${header} */`,
     `/* ${theme.name}: ${theme.description} */`,
-    ...blumeRules(theme, ":root"),
+    blumeThemeCss(theme),
   ].join("\n\n") + "\n";
 
 /**
