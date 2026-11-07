@@ -17,8 +17,7 @@ import {
   type ThemeMode,
 } from "@timmo001/groundwork-tokens/page";
 import { runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
-import { on } from "@timmo001/groundwork-ui";
-import { Schema } from "effect";
+import { getStorage, on } from "@timmo001/groundwork-ui";
 
 import {
   desktopCssKey,
@@ -26,7 +25,6 @@ import {
   reportConfigId,
   type ReportConfig,
 } from "./page.ts";
-import { getStorage } from "./storage.ts";
 import { hydrateTable } from "./table-client.ts";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
@@ -151,16 +149,15 @@ for (const table of document.querySelectorAll("gw-table")) {
 const positionKey = `gw-report:position:${location.pathname}`;
 const local = getStorage("localStorage");
 
-const savePosition = () =>
-  local.set(positionKey, Schema.Number, Math.round(window.scrollY));
+const savePosition = () => local.set(positionKey, Math.round(window.scrollY));
 
 history.scrollRestoration = "manual";
 
-const position = local.get(positionKey, Schema.Number);
+const position = Number(local.get(positionKey) ?? Number.NaN);
 
 // After the tables draw, so the page is as tall as it was; a link to a
 // section still wins
-if (position !== undefined && location.hash === "") {
+if (Number.isFinite(position) && location.hash === "") {
   void customElements
     .whenDefined("gw-table")
     .then(() =>

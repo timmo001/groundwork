@@ -2,27 +2,23 @@
  * `@storage`: keeps a Lit element's property in `localStorage` or
  * `sessionStorage`, so it outlasts a reload. `getStorage` reads and writes
  * the same values from code that isn't a decorated property. Values are kept
- * as JSON and checked against a Schema when they're read, so a stale or
- * hand-edited value falls back to the default. Adapted from the Home
+ * as JSON in Groundwork UI's shared store, the one elements with a
+ * `storage-key` use, and checked against a Schema when they're read, so a
+ * stale or hand-edited value falls back to the default. Adapted from the Home
  * Assistant frontend's storage decorator (src/common/decorators/storage.ts,
  * Apache-2.0), for standard decorators.
  *
  * @module
  */
+import type { Json } from "@timmo001/groundwork-ui/element.js";
+import {
+  getStorage as getShared,
+  type StorageName,
+} from "@timmo001/groundwork-ui/storage.js";
 import { Option, Schema } from "effect";
 import type { ReactiveElement } from "lit";
 
-/** Which of the browser's stores a value is kept in. */
-export type StorageName = "localStorage" | "sessionStorage";
-
-/** A value that survives `JSON.stringify` and `JSON.parse`. */
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | readonly Json[]
-  | { readonly [key: string]: Json };
+export type { Json, StorageName };
 
 /** How a kept value is checked when read, and written back as JSON. */
 export type StoredSchema<A> = Schema.Codec<A, Json>;
@@ -44,91 +40,22 @@ export interface StoredValues {
   readonly subscribe: (key: string, listener: () => void) => () => void;
 }
 
-const parse = (text: string | null) => {
-  if (text === null) return undefined;
-
-  try {
-    const value: unknown = JSON.parse(text);
-
-    return value;
-  } catch {
-    // Not JSON: treated as nothing kept
-    return undefined;
-  }
-};
-
 const open = (name: StorageName): StoredValues => {
-  // The raw parsed JSON, checked against a schema on each read
-  const cache = new Map<string, unknown>();
-  const listeners = new Map<string, Set<() => void>>();
-
-  const store = () => {
-    try {
-      return window[name];
-    } catch {
-      // Blocked, such as with cookies turned off
-      return undefined;
-    }
-  };
-
-  const notify = (key: string) => {
-    for (const listener of listeners.get(key) ?? []) listener();
-  };
-
-  const raw = (key: string) => {
-    if (!cache.has(key)) {
-      let text: string | null = null;
-
-      try {
-        text = store()?.getItem(key) ?? null;
-      } catch {
-        // Unreadable: treated as nothing kept
-      }
-
-      cache.set(key, parse(text));
-    }
-
-    return cache.get(key);
-  };
-
-  // Only localStorage fires storage events, for changes from other tabs
-  if (name === "localStorage") {
-    window.addEventListener("storage", (event) => {
-      if (event.key === null || !cache.has(event.key)) return;
-
-      cache.set(event.key, parse(event.newValue));
-      notify(event.key);
-    });
-  }
+  const shared = getShared(name);
 
   return {
     get: (key, schema) =>
-      Option.getOrUndefined(Schema.decodeUnknownOption(schema)(raw(key))),
-    set: (key, schema, value) => {
-      const encoded =
+      Option.getOrUndefined(
+        Schema.decodeUnknownOption(schema)(shared.get(key)),
+      ),
+    set: (key, schema, value) =>
+      shared.set(
+        key,
         value === undefined
           ? undefined
-          : Option.getOrUndefined(Schema.encodeOption(schema)(value));
-
-      cache.set(key, encoded);
-
-      try {
-        if (encoded === undefined) store()?.removeItem(key);
-        else store()?.setItem(key, JSON.stringify(encoded));
-      } catch {
-        // Unavailable or full: the value still holds until the page closes
-      }
-
-      notify(key);
-    },
-    subscribe: (key, listener) => {
-      const set = listeners.get(key) ?? new Set<() => void>();
-
-      set.add(listener);
-      listeners.set(key, set);
-
-      return () => set.delete(listener);
-    },
+          : Option.getOrUndefined(Schema.encodeOption(schema)(value)),
+      ),
+    subscribe: shared.subscribe,
   };
 };
 
