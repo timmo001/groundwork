@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-report",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Groundwork's report page: one self-contained HTML file built from blocks, with every theme and the desktop's Omarchy theme",
   "license": "Apache-2.0",
   "type": "module",
@@ -35,8 +35,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "0.11.0",
-    "@timmo001/groundwork-ui": "0.11.0",
+    "@timmo001/groundwork-tokens": "0.11.1",
+    "@timmo001/groundwork-ui": "0.11.1",
     "effect": "4.1.2"
   },
   "devDependencies": {
