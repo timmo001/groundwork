@@ -24640,7 +24640,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, noReset: { attribute: \"no-reset\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, extraModes: { attribute: \"extra-modes\", type: \"json\" }, accept: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, noReset: { attribute: \"no-reset\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24724,6 +24724,24 @@
               },
               "description": "The modes to offer, in order and separated by spaces.",
               "default": "\"auto light dark darker\""
+            },
+            {
+              "kind": "field",
+              "name": "extraModes",
+              "type": {
+                "text": "readonly ModeOption[]"
+              },
+              "description": "An app's own modes, offered when `modes` lists them.",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "accept",
+              "type": {
+                "text": "string"
+              },
+              "description": "The file types Import takes.",
+              "default": "\".json,.toml,application/json\""
             },
             {
               "kind": "field",
@@ -25346,14 +25364,14 @@
               "type": {
                 "text": "string"
               },
-              "description": "The modes to offer, in order and separated by spaces. Defaults to `auto light dark darker`.",
+              "description": "The modes to offer, in order and separated by spaces, including any from `extra-modes`. Defaults to `auto light dark darker`.",
               "name": "modes"
             },
             {
               "type": {
-                "text": "\"auto\"|\"light\"|\"dark\"|\"darker\""
+                "text": "string"
               },
-              "description": "The mode in use. Defaults to `auto`.",
+              "description": "The mode in use: `auto`, `light`, `dark`, `darker` or one from `extra-modes`. Defaults to `auto`.",
               "name": "mode"
             },
             {
@@ -25453,6 +25471,20 @@
               },
               "description": "Import in the ⋮ menu. Defaults to `Import a theme file`.",
               "name": "import-file-label"
+            },
+            {
+              "type": {
+                "text": "ModeOption[]"
+              },
+              "description": "An app's own modes, as JSON: `value`, `label`, `icon` (SVG path data) and an optional `scheme` of `light` or `dark`. List their values in `modes` to offer them.",
+              "name": "extra-modes"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The file types Import takes, as for an input's `accept`. Defaults to `.json,.toml,application/json`.",
+              "name": "accept"
             }
           ],
           "superclass": {

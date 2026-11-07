@@ -29,12 +29,20 @@ const modeIcons = {
     "M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z",
 };
 
-const allModes = [
+/** A mode the picker offers. `scheme` is the one it shows in, if any. */
+export interface ModeOption {
+  readonly value: string;
+  readonly label: string;
+  readonly icon: string;
+  readonly scheme?: "light" | "dark";
+}
+
+const allModes: readonly ModeOption[] = [
   { value: "auto", label: "Auto", icon: modeIcons.auto },
-  { value: "light", label: "Light", icon: modeIcons.light },
-  { value: "dark", label: "Dark", icon: modeIcons.dark },
-  { value: "darker", label: "Darker", icon: modeIcons.darker },
-] as const;
+  { value: "light", label: "Light", icon: modeIcons.light, scheme: "light" },
+  { value: "dark", label: "Dark", icon: modeIcons.dark, scheme: "dark" },
+  { value: "darker", label: "Darker", icon: modeIcons.darker, scheme: "dark" },
+];
 
 // MDI's dots-vertical, for the overflow once the mode and theme are in place
 const moreIcon =
@@ -78,8 +86,8 @@ const moreIcon =
  * @summary The page's mode, theme and import, in place or in a popover.
  *
  * @attr {"auto"|"popover"|"cycle"|"inline"} layout - How it shows: in place while it fits then in a popover, a button and popover, a button cycling the modes, or every control in place. Defaults to `auto`.
- * @attr {string} modes - The modes to offer, in order and separated by spaces. Defaults to `auto light dark darker`.
- * @attr {"auto"|"light"|"dark"|"darker"} mode - The mode in use. Defaults to `auto`.
+ * @attr {string} modes - The modes to offer, in order and separated by spaces, including any from `extra-modes`. Defaults to `auto light dark darker`.
+ * @attr {string} mode - The mode in use: `auto`, `light`, `dark`, `darker` or one from `extra-modes`. Defaults to `auto`.
  * @attr {string} theme - The theme in use, by id.
  * @attr {OptionItem[]} themes - The themes to offer, as JSON. The select hides with fewer than two. With `gallery`, a `group` gathers a family's themes.
  * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
@@ -94,6 +102,8 @@ const moreIcon =
  * @attr {string} reset-label - The Reset button. Defaults to `Reset`.
  * @attr {string} import-label - The Import button. Defaults to `Import`.
  * @attr {string} import-file-label - Import in the ⋮ menu. Defaults to `Import a theme file`.
+ * @attr {ModeOption[]} extra-modes - An app's own modes, as JSON: `value`, `label`, `icon` (SVG path data) and an optional `scheme` of `light` or `dark`. List their values in `modes` to offer them.
+ * @attr {string} accept - The file types Import takes, as for an input's `accept`. Defaults to `.json,.toml,application/json`.
  *
  * @csspart gallery - The theme gallery, with `gallery`.
  * @csspart controls - The mode, theme and status.
@@ -118,6 +128,8 @@ export class GwThemePicker extends GwElement {
     label: {},
     layout: { reflect: true },
     modes: {},
+    extraModes: { attribute: "extra-modes", type: "json" },
+    accept: {},
     scheme: { reflect: true },
     noImport: { attribute: "no-import", type: "boolean", reflect: true },
     noReset: { attribute: "no-reset", type: "boolean", reflect: true },
@@ -227,6 +239,10 @@ export class GwThemePicker extends GwElement {
   declare layout: "auto" | "popover" | "cycle" | "inline";
   /** The modes to offer, in order and separated by spaces. */
   declare modes: string;
+  /** An app's own modes, offered when `modes` lists them. */
+  declare extraModes: readonly ModeOption[];
+  /** The file types Import takes. */
+  declare accept: string;
   /** The one scheme the theme in use covers, or empty for both. */
   declare scheme: "" | "light" | "dark";
   /** Leaves Import out, so only the themes in `themes` are offered. */
@@ -301,6 +317,8 @@ export class GwThemePicker extends GwElement {
     this.label = "Theme";
     this.layout = "auto";
     this.modes = "auto light dark darker";
+    this.extraModes = [];
+    this.accept = ".json,.toml,application/json";
     this.scheme = "";
     this.noImport = false;
     this.noReset = false;
@@ -316,7 +334,18 @@ export class GwThemePicker extends GwElement {
   /** The modes on offer, in the order `modes` gives them, with their names. */
   #offered() {
     const wanted = String(this.modes).split(/\s+/);
-    const offered = allModes.filter(({ value }) => wanted.includes(value));
+
+    const known = [
+      ...allModes,
+      ...(Array.isArray(this.extraModes) ? this.extraModes : []),
+    ];
+
+    const offered = wanted.flatMap((value) => {
+      const entry = known.find((mode) => mode.value === value);
+
+      return entry === undefined ? [] : [entry];
+    });
+
     const names = this.modeLabels ?? {};
 
     return (offered.length > 0 ? offered : allModes).map((entry) => ({
@@ -327,11 +356,11 @@ export class GwThemePicker extends GwElement {
 
   /** Whether `mode` can be picked with the theme in use. */
   #allowed(mode: string) {
-    if (this.scheme === "light") return mode === "light";
+    if (this.scheme === "") return true;
 
-    if (this.scheme === "dark") return mode === "dark" || mode === "darker";
-
-    return true;
+    return this.#offered().some(
+      (entry) => entry.value === mode && entry.scheme === this.scheme,
+    );
   }
 
   /** Opens the popover under the button, or with `cycle`, steps to the next mode. */
@@ -652,6 +681,7 @@ export class GwThemePicker extends GwElement {
     this.#reset.hidden = this.noReset;
     this.#reset.textContent = this.resetLabel;
     this.#import.textContent = this.importLabel;
+    this.#file.accept = this.accept;
 
     if (
       ["noImport", "noReset", "resetLabel", "importFileLabel"].some((name) =>
