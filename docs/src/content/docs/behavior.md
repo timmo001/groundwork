@@ -75,6 +75,33 @@ The notification center is the one place an app tells you it needs you. A notifi
 - **Like ones stack.** One restart notification lists everything that asked; "3 devices discovered" is one card.
 - Decisions go to the Plannotator Inbox; reviews go through Plannotator, not GitHub.
 
+## Push
+
+One way for a service to reach phones when its app is closed, so the PWA and the Android shell share one client and every service sends one shape. The Schemas are in `@timmo001/groundwork-pwa/push`.
+
+| Route | Does |
+| --- | --- |
+| `GET push/vapid-key` | The service's VAPID public key, `{ publicKey }`, for the client to subscribe with |
+| `POST push/subscriptions` | Keeps a `PushSubscription`: the endpoint, its `p256dh` and `auth` keys, and the client (`id`, `name`, `platform`). A known client's new one replaces its last |
+| `DELETE push/subscriptions` | Drops the subscription with `{ endpoint }` |
+
+- **Subscribing.** The PWA subscribes through its service worker's `pushManager` with the VAPID key. The shell registers with UnifiedPush, falling back to the embedded FCM distributor, and posts that endpoint the same way.
+- **Sending.** The service encrypts each `PushPayload` with a Web Push library and its VAPID keys, which reaches the browser's push service and a UnifiedPush endpoint alike. A `404` or `410` from the endpoint means the subscription is gone, so the service drops it.
+- **The payload.** `title`, then optional `body`, `tone`, `link` (a page in the app, relative to its scope), `tag` (like ones replace each other), `level` (`alert` or `passive`, as in [Notifications](#notifications)), `ongoing` and the app's own `data`.
+- **Ongoing work.** `ongoing` has an `id`, a `status`, an optional `progress` of `{ value, max }` and `done`. Each push with the same id updates one notification, shown as a Live Update on Android 16 and a plain ongoing one below it, until `done`.
+- Clients read a push with `decodePushPayload`, which turns anything else away rather than showing it.
+
+## Pairing
+
+Connecting a phone to a service without typing an address or a credential. The Schemas and helpers are in `@timmo001/groundwork-pwa/pairing`.
+
+1. **The link.** The service makes a one-time code and shows its base URL with `?pair=<code>`, as text and a QR code (`pairingUrl`). The code works once and expires a few minutes after it's made.
+2. **Opening it.** The app opens the link, or scans it with `scanPairingLink` from the camera, where the browser has the Barcode Detection API (`canScan`). The page starts the camera and owns the permission prompt; the Android shell passes it through.
+3. **The handshake.** The app posts `{ code, client }` to `POST pair`. The service checks the code, forgets it, and answers with `{ token, service: { id, name } }`. `pair` does the round trip.
+4. **After.** The app sends `Authorization: Bearer <token>` from then on. The service records the client with when it paired and when it was last seen, and lists them so one can be removed, which ends its token.
+
+The same client `id` goes in the pairing and in the push subscription, so removing a client stops its pushes too.
+
 ## Interfaces
 
 How an app's pages hold up as they grow. Groundwork's components do most of this themselves, so a page gets it by using them: [tables](/components/display#table) and [expansion panels](/components/display#expansion-panel) keep their own view state and draw on open, and long lists are windowed.

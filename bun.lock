@@ -132,6 +132,7 @@
       "name": "@timmo001/groundwork-pwa",
       "dependencies": {
         "@timmo001/groundwork-tokens": "workspace:*",
+        "effect": "4.1.2",
         "sharp": "0.35.5",
       },
       "devDependencies": {
