@@ -5,7 +5,12 @@
  * @module
  */
 import { toCss, toHex } from "./color.ts";
-import type { Font, MonoFont, Style } from "./schema.ts";
+import {
+  MonoFont,
+  type BorderStrength,
+  type Density,
+  type Style,
+} from "./schema.ts";
 import {
   check,
   modes,
@@ -36,46 +41,122 @@ export const inLayer = (layer: string, rules: string) =>
     .map((line) => (line === "" ? line : `  ${line}`))
     .join("\n")}\n}`;
 
-const fontStack = (font: Font | MonoFont) => {
+/** A family's stack, falling back to the system's sans or monospace font. */
+const fontStack = (font: string, mono: boolean) => {
   if (font === "System UI") {
     return 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
   }
 
-  const generic = font.endsWith("Mono")
-    ? "ui-monospace, monospace"
-    : "system-ui, sans-serif";
+  const generic = mono ? "ui-monospace, monospace" : "system-ui, sans-serif";
 
   return `"${font} Variable", "${font}", ${generic}`;
 };
 
-const density = { compact: 0.85, normal: 1, roomy: 1.2 } as const;
+const monoSuggestions: readonly string[] = MonoFont.literals;
 
-/** How much controls grow or shrink with density, less than spacing does. */
-const controlScale = { compact: 0.85, normal: 1, roomy: 1.1 } as const;
+const round = (value: number) => Number(value.toFixed(4));
 
-const borderColor = {
-  none: "transparent",
-  hairline: "var(--gw-color-border-quiet)",
-  soft: "var(--gw-color-border-normal)",
-  strong: "var(--gw-color-border-loud)",
-} as const;
+/** The scale a density preset stands for, or the number given. */
+const densityScale = (density: Density) => {
+  switch (density) {
+    case "compact": {
+      return 0.85;
+    }
+
+    case "normal": {
+      return 1;
+    }
+
+    case "roomy": {
+      return 1.2;
+    }
+
+    default: {
+      return density;
+    }
+  }
+};
+
+/**
+ * How much controls grow or shrink with density, less than spacing does as
+ * it grows: half as much above 1, which gives the roomy preset's 1.1.
+ */
+const controlScale = (density: Density) => {
+  const scale = densityScale(density);
+
+  return round(scale <= 1 ? scale : 1 + (scale - 1) / 2);
+};
+
+/** The level a border preset stands for, from 0 to 3, or the number given. */
+const borderLevel = (strength: BorderStrength) => {
+  switch (strength) {
+    case "none": {
+      return 0;
+    }
+
+    case "hairline": {
+      return 1;
+    }
+
+    case "soft": {
+      return 2;
+    }
+
+    case "strong": {
+      return 3;
+    }
+
+    default: {
+      return strength;
+    }
+  }
+};
+
+const borderRoles = [
+  "transparent",
+  "var(--gw-color-border-quiet)",
+  "var(--gw-color-border-normal)",
+  "var(--gw-color-border-loud)",
+] as const;
+
+/**
+ * The border color for a strength: the theme's quiet, normal or loud border
+ * at 1, 2 and 3, and a mix of the two either side between them.
+ */
+const borderColor = (strength: BorderStrength) => {
+  const level = borderLevel(strength);
+  const below = Math.floor(level);
+  const share = round((level - below) * 100);
+
+  if (share === 0) return borderRoles[below] ?? borderRoles[3];
+
+  return `color-mix(in oklch, ${borderRoles[below + 1]} ${share}%, ${borderRoles[below]})`;
+};
 
 /** The style as `--gw-*` properties, so components never branch on a theme. */
 const styleProperties = (style: Style) => ({
-  "font-sans": fontStack(style.font),
-  "font-figures": fontStack(style.figures ?? style.font),
-  "font-mono": fontStack(style.mono),
+  "font-sans": fontStack(style.font, false),
+  "font-figures":
+    style.figures === undefined
+      ? fontStack(style.font, false)
+      : fontStack(
+          style.figures,
+          style.figuresMono ?? monoSuggestions.includes(style.figures),
+        ),
+  "font-mono": fontStack(style.mono, true),
   "font-weight-regular": String(style.weights.regular),
   "font-weight-strong": String(style.weights.strong),
-  density: String(density[style.density]),
-  "control-scale": String(controlScale[style.density]),
+  density: String(densityScale(style.density)),
+  "control-scale": String(controlScale(style.density)),
   ...spacing,
   "radius-panel": `${style.radius.panel}px`,
   "radius-control": `${style.radius.control}px`,
   "radius-chip": `${style.radius.chip}px`,
   "border-width":
-    style.border.strength === "none" ? "0px" : `${style.border.width}px`,
-  "border-color": borderColor[style.border.strength],
+    borderLevel(style.border.strength) === 0
+      ? "0px"
+      : `${style.border.width}px`,
+  "border-color": borderColor(style.border.strength),
   "label-transform": style.capitals ? "uppercase" : "none",
   "label-tracking": style.capitals ? "0.06em" : "normal",
   "link-color": "var(--gw-color-link)",
@@ -546,9 +627,9 @@ const blumeRules = (theme: ResolvedTheme, root: string) => {
 
   const style = {
     "--blume-radius": `${theme.style.radius.panel}px`,
-    "--blume-font-body": fontStack(theme.style.font),
-    "--blume-font-display": fontStack(theme.style.font),
-    "--blume-font-mono": fontStack(theme.style.mono),
+    "--blume-font-body": fontStack(theme.style.font, false),
+    "--blume-font-display": fontStack(theme.style.font, false),
+    "--blume-font-mono": fontStack(theme.style.mono, true),
   };
 
   const lightTokens: Record<string, string> =
@@ -759,7 +840,7 @@ const styleSummary = (style: Style) => [
   `| Font | ${style.font}${style.figures === undefined ? "" : `, with ${style.figures} figures`} |`,
   `| Code | ${style.mono} |`,
   `| Radius | Panels ${style.radius.panel}px, controls ${style.radius.control === 999 ? "pill" : `${style.radius.control}px`}, chips ${style.radius.chip === 999 ? "pill" : `${style.radius.chip}px`} |`,
-  `| Borders | ${style.border.strength === "none" ? "None" : `${style.border.width}px, ${style.border.strength}`} |`,
+  `| Borders | ${borderLevel(style.border.strength) === 0 ? "None" : `${style.border.width}px, ${style.border.strength}`} |`,
   `| Weights | ${style.weights.regular} and ${style.weights.strong} |`,
   `| Density | ${style.density}${style.rows === "dense" ? ", lists as dense rows" : ""} |`,
   `| Labels | ${style.capitals ? "Capitals" : "Sentence case"} |`,

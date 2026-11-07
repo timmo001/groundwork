@@ -9,6 +9,10 @@ import { Schema } from "effect";
 /** A color written as a six-digit sRGB hex, such as `#1b1e23`. */
 export const Hex = Schema.String.check(Schema.isPattern(/^#[0-9a-f]{6}$/));
 
+/**
+ * The text fonts Groundwork suggests, as the theme editor lists them. A
+ * theme can name any family; see `FontFamily`.
+ */
 export const Font = Schema.Literals([
   "Mona Sans",
   "System UI",
@@ -30,6 +34,7 @@ export const Font = Schema.Literals([
 
 export type Font = typeof Font.Type;
 
+/** The code fonts Groundwork suggests, as the theme editor lists them. */
 export const MonoFont = Schema.Literals([
   "Geist Mono",
   "JetBrains Mono",
@@ -38,12 +43,47 @@ export const MonoFont = Schema.Literals([
 
 export type MonoFont = typeof MonoFont.Type;
 
+/**
+ * A font family's name, such as `Inter` or one of `Font` and `MonoFont`'s.
+ * The page loads the font's files; the stack falls back to the system's
+ * font where it isn't there.
+ */
+export const FontFamily = Schema.NonEmptyString;
+
+/**
+ * The presets the named densities scale spacing by, or a number for any
+ * scale between: 0.85, 1 and 1.2.
+ */
+export const Density = Schema.Union([
+  Schema.Literals(["compact", "normal", "roomy"]),
+  Schema.Number.check(Schema.isBetween({ minimum: 0.7, maximum: 1.5 })),
+]);
+
+export type Density = typeof Density.Type;
+
+/**
+ * How strong borders are: a preset, or a number from 0 (none) through 1
+ * (hairline) and 2 (soft) to 3 (strong), mixing between the theme's quiet,
+ * normal and loud border colors.
+ */
+export const BorderStrength = Schema.Union([
+  Schema.Literals(["none", "hairline", "soft", "strong"]),
+  Schema.Number.check(Schema.isBetween({ minimum: 0, maximum: 3 })),
+]);
+
+export type BorderStrength = typeof BorderStrength.Type;
+
 /** How a theme looks beyond color: shape, density, type and surface accents. */
 export const Style = Schema.Struct({
-  font: Font,
+  font: FontFamily,
   /** The font for figures and tabular numbers, when it differs from `font`. */
-  figures: Schema.optionalKey(Schema.Union([Font, MonoFont])),
-  mono: MonoFont,
+  figures: Schema.optionalKey(FontFamily),
+  /**
+   * Whether `figures` is a monospace font, for its fallback. Defaults to
+   * whether it's one of `MonoFont`'s.
+   */
+  figuresMono: Schema.optionalKey(Schema.Boolean),
+  mono: FontFamily,
   radius: Schema.Struct({
     panel: Schema.Number,
     control: Schema.Number,
@@ -51,13 +91,13 @@ export const Style = Schema.Struct({
   }),
   border: Schema.Struct({
     width: Schema.Number,
-    strength: Schema.Literals(["none", "hairline", "soft", "strong"]),
+    strength: BorderStrength,
   }),
   weights: Schema.Struct({
     regular: Schema.Number,
     strong: Schema.Number,
   }),
-  density: Schema.Literals(["compact", "normal", "roomy"]),
+  density: Density,
   capitals: Schema.Boolean,
   link: Schema.Struct({
     color: Schema.Literals(["text", "accent"]),
