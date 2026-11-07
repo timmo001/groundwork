@@ -564,8 +564,6 @@ export class GwButton extends GwElement {
   }
 }
 
-GwButton.define("gw-button");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-button": GwButton;

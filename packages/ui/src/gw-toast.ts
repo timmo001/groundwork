@@ -160,8 +160,6 @@ export class GwToaster extends GwElement {
   }
 }
 
-GwToaster.define("gw-toaster");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-toaster": GwToaster;

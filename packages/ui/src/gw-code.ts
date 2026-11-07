@@ -141,8 +141,6 @@ export class GwCode extends GwElement {
   }
 }
 
-GwCode.define("gw-code");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-code": GwCode;

@@ -101,8 +101,6 @@ export class GwFadeIn extends GwElement {
   }
 }
 
-GwFadeIn.define("gw-fade-in");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-fade-in": GwFadeIn;

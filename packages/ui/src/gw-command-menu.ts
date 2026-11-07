@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import "./gw-option-list.js";
+import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
 import { base } from "./styles.js";
 
@@ -307,8 +307,6 @@ export class GwCommandMenu extends GwElement {
     if (!this.open && dialog.open) dialog.close();
   }
 }
-
-GwCommandMenu.define("gw-command-menu");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -6,7 +6,7 @@
  */
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-button.js";
+import type {} from "./gw-button.js";
 import { base } from "./styles.js";
 
 const gap = 8;
@@ -428,8 +428,6 @@ export class GwPopover extends GwElement {
     );
   }
 }
-
-GwPopover.define("gw-popover");
 
 declare global {
   interface HTMLElementTagNameMap {

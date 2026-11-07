@@ -98,8 +98,6 @@ export class GwEmptyState extends GwElement {
   }
 }
 
-GwEmptyState.define("gw-empty-state");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-empty-state": GwEmptyState;

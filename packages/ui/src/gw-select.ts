@@ -7,7 +7,7 @@
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
-import "./gw-option-list.js";
+import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
 import { createIcon, setIconPath } from "./styles.js";
 
@@ -463,8 +463,6 @@ export class GwSelect extends LightElement {
     this.#hint.hidden = !this.hint;
   }
 }
-
-GwSelect.define("gw-select");
 
 declare global {
   interface HTMLElementTagNameMap {

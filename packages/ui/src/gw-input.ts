@@ -305,8 +305,6 @@ export class GwInput extends LightElement {
   }
 }
 
-GwInput.define("gw-input");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-input": GwInput;

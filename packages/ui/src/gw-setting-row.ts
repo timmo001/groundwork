@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-skeleton.js";
+import type {} from "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
 import { base, controlSizes } from "./styles.js";
 
@@ -174,8 +174,6 @@ export class GwSettingRow extends GwElement {
     this.#rendered = true;
   }
 }
-
-GwSettingRow.define("gw-setting-row");
 
 declare global {
   interface HTMLElementTagNameMap {

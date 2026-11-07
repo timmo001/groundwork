@@ -15,7 +15,10 @@
     "LICENSE"
   ],
   "customElements": "custom-elements.json",
-  "sideEffects": true,
+  "sideEffects": [
+    "./src/index.ts",
+    "./src/define/*"
+  ],
   "publishConfig": {
     "access": "public",
     "provenance": true

@@ -106,10 +106,6 @@ export class GwSwitch extends GwCheckbox {
   }
 }
 
-GwCheckbox.define("gw-checkbox");
-
-GwSwitch.define("gw-switch");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-checkbox": GwCheckbox;

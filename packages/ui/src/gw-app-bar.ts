@@ -431,8 +431,6 @@ export class GwAppBar extends GwElement {
   }
 }
 
-GwAppBar.define("gw-app-bar");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-app-bar": GwAppBar;

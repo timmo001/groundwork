@@ -1,0 +1,46 @@
+/**
+ * Defines every `gw-` element. The package index imports it.
+ *
+ * @module
+ */
+import "./gw-alert.js";
+import "./gw-app-bar.js";
+import "./gw-badge.js";
+import "./gw-banner.js";
+import "./gw-button.js";
+import "./gw-card.js";
+import "./gw-checkbox.js";
+import "./gw-chip.js";
+import "./gw-code.js";
+import "./gw-command-menu.js";
+import "./gw-dialog.js";
+import "./gw-dot.js";
+import "./gw-empty-state.js";
+import "./gw-expansion.js";
+import "./gw-facts.js";
+import "./gw-fade-in.js";
+import "./gw-filter.js";
+import "./gw-gauge.js";
+import "./gw-input.js";
+import "./gw-list.js";
+import "./gw-markdown.js";
+import "./gw-menu-button.js";
+import "./gw-meter.js";
+import "./gw-notification.js";
+import "./gw-notification-center.js";
+import "./gw-option-list.js";
+import "./gw-page-header.js";
+import "./gw-popover.js";
+import "./gw-range.js";
+import "./gw-section-title.js";
+import "./gw-segmented.js";
+import "./gw-select.js";
+import "./gw-setting-row.js";
+import "./gw-sheet.js";
+import "./gw-skeleton.js";
+import "./gw-spinner.js";
+import "./gw-table.js";
+import "./gw-theme-gallery.js";
+import "./gw-theme-picker.js";
+import "./gw-toast.js";
+import "./layout.js";

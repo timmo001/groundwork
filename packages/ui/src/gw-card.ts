@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-skeleton.js";
+import type {} from "./gw-skeleton.js";
 import { animateHeight, fadeIn } from "./motion.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
@@ -423,8 +423,6 @@ export class GwCard extends GwElement {
     this.#rendered = true;
   }
 }
-
-GwCard.define("gw-card");
 
 declare global {
   interface HTMLElementTagNameMap {

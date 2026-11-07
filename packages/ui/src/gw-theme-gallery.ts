@@ -468,8 +468,6 @@ export class GwThemeGallery extends GwElement {
   }
 }
 
-GwThemeGallery.define("gw-theme-gallery");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-theme-gallery": GwThemeGallery;

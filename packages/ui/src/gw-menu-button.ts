@@ -795,8 +795,6 @@ export class GwMenuButton extends GwElement {
   }
 }
 
-GwMenuButton.define("gw-menu-button");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-menu-button": GwMenuButton;

@@ -115,8 +115,6 @@ export class GwBanner extends GwElement {
   }
 }
 
-GwBanner.define("gw-banner");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-banner": GwBanner;

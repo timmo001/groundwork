@@ -1,10 +1,14 @@
 /**
  * Groundwork's web components: framework-free custom elements styled by the
- * `--gw-*` tokens. Importing this defines every `gw-` element.
+ * `--gw-*` tokens. Importing this defines every `gw-` element; import a
+ * class from `./gw-x.ts` to use it without defining anything, or
+ * `./define/gw-x.ts` to define only that element and the ones it renders.
  * Docs: https://groundwork.timmo.dev/components
  *
  * @packageDocumentation
  */
+import "./define/all.js";
+
 export * from "./element.js";
 
 export * from "./styles.js";

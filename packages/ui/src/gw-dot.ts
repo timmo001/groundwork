@@ -82,8 +82,6 @@ export class GwDot extends GwElement {
   }
 }
 
-GwDot.define("gw-dot");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-dot": GwDot;

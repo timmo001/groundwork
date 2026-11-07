@@ -135,8 +135,6 @@ export class GwAlert extends GwElement {
   }
 }
 
-GwAlert.define("gw-alert");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-alert": GwAlert;

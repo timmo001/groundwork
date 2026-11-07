@@ -191,8 +191,6 @@ export class GwPageHeader extends GwElement {
   }
 }
 
-GwPageHeader.define("gw-page-header");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-page-header": GwPageHeader;

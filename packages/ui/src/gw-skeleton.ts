@@ -171,14 +171,6 @@ export class GwSkeletonIcon extends GwSkeleton {
   ];
 }
 
-GwSkeleton.define("gw-skeleton");
-
-GwSkeletonText.define("gw-skeleton-text");
-
-GwSkeletonLines.define("gw-skeleton-lines");
-
-GwSkeletonIcon.define("gw-skeleton-icon");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-skeleton": GwSkeleton;

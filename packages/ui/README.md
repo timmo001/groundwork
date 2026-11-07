@@ -20,6 +20,19 @@ import "@timmo001/groundwork-tokens/themes.css";
 import "@timmo001/groundwork-ui";
 ```
 
+To define only the elements an app uses, import each one's `define/` entry,
+which also defines the elements it renders. The element files themselves,
+such as `gw-button.ts`, only export the class and define nothing, so an app
+can extend or wrap a class, or register it under its own tag.
+
+```ts
+import "@timmo001/groundwork-ui/define/gw-button.ts";
+import { GwSelect } from "@timmo001/groundwork-ui/gw-select.ts";
+```
+
+`define()` leaves a tag another class already holds to that class, with a
+console warning, as when two copies of the package load.
+
 ```html
 <html data-gw-theme="base" data-gw-mode="dark">
   <gw-button appearance="filled">Save</gw-button>

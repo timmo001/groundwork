@@ -84,8 +84,6 @@ export class GwSpinner extends GwElement {
   }
 }
 
-GwSpinner.define("gw-spinner");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-spinner": GwSpinner;

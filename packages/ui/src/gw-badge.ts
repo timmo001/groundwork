@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-skeleton.js";
+import type {} from "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
 import {
   base,
@@ -181,8 +181,6 @@ export class GwBadge extends GwElement {
     }
   }
 }
-
-GwBadge.define("gw-badge");
 
 declare global {
   interface HTMLElementTagNameMap {

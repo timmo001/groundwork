@@ -5,13 +5,13 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import "./gw-button.js";
-import "./gw-menu-button.js";
+import type {} from "./gw-button.js";
+import type {} from "./gw-menu-button.js";
 import type { OptionItem } from "./gw-option-list.js";
-import "./gw-popover.js";
-import "./gw-segmented.js";
-import "./gw-select.js";
-import "./gw-theme-gallery.js";
+import type {} from "./gw-popover.js";
+import type {} from "./gw-segmented.js";
+import type {} from "./gw-select.js";
+import type {} from "./gw-theme-gallery.js";
 import { base } from "./styles.js";
 
 // MDI's palette
@@ -721,8 +721,6 @@ export class GwThemePicker extends GwElement {
     }
   }
 }
-
-GwThemePicker.define("gw-theme-picker");
 
 declare global {
   interface HTMLElementTagNameMap {

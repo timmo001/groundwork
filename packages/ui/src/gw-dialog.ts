@@ -6,7 +6,7 @@
  */
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h } from "./element.js";
-import "./gw-button.js";
+import type {} from "./gw-button.js";
 import { base } from "./styles.js";
 
 // MDI's close
@@ -292,8 +292,6 @@ export class GwDialog extends GwElement {
     if (!this.open && dialog.open) dialog.close(this.returnValue);
   }
 }
-
-GwDialog.define("gw-dialog");
 
 declare global {
   interface HTMLElementTagNameMap {

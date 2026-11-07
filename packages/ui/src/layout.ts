@@ -241,14 +241,6 @@ export class GwGrid extends GwSlotted {
   ];
 }
 
-GwPage.define("gw-page");
-
-GwStack.define("gw-stack");
-
-GwRow.define("gw-row");
-
-GwGrid.define("gw-grid");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-page": GwPage;

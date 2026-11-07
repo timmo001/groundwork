@@ -322,8 +322,6 @@ export class GwSegmented extends GwElement {
   }
 }
 
-GwSegmented.define("gw-segmented");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-segmented": GwSegmented;

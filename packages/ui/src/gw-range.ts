@@ -174,8 +174,6 @@ export class GwRange extends LightElement {
   }
 }
 
-GwRange.define("gw-range");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-range": GwRange;

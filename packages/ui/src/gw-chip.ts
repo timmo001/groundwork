@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-skeleton.js";
+import type {} from "./gw-skeleton.js";
 import { fadeIn } from "./motion.js";
 import {
   base,
@@ -153,8 +153,6 @@ export class GwChip extends GwElement {
     }
   }
 }
-
-GwChip.define("gw-chip");
 
 declare global {
   interface HTMLElementTagNameMap {

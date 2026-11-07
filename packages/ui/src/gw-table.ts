@@ -32,7 +32,7 @@ import {
   windowScroll,
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-chip.js";
+import type {} from "./gw-chip.js";
 import { isText, keep, keptAt, textsOf } from "./kept.js";
 import { base, createIcon } from "./styles.js";
 
@@ -963,8 +963,6 @@ export class GwTable extends GwElement {
     this.#renderBody();
   }
 }
-
-GwTable.define("gw-table");
 
 declare global {
   interface HTMLElementTagNameMap {

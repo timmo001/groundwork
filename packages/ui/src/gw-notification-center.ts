@@ -5,9 +5,9 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import "./gw-button.js";
-import "./gw-empty-state.js";
-import "./gw-notification.js";
+import type {} from "./gw-button.js";
+import type {} from "./gw-empty-state.js";
+import type {} from "./gw-notification.js";
 import { animateHeight } from "./motion.js";
 import { base } from "./styles.js";
 
@@ -171,8 +171,6 @@ export class GwNotificationCenter extends GwElement {
     this.#emptyText.textContent = this.emptyText;
   }
 }
-
-GwNotificationCenter.define("gw-notification-center");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import "./gw-button.js";
+import type {} from "./gw-button.js";
 import { fadeEasing, motionDuration, reducedMotion } from "./motion.js";
 import { base, createIcon, setIconPath, type Tone } from "./styles.js";
 
@@ -219,8 +219,6 @@ export class GwNotification extends GwElement {
     this.#close.textContent = this.dismissLabel;
   }
 }
-
-GwNotification.define("gw-notification");
 
 declare global {
   interface HTMLElementTagNameMap {

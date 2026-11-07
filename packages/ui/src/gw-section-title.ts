@@ -68,8 +68,6 @@ export class GwSectionTitle extends GwElement {
   }
 }
 
-GwSectionTitle.define("gw-section-title");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-section-title": GwSectionTitle;

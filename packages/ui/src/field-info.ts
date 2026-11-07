@@ -5,7 +5,7 @@
  * @module
  */
 import { h, setAttribute } from "./element.js";
-import "./gw-popover.js";
+import type {} from "./gw-popover.js";
 import { createIcon } from "./styles.js";
 
 // MDI's information-outline

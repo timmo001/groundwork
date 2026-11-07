@@ -10,7 +10,7 @@
 import { micromark } from "micromark";
 import { gfm, gfmHtml } from "micromark-extension-gfm";
 import { GwElement, css, h } from "./element.js";
-import "./gw-skeleton.js";
+import type {} from "./gw-skeleton.js";
 import { base } from "./styles.js";
 
 /** Up to this many characters render at once; longer text waits for idle time. */
@@ -255,8 +255,6 @@ export class GwMarkdown extends GwElement {
     this.#renderLater(markdown, this.#generation);
   }
 }
-
-GwMarkdown.define("gw-markdown");
 
 declare global {
   interface HTMLElementTagNameMap {

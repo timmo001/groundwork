@@ -41,6 +41,8 @@ import "@timmo001/groundwork-tokens/themes.css";
 import "@timmo001/groundwork-ui";
 ```
 
+That defines every element. To define only some, import each one's `define/` entry, such as `@timmo001/groundwork-ui/define/gw-button.ts`, which also defines the elements it renders. An element's own file, such as `gw-button.ts`, exports the class and defines nothing, so it can be extended or registered under another tag. A tag another class already holds is left to it, with a console warning.
+
 Set `data-gw-theme` and `data-gw-mode` on a container, and everything inside follows. A change every app needs goes into Groundwork; a look only one app wants stays in that app, as below.
 
 ## Your own look

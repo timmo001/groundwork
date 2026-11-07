@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-button.js";
+import type {} from "./gw-button.js";
 import { base } from "./styles.js";
 
 // MDI's chevrons, pointing the way the sheet leaves when it closes
@@ -317,8 +317,6 @@ export class GwSheet extends GwElement {
     this.#place();
   }
 }
-
-GwSheet.define("gw-sheet");
 
 declare global {
   interface HTMLElementTagNameMap {

@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-chip.js";
+import type {} from "./gw-chip.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
 /** One option of a filter. */
@@ -452,8 +452,6 @@ export class GwFilter extends GwElement {
     this.#renderOptions();
   }
 }
-
-GwFilter.define("gw-filter");
 
 declare global {
   interface HTMLElementTagNameMap {

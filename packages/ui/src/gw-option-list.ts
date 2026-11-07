@@ -696,8 +696,6 @@ export class GwOptionList extends GwElement {
   }
 }
 
-GwOptionList.define("gw-option-list");
-
 declare global {
   interface HTMLElementTagNameMap {
     "gw-option-list": GwOptionList;

@@ -5,7 +5,7 @@
  * @module
  */
 import { css, h } from "./element.js";
-import "./gw-button.js";
+import type {} from "./gw-button.js";
 import { animateHeight } from "./motion.js";
 
 /**

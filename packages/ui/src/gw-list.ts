@@ -16,7 +16,7 @@ import {
   windowScroll,
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
-import "./gw-chip.js";
+import type {} from "./gw-chip.js";
 import { keep, keptAt, textsOf } from "./kept.js";
 import { base, createIcon } from "./styles.js";
 
@@ -591,8 +591,6 @@ export class GwList<T extends object = object> extends GwElement {
     root.append(this.#scroller);
   }
 }
-
-GwList.define("gw-list");
 
 declare global {
   interface HTMLElementTagNameMap {
