@@ -239,9 +239,11 @@ const modes = [
       const scheme = onlyFor(picker, theme);
 
       // The controls are Groundwork components, so the picker carries the
-      // page's theme and mode for them to follow
+      // page's theme and the scheme the page resolved to for them to follow.
+      // Auto isn't a Groundwork mode, so it takes the page's scheme too.
       picker.dataset.gwTheme = theme;
-      picker.dataset.gwMode = mode;
+      picker.dataset.gwMode =
+        mode === "auto" ? (root.dataset.theme === "dark" ? "dark" : "light") : mode;
 
       for (const control of picker.querySelectorAll("gw-select, gw-segmented")) {
         if (control instanceof GwSegmented) {
