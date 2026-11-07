@@ -1,6 +1,6 @@
 ---
 title: Behavior
-description: How CLIs, agent tools, progress, status and notifications behave, so every tool works alike.
+description: How CLIs, agent tools, status, notifications and interfaces behave, so every tool works alike.
 ---
 
 The parts that aren't pixels. A new system follows these, and the [`cli-tool` template](https://github.com/timmo001/groundwork/tree/main/templates/cli-tool) shows each one working.
@@ -74,3 +74,46 @@ The notification center is the one place an app tells you it needs you. A notifi
 - **System notifications clear themselves.** A pending restart goes when you restart; you dismiss your own.
 - **Like ones stack.** One restart notification lists everything that asked; "3 devices discovered" is one card.
 - Decisions go to the Plannotator Inbox; reviews go through Plannotator, not GitHub.
+
+## Interfaces
+
+How an app's pages hold up as they grow. Groundwork's components do most of this themselves, so a page gets it by using them: [tables](/components/display#table) and [expansion panels](/components/display#expansion-panel) keep their own view state and draw on open, and long lists are windowed.
+
+### View state
+
+How someone has set a view up to read it: the sort, the search, folded sections, filters and the chosen tab. It isn't data, which comes from the server, and it isn't a setting, which is an app-wide preference.
+
+- The page sets how a view starts. The browser keeps only what someone changes, so a new default still reaches anyone who never touched it.
+- It comes back as it was left, in that browser, under a `storage-key`. Keys read `app:view:part`, such as `upkeep:jobs:table`.
+- A component with a `storage-key` keeps its own view state, so the page never has to. Code that keeps something of its own reads and writes through the same `getStorage()`.
+- It goes in the URL only when a link should carry it, such as a search someone would share.
+
+### Folds
+
+Expansion panels, and the groups in a table or list.
+
+- Each starts as the page chooses: folded for long or reference content, open for what needs you.
+- What's in a fold is drawn the first time it opens, never with the page, and stays drawn after that. With `gw-expansion`, that's its `draw`.
+- Group headings sit on the page's own surface, the bottom layer, and the rows or cards in them sit raised on top.
+
+### Long content
+
+Anything that can grow past a screen, such as a table, a list, a feed or a diff, draws only the part in view. Inside a fold or a panel, it scrolls in its own frame up to a maximum height (`contained`), rather than stretching the page.
+
+### Respond first
+
+A press shows its result in the same frame: the fold opens and the chevron turns. The work it starts, such as a request, marking something read or drawing heavy content, waits until after that frame. A write shows at once and rolls back if it fails.
+
+### Loading
+
+- A skeleton shaped like the content, for each part rather than the whole page, so nothing jumps when the data arrives.
+- A refresh keeps the last data on screen.
+- A spinner is only for an action in progress, never for content.
+
+### Refreshing
+
+Polling and live changes redraw only what changed, keyed by each item's id. They never reset view state, the scroll position or open folds.
+
+### Text
+
+Written text from people or agents, such as a description, a reason or a summary, renders as markdown, sanitized. Short plain values, such as a name or a version, stay plain text.
