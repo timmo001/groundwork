@@ -32,13 +32,15 @@ main {
   padding: var(--gw-space-6) var(--gw-space-5);
 }
 
-.phone-actions {
+.phone-actions,
+.push-actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gw-space-2);
   margin-top: var(--gw-space-4);
 }
 
-.phone-actions[hidden] {
+.phone-actions[hidden],
+.push-actions[hidden] {
   display: none;
 }

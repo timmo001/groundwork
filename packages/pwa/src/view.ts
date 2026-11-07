@@ -10,6 +10,8 @@
  *
  *   if (pwa.canInstall()) showInstallButton(() => pwa.install());
  */
+import { Option, Schema } from "effect";
+
 import {
   resolveConfig,
   shareParams,
@@ -17,8 +19,114 @@ import {
   type ResolvedPwaConfig,
   type Share,
 } from "./config.ts";
+import {
+  pushRoutes,
+  VapidKey,
+  type PushClient,
+  type PushSubscription as ContractSubscription,
+} from "./push.ts";
 
 export * from "./config.ts";
+
+/** Where the app subscribes to a service's pushes. */
+export interface PushServiceOptions {
+  /** The service's base URL, which serves the push contract's routes. */
+  readonly service: string;
+  /** This install, the same client the pairing sent. */
+  readonly client: PushClient;
+  /** Sent with each request, such as the pairing's `Authorization`. */
+  readonly headers?: Record<string, string>;
+}
+
+/** Where push stands: off in this browser, not asked, refused, or on. */
+export type PushState = "unsupported" | "default" | "denied" | "subscribed";
+
+const decodeVapidKey = Schema.decodeUnknownOption(VapidKey);
+
+/** Whether this browser can push and whether the app is subscribed. */
+export const pushState = async (
+  registration: ServiceWorkerRegistration | undefined,
+): Promise<PushState> => {
+  if (registration === undefined || !("PushManager" in window))
+    return "unsupported";
+
+  if (Notification.permission === "denied") return "denied";
+
+  const existing = await registration.pushManager.getSubscription();
+
+  return existing === null ? "default" : "subscribed";
+};
+
+/**
+ * Asks for notifications, subscribes with the service's VAPID key and posts
+ * the subscription. Only a tap or click may ask, so call it from one, as the
+ * install offer is. Returns the state it ends in.
+ */
+export const subscribePush = async (
+  registration: ServiceWorkerRegistration | undefined,
+  { service, client, headers = {} }: PushServiceOptions,
+): Promise<PushState> => {
+  if (registration === undefined || !("PushManager" in window))
+    return "unsupported";
+
+  const permission = await Notification.requestPermission();
+
+  // Dismissing the prompt leaves it at "default", to ask again later
+  if (permission !== "granted")
+    return permission === "denied" ? "denied" : "default";
+
+  const key = await fetch(new URL(pushRoutes.vapidKey, service), { headers })
+    .then((response) => response.json())
+    .then((body) => Option.getOrUndefined(decodeVapidKey(body)));
+
+  if (key === undefined) return "default";
+
+  // One made with another key, such as the service's last, can't be reused
+  await (await registration.pushManager.getSubscription())?.unsubscribe();
+
+  const subscription = await registration.pushManager.subscribe({
+    userVisibleOnly: true,
+    applicationServerKey: key.publicKey,
+  });
+
+  const { endpoint, keys } = subscription.toJSON();
+  const p256dh = keys?.["p256dh"];
+  const auth = keys?.["auth"];
+
+  if (endpoint === undefined || p256dh === undefined || auth === undefined)
+    return "default";
+
+  const body: ContractSubscription = {
+    endpoint,
+    keys: { p256dh, auth },
+    client,
+  };
+
+  const response = await fetch(new URL(pushRoutes.subscriptions, service), {
+    method: "POST",
+    headers: { ...headers, "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  return response.ok ? "subscribed" : "default";
+};
+
+/** Stops the app's pushes, here and at the service. */
+export const unsubscribePush = async (
+  registration: ServiceWorkerRegistration | undefined,
+  { service, headers = {} }: PushServiceOptions,
+): Promise<void> => {
+  const subscription = await registration?.pushManager.getSubscription();
+
+  if (subscription === null || subscription === undefined) return;
+
+  await fetch(new URL(pushRoutes.subscriptions, service), {
+    method: "DELETE",
+    headers: { ...headers, "content-type": "application/json" },
+    body: JSON.stringify({ endpoint: subscription.endpoint }),
+  });
+  await subscription.unsubscribe();
+};
 
 /** Chromium's `beforeinstallprompt` event, which other engines don't send. */
 interface InstallPromptEvent extends Event {

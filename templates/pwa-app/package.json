@@ -16,12 +16,14 @@
     "@timmo001/groundwork-demo": "workspace:*",
     "@timmo001/groundwork-pwa": "workspace:*",
     "@timmo001/groundwork-tokens": "workspace:*",
-    "@timmo001/groundwork-ui": "workspace:*"
+    "@timmo001/groundwork-ui": "workspace:*",
+    "web-push": "4.0.0"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.92.0",
     "@timmo001/oxlint-rules": "0.6.4",
     "@types/bun": "1.4.4",
+    "@types/web-push": "3.6.4",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
     "prettier": "3.9.10",

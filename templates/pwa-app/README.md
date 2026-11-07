@@ -13,7 +13,8 @@ What it shows:
 
 - `pwa.config.ts` keeps every piece on. Turn one off, override the colors or add manifest members there.
 - `src/build.ts` bundles the page and worker, then writes the manifest, the icons from the logo and the page's head tags. Each step is its own function, so another bundler can take the parts it wants.
-- `src/sw.ts` keeps the app shell for offline starts. Add the app's own `routes` there, ahead of the shell's.
-- `src/index.ts` connects the install offer and shares, shown in the "This phone" card.
+- `src/sw.ts` keeps the app shell for offline starts and shows pushes as notifications. Add the app's own `routes` there, ahead of the shell's, and pass `show` or `open` to `servePush` to change a push.
+- `src/index.ts` connects the install offer, shares and notifications, shown in the "This phone" card.
+- `src/serve.ts` is also a small push service for the demo, keeping the push contract's routes in memory. "Send a test", or `POST push/test`, pushes a sample to every subscription. Set `VAPID_PUBLIC_KEY` and `VAPID_PRIVATE_KEY` to keep keys between runs.
 
 See [Phones](https://groundwork.timmo.dev/phones) for the details.

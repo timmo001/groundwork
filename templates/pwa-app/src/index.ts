@@ -11,7 +11,13 @@ import "@timmo001/groundwork-demo/web.css";
 import "./index.css";
 import "@timmo001/groundwork-ui";
 import "@timmo001/groundwork-demo/web";
-import { connectPwa, type Share } from "@timmo001/groundwork-pwa/view";
+import {
+  connectPwa,
+  pushState,
+  subscribePush,
+  type PushState,
+  type Share,
+} from "@timmo001/groundwork-pwa/view";
 import {
   coreThemeChoices,
   customThemeId,
@@ -74,8 +80,30 @@ if (picker !== null) {
 const facts = document.querySelector("gw-facts");
 const actions = document.querySelector("div.phone-actions");
 const install = document.querySelector("gw-button.install");
+const pushActions = document.querySelector("div.push-actions");
+const subscribe = document.querySelector("gw-button.subscribe");
+const testPush = document.querySelector("gw-button.test-push");
 let lastShare = "None yet";
 let offline = "Starting";
+let push: PushState = "unsupported";
+
+const pushLabels: Record<PushState, string> = {
+  unsupported: "Not in this browser",
+  default: "Off",
+  denied: "Blocked in settings",
+  subscribed: "On",
+};
+
+// The demo's own server keeps the push routes. A real app subscribes to its
+// service, with the client it sent when pairing
+const clientId = localStorage.getItem("pwa-app-client") ?? crypto.randomUUID();
+
+localStorage.setItem("pwa-app-client", clientId);
+
+const pushService = {
+  service: new URL("./", location.href).href,
+  client: { id: clientId, name: "This phone", platform: "web" as const },
+};
 
 const describeShare = ({ title, text, url }: Share) =>
   [title, text, url].filter((part) => part !== undefined).join(" · ");
@@ -100,7 +128,16 @@ const render = () => {
     },
     { label: "Offline start", value: offline },
     { label: "Last share", value: lastShare },
+    { label: "Notifications", value: pushLabels[push] },
   ];
+
+  if (pushActions instanceof HTMLElement)
+    pushActions.hidden = push === "unsupported" || push === "denied";
+
+  if (subscribe instanceof HTMLElement)
+    subscribe.hidden = push === "subscribed";
+
+  if (testPush instanceof HTMLElement) testPush.hidden = push !== "subscribed";
 };
 
 render();
@@ -111,4 +148,17 @@ const registration = await pwa.worker;
 
 offline = registration === undefined ? "Unavailable" : "Ready";
 
+push = await pushState(registration);
+
 render();
+
+subscribe?.addEventListener("click", async () => {
+  push = await subscribePush(registration, pushService);
+  render();
+});
+
+testPush?.addEventListener(
+  "click",
+  () =>
+    void fetch(new URL("push/test", pushService.service), { method: "POST" }),
+);

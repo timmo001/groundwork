@@ -143,6 +143,47 @@ serveShell(self, config, {
 | `staleWhileRevalidate(cache, event)` | The cached copy, fetching a fresh one for next time |
 | `keepResponse(cache, request, response)` | Caches a good same-origin response and passes it on |
 
-A worker that does more, such as push, imports `serveShell` beside its own listeners.
+A worker that does more imports `serveShell` beside its own listeners.
 
 ![The install prompt, with the icon rendered from the logo](/screenshots/phones/install-base-dark.png)
+
+## Push
+
+Pushes follow the [push contract](/behavior#push): the service keeps `push/vapid-key` and `push/subscriptions`, and sends a `PushPayload`. The worker shows them with `servePush`, beside `serveShell`:
+
+```ts
+import { servePush, serveShell, type PushWorkerScope, type ShellWorkerScope } from "@timmo001/groundwork-pwa/worker";
+
+declare const self: ShellWorkerScope & PushWorkerScope;
+
+serveShell(self, config, { version });
+servePush(self, config);
+```
+
+A push shows its title and body, with its `tag` so like ones replace each other, quiet when it's `passive`. Ongoing work shows its status and progress and stays until it's `done`. A tap opens the payload's `link`, bringing an open window forward rather than opening another.
+
+![The demo's test push in the shade, on Base, dark](/screenshots/phones/push-base-dark.png)
+
+Each part can be replaced:
+
+| Option | Replaces |
+| --- | --- |
+| `show(payload)` | The notification, `{ title, options }`. `pushNotification` is the default, to build on |
+| `open(payload)` | The page a tap opens. `undefined` falls back to the `link`, then the start page |
+| `onOther(text)` | What happens to a push that isn't a payload, which shows nothing by default |
+
+The page subscribes from `./view`. Browsers only ask for notifications from a tap, so offer it as a button, as the install offer is:
+
+```ts
+import { pushState, subscribePush } from "@timmo001/groundwork-pwa/view";
+
+const registration = await pwa.worker;
+const service = { service: "https://bridge.local:9170/", client, headers: { authorization: `Bearer ${token}` } };
+
+if ((await pushState(registration)) === "default")
+  button.onclick = async () => showState(await subscribePush(registration, service));
+```
+
+`pushState` is `unsupported`, `default`, `denied` or `subscribed`. `subscribePush` asks, subscribes with the service's key, replacing a subscription made with another, and posts it with the same `client` the [pairing](/behavior#pairing) sent. `unsubscribePush` stops it here and at the service.
+
+The template's server keeps the routes in memory for the demo, and `POST push/test` sends every subscription a sample. A real service uses a Web Push library the same way, with its VAPID keys kept.

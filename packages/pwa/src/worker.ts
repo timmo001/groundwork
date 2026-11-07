@@ -15,6 +15,7 @@
  *   serveShell(self, config, { version: "1" });
  */
 import { resolveConfig, type PwaConfig } from "./config.ts";
+import { decodePushPayload, type PushPayload } from "./push.ts";
 
 /** An install or activate event, which the worker can keep alive. */
 export interface ShellExtendableEvent extends Event {
@@ -195,6 +196,150 @@ export const serveShell = (
       request.mode === "navigate"
         ? networkFirst(cache, request, startUrl)
         : staleWhileRevalidate(cache, event),
+    );
+  });
+};
+
+/** A push arriving at the worker. */
+export interface ShellPushEvent extends ShellExtendableEvent {
+  readonly data: { readonly text: () => string } | null;
+}
+
+/** A tap on one of the app's notifications. */
+export interface ShellNotificationEvent extends ShellExtendableEvent {
+  readonly notification: Notification;
+}
+
+/** An open window of the app, which a notification tap can bring forward. */
+export interface ShellWindowClient {
+  readonly url: string;
+  readonly focus: () => Promise<object>;
+  readonly navigate: (url: string) => Promise<object | null>;
+}
+
+/** The parts of a service worker's global scope push uses. */
+export interface PushWorkerScope {
+  readonly location: { readonly href: string };
+  readonly registration: {
+    readonly showNotification: (
+      title: string,
+      options?: NotificationOptions,
+    ) => Promise<void>;
+  };
+  readonly clients: {
+    readonly matchAll: (options: {
+      readonly type: "window";
+      readonly includeUncontrolled: boolean;
+    }) => Promise<readonly ShellWindowClient[]>;
+    readonly openWindow: (url: string) => Promise<object | null>;
+  };
+  readonly addEventListener: {
+    (type: "push", listener: (event: ShellPushEvent) => void): void;
+    (
+      type: "notificationclick",
+      listener: (event: ShellNotificationEvent) => void,
+    ): void;
+  };
+}
+
+/** What `servePush` takes beside the config. Each replaces a default. */
+export interface PushOptions {
+  /** The notification for a payload. Defaults to {@link pushNotification}. */
+  readonly show?: (payload: PushPayload) => {
+    readonly title: string;
+    readonly options: NotificationOptions;
+  };
+  /** The page a tap opens. Defaults to the payload's `link`, or the start page. */
+  readonly open?: (payload: PushPayload) => string | undefined;
+  /** Called with a push that isn't a payload, which shows nothing by default. */
+  readonly onOther?: (text: string) => Promise<void> | void;
+}
+
+/**
+ * The default notification for a payload: its title and body, the tag that
+ * makes like ones replace each other, quiet for a passive one, and the
+ * payload kept on the notification for the tap. Ongoing work shows its status
+ * and progress, and stays until it's done.
+ */
+export const pushNotification = (payload: PushPayload) => {
+  const progress =
+    payload.ongoing?.progress === undefined
+      ? ""
+      : ` (${Math.round((payload.ongoing.progress.value / payload.ongoing.progress.max) * 100)}%)`;
+
+  const body =
+    payload.ongoing === undefined
+      ? payload.body
+      : `${payload.ongoing.status}${progress}`;
+
+  const tag = payload.ongoing?.id ?? payload.tag;
+
+  const options: NotificationOptions = {
+    data: payload,
+    silent: payload.level === "passive",
+    requireInteraction:
+      payload.ongoing !== undefined && payload.ongoing.done !== true,
+  };
+
+  if (body !== undefined) options.body = body;
+
+  if (tag !== undefined) options.tag = tag;
+
+  return { title: payload.title, options };
+};
+
+/**
+ * Shows the app's pushes as notifications and opens the app at the page a
+ * tap points to, bringing an open window forward rather than opening another.
+ */
+export const servePush = (
+  scope: PushWorkerScope,
+  config: PwaConfig,
+  { show = pushNotification, open, onOther }: PushOptions = {},
+): void => {
+  const pwa = resolveConfig(config);
+  const base = new URL(pwa.scope, scope.location.href).href;
+
+  scope.addEventListener("push", (event) => {
+    const text = event.data?.text() ?? "";
+    const payload = decodePushPayload(text);
+
+    if (payload === undefined) {
+      if (onOther !== undefined)
+        event.waitUntil(Promise.resolve(onOther(text)));
+
+      return;
+    }
+
+    const { title, options } = show(payload);
+
+    event.waitUntil(scope.registration.showNotification(title, options));
+  });
+
+  scope.addEventListener("notificationclick", (event) => {
+    event.notification.close();
+
+    const payload = decodePushPayload(JSON.stringify(event.notification.data));
+
+    const target = new URL(
+      (payload === undefined ? undefined : open?.(payload)) ??
+        payload?.link ??
+        pwa.startUrl,
+      base,
+    ).href;
+
+    event.waitUntil(
+      scope.clients
+        .matchAll({ type: "window", includeUncontrolled: true })
+        .then(async (windows) => {
+          const existing = windows.find(({ url }) => url.startsWith(base));
+
+          if (existing === undefined) return scope.clients.openWindow(target);
+
+          await existing.navigate(target);
+
+          return existing.focus();
+        }),
     );
   });
 };

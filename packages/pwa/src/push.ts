@@ -93,3 +93,30 @@ const decodePayloadJson = Schema.decodeUnknownOption(
 /** Reads a push's text, or `undefined` when it isn't a payload. */
 export const decodePushPayload = (text: string): PushPayload | undefined =>
   Option.getOrUndefined(decodePayloadJson(text));
+
+/** What `DELETE push/subscriptions` takes. */
+export const PushUnsubscribe = Schema.Struct({ endpoint: Schema.String });
+
+export interface PushUnsubscribe extends Schema.Schema.Type<
+  typeof PushUnsubscribe
+> {}
+
+const decodeSubscriptionJson = Schema.decodeUnknownOption(
+  Schema.fromJsonString(PushSubscription),
+);
+
+const decodeUnsubscribeJson = Schema.decodeUnknownOption(
+  Schema.fromJsonString(PushUnsubscribe),
+);
+
+/** For a service: reads a posted subscription, or `undefined`. */
+export const decodePushSubscription = (
+  text: string,
+): PushSubscription | undefined =>
+  Option.getOrUndefined(decodeSubscriptionJson(text));
+
+/** For a service: reads a `DELETE` body, or `undefined`. */
+export const decodePushUnsubscribe = (
+  text: string,
+): PushUnsubscribe | undefined =>
+  Option.getOrUndefined(decodeUnsubscribeJson(text));
