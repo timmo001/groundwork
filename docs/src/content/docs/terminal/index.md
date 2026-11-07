@@ -11,12 +11,15 @@ Full-screen terminal apps use `@timmo001/groundwork-tui`: [OpenTUI](https://open
 
 ## Themes
 
-A TUI takes its colors from a core theme or the desktop's Omarchy theme, picked by two environment variables:
+A TUI takes its colors from any theme: one of Groundwork's, the desktop's Omarchy theme, an app's own, or a theme file. Environment variables pick it:
 
 | Variable | Values | Default |
 | --- | --- | --- |
-| `GW_THEME` | A core theme's id, such as `base` or `slate`, or `omarchy` | `omarchy` where Omarchy is installed, otherwise `base` |
-| `GW_MODE` | `light`, `dark` or `darker` | The Omarchy theme's own mode, otherwise `dark` |
+| `GW_THEME` | A Groundwork theme's id, such as `slate` or `catppuccin-mocha`, `omarchy`, an app theme's id, or a path to a theme document or an Omarchy `colors.toml` | `omarchy` where Omarchy is installed, otherwise `base` |
+| `GW_MODE` | `light`, `dark` or `darker` | The theme's own mode, otherwise `dark` |
+| `GW_TRANSPARENT` | `true` to leave panels unpainted, so the terminal's background shows through | `false` |
+
+A theme file that can't be read or decoded falls back to the default, with a warning on stderr.
 
 The Omarchy theme is the one in use, read from `~/.local/state/omarchy/current/theme/colors.toml`. It has its own mode, plus Darker for a dark one, so a `GW_MODE` it doesn't have falls back to its own.
 
@@ -27,7 +30,7 @@ import { loadTheme } from "@timmo001/groundwork-tui";
 const theme = await Effect.runPromise(loadTheme);
 ```
 
-`themeFor(id, mode)` picks one directly, for an app with its own setting. For a theme picker, `themeOptions` lists the Omarchy theme and the core themes with the modes each has, and `resolveTheme({ theme, mode })` turns the pick into colors. The demo's Theme item does this and keeps the pick in `~/.config/tui-menu/theme.json`. Since every view is built in its theme, it opens the renderer again in the new one.
+An app with themes of its own passes their documents to `loadThemeWith(themes)`, which picks them by id too. `themeFor(id, mode)` picks one of Groundwork's directly, `themeFromDocument(document, mode)` places any theme document, and `themeFromFile(path, mode)` reads one through Effect's `FileSystem`. Each takes `{ transparent }`. For a theme picker, `themeOptionsWith(themes)` lists the app's themes, then the Omarchy theme, then Groundwork's core and optional themes, with the modes each has, and `resolveTheme({ theme, mode, transparent }, themes)` turns the pick into colors. The demo's Theme item does this and keeps the pick in `~/.config/tui-menu/theme.json`. Since every view is built in its theme, it opens the renderer again in the new one.
 
 ## Keys
 
