@@ -26,7 +26,7 @@ Before writing a theme from a palette, check it isn't one Groundwork already has
 - Only the text tint or the status colors differ: usually tuning for a terminal or an app, not a new theme.
 - A clearly different background hue or accent: a candidate for the app's own theme.
 
-An Omarchy `colors.toml` maps with `omarchyTheme` from `@timmo001/groundwork-tokens/runtime`, the same mapping apps use at runtime.
+An Omarchy `colors.toml` maps with `omarchyTheme` from `@timmo001/groundwork-tokens/runtime`, the same mapping apps use at runtime. Android's dynamic color maps the same way with `androidTheme`, solved with `androidRuntimeTheme`.
 
 ## 3. Write the app's own theme
 

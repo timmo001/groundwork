@@ -139,7 +139,35 @@ if (mapped._tag === "Success") {
 
 A browser can't open a file dialog in a chosen folder, so a web app asks for the file; a desktop app, a TUI or an agent reads the folder directly. An agent can also hand the file to a web app through its [theme tools](/agents#theme-tools).
 
-Try it: design a theme with the controls, upload a theme document or an Omarchy `colors.toml`, or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.
+### Following Android
+
+An app in the Android shell can follow the phone's dynamic color, taken from its wallpaper. The shell reads the system's Material roles from `android.R.color` in both modes and sends them to the page, and `androidTheme(colors)` maps them onto a mapped theme covering light and dark:
+
+| Material role | Groundwork |
+| --- | --- |
+| `surface` | Background |
+| `surfaceContainerLowest` in dark, `surfaceContainerHigh` in light | Lower |
+| `surfaceContainer` in dark, `surfaceContainerLowest` in light | Raised |
+| `onSurface`, `onSurfaceVariant` | Text, muted text |
+| `outlineVariant` | Border |
+| `primary` | Accent |
+| `error` | Danger |
+
+Material has no info, success, important or warning roles, so those are Base's, solved against the system's surfaces. `androidRuntimeTheme` solves it and checks it against the contrast targets. When a wallpaper's colors miss one, it solves the theme from the system's surface and primary instead, keeping the wallpaper's hue, and `fallback` reads `true`. Pass your own fallback as the second argument.
+
+```ts
+import { androidRuntimeTheme, androidTheme } from "@timmo001/groundwork-tokens/runtime";
+
+const mapped = androidTheme(colors);
+
+if (mapped._tag === "Success") {
+  const { css, fallback } = androidRuntimeTheme(mapped.success);
+}
+```
+
+### Try it
+
+Design a theme with the controls, upload a theme document or an Omarchy `colors.toml`, or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.
 
 <ThemeEditor />
 

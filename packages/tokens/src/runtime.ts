@@ -8,11 +8,22 @@
 import { Schema } from "effect";
 import baseDocument from "../themes/base.json" with { type: "json" };
 import { themeCss } from "./generate.ts";
-import { SolvedTheme, Theme } from "./schema.ts";
+import { androidFallbackTheme } from "./android.ts";
+import { MappedTheme, SolvedTheme, Theme } from "./schema.ts";
 import { check, resolve, type Check, type ResolvedTheme } from "./solve.ts";
 import { appTonesCss, type AppTones } from "./tones.ts";
 
 export { omarchyTheme, type OmarchyCurrentTheme } from "./omarchy.ts";
+
+export {
+  androidColorRoles,
+  androidFallbackTheme,
+  androidTheme,
+  androidThemeId,
+  type AndroidColorRole,
+  type AndroidColors,
+  type AndroidScheme,
+} from "./android.ts";
 
 export { blumeThemeCss, blumeThemesCss, hexModes, layers } from "./generate.ts";
 
@@ -41,6 +52,23 @@ export const runtimeTheme = (theme: Theme, id = theme.id): RuntimeTheme => {
   const resolved = resolve({ ...theme, id }, base.style);
 
   return { theme: resolved, css: themeCss(resolved), checks: check(resolved) };
+};
+
+/**
+ * Solves a theme mapped from the system's colors, as `runtimeTheme` does.
+ * When it misses a contrast target, such as on a wallpaper whose colors sit
+ * too close, it's solved from its surface and primary instead, or from
+ * `fallback` when the app gives one, and `fallback` reads `true`.
+ */
+export const androidRuntimeTheme = (
+  theme: MappedTheme,
+  fallback: (theme: MappedTheme) => Theme = androidFallbackTheme,
+): RuntimeTheme & { readonly fallback: boolean } => {
+  const mapped = runtimeTheme(theme);
+
+  return mapped.checks.every((item) => item.passes)
+    ? { ...mapped, fallback: false }
+    : { ...runtimeTheme(fallback(theme), theme.id), fallback: true };
 };
 
 /**
