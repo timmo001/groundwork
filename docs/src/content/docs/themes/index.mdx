@@ -68,7 +68,7 @@ page.setMode("darker");
 const result = await page.importTheme(colorsToml);
 ```
 
-`themeOptions` turns the choices into the picker's options, in the order given, grouped by family, with the rest under Groundwork. A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too.
+`themeOptions` turns the choices into the picker's options, in the order given, grouped by family, with the rest under Groundwork. A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too. An app with theme documents and no built CSS passes them as `appThemes` instead: each is offered after `themes` under its own id, solved on load with the app's tones, and its CSS cached so the boot script applies a picked one before the first paint. `themeChoice(document)` gives a document's choice, for the picker's options. The visitor's imported theme keeps its own `custom` slot, apart from the app's.
 
 A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "light"` or `mode: "dark"` in its choice. While it's picked, the page stays in that scheme: picking Latte while the page is dark moves it to light, and dark, Darker and Auto can't be set until another theme is picked. `state().only` names that scheme, for the picker's `scheme`, which disables the other modes. `state().scheme` says which side is in use.
 

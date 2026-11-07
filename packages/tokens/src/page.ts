@@ -10,12 +10,15 @@
  * @module
  */
 import {
+  appThemeStorageKey,
+  appThemeStyleId,
   customThemeId,
   customThemeStyleId,
   omarchyStorageKeys,
   omarchyThemeId,
   omarchyThemeStyleId,
   themeAllows,
+  themeChoice,
   themeStorageKeys,
   type ThemeBootOptions,
   type ThemeChoice,
@@ -29,6 +32,8 @@ import type { Theme } from "./schema.ts";
 import type {} from "./webmcp.ts";
 
 export {
+  appThemeStorageKey,
+  appThemeStyleId,
   coreThemeChoices,
   customThemeId,
   customThemeStyleId,
@@ -38,6 +43,7 @@ export {
   optionalThemeDocuments,
   themeAllows,
   themeBootScript,
+  themeChoice,
   themeCovers,
   themeOptions,
   type ThemeBootOptions,
@@ -52,7 +58,7 @@ export interface PageThemeState {
   readonly mode: ThemeMode;
   /** The scheme in use, with `auto` resolved from the system. */
   readonly scheme: ThemeScheme;
-  /** The theme id in use: a built-in one, `omarchy` or `custom`. */
+  /** The theme id in use: a built-in one, an app theme's, `omarchy` or `custom`. */
   readonly theme: string;
   /**
    * The one scheme the theme in use covers, such as `light` for Catppuccin
@@ -78,6 +84,12 @@ export type ImportResult =
 export interface PageThemeOptions extends ThemeBootOptions {
   /** The built-in themes to offer, their CSS already on the page. */
   readonly themes: readonly ThemeChoice[];
+  /**
+   * The app's own theme documents, offered after `themes`. Each is solved
+   * under its own id on load and its CSS cached, so the boot script applies
+   * a picked one before the first paint.
+   */
+  readonly appThemes?: readonly Theme[];
   /**
    * The full documents of `themes`, loaded only when the WebMCP tools
    * register. Defaults to the core themes.
@@ -172,7 +184,10 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const defaultMode = options.defaultMode ?? "auto";
   const listeners = new Set<(state: PageThemeState) => void>();
 
-  const known = (id: string) => options.themes.some((theme) => theme.id === id);
+  const appThemes = options.appThemes ?? [];
+  const appChoices = appThemes.map(themeChoice);
+  const offered = [...options.themes, ...appChoices];
+  const known = (id: string) => offered.some((theme) => theme.id === id);
 
   const setStyle = (id: string, css: string | null) => {
     let style = document.getElementById(id);
@@ -224,7 +239,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     id === null
       ? undefined
       : [
-          ...options.themes,
+          ...offered,
           ...(omarchy === null ? [] : [omarchy]),
           ...(custom === null ? [] : [custom]),
         ].find((theme) => theme.id === id);
@@ -457,6 +472,24 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   // reaches the visitor
   commit(state, read(stored.theme) !== null);
 
+  // An app's own themes are solved on every load, so a solver change
+  // reaches them; the cache only serves the boot script's first paint
+  if (appThemes.length > 0) {
+    void import("./runtime.ts").then(({ appTonesCss, runtimeTheme }) => {
+      for (const theme of appThemes) {
+        const runtime = runtimeTheme(theme);
+
+        const css =
+          options.tones === undefined
+            ? runtime.css
+            : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
+
+        setStyle(appThemeStyleId(theme.id), css);
+        write(appThemeStorageKey(options.key, theme.id), css);
+      }
+    });
+  }
+
   // The store's theme wins over this browser's, since another client may
   // have changed or dropped it. It's offered, and used only when this
   // browser had the visitor's own theme picked
@@ -490,9 +523,10 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
   if (document.modelContext !== undefined) {
     void import("./webmcp.ts").then(
       async ({ coreThemes, registerThemeTools }) => {
-        const documents = ((await options.documents?.()) ?? coreThemes).filter(
-          (theme) => known(theme.id),
-        );
+        const documents = [
+          ...((await options.documents?.()) ?? coreThemes),
+          ...appThemes,
+        ].filter((theme) => known(theme.id));
 
         registerThemeTools({
           themes: documents,

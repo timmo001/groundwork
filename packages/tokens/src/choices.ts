@@ -22,6 +22,7 @@ import survey from "../themes/survey.json" with { type: "json" };
 import tokyoNightMoon from "../themes/tokyo-night-moon.json" with { type: "json" };
 import tokyoNightStorm from "../themes/tokyo-night-storm.json" with { type: "json" };
 import tokyoNight from "../themes/tokyo-night.json" with { type: "json" };
+import type { Theme } from "./schema.ts";
 
 /** How light the page is: `auto` follows the system. */
 export type ThemeMode = "auto" | "light" | "dark" | "darker";
@@ -158,6 +159,28 @@ export interface ThemeBootOptions {
   readonly defaultMode?: ThemeMode;
 }
 
+/** The id of the `<style>` holding an app theme's CSS. */
+export const appThemeStyleId = (id: string) => `gw-app-theme-${id}`;
+
+/** The local storage key an app theme's solved CSS is cached under. */
+export const appThemeStorageKey = (key: string, id: string) =>
+  `${key}:app:${id}`;
+
+/** A theme document as a choice, with the one scheme it covers, if any. */
+export const themeChoice = (theme: Theme): ThemeChoice => {
+  switch (theme.kind) {
+    case "solved":
+      return { id: theme.id, name: theme.name };
+    case "mapped":
+      return {
+        id: theme.id,
+        name: theme.name,
+        family: theme.family,
+        mode: theme.otherPalette === undefined ? theme.mode : undefined,
+      };
+  }
+};
+
 /** The local storage keys a pick is kept under. */
 export const themeStorageKeys = (key: string) => ({
   mode: `${key}:mode`,
@@ -176,10 +199,10 @@ export const omarchyStorageKeys = (key: string) => ({
 });
 
 /**
- * An inline script that applies the stored mode, theme and any custom or
- * Omarchy theme's cached CSS before the first paint. Takes the same key and
- * defaults as `pageTheme`. Picking a theme stores the mode it needs, so the
- * two stay in step.
+ * An inline script that applies the stored mode, theme and any custom,
+ * Omarchy or app theme's cached CSS before the first paint. Takes the same
+ * key and defaults as `pageTheme`. Picking a theme stores the mode it needs,
+ * so the two stay in step.
  */
 export const themeBootScript = (options: ThemeBootOptions) => {
   const config = JSON.stringify({
@@ -191,9 +214,12 @@ export const themeBootScript = (options: ThemeBootOptions) => {
     style: customThemeStyleId,
     omarchyId: omarchyThemeId,
     omarchyStyle: omarchyThemeStyleId,
+    app: appThemeStorageKey(options.key, ""),
+    appStyle: appThemeStyleId(""),
   });
 
   // An imported or Omarchy theme only applies once it's been picked, and
-  // falls back to the default when its CSS has gone
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};let m=g(c.keys.mode)??c.mode;let t=g(c.keys.theme)??c.theme;const o=t===c.custom?g(c.keys.css):t===c.omarchyId?g(c.omarchy.css):null;if(t===c.custom||t===c.omarchyId){if(o)a(t===c.custom?c.style:c.omarchyStyle,o);else{t=c.theme;m=c.mode}}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  // falls back to the default when its CSS has gone. Any other pick with
+  // cached CSS is an app theme; `pageTheme` solves it when nothing's cached
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};let m=g(c.keys.mode)??c.mode;let t=g(c.keys.theme)??c.theme;const o=t===c.custom?g(c.keys.css):t===c.omarchyId?g(c.omarchy.css):null;if(t===c.custom||t===c.omarchyId){if(o)a(t===c.custom?c.style:c.omarchyStyle,o);else{t=c.theme;m=c.mode}}else{const p=g(c.app+t);if(p)a(c.appStyle+t,p)}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
