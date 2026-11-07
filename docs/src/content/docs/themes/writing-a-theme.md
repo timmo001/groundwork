@@ -40,10 +40,10 @@ Groundwork's own themes live in `packages/tokens/themes/`. Run `mise run gen` af
 | --- | --- |
 | `background` | The dark mode background. Its hue and chroma tint every surface in both modes. |
 | `accent` | The hue and chroma of the one color the theme is known by. Its lightness is solved per mode. An accent with no real color, as Base's, uses the black and white primary. |
-| `style.font`, `figures`, `mono` | The text font, an optional font for figures, and the code font. |
+| `style.font`, `figures`, `mono` | The text font, an optional font for figures, and the code font. Any family's name works; [Type](/foundations/type) lists the ones Groundwork bundles, and an app loads any other itself. `figuresMono: true` makes `figures` fall back to a monospace font, as it does already for the bundled code fonts. |
 | `style.radius` | Panels, controls and chips, in pixels. 999 is a pill. |
-| `style.border` | Width and strength: `none`, `hairline`, `soft` or `strong`. |
-| `style.density` | `compact`, `normal` or `roomy`, scaling every space and control height. |
+| `style.border` | Width and strength: `none`, `hairline`, `soft` or `strong`, or a number from 0 to 3 for anything between, where 1, 2 and 3 are hairline, soft and strong. |
+| `style.density` | `compact`, `normal` or `roomy` (0.85, 1 and 1.2), or a number from 0.7 to 1.5, scaling every space. Controls grow by half as much above 1. |
 | `style.capitals` | Labels and headings in capitals. |
 | `style.link` | Accent or strong text, with a thin or thick underline. |
 | `style.surfaceAccent` | `none`, `sheen` (a faint accent gradient), `marker` (an accent bar on the left) or `flange` (an accent edge on top). |

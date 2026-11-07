@@ -96,6 +96,9 @@ const slug = (name: string) =>
     .replaceAll(/[^a-z0-9]+/g, "-")
     .replaceAll(/^-|-$/g, "") || themeId;
 
+/** The choice that opens a field for any value, past the presets. */
+const custom = "custom";
+
 const segments = (values: readonly string[]) =>
   values.map((value) => ({
     value,
@@ -110,15 +113,34 @@ const segmented = (label: string, values: readonly string[]) => {
   return element;
 };
 
+/** The suggested fonts, then Other for any family. */
 const select = (label: string, values: readonly string[]) => {
   const element = h("gw-select", { label });
 
-  element.options = values.map((value) => ({ value, label: value }));
+  element.options = [
+    ...values.map((value) => ({ value, label: value })),
+    { value: custom, label: "Other" },
+  ];
 
   return element;
 };
 
 const field = (label: string, type: string) => h("gw-input", { label, type });
+
+/** The field a Custom or Other choice opens, hidden until then. */
+const otherField = (
+  label: string,
+  type: string,
+  range: Readonly<Record<string, string>> = {},
+) => h("gw-input", { label, type, hidden: true, ...range });
+
+/** A control with presets, and the field for any other value. */
+interface Choice {
+  readonly control: GwSelect | GwSegmented;
+  readonly other: GwInput;
+  /** What the field starts at when Custom or Other is picked. */
+  readonly start: () => string;
+}
 
 const labeled = (label: string, control: HTMLElement) =>
   h("div", { class: "editor-field" }, h("span", { class: "editor-label" }, label), control);
@@ -143,7 +165,11 @@ export class GwThemeEditor extends GwElement {
 
   readonly #font: GwSelect = select("Font", Font.literals);
 
+  readonly #fontOther: GwInput = otherField("Font family", "text");
+
   readonly #mono: GwSelect = select("Mono font", MonoFont.literals);
+
+  readonly #monoOther: GwInput = otherField("Mono font family", "text");
 
   readonly #panel: GwInput = field("Panel radius", "number");
 
@@ -156,13 +182,34 @@ export class GwThemeEditor extends GwElement {
     "hairline",
     "soft",
     "strong",
+    custom,
   ]);
+
+  readonly #borderOther: GwInput = otherField("Border strength, 0 to 3", "number", {
+    min: "0",
+    max: "3",
+    step: "0.25",
+  });
 
   readonly #density: GwSegmented = segmented("Density", [
     "compact",
     "normal",
     "roomy",
+    custom,
   ]);
+
+  readonly #densityOther: GwInput = otherField("Density, 0.7 to 1.5", "number", {
+    min: "0.7",
+    max: "1.5",
+    step: "0.05",
+  });
+
+  readonly #choices = {
+    font: { control: this.#font, other: this.#fontOther, start: () => this.#document.style.font },
+    mono: { control: this.#mono, other: this.#monoOther, start: () => this.#document.style.mono },
+    border: { control: this.#border, other: this.#borderOther, start: () => "1" },
+    density: { control: this.#density, other: this.#densityOther, start: () => "1" },
+  } satisfies Record<string, Choice>;
 
   readonly #surface: GwSegmented = segmented("Surface accent", [
     "none",
@@ -220,9 +267,12 @@ export class GwThemeEditor extends GwElement {
       this.#description,
       h("div", { class: "editor-pair" }, this.#background, this.#accent),
       h("div", { class: "editor-pair" }, this.#font, this.#mono),
+      h("div", { class: "editor-pair" }, this.#fontOther, this.#monoOther),
       h("div", { class: "editor-trio" }, this.#panel, this.#control, this.#chip),
       labeled("Border", this.#border),
+      this.#borderOther,
       labeled("Density", this.#density),
+      this.#densityOther,
       labeled("Surface accent", this.#surface),
       labeled("Rows", this.#rows),
       h("div", { class: "editor-pair" }, labeled("Link color", this.#linkColor), labeled("Link underline", this.#underline)),
@@ -301,18 +351,50 @@ export class GwThemeEditor extends GwElement {
     this.#description.value = theme.description;
     this.#background.value = theme.background;
     this.#accent.value = theme.accent;
-    this.#font.value = style.font;
-    this.#mono.value = style.mono;
+    this.#pick(this.#choices.font, style.font);
+    this.#pick(this.#choices.mono, style.mono);
     this.#panel.value = String(style.radius.panel);
     this.#control.value = String(style.radius.control);
     this.#chip.value = String(style.radius.chip);
-    this.#border.value = style.border.strength;
-    this.#density.value = style.density;
+    this.#pick(this.#choices.border, String(style.border.strength));
+    this.#pick(this.#choices.density, String(style.density));
     this.#surface.value = style.surfaceAccent;
     this.#rows.value = style.rows;
     this.#linkColor.value = style.link.color;
     this.#underline.value = style.link.underline;
     this.#capitals.checked = style.capitals;
+  }
+
+  /** Sets a choice to a preset, or to Custom or Other with the value in its field. */
+  #pick(choice: Choice, value: string) {
+    const preset = choice.control.options.some(
+      (option) => option.value === value && option.value !== custom,
+    );
+
+    choice.control.value = preset ? value : custom;
+    choice.other.value = preset ? "" : value;
+    choice.other.hidden = preset;
+  }
+
+  /** Shows each Custom or Other field while its choice is picked, starting it off. */
+  #reveal() {
+    for (const { control, other, start } of Object.values(this.#choices)) {
+      other.hidden = control.value !== custom;
+
+      if (!other.hidden && other.value === "") other.value = start();
+    }
+  }
+
+  /** A choice's value: the preset, or what's in its field. */
+  #chosen({ control, other }: Choice) {
+    return control.value === custom ? other.value : control.value;
+  }
+
+  /** A preset's name, or the number in its field. */
+  #level(choice: Choice) {
+    const value = this.#chosen(choice);
+
+    return choice.control.value === custom ? Number(value) : value;
   }
 
   /** The document the controls describe, as JSON for the decoder to check. */
@@ -329,15 +411,15 @@ export class GwThemeEditor extends GwElement {
         accent: this.#accent.value,
         style: {
           ...theme.style,
-          font: this.#font.value,
-          mono: this.#mono.value,
+          font: this.#chosen(this.#choices.font),
+          mono: this.#chosen(this.#choices.mono),
           radius: {
             panel: Number(this.#panel.value),
             control: Number(this.#control.value),
             chip: Number(this.#chip.value),
           },
-          border: { ...theme.style.border, strength: this.#border.value },
-          density: this.#density.value,
+          border: { ...theme.style.border, strength: this.#level(this.#choices.border) },
+          density: this.#level(this.#choices.density),
           capitals: this.#capitals.checked,
           link: { color: this.#linkColor.value, underline: this.#underline.value },
           surfaceAccent: this.#surface.value,
@@ -350,6 +432,7 @@ export class GwThemeEditor extends GwElement {
   }
 
   #edit() {
+    this.#reveal();
     this.#apply(this.#read(), false);
   }
 
