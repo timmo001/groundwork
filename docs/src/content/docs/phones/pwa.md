@@ -102,7 +102,7 @@ A share opens the app's share page with `share-title`, `share-text` and `share-u
 window.addEventListener("gw-share", (event) => showShare(event.detail));
 ```
 
-![A link shared to the demo, on Base, light](/screenshots/phones/share-base-light.png)
+![A link shared to the demo, on Base, dark](/screenshots/phones/share-base-dark.png)
 
 ## Offline
 

@@ -154,7 +154,7 @@ avdmanager list avd -c | grep -qx "$ANDROID_AVD" ||
 '''
 
 [tasks."android:emulator"]
-description = "Start the groundwork emulator in the background, waiting until it has booted"
+description = "Start the groundwork emulator in the background, in dark mode, waiting until it has booted"
 depends = ["android:setup"]
 run = '''
 # Hyprland leaves Xwayland apps unscaled (force_zero_scaling), so the Qt
@@ -163,6 +163,7 @@ scale=$(hyprctl -j monitors 2>/dev/null | jq -r 'first(.[] | select(.focused)) |
 QT_SCALE_FACTOR=${scale:-1} emulator -avd "$ANDROID_AVD" -no-snapshot-save -no-boot-anim > /dev/null 2>&1 &
 adb wait-for-device
 until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2; done
+adb shell cmd uimode night yes >/dev/null
 echo "$ANDROID_AVD is up: $(adb shell getprop ro.build.version.release | tr -d '\r') (API $(adb shell getprop ro.build.version.sdk | tr -d '\r'))"
 '''
 
