@@ -90,10 +90,10 @@
     },
     "packages/docs-kit": {
       "name": "@timmo001/docs-kit",
-      "version": "0.10.7",
+      "version": "0.10.8",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.10.7",
-        "@timmo001/groundwork-ui": "0.10.7",
+        "@timmo001/groundwork-tokens": "0.10.8",
+        "@timmo001/groundwork-ui": "0.10.8",
         "sharp": "0.35.5",
       },
       "devDependencies": {
@@ -114,7 +114,7 @@
       "name": "@timmo001/groundwork-lit-effect",
       "dependencies": {
         "@lit/context": "1.1.6",
-        "@timmo001/groundwork-ui": "0.10.7",
+        "@timmo001/groundwork-ui": "0.10.8",
         "effect": "4.1.2",
         "lit": "3.3.3",
       },
@@ -130,10 +130,10 @@
     },
     "packages/report": {
       "name": "@timmo001/groundwork-report",
-      "version": "0.10.7",
+      "version": "0.10.8",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.10.7",
-        "@timmo001/groundwork-ui": "0.10.7",
+        "@timmo001/groundwork-tokens": "0.10.8",
+        "@timmo001/groundwork-ui": "0.10.8",
         "effect": "4.1.2",
       },
       "devDependencies": {
@@ -167,7 +167,7 @@
     },
     "packages/tokens": {
       "name": "@timmo001/groundwork-tokens",
-      "version": "0.10.7",
+      "version": "0.10.8",
       "dependencies": {
         "@types/culori": "4.0.1",
         "culori": "4.0.2",
@@ -186,10 +186,10 @@
     },
     "packages/tui": {
       "name": "@timmo001/groundwork-tui",
-      "version": "0.10.7",
+      "version": "0.10.8",
       "dependencies": {
         "@opentui/core": "0.8.2",
-        "@timmo001/groundwork-tokens": "0.10.7",
+        "@timmo001/groundwork-tokens": "0.10.8",
         "effect": "4.1.2",
         "fuse.js": "7.5.0",
       },
@@ -205,7 +205,7 @@
     },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
-      "version": "0.10.7",
+      "version": "0.10.8",
       "dependencies": {
         "@tanstack/table-core": "9.3.1",
         "@tanstack/virtual-core": "3.19.11",
