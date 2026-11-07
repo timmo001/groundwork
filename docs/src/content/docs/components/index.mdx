@@ -53,6 +53,7 @@ An app can take the components without taking their look. Nothing is forced: eac
 - **Wrapping.** For markup or behavior of your own, wrap the element in one of yours and keep its attributes and events.
 - **Your own tokens.** An app with its own variables can point them at Groundwork's, such as `--app-surface: var(--gw-color-surface-raised)`, and keep its stylesheets as they are.
 - **Plain CSS wins.** The elements' styles are in the `groundwork.components` cascade layer and the tokens in `groundwork.tokens`, so an app's CSS outside a layer wins over them without matching their selectors or adding `!important`. That's how the fields' light DOM classes take a page's own rules. See [Overriding tokens](/themes#overriding-tokens).
+- **Hidden and reduced motion.** In a shadow root, `hidden` and the reduced motion rules sit in a `groundwork.state` layer above the components, with no `!important`, so a page's rule on an element or a part still wins: keep a skeleton pulsing, or show a hidden element its own way. Under reduced motion everything stops but a loading ring's turn, which shows something is still happening.
 
 The same badge, as it comes and with an app's own shape: square corners, a tone stripe, an uppercase label and a monospace value. Pick another theme and both follow it.
 
