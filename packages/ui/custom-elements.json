@@ -188,6 +188,15 @@
       "path": "src/element.ts",
       "declarations": [
         {
+          "kind": "variable",
+          "name": "componentsLayer",
+          "type": {
+            "text": "string"
+          },
+          "default": "\"groundwork.components\"",
+          "description": "The cascade layer every element's styles sit in. A page's own CSS outside\na layer wins over the field styles adopted into the document, whatever\nits specificity. In a shadow root every sheet is in it, so they keep\ntheir order between themselves."
+        },
+        {
           "kind": "function",
           "name": "css",
           "parameters": [
@@ -204,7 +213,7 @@
               }
             }
           ],
-          "description": "A stylesheet from CSS text, shared by every element that adopts it.\nInterpolations are joined in as text."
+          "description": "A stylesheet from CSS text, shared by every element that adopts it, in\nthe components layer. Interpolations are joined in as text."
         },
         {
           "kind": "function",
@@ -530,6 +539,14 @@
         }
       ],
       "exports": [
+        {
+          "kind": "js",
+          "name": "componentsLayer",
+          "declaration": {
+            "name": "componentsLayer",
+            "module": "src/element.ts"
+          }
+        },
         {
           "kind": "js",
           "name": "css",
@@ -27942,7 +27959,7 @@
           "kind": "variable",
           "name": "scrollbars",
           "default": "new CSSStyleSheet()",
-          "description": "The page's scrollbars for a shadow root: a small rounded thumb on a clear\ntrack with no arrow buttons, squaring off at the ends of its track. Every\n`gw-` element adopts it; add it to an app's own components' styles to match.\nThe `--gw-scrollbar-*` properties restyle it as they do the page's."
+          "description": "The page's scrollbars for a shadow root: a small rounded thumb on a clear\ntrack with no arrow buttons, squaring off at the ends of its track. Every\n`gw-` element adopts it; add it to an app's own components' styles to match.\nThe `--gw-scrollbar-*` properties restyle it as they do the page's. It's\nin the components layer, `componentsLayer` in `element.ts`, which imports\nthis module, so the name is written out here."
         },
         {
           "kind": "function",

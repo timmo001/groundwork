@@ -32,8 +32,16 @@ export type Json =
 export type PropertyValue = Json | undefined;
 
 /**
- * A stylesheet from CSS text, shared by every element that adopts it.
- * Interpolations are joined in as text.
+ * The cascade layer every element's styles sit in. A page's own CSS outside
+ * a layer wins over the field styles adopted into the document, whatever
+ * its specificity. In a shadow root every sheet is in it, so they keep
+ * their order between themselves.
+ */
+export const componentsLayer = "groundwork.components";
+
+/**
+ * A stylesheet from CSS text, shared by every element that adopts it, in
+ * the components layer. Interpolations are joined in as text.
  */
 export const css = (
   strings: TemplateStringsArray,
@@ -41,7 +49,9 @@ export const css = (
 ) => {
   const sheet = new CSSStyleSheet();
 
-  sheet.replaceSync(String.raw({ raw: strings }, ...values));
+  sheet.replaceSync(
+    `@layer ${componentsLayer} {\n${String.raw({ raw: strings }, ...values)}\n}`,
+  );
 
   return sheet;
 };

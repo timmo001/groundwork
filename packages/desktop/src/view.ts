@@ -303,7 +303,8 @@ export const connectDesktop = async <AppRequests extends RequestHandlers = {}>(
 
   const sheet = new CSSStyleSheet();
 
-  sheet.replaceSync(styles);
+  // In the elements' layer, so the app's own CSS wins over them
+  sheet.replaceSync(`@layer groundwork.components {\n${styles}\n}`);
   document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];
   document.body.append(notices);
 

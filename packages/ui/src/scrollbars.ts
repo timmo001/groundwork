@@ -10,11 +10,13 @@
  * The page's scrollbars for a shadow root: a small rounded thumb on a clear
  * track with no arrow buttons, squaring off at the ends of its track. Every
  * `gw-` element adopts it; add it to an app's own components' styles to match.
- * The `--gw-scrollbar-*` properties restyle it as they do the page's.
+ * The `--gw-scrollbar-*` properties restyle it as they do the page's. It's
+ * in the components layer, `componentsLayer` in `element.ts`, which imports
+ * this module, so the name is written out here.
  */
 export const scrollbars = new CSSStyleSheet();
 
-scrollbars.replaceSync(`
+scrollbars.replaceSync(`@layer groundwork.components {
   @supports not selector(::-webkit-scrollbar) {
     * {
       scrollbar-width: thin;
@@ -108,7 +110,7 @@ scrollbars.replaceSync(`
   ::-webkit-scrollbar-corner {
     background: transparent;
   }
-`);
+}`);
 
 let followingPageScroll = false;
 
