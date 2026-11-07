@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./runtime": "./src/runtime.ts",
+    "./build": "./src/build.ts",
     "./choices": "./src/choices.ts",
     "./page": "./src/page.ts",
     "./webmcp": "./src/webmcp.ts",
@@ -17,6 +18,9 @@
     "./themes.css": "./generated/themes.css",
     "./themes.json": "./generated/themes.json",
     "./themes/*.json": "./themes/*.json"
+  },
+  "bin": {
+    "groundwork-tokens": "./src/bin.ts"
   },
   "files": [
     "src",
@@ -49,12 +53,12 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@effect/platform-node": "4.1.2",
     "@types/culori": "4.0.1",
     "culori": "4.0.2",
     "effect": "4.1.2"
   },
   "devDependencies": {
-    "@effect/platform-node": "4.1.2",
     "@oxlint/plugins": "1.92.0",
     "@timmo001/oxlint-rules": "0.6.4",
     "@types/bun": "1.4.4",
