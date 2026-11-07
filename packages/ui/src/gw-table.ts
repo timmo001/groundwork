@@ -255,6 +255,7 @@ export class GwTable extends GwElement {
 
       .scroller {
         overflow-x: auto;
+        overscroll-behavior-x: contain;
         background: var(--gw-color-surface-raised);
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
         border-radius: var(--gw-radius-panel);
@@ -263,7 +264,6 @@ export class GwTable extends GwElement {
       :host([contained]) .scroller {
         max-height: var(--gw-table-max-height, 70vh);
         overflow-y: auto;
-        overscroll-behavior: contain;
       }
 
       /* The header stays in view as a contained table scrolls */
@@ -469,6 +469,31 @@ export class GwTable extends GwElement {
 
   /** How many rows there are after the search, without the headings. */
   #matched = 0;
+
+  /**
+   * Each shown row's element, kept while it stands so scrolling moves rows
+   * rather than building them again.
+   */
+  #drawnRows = new WeakMap<Shown, HTMLTableRowElement>();
+
+  readonly #beforeCell = h("td");
+
+  readonly #before = h(
+    "tr",
+    { class: "spacer", "aria-hidden": "true" },
+    this.#beforeCell,
+  );
+
+  readonly #afterCell = h("td");
+
+  readonly #after = h(
+    "tr",
+    { class: "spacer", "aria-hidden": "true" },
+    this.#afterCell,
+  );
+
+  /** The frame booked to measure the rows just drawn. */
+  #measuring = 0;
 
   /** Draws the rows on screen as the page scrolls. */
   readonly #windowed = new Virtualizer<Window, HTMLTableRowElement>({
@@ -786,62 +811,77 @@ export class GwTable extends GwElement {
     const after = items.at(-1)?.end ?? before;
     const drawn = this.#drawn();
 
-    const spacer = (height: number) =>
-      h(
-        "tr",
-        { class: "spacer", "aria-hidden": "true" },
-        h("td", {
-          colspan: drawn.length,
-          style: `height: ${Math.max(0, height)}px`,
-        }),
-      );
-
     const rows = items.flatMap((item) => {
       const shown = this.#shown[item.index];
 
       if (shown === undefined) return [];
 
-      if (shown.kind === "group") return [this.#renderGroup(shown, item.index)];
+      const row =
+        this.#drawnRows.get(shown) ??
+        (shown.kind === "group"
+          ? this.#renderGroup(shown, item.index)
+          : this.#renderRow(shown.row, item.index, drawn));
 
-      const { row } = shown;
-      const tr = h("tr", { part: "row", "data-index": item.index });
+      this.#drawnRows.set(shown, row);
 
-      for (const column of drawn) {
-        const cell =
-          column.cell === undefined
-            ? String(this.#valueOf(column, row) ?? "")
-            : column.cell(row);
-
-        tr.append(
-          h(
-            "td",
-            {
-              class: [
-                column.numeric ? "numeric" : "",
-                column.wide ? "wide" : "",
-              ]
-                .join(" ")
-                .trim(),
-            },
-            cell,
-          ),
-        );
-      }
-
-      return [tr];
+      return [row];
     });
 
-    this.#body.replaceChildren(
-      spacer(before - virtualizer.options.scrollMargin),
-      ...rows,
-      spacer(
-        virtualizer.getTotalSize() - (after - virtualizer.options.scrollMargin),
-      ),
-    );
+    const margin = virtualizer.options.scrollMargin;
 
-    for (const row of rows) virtualizer.measureElement(row);
+    this.#beforeCell.colSpan = drawn.length;
+    this.#beforeCell.style.height = `${Math.max(0, before - margin)}px`;
+    this.#afterCell.colSpan = drawn.length;
+    this.#afterCell.style.height = `${Math.max(0, virtualizer.getTotalSize() - (after - margin))}px`;
+
+    const next = [this.#before, ...rows, this.#after];
+    const { children } = this.#body;
+
+    // Rows stay put when the same ones are in view, so what's in them isn't
+    // taken off the page and put back on every scroll
+    if (
+      next.length !== children.length ||
+      next.some((row, index) => children[index] !== row)
+    ) {
+      this.#body.replaceChildren(...next);
+    }
+
+    // Measured a frame later, once what's in the rows has drawn: measured at
+    // once, a new row is short, and the frame's scroll clamps to fit it
+    cancelAnimationFrame(this.#measuring);
+    this.#measuring = requestAnimationFrame(() => {
+      for (const row of rows) {
+        if (row.isConnected) virtualizer.measureElement(row);
+      }
+    });
 
     virtualizer._willUpdate();
+  }
+
+  /** A row of cells, each its column's `cell` or its value as text. */
+  #renderRow(row: TableRow, index: number, drawn: readonly TableColumn[]) {
+    const tr = h("tr", { part: "row", "data-index": index });
+
+    for (const column of drawn) {
+      const cell =
+        column.cell === undefined
+          ? String(this.#valueOf(column, row) ?? "")
+          : column.cell(row);
+
+      tr.append(
+        h(
+          "td",
+          {
+            class: [column.numeric ? "numeric" : "", column.wide ? "wide" : ""]
+              .join(" ")
+              .trim(),
+          },
+          cell,
+        ),
+      );
+    }
+
+    return tr;
   }
 
   protected override create(root: ShadowRoot) {

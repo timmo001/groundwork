@@ -119,7 +119,6 @@ export class GwList<T extends object = object> extends GwElement {
       :host([contained]) .scroller {
         max-height: var(--gw-list-max-height, 70vh);
         overflow-y: auto;
-        overscroll-behavior: contain;
       }
 
       .item {
@@ -213,6 +212,9 @@ export class GwList<T extends object = object> extends GwElement {
 
   /** Each item's container and what's drawn in it, by key. */
   readonly #drawn = new Map<string, Drawn<T>>();
+
+  /** The frame booked to measure the rows just drawn. */
+  #measuring = 0;
 
   /** Draws the items on screen as the page scrolls. */
   readonly #windowed = new Virtualizer<Window, HTMLDivElement>({
@@ -514,9 +516,27 @@ export class GwList<T extends object = object> extends GwElement {
 
     this.#before.style.height = `${Math.max(0, before - margin)}px`;
     this.#after.style.height = `${Math.max(0, virtualizer.getTotalSize() - (after - margin))}px`;
-    this.#body.replaceChildren(this.#before, ...rows, this.#after);
 
-    for (const row of rows) virtualizer.measureElement(row);
+    const next = [this.#before, ...rows, this.#after];
+    const { children } = this.#body;
+
+    // Rows stay put when the same ones are in view, so what's in them isn't
+    // taken off the page and put back on every scroll
+    if (
+      next.length !== children.length ||
+      next.some((row, index) => children[index] !== row)
+    ) {
+      this.#body.replaceChildren(...next);
+    }
+
+    // Measured a frame later, once what's in the rows has drawn: measured at
+    // once, a new row is short, and the frame's scroll clamps to fit it
+    cancelAnimationFrame(this.#measuring);
+    this.#measuring = requestAnimationFrame(() => {
+      for (const row of rows) {
+        if (row.isConnected) virtualizer.measureElement(row);
+      }
+    });
 
     virtualizer._willUpdate();
   }
