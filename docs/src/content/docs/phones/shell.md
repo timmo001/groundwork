@@ -87,3 +87,26 @@ const level = await mobile.call("battery", Schema.Number);
 ```
 
 Messages the app's Kotlin sends, under names the shell doesn't use, go to `onMessage` with their JSON data, for the app to parse with its own schema.
+
+## The Kotlin side
+
+The shell is a Gradle library module, `packages/mobile/android/shell`, for Android 14 and up. The app's own module depends on it and subclasses `ShellActivity`, so the synced copy is never edited:
+
+```kotlin
+class MainActivity : ShellActivity() {
+  override fun onBridgeReady(bridge: Bridge) {
+    bridge.handle("battery") { _, reply ->
+      reply.ok(getSystemService(BatteryManager::class.java)
+        .getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY))
+    }
+  }
+}
+```
+
+`bridge.send(name, data)` sends a message to the view, held until the page connects. A handler under one of the shell's names replaces the shell's own, and `bridge.remove(name)` takes one away. Every other hook, such as `startUrl`, `allowedOrigins`, `createWebView`, `deepLinkUrl` and `openExternal`, is open to override.
+
+The app's build writes `mobile.config.ts` as JSON to `assets/groundwork/mobile.config.json`, and its web build to `assets/web/`, which the shell serves from `https://appassets.androidplatform.net`. In debug builds a `groundwork.devUrl` meta-data entry in the app's manifest points the shell at the dev server instead.
+
+The app's manifest declares the activity, its deep link and App Link intent filters, and the camera or microphone permissions it wants the page to have. The shell's own manifest asks only for the internet and notifications.
+
+The page follows the phone's dark mode through the theme's `isLightTheme`, which the WebView passes on as `prefers-color-scheme`, and the WebView never darkens it itself.
