@@ -29,6 +29,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@effect/platform-node": "4.1.2",
     "@opentui/core": "0.8.2",
     "@timmo001/groundwork-tokens": "0.10.11",
     "effect": "4.1.2",
