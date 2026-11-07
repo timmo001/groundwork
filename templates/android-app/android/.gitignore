@@ -1,0 +1,6 @@
+.gradle/
+.kotlin/
+build/
+local.properties
+# Written by `bun run build` from the page and mobile.config.ts
+app/src/main/assets/

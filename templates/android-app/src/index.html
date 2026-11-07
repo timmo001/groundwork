@@ -1,0 +1,49 @@
+<!doctype html>
+<!-- The demo page: the theme CSS and the demo app, in the Android shell. -->
+<html lang="en" data-gw-theme="base">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Updates</title>
+    <!-- theme:boot -->
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <gw-app-bar>
+      <span slot="brand" class="brand">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="20" y="13" width="24" height="9" rx="2" opacity="0.5" />
+          <rect x="12" y="27.5" width="40" height="9" rx="2" opacity="0.75" />
+          <rect x="4" y="42" width="56" height="9" rx="2" />
+        </svg>
+        Groundwork
+      </span>
+      <gw-theme-picker slot="actions"></gw-theme-picker>
+    </gw-app-bar>
+    <main>
+      <gw-demo-app></gw-demo-app>
+      <gw-card
+        id="phone"
+        heading="This phone"
+        description="What the shell adds to the page"
+      >
+        <gw-facts></gw-facts>
+        <div class="phone-actions">
+          <gw-button class="notify" appearance="outlined" size="small"
+            >Send a notification</gw-button
+          >
+          <gw-button class="ongoing" appearance="outlined" size="small"
+            >Start a download</gw-button
+          >
+          <gw-button class="external" appearance="outlined" size="small"
+            >Open the docs</gw-button
+          >
+        </div>
+      </gw-card>
+    </main>
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

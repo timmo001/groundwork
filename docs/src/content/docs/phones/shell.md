@@ -111,6 +111,8 @@ The app's manifest declares the activity, its deep link and App Link intent filt
 
 The page follows the phone's dark mode through the theme's `isLightTheme`, which the WebView passes on as `prefers-color-scheme`, and the WebView never darkens it itself.
 
+The shell draws edge to edge, under the status bar, the cutout and the navigation bar, and only the keyboard resizes the page. With `viewport-fit=cover` in the page's viewport meta, the WebView fills in `env(safe-area-inset-*)`: `gw-app-bar` reaches up under the status bar so it takes the bar's surface, and the page pads its sides and bottom with the other insets, as the template's `index.css` does.
+
 ## Shares, tiles, Live Updates and push
 
 - **Shares.** Give the activity an `ACTION_SEND` intent filter for `text/plain`. A shared link arrives as `url`, other text as `text`, and the subject as `title`, through the `share` message and the `gw-share` event.

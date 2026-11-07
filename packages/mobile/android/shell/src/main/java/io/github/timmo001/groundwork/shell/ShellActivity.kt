@@ -26,6 +26,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -79,6 +80,7 @@ open class ShellActivity : ComponentActivity() {
         .getApplicationInfo(packageName, PackageManager.GET_META_DATA)
         .metaData
         ?.getString("groundwork.devUrl")
+        ?.ifBlank { null }
 
   private val chooseFiles =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -105,17 +107,26 @@ open class ShellActivity : ComponentActivity() {
     assetLoader =
       WebViewAssetLoader.Builder()
         .addPathHandler("/", WebViewAssetLoader.AssetsPathHandler(this).let { assets ->
-          WebViewAssetLoader.PathHandler { path -> assets.handle("web/$path") }
+          // Any page in the app falls back to index.html, as a static host
+          // set up for a single-page app would
+          WebViewAssetLoader.PathHandler { path ->
+            assets.handle("web/${path.ifEmpty { "index.html" }}") ?: assets.handle("web/index.html")
+          }
         })
         .build()
 
     WebView.setWebContentsDebuggingEnabled(dev && config.devTools)
     webView = createWebView()
-    setContentView(webView)
-    ViewCompat.setOnApplyWindowInsetsListener(webView) { view, insets ->
-      val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
-      view.updatePadding(bars.left, bars.top, bars.right, bars.bottom)
-      WindowInsetsCompat.CONSUMED
+    // The page draws under the system bars and cutout and pads itself with
+    // `env(safe-area-inset-*)`, which the WebView fills in; only the
+    // keyboard pads the frame, so the page resizes above it
+    val frame = FrameLayout(this).apply { addView(webView) }
+
+    setContentView(frame)
+    ViewCompat.setOnApplyWindowInsetsListener(frame) { view, insets ->
+      val keyboard = insets.getInsets(WindowInsetsCompat.Type.ime())
+      view.updatePadding(bottom = keyboard.bottom)
+      insets
     }
 
     registerShellHandlers()

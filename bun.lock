@@ -260,6 +260,27 @@
         "typescript": "7.0.2",
       },
     },
+    "templates/android-app": {
+      "name": "android-app",
+      "dependencies": {
+        "@fontsource-variable/geist-mono": "5.3.0",
+        "@fontsource-variable/mona-sans": "5.3.0",
+        "@timmo001/groundwork-demo": "workspace:*",
+        "@timmo001/groundwork-mobile": "workspace:*",
+        "@timmo001/groundwork-tokens": "workspace:*",
+        "@timmo001/groundwork-ui": "workspace:*",
+        "effect": "4.1.2",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.92.0",
+        "@timmo001/oxlint-rules": "0.6.4",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.92.0",
+        "oxlint-tsgolint": "7.0.2006",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "templates/cli-tool": {
       "name": "cli-tool",
       "bin": {
@@ -1273,6 +1294,8 @@
     "ajv-i18n": ["ajv-i18n@4.2.0", "", { "peerDependencies": { "ajv": "^8.0.0-beta.0" } }, "sha512-v/ei2UkCEeuKNXh8RToiFsUclmU+G57LO1Oo22OagNMENIw+Yb8eMwvHu7Vn9fmkjJyv6XclhJ8TbuigSglPkg=="],
 
     "am-i-vibing": ["am-i-vibing@0.5.0", "", { "dependencies": { "process-ancestry": "^0.1.0" }, "bin": { "am-i-vibing": "dist/cli.mjs" } }, "sha512-KLcsDhqf1XRrJmJr+9I/C0EX2K+sGrAGZFgkmd84c8TJO9zJBu+/kFInjazu1KfJWFhWDKdRWkpBzEs7s35DVA=="],
+
+    "android-app": ["android-app@workspace:templates/android-app"],
 
     "ansi-regex": ["ansi-regex@6.5.0", "", {}, "sha512-zhvbbbdt1kbw7EJ9OQoxmQcuaNR9P5kTj7e/YdmOSU10aHWbycofJxA6jKfoEy3vlLdctOF9ZHaxLtmSm998wQ=="],
 

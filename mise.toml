@@ -142,6 +142,26 @@ fi
 echo "The PWA demo is at https://pwa.groundwork.localhost"
 '''
 
+[tasks."demo:android"]
+description = "Build the Android demo, the demo app in the Kotlin shell, and install and open it on the running emulator"
+depends = ["install"]
+dir = "templates/android-app"
+run = '''
+bun run build
+(cd android && gradle --no-daemon -q --console=plain :app:installDebug)
+adb shell am start -S -n io.github.timmo001.groundwork.demo/.MainActivity >/dev/null
+echo "The Android demo is open on the emulator"
+'''
+
+[tasks."android:build"]
+description = "Build the Android demo's web page and its debug and release APKs"
+depends = ["install"]
+dir = "templates/android-app"
+run = '''
+bun run build
+(cd android && gradle --no-daemon -q --console=plain :app:assembleDebug :app:assembleRelease)
+'''
+
 [tasks."android:setup"]
 description = "Install the Android SDK packages and create the groundwork emulator, a medium phone on the latest Android"
 run = '''
