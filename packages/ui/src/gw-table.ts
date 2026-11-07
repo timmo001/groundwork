@@ -33,6 +33,7 @@ import {
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import "./gw-chip.js";
+import { isText, keep, keptAt, textsOf } from "./kept.js";
 import { base, createIcon } from "./styles.js";
 
 /** A value a cell holds, which sorting and search read. */
@@ -82,6 +83,14 @@ const searchIcon =
 /** From this many rows, `search="auto"` adds a search field. */
 const searchFrom = 8;
 
+/** A table's view state as kept: only the parts someone has changed. */
+type Kept = {
+  readonly sort?: string;
+  readonly descending?: boolean;
+  readonly query?: string;
+  readonly toggledGroups?: readonly string[];
+};
+
 const features = tableFeatures({
   coreReactivityFeature: storeReactivityBindings(),
   rowSortingFeature,
@@ -125,8 +134,9 @@ type Shown =
  * a link or a `gw-chip`. `row-key` names the row property
  * that identifies it, so a row keeps its place across updates. The sort and
  * search are the table's own, set from their attributes to start with; it
- * fires `change` when they change, so a page can keep them in its URL or
- * storage.
+ * fires `change` when they change. With `storage-key` it keeps them, and the
+ * folded groups, in this browser itself: only what someone changed, so the
+ * page's attributes still set the rest.
  *
  * `group` gathers the rows under a heading for each value of a column, such
  * as a state, with its name (from the column's `groupLabel`) and a chip
@@ -148,6 +158,7 @@ type Shown =
  * @attr {boolean} groups-collapsed - Starts with every group folded away, for long lists.
  * @attr {string[]} toggled-groups - The groups, by value, toggled from how they start: folded away, or opened with `groups-collapsed`. As JSON or a property.
  * @attr {boolean} contained - Scrolls inside its own frame, up to `--gw-table-max-height`, rather than with the page.
+ * @attr {string} storage-key - Keeps the sort, search and folded groups someone set in `localStorage` under this key.
  * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.
  * @attr {string} search-label - The search field's name and placeholder. Defaults to `Search`.
  * @attr {string} row-key - The row property that identifies each row.
@@ -174,6 +185,7 @@ export class GwTable extends GwElement {
     groupsCollapsed: { type: "boolean", attribute: "groups-collapsed" },
     toggledGroups: { type: "json", attribute: "toggled-groups" },
     contained: { type: "boolean", reflect: true },
+    storageKey: { attribute: "storage-key" },
     search: {},
     searchLabel: { attribute: "search-label" },
     rowKey: { attribute: "row-key" },
@@ -409,6 +421,7 @@ export class GwTable extends GwElement {
   declare groupsCollapsed: boolean;
   declare toggledGroups: readonly string[];
   declare contained: boolean;
+  declare storageKey: string;
   declare search: "auto" | "always" | "never";
   declare searchLabel: string;
   declare rowKey: string;
@@ -498,6 +511,7 @@ export class GwTable extends GwElement {
     this.groupsCollapsed = false;
     this.toggledGroups = [];
     this.contained = false;
+    this.storageKey = "";
     this.search = "auto";
     this.searchLabel = "Search";
     this.rowKey = "";
@@ -541,8 +555,33 @@ export class GwTable extends GwElement {
     this.#mounted = undefined;
   }
 
-  #change() {
+  /** Fires `change`, and keeps what changed under `storage-key`. */
+  #change(part: Kept) {
+    if (this.storageKey !== "") keep(this.storageKey, part);
+
     this.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+  }
+
+  /**
+   * Puts back what was kept under `storage-key`, checked against what each
+   * part can be, since anyone can edit what's kept.
+   */
+  #restore() {
+    const kept = keptAt(this.storageKey);
+
+    if (kept === undefined) return;
+
+    const { sort, descending, query, toggledGroups } = kept;
+
+    if (isText(sort)) this.sort = sort;
+
+    if (descending === true || descending === false) {
+      this.descending = descending;
+    }
+
+    if (isText(query)) this.query = query;
+
+    this.toggledGroups = textsOf(toggledGroups) ?? this.toggledGroups;
   }
 
   /** A cell's value: its column's `value`, or the row's property by the column's id. */
@@ -632,7 +671,7 @@ export class GwTable extends GwElement {
       ? this.toggledGroups.filter((each) => each !== value)
       : [...this.toggledGroups, value];
 
-    this.#change();
+    this.#change({ toggledGroups: this.toggledGroups });
   }
 
   #sortBy(column: TableColumn) {
@@ -643,7 +682,7 @@ export class GwTable extends GwElement {
       this.descending = Boolean(column.numeric);
     }
 
-    this.#change();
+    this.#change({ sort: this.sort, descending: this.descending });
   }
 
   /** The columns it draws: all but the one it groups by, which each heading names. */
@@ -808,7 +847,7 @@ export class GwTable extends GwElement {
   protected override create(root: ShadowRoot) {
     this.#input.addEventListener("input", () => {
       this.query = this.#input.value;
-      this.#change();
+      this.#change({ query: this.query });
     });
     root.append(this.#toolbar, this.#scroller);
   }
@@ -831,6 +870,9 @@ export class GwTable extends GwElement {
     if (changed.has("groupsCollapsed") && !changed.has("toggledGroups")) {
       this.toggledGroups = [];
     }
+
+    // What was kept wins over how the page starts it
+    if (changed.has("storageKey") && this.storageKey !== "") this.#restore();
 
     if (changed.has("contained") && this.isConnected) this.#mount();
 

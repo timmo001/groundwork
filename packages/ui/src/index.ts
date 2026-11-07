@@ -19,6 +19,8 @@ export * from "./layout.js";
 
 export * from "./on.js";
 
+export * from "./storage.js";
+
 export * from "./gw-alert.js";
 
 export * from "./gw-app-bar.js";
@@ -34,6 +36,8 @@ export * from "./gw-card.js";
 export * from "./gw-checkbox.js";
 
 export * from "./gw-chip.js";
+
+export * from "./gw-code.js";
 
 export * from "./gw-command-menu.js";
 
@@ -54,6 +58,10 @@ export * from "./gw-fade-in.js";
 export * from "./gw-gauge.js";
 
 export * from "./gw-input.js";
+
+export * from "./gw-list.js";
+
+export * from "./gw-markdown.js";
 
 export * from "./gw-menu-button.js";
 

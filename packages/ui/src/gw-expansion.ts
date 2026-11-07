@@ -5,6 +5,8 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
+import "./gw-skeleton.js";
+import { getStorage } from "./storage.js";
 import { base } from "./styles.js";
 
 /**
@@ -15,12 +17,22 @@ import { base } from "./styles.js";
  * `actions` sit in the summary row before the chevron, and pressing them
  * doesn't open or close it.
  *
+ * Content that costs something to build goes in `draw` rather than the slot:
+ * it's called with a container the first time it opens, the frame after, so
+ * the panel opens at once with skeleton lines and the content follows. While
+ * it's open, a new `draw` draws again; while it's shut, that waits until it
+ * opens. `storage-key` keeps whether it's open in this browser, once someone
+ * opens or shuts it, so it comes back as they left it.
+ *
  * @element gw-expansion
  * @summary A heading that opens and closes the content under it.
  *
  * @attr {string} heading - The heading in the summary row.
  * @attr {string} description - A line under the heading.
- * @attr {boolean} open - Whether the content shows.
+ * @attr {boolean} open - Whether the content shows; how it starts when it has a `storage-key`.
+ * @attr {string} storage-key - Keeps whether it's open in `localStorage` under this key.
+ *
+ * @prop {(target: HTMLElement) => void} draw - Draws the content into `target`, the first time it opens.
  *
  * @slot - The content.
  * @slot icon - An icon before the heading.
@@ -40,6 +52,8 @@ export class GwExpansion extends GwElement {
     heading: {},
     description: {},
     open: { type: "boolean", reflect: true },
+    storageKey: { attribute: "storage-key" },
+    draw: { attribute: false },
   } as const;
 
   static override styles = [
@@ -183,12 +197,20 @@ export class GwExpansion extends GwElement {
           var(--gw-color-border-quiet);
         font-size: var(--gw-font-size-s);
       }
+
+      gw-skeleton-lines[hidden] {
+        display: none;
+      }
     `,
   ];
 
   declare heading: string;
   declare description: string;
   declare open: boolean;
+  declare storageKey: string;
+  declare draw: ((target: HTMLElement) => void) | undefined;
+
+  readonly #placeholder = h("gw-skeleton-lines", { lines: 3, hidden: true });
 
   readonly #heading = h("span", { class: "heading", part: "heading" });
 
@@ -220,20 +242,86 @@ export class GwExpansion extends GwElement {
         h("span", { class: "chevron" }),
       ),
     ),
-    h("div", { class: "content", part: "content" }, h("slot")),
+    h(
+      "div",
+      { class: "content", part: "content" },
+      h("slot"),
+      this.#placeholder,
+    ),
   );
+
+  /** The container `draw` draws into, made the first time it opens. */
+  #drawn: HTMLElement | undefined;
+
+  /** Whether `draw` has changed since it last drew. */
+  #stale = false;
+
+  #pending = false;
 
   constructor() {
     super();
     this.heading = "";
     this.description = "";
     this.open = false;
+    this.storageKey = "";
+    this.draw = undefined;
   }
 
   readonly #onToggle = () => {
+    // A toggle from setting `open` already matches it; only a press doesn't
+    const pressed = this.#details.open !== this.open;
+
     this.open = this.#details.open;
+
+    if (pressed && this.storageKey !== "") {
+      getStorage().set(this.storageKey, this.open);
+    }
+
     this.dispatchEvent(new Event("toggle", { bubbles: true, composed: true }));
   };
+
+  #drawNow() {
+    const draw = this.draw;
+
+    if (!this.open || draw === undefined || !this.isConnected) return;
+
+    if (this.#drawn === undefined) {
+      this.#drawn = h("div", { "data-gw-drawn": "" });
+      this.append(this.#drawn);
+    }
+
+    this.#stale = false;
+    this.#placeholder.hidden = true;
+    draw(this.#drawn);
+  }
+
+  /**
+   * Draws once it's open. While it stays open, a new `draw` draws at once,
+   * like any update. Opening waits for a paint first, so the panel opens
+   * before the content is built.
+   */
+  #drawWhenOpen(opened: boolean) {
+    if (!this.open || this.draw === undefined || !this.#stale) return;
+
+    if (this.#drawn !== undefined && !opened) {
+      this.#drawNow();
+
+      return;
+    }
+
+    // Content drawn before stays up while it redraws
+    this.#placeholder.hidden = this.#drawn !== undefined;
+
+    if (this.#pending) return;
+
+    this.#pending = true;
+    requestAnimationFrame(() =>
+      setTimeout(() => {
+        this.#pending = false;
+        this.#drawNow();
+      }),
+    );
+  }
 
   /**
    * A click in the actions that no control of its own takes, such as on the
@@ -268,11 +356,22 @@ export class GwExpansion extends GwElement {
     root.append(this.#details);
   }
 
-  protected override update() {
+  protected override update(changed: ReadonlySet<string>) {
+    if (changed.has("storageKey") && this.storageKey !== "") {
+      const kept = getStorage().get(this.storageKey);
+
+      if (kept === true || kept === false) this.open = kept;
+    }
+
+    if (changed.has("draw")) this.#stale = this.draw !== undefined;
+
+    if (this.draw === undefined) this.#placeholder.hidden = true;
+
     this.#details.open = this.open;
     this.#heading.textContent = this.heading;
     this.#description.textContent = this.description;
     this.#description.hidden = !this.description;
+    this.#drawWhenOpen(changed.has("open"));
   }
 }
 

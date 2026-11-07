@@ -18,6 +18,9 @@ export interface GwEventMap {
     change: Event;
     toggle: Event;
   };
+  "gw-list": {
+    change: Event;
+  };
   "gw-menu-button": {
     select: CustomEvent<{ value: string }>;
     check: CustomEvent<{ value: string, checked: boolean }>;

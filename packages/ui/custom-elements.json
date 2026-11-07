@@ -6062,6 +6062,444 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-code.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A block of code or a diff, such as a patch waiting on review, in its own\nframe that scrolls both ways up to `--gw-code-max-height`, so a long one\nnever stretches the page. With `diff`, added and removed lines are tinted\nand hunk headers are quiet. Put it in a `gw-expansion`'s `draw`, so a\nfolded diff isn't built until it's opened.",
+          "name": "GwCode",
+          "cssProperties": [
+            {
+              "description": "How tall it grows before it scrolls. Defaults to `32rem`.",
+              "name": "--gw-code-max-height"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The scrolling frame.",
+              "name": "code"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ content: {}, diff: { type: \"boolean\", reflect: true }, label: {}, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: block; min-width: 0; } pre { max-height: var(--gw-code-max-height, 32rem); margin: 0; padding: var(--gw-space-3) 0; overflow: auto; overscroll-behavior: contain; font-family: var(--gw-font-mono); font-size: var(--gw-font-size-s); line-height: 1.5; background: var( --gw-color-surface-lower, var(--gw-color-surface-default) ); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } code { display: block; width: max-content; min-width: 100%; font: inherit; } span { display: block; padding-inline: var(--gw-space-3); white-space: pre; } .add { color: var(--gw-color-success); background: var(--gw-color-fill-success-quiet); } .remove { color: var(--gw-color-danger); background: var(--gw-color-fill-danger-quiet); } .hunk, .file { color: var(--gw-color-text-secondary); } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "diff",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#code",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#pre",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The code.",
+              "name": "content"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Reads it as a unified diff and tints its lines.",
+              "name": "diff"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The frame's accessible name, such as the file's name.",
+              "name": "label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-code",
+          "customElement": true,
+          "summary": "Code or a diff in its own scrolling frame."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwCode",
+          "declaration": {
+            "name": "GwCode",
+            "module": "src/gw-code.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-command-menu.ts",
       "declarations": [
         {
@@ -8016,7 +8454,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A heading that opens and closes the content under it, on a native\n`<details>`, so find-in-page and the keyboard work as they do anywhere. The\ncontent glides open and shut rather than jumping, and the chevron turns\nwith it. `open` reflects its state and it fires `toggle`. Controls in\n`actions` sit in the summary row before the chevron, and pressing them\ndoesn't open or close it.",
+          "description": "A heading that opens and closes the content under it, on a native\n`<details>`, so find-in-page and the keyboard work as they do anywhere. The\ncontent glides open and shut rather than jumping, and the chevron turns\nwith it. `open` reflects its state and it fires `toggle`. Controls in\n`actions` sit in the summary row before the chevron, and pressing them\ndoesn't open or close it.\n\nContent that costs something to build goes in `draw` rather than the slot:\nit's called with a container the first time it opens, the frame after, so\nthe panel opens at once with skeleton lines and the content follows. While\nit's open, a new `draw` draws again; while it's shut, that waits until it\nopens. `storage-key` keeps whether it's open in this browser, once someone\nopens or shuts it, so it comes back as they left it.",
           "name": "GwExpansion",
           "cssParts": [
             {
@@ -8066,7 +8504,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, description: {}, open: { type: \"boolean\", reflect: true }, }",
+              "default": "{ heading: {}, description: {}, open: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, draw: { attribute: false }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8079,7 +8517,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3rem; padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width)); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } /* Hovering or pressing an action leaves the row alone, since it won't toggle */ summary:not(:has(.actions:hover)):hover { background: var(--gw-color-fill-neutral-hovered); } summary:not(:has(.actions:active)):active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:not(:has(.actions:hover)):hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:not(:has(.actions:active)):active .toggle { background: var(--gw-color-fill-neutral-selected); } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; cursor: auto; user-select: text; } .actions[hidden] { display: none; } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } `, ]",
+              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3rem; padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width)); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } /* Hovering or pressing an action leaves the row alone, since it won't toggle */ summary:not(:has(.actions:hover)):hover { background: var(--gw-color-fill-neutral-hovered); } summary:not(:has(.actions:active)):active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:not(:has(.actions:hover)):hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:not(:has(.actions:active)):active .toggle { background: var(--gw-color-fill-neutral-selected); } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; cursor: auto; user-select: text; } .actions[hidden] { display: none; } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } gw-skeleton-lines[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8108,6 +8546,29 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "draw",
+              "type": {
+                "text": "(target: HTMLElement) => void"
+              },
+              "default": "undefined",
+              "description": "Draws the content into `target`, the first time it opens."
+            },
+            {
+              "kind": "field",
+              "name": "#placeholder",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -8144,9 +8605,60 @@
             },
             {
               "kind": "field",
+              "name": "#drawn",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLElement | undefined"
+              },
+              "description": "The container `draw` draws into, made the first time it opens."
+            },
+            {
+              "kind": "field",
+              "name": "#stale",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether `draw` has changed since it last drew."
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "#onToggle",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#drawNow",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#drawWhenOpen",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "opened",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Draws once it's open. While it stays open, a new `draw` draws at once,\nlike any update. Opening waits for a paint first, so the panel opens\nbefore the content is built."
             },
             {
               "kind": "field",
@@ -8179,7 +8691,7 @@
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "_changed",
+                  "name": "changed",
                   "type": {
                     "text": "ReadonlySet<string>"
                   }
@@ -8302,18 +8814,6 @@
                 "text": "boolean"
               },
               "default": "false",
-              "inheritedFrom": {
-                "name": "GwElement",
-                "module": "src/element.ts"
-              }
-            },
-            {
-              "kind": "field",
-              "name": "#pending",
-              "privacy": "private",
-              "type": {
-                "text": "Promise<void> | undefined"
-              },
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8495,8 +8995,15 @@
               "type": {
                 "text": "boolean"
               },
-              "description": "Whether the content shows.",
+              "description": "Whether the content shows; how it starts when it has a `storage-key`.",
               "name": "open"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Keeps whether it's open in `localStorage` under this key.",
+              "name": "storage-key"
             }
           ],
           "superclass": {
@@ -11541,6 +12048,1194 @@
           "declaration": {
             "name": "GwInput",
             "module": "src/gw-input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A long list of items the page draws itself, such as cards or expansion\npanels. Only the items on screen exist, drawn by TanStack Virtual against\nthe window's scroll, or its own frame with `contained`, so a list of\nthousands stays quick, and items can be any height.\n\nSet `items` and `draw` as properties. `draw(item, target)` draws an item\ninto a container in the light DOM, so the page's own styles and\ncomponents work in it, the first time it scrolls into view and again when\nthe item or `draw` changes. An item scrolled away keeps what was drawn, so\nit comes back as it was left, such as with a panel open. `keyOf` names\neach item, so it keeps its place and its drawing across updates.\n\n`groupOf` gathers the items under a heading for each value it returns, in\nthe order they first appear, with a chip counting each group's items.\nHeadings sit flat on the page's own surface, and pressing one folds its\nitems away. With `storage-key` it keeps which groups someone folded.",
+          "name": "GwList",
+          "cssProperties": [
+            {
+              "description": "How tall a `contained` list grows before it scrolls. Defaults to `70vh`.",
+              "name": "--gw-list-max-height"
+            },
+            {
+              "description": "The space after each item. Defaults to `--gw-space-2`.",
+              "name": "--gw-list-gap"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The list.",
+              "name": "list"
+            },
+            {
+              "description": "Each item's row.",
+              "name": "item"
+            },
+            {
+              "description": "Each group's heading.",
+              "name": "group"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Takes nothing of the page's: the list places each item's container in a slot of its own.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, estimate: { type: \"number\" }, emptyLabel: { attribute: \"empty-label\" }, items: { attribute: false }, draw: { attribute: false }, keyOf: { attribute: false }, groupOf: { attribute: false }, groupLabel: { attribute: false }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: block; min-width: 0; } :host([contained]) .scroller { max-height: var(--gw-list-max-height, 70vh); overflow-y: auto; overscroll-behavior: contain; } .item { padding-block-end: var(--gw-list-gap, var(--gw-space-2)); } /* A group's heading sits flat on the page's own surface, under the items raised on it */ .group { padding-block: var(--gw-space-3) var(--gw-space-2); } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-1) var(--gw-space-2); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); text-align: start; cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); --gw-icon-size: 1.35em; } .group-toggle:hover { color: var(--gw-color-text-primary); background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "groupsCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "toggledGroups",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "contained",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "estimate",
+              "type": {
+                "text": "number"
+              },
+              "default": "56"
+            },
+            {
+              "kind": "field",
+              "name": "emptyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Nothing to show\""
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "readonly T[]"
+              },
+              "default": "[]",
+              "description": "The items, in order."
+            },
+            {
+              "kind": "field",
+              "name": "draw",
+              "type": {
+                "text": "ListDraw<T>"
+              },
+              "default": "undefined",
+              "description": "Draws an item into its container."
+            },
+            {
+              "kind": "field",
+              "name": "keyOf",
+              "type": {
+                "text": "(item: T) => string"
+              },
+              "default": "undefined",
+              "description": "What identifies an item. Defaults to its position."
+            },
+            {
+              "kind": "field",
+              "name": "groupOf",
+              "type": {
+                "text": "(item: T) => string"
+              },
+              "default": "undefined",
+              "description": "The group an item belongs to."
+            },
+            {
+              "kind": "field",
+              "name": "groupLabel",
+              "type": {
+                "text": "(value: string) => string"
+              },
+              "default": "undefined",
+              "description": "A group's name from its value. Defaults to the value."
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#none",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#scroller",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#before",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#after",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#shown",
+              "privacy": "private",
+              "type": {
+                "text": "readonly Shown<T>[]"
+              },
+              "default": "[]",
+              "description": "The headings and items it shows, rebuilt when what they depend on changes."
+            },
+            {
+              "kind": "field",
+              "name": "#rows",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, HTMLDivElement>()",
+              "description": "Each row's element in the shadow root, by key, kept while it's shown."
+            },
+            {
+              "kind": "field",
+              "name": "#drawn",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, Drawn<T>>()",
+              "description": "Each item's container and what's drawn in it, by key."
+            },
+            {
+              "kind": "field",
+              "name": "#windowed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Virtualizer<Window, HTMLDivElement>({ count: 0, getScrollElement: () => window, estimateSize: () => this.estimate, overscan: 6, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })",
+              "description": "Draws the items on screen as the page scrolls."
+            },
+            {
+              "kind": "field",
+              "name": "#framed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Virtualizer<HTMLDivElement, HTMLDivElement>({ count: 0, getScrollElement: () => this.#scroller, estimateSize: () => this.estimate, overscan: 6, observeElementRect, observeElementOffset, scrollToFn: elementScroll, initialOffset: () => this.#scroller.scrollTop, onChange: () => this.requestUpdate(\"window\"), })",
+              "description": "Draws the items in view as a `contained` list's own frame scrolls."
+            },
+            {
+              "kind": "field",
+              "name": "#cleanup",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#mounted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Whether the frame's virtualizer is the one mounted, once connected."
+            },
+            {
+              "kind": "method",
+              "name": "#mount",
+              "privacy": "private",
+              "description": "Mounts the virtualizer for how it scrolls, swapping out the other."
+            },
+            {
+              "kind": "method",
+              "name": "#unmount",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#keyOf",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "T"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#process",
+              "privacy": "private",
+              "description": "Gathers the items into their groups, then each group's heading and items."
+            },
+            {
+              "kind": "method",
+              "name": "#toggleGroup",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#groupRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "Extract<Shown<T>, { readonly kind: \"group\" }>"
+                  }
+                }
+              ],
+              "description": "A group's heading row, made once and brought up to date."
+            },
+            {
+              "kind": "method",
+              "name": "#itemRow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "shown",
+                  "type": {
+                    "text": "Extract<Shown<T>, { readonly kind: \"item\" }>"
+                  }
+                }
+              ],
+              "description": "An item's row, with a slot for its container, which is drawn into the\nfirst time it shows and again when the item or `draw` changes."
+            },
+            {
+              "kind": "method",
+              "name": "#prune",
+              "privacy": "private",
+              "description": "Forgets the rows and drawings of items that are gone."
+            },
+            {
+              "kind": "method",
+              "name": "#bodyOffset",
+              "privacy": "private",
+              "description": "Where the list starts, on the scale the virtualizer scrolls on."
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#renderRows",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "virtualizer",
+                  "type": {
+                    "text": "Virtualizer<S, HTMLDivElement>"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a group is folded or opened. Read `toggledGroups`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The list's accessible name.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Starts with every group folded away, for long lists.",
+              "name": "groups-collapsed"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The groups, by value, toggled from how they start. As JSON or a property.",
+              "name": "toggled-groups"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Scrolls inside its own frame, up to `--gw-list-max-height`, rather than with the page.",
+              "name": "contained"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Keeps the groups someone folded or opened in `localStorage` under this key.",
+              "name": "storage-key"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How tall an item is likely to be, in pixels, before it's measured. Defaults to `56`.",
+              "name": "estimate"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says with no items. Defaults to `Nothing to show`.",
+              "name": "empty-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-list",
+          "customElement": true,
+          "summary": "A long list of anything, windowed, with foldable groups."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwList",
+          "declaration": {
+            "name": "GwList",
+            "module": "src/gw-list.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-markdown.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Written text, such as a description, a reason or an agent's summary,\nrendered from markdown with GitHub's extensions: tables, task lists,\nstrikethrough and bare links. HTML in the text shows as text, and links\nwith unsafe protocols are dropped, so text from anyone is safe to show.\nLinks open in another tab.\n\nShort text renders at once. Long text is parsed when the page is idle,\nbehind skeleton lines, and added a few blocks a frame, so it never holds\nup a click or a scroll. Headings are sized for text inside a page, not as\nthe page's own headings. Code blocks scroll sideways in their own frame.",
+          "name": "GwMarkdown",
+          "cssParts": [
+            {
+              "description": "The rendered text.",
+              "name": "content"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ content: {}, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: block; min-width: 0; line-height: 1.5; overflow-wrap: anywhere; } .content > :first-child { margin-block-start: 0; } .content > :last-child { margin-block-end: 0; } p, ul, ol, pre, blockquote, table { margin-block: 0 var(--gw-space-3); } h1, h2, h3, h4, h5, h6 { margin-block: var(--gw-space-4) var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); line-height: 1.3; color: var(--gw-color-text-strong); } h1 { font-size: var(--gw-font-size-l); } ul, ol { padding-inline-start: var(--gw-space-5); } li + li { margin-block-start: var(--gw-space-1); } li:has(> input[type=\"checkbox\"]) { list-style: none; } a { color: var(--gw-color-link); } code { padding: 0.1em 0.3em; font-family: var(--gw-font-mono); font-size: 0.9em; background: var(--gw-color-fill-neutral-resting); border-radius: var(--gw-radius-xs); } pre { max-height: var(--gw-markdown-code-max-height, 24rem); padding: var(--gw-space-3); overflow: auto; overscroll-behavior: contain; background: var( --gw-color-surface-lower, var(--gw-color-surface-default) ); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } pre code { padding: 0; background: none; overflow-wrap: normal; } blockquote { padding-inline-start: var(--gw-space-3); margin-inline: 0; color: var(--gw-color-text-secondary); border-inline-start: 0.25rem solid var(--gw-color-border-normal); } table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; } th, td { padding: var(--gw-space-1) var(--gw-space-2); text-align: start; border: var(--gw-border-width) solid var(--gw-color-border-quiet); } th { font-weight: var(--gw-font-weight-strong); } hr { margin-block: var(--gw-space-4); border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } img { max-width: 100%; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "content",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#content",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#placeholder",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#generation",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0",
+              "description": "Counts renders, so a long one stops once newer text arrives."
+            },
+            {
+              "kind": "method",
+              "name": "#renderLater",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "markdown",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "generation",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The markdown.",
+              "name": "content"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-markdown",
+          "customElement": true,
+          "summary": "Written text rendered from markdown, safely."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwMarkdown",
+          "declaration": {
+            "name": "GwMarkdown",
+            "module": "src/gw-markdown.ts"
           }
         }
       ]
@@ -21078,7 +22773,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL or\nstorage.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change. With `storage-key` it keeps them, and the\nfolded groups, in this browser itself: only what someone changed, so the\npage's attributes still set the rest.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort.",
           "name": "GwTable",
           "cssProperties": [
             {
@@ -21114,7 +22809,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21196,6 +22891,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
             },
             {
               "kind": "field",
@@ -21374,7 +23077,22 @@
             {
               "kind": "method",
               "name": "#change",
-              "privacy": "private"
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "part",
+                  "type": {
+                    "text": "Kept"
+                  }
+                }
+              ],
+              "description": "Fires `change`, and keeps what changed under `storage-key`."
+            },
+            {
+              "kind": "method",
+              "name": "#restore",
+              "privacy": "private",
+              "description": "Puts back what was kept under `storage-key`, checked against what each\npart can be, since anyone can edit what's kept."
             },
             {
               "kind": "method",
@@ -21894,6 +23612,13 @@
               },
               "description": "Scrolls inside its own frame, up to `--gw-table-max-height`, rather than with the page.",
               "name": "contained"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Keeps the sort, search and folded groups someone set in `localStorage` under this key.",
+              "name": "storage-key"
             },
             {
               "type": {
@@ -23732,6 +25457,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/storage.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-alert.js"
           }
         },
@@ -23789,6 +25522,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-chip.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-code.js"
           }
         },
         {
@@ -23869,6 +25610,22 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-input.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-list.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-markdown.js"
           }
         },
         {
@@ -24021,6 +25778,109 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-toast.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/kept.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "isText",
+          "return": {
+            "type": {
+              "text": "value is string"
+            }
+          },
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "Json | undefined"
+              }
+            }
+          ],
+          "description": "Whether a kept value is text, boxed so it's told apart without `typeof`."
+        },
+        {
+          "kind": "function",
+          "name": "textsOf",
+          "parameters": [
+            {
+              "name": "value",
+              "type": {
+                "text": "Json | undefined"
+              }
+            }
+          ],
+          "description": "The text in a kept list, leaving out anything else."
+        },
+        {
+          "kind": "function",
+          "name": "keptAt",
+          "parameters": [
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "What's kept under a key, if it's a record of view state at all."
+        },
+        {
+          "kind": "function",
+          "name": "keep",
+          "parameters": [
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "part",
+              "type": {
+                "text": "{ readonly [key: string]: Json }"
+              }
+            }
+          ],
+          "description": "Keeps `part` under `key`, beside what's already kept there."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "isText",
+          "declaration": {
+            "name": "isText",
+            "module": "src/kept.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "textsOf",
+          "declaration": {
+            "name": "textsOf",
+            "module": "src/kept.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "keptAt",
+          "declaration": {
+            "name": "keptAt",
+            "module": "src/kept.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "keep",
+          "declaration": {
+            "name": "keep",
+            "module": "src/kept.ts"
           }
         }
       ]
@@ -25855,6 +27715,36 @@
           "declaration": {
             "name": "followPageScroll",
             "module": "src/scrollbars.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/storage.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "getStorage",
+          "parameters": [
+            {
+              "name": "name",
+              "default": "\"localStorage\"",
+              "type": {
+                "text": "StorageName"
+              }
+            }
+          ],
+          "description": "The values in one of the browser's stores, shared across the page."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "getStorage",
+          "declaration": {
+            "name": "getStorage",
+            "module": "src/storage.ts"
           }
         }
       ]

@@ -78,6 +78,13 @@
       ]
     },
     {
+      "name": "ui-storage",
+      "kind": "element",
+      "description": "getStorage, the shared localStorage and sessionStorage store elements keep their view state in under a storage-key",
+      "files": ["packages/ui/src/storage.ts", "packages/ui/src/kept.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-layout",
       "kind": "element",
       "description": "gw-page, gw-stack, gw-row and gw-grid",
@@ -144,6 +151,13 @@
       "needs": ["ui-base", "gw-skeleton"]
     },
     {
+      "name": "gw-code",
+      "kind": "element",
+      "description": "Code or a diff in its own scrolling frame, with a diff's added and removed lines tinted",
+      "files": ["packages/ui/src/gw-code.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-command-menu",
       "kind": "element",
       "description": "A searchable command menu on Cmd or Ctrl+K, a bottom sheet on phones",
@@ -174,9 +188,9 @@
     {
       "name": "gw-expansion",
       "kind": "element",
-      "description": "A heading that glides its content open and shut, on native details",
+      "description": "A heading that glides its content open and shut, on native details, drawing costly content when it first opens and keeping whether it's open",
       "files": ["packages/ui/src/gw-expansion.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "ui-storage", "gw-skeleton"]
     },
     {
       "name": "gw-facts",

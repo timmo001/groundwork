@@ -45,6 +45,8 @@
   },
   "dependencies": {
     "@tanstack/table-core": "9.3.1",
-    "@tanstack/virtual-core": "3.19.11"
+    "@tanstack/virtual-core": "3.19.11",
+    "micromark": "4.0.3",
+    "micromark-extension-gfm": "3.0.0"
   }
 }

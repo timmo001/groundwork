@@ -82,6 +82,14 @@ An `href` link lives in the card's shadow root, so it isn't in the page's HTML a
 
 A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`, and buttons in `actions` to keep them in the summary row, where pressing them doesn't open or close it.
 
+Give it a `storage-key` to keep whether it's open in this browser once someone opens or shuts it; until then, `open` sets how it starts.
+
+When the content costs something to build, such as a long list or a diff, set `draw` instead of slotting it. It's called with a container the first time the panel opens, a frame later, so the panel opens at once with skeleton lines and the content follows. A new `draw` draws again while it's open, and waits while it's shut. The container sits in the light DOM, so the page's own styles reach what's drawn.
+
+```ts
+expansion.draw = (target) => render(changesTable(changes), target);
+```
+
 <Demo id="expansion-anatomy" layout="stack">
   <gw-anatomy scale="1" target="[part=summary]">
     <gw-expansion heading="Network" description="Wake on LAN, interfaces and ports"></gw-expansion>
@@ -213,6 +221,7 @@ Rows of data that sort by a header press and search every column, built on TanSt
 | `groups-collapsed` | Starts every group folded away, for long lists. Pressing a group's chip still opens it |
 | `toggled-groups` | The groups, by value, pressed from how they start, so a page can keep which are folded |
 | `contained` | Scrolls inside its own frame, up to `--gw-table-max-height` (`70vh`), with the header kept in view, rather than with the page |
+| `storage-key` | Keeps the sort, search and folded groups someone set in `localStorage` under this key, so the table comes back as they left it. Only what they changed is kept, so the other attributes still set the rest |
 | `row-key` | The row property that identifies each row, so it keeps its place across updates |
 | `label`, `search-label`, `empty-label`, `no-match-label` | Its name, and the text it shows, for an app in another language |
 
@@ -222,7 +231,7 @@ Grouped by state:
   <gw-table label="Issues" group="state" sort="seen" descending row-key="id" columns='[{"id":"title","header":"Issue","wide":true},{"id":"state","header":"State"},{"id":"host","header":"Host"},{"id":"seen","header":"Seen","numeric":true}]' rows='[{"id":"a","title":"waybar crashed on a monitor hotplug","state":"Regressed","host":"desktop","seen":14},{"id":"b","title":"pipewire lost its sink after suspend","state":"New","host":"laptop","seen":3},{"id":"c","title":"upkeep-worker.service failed","state":"New","host":"desktop","seen":1},{"id":"d","title":"Out of memory in the docs build","state":"Ongoing","host":"server","seen":27},{"id":"e","title":"ghostty crashed opening a tab","state":"Ongoing","host":"desktop","seen":6}]'></gw-table>
 </Demo>
 
-Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort, search or folded groups change; read `sort`, `descending`, `query` and `toggledGroups`, such as to keep them in the URL or storage.
+Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort, search or folded groups change; read `sort`, `descending`, `query` and `toggledGroups`, such as to keep them in the URL. To keep them in this browser, give it a `storage-key` instead.
 
 ```ts
 table.columns = [
@@ -231,6 +240,48 @@ table.columns = [
 ];
 table.rows = jobs;
 ```
+
+## List
+
+A long list of anything the page draws itself, such as cards or expansion panels, where a table's columns don't fit. Only the items on screen exist, windowed by TanStack Virtual against the window's scroll, or its own frame with `contained`, and items can be any height.
+
+Set `items` and `draw` as properties. `draw(item, target)` draws an item into a container in the light DOM, so the page's own styles and components work in it, when it first scrolls into view and again when the item or `draw` changes. `keyOf` names each item, so it keeps its place and what was drawn across updates; an item scrolled away comes back as it was left, with its panels still open.
+
+`groupOf` gathers the items under a heading for each value, in the order they first appear, with a chip counting each group. Headings sit flat on the page's own surface, under the items raised on it, and fold their items away when pressed.
+
+| Attribute | What it does |
+| --- | --- |
+| `groups-collapsed` | Starts every group folded away |
+| `toggled-groups` | The groups, by value, pressed from how they start |
+| `contained` | Scrolls inside its own frame, up to `--gw-list-max-height` (`70vh`) |
+| `storage-key` | Keeps the groups someone folded or opened in `localStorage` under this key |
+| `estimate` | How tall an item is likely to be before it's measured, in pixels (`56`) |
+| `label`, `empty-label` | Its name, and what it says with no items |
+
+```ts
+list.items = entries;
+list.keyOf = (entry) => entry.id;
+list.groupOf = (entry) => dayOf(entry.at);
+list.draw = (entry, target) => render(entryPanel(entry), target);
+```
+
+## Markdown
+
+<Demo id="markdown" layout="stack">
+  <gw-markdown content={"Healed **3 consumers** of `@timmo001/oxlint-rules` after the release.\n\n- Bumped the pin in each\n- Re-ran their checks\n\nSee [the run](https://github.com/timmo001/groundwork) for the details."}></gw-markdown>
+</Demo>
+
+Written text, such as a description, a reason or an agent's summary, rendered from markdown with GitHub's extensions: tables, task lists, strikethrough and bare links. It's parsed with [micromark](https://github.com/micromark/micromark), which shows HTML in the text as text and drops links with unsafe protocols, so text from anyone is safe to show. Links open in another tab.
+
+Short text renders at once. Long text is parsed when the page is idle, behind skeleton lines, then added a few blocks a frame, so it never holds up a click or a scroll. Headings are sized for text inside a page, and code blocks scroll in their own frame. Short plain values, such as a name or a version, stay plain text.
+
+## Code
+
+<Demo id="code" layout="stack">
+  <gw-code diff label="skills/release/SKILL.md" content={"@@ -4,3 +4,3 @@\n description: Release a package.\n-Run the release script by hand.\n+Run `mise run release`, which tags and publishes.\n ## Steps"}></gw-code>
+</Demo>
+
+Code or a diff in its own frame, which scrolls both ways up to `--gw-code-max-height` (`32rem`), so a long one never stretches the page. With `diff`, added and removed lines are tinted and hunk headers are quiet. In a fold, draw it with the expansion panel's `draw`, so a diff isn't built until someone opens it.
 
 ## References
 
