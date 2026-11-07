@@ -14,6 +14,16 @@ python = "3.15.2"
 "npm:markdownlint-cli2" = "0.24.0"
 actionlint = "1.7.12"
 shellcheck = "0.11.0"
+# The Android shell: the SDK command-line tools, and the JDK, Gradle and Kotlin
+# that build it. android:setup installs the SDK packages and the emulator.
+android-sdk = "23.0"
+java = "temurin-25.0.5+8.0.LTS"
+gradle = "9.9.0"
+kotlin = "2.4.21"
+
+[env]
+ANDROID_AVD = "groundwork"
+ANDROID_API = "android-37.2"
 
 [tasks.install]
 description = "Install dependencies"
@@ -113,6 +123,30 @@ description = "Run the desktop demo: the demo app in an Electrobun window"
 depends = ["install"]
 dir = "templates/desktop-app"
 run = "bun run start"
+
+[tasks."android:setup"]
+description = "Install the Android SDK packages and create the groundwork emulator, a medium phone on the latest Android"
+run = '''
+abi=x86_64
+[ "$(uname -m)" = aarch64 ] && abi=arm64-v8a
+image="system-images/$ANDROID_API/google_apis_playstore_ps16k/$abi"
+android --no-metrics sdk install platform-tools emulator "platforms/$ANDROID_API" build-tools/37.0.0 "$image"
+avdmanager list avd -c | grep -qx "$ANDROID_AVD" ||
+  echo no | avdmanager create avd --name "$ANDROID_AVD" --device medium_phone --package "$(echo "$image" | tr / ';')"
+'''
+
+[tasks."android:emulator"]
+description = "Start the groundwork emulator in the background, waiting until it has booted"
+depends = ["android:setup"]
+run = '''
+# Hyprland leaves Xwayland apps unscaled (force_zero_scaling), so the Qt
+# emulator needs the monitor's scale itself.
+scale=$(hyprctl -j monitors 2>/dev/null | jq -r 'first(.[] | select(.focused)) | .scale' 2>/dev/null)
+QT_SCALE_FACTOR=${scale:-1} emulator -avd "$ANDROID_AVD" -no-snapshot-save -no-boot-anim > /dev/null 2>&1 &
+adb wait-for-device
+until [ "$(adb shell getprop sys.boot_completed | tr -d '\r')" = 1 ]; do sleep 2; done
+echo "$ANDROID_AVD is up: $(adb shell getprop ro.build.version.release | tr -d '\r') (API $(adb shell getprop ro.build.version.sdk | tr -d '\r'))"
+'''
 
 [tasks."report:dev"]
 description = "Run the report template's dev server, which reloads the sample report on a change"
