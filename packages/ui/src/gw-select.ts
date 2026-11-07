@@ -67,6 +67,9 @@ const chevronIcon =
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
+ * @cssprop --gw-select-sheet-height - The tallest the list grows as a bottom sheet on narrow screens. Defaults to `60vh`.
+ * @cssprop --gw-select-backdrop - The backdrop behind the sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-select-clear-height - The Clear button's height with `multiple`. Defaults to `2.5rem`.
  *
  * @fires {Event} change - When the value, or `values` with `multiple`, changes.
  */

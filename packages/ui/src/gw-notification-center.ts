@@ -36,6 +36,8 @@ const emptyIcon =
  * @csspart heading - The heading.
  * @csspart list - The list of cards.
  *
+ * @cssprop --gw-notification-center-gap - The space between the cards. Defaults to `--gw-space-2`.
+ *
  * @fires {Event} clear - When Clear all is pressed.
  */
 export class GwNotificationCenter extends GwElement {
@@ -70,7 +72,7 @@ export class GwNotificationCenter extends GwElement {
 
       .list {
         display: grid;
-        gap: var(--gw-space-2);
+        gap: var(--gw-notification-center-gap, var(--gw-space-2));
       }
 
       [hidden] {

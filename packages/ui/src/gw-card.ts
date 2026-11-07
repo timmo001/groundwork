@@ -45,6 +45,13 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @csspart description - The line under the heading.
  * @csspart body - The content.
  * @csspart footer - The area under the divider.
+ *
+ * @cssprop --gw-card-padding - The space inside the card. Defaults to `--gw-space-4`.
+ * @cssprop --gw-card-gap - The space between the header, content and footer. Defaults to `--gw-space-3`.
+ * @cssprop --gw-card-background - The surface. Defaults to `--gw-color-surface-raised`.
+ * @cssprop --gw-card-border-color - The border and footer divider. Defaults to `--gw-color-border-normal`.
+ * @cssprop --gw-card-radius - The corners. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-card-shadow - The shadow. Defaults to `--gw-shadow-s`.
  */
 export class GwCard extends GwElement {
   static override properties = {
@@ -69,15 +76,16 @@ export class GwCard extends GwElement {
       .card {
         display: flex;
         flex-direction: column;
-        gap: var(--gw-space-3);
+        gap: var(--gw-card-gap, var(--gw-space-3));
         height: 100%;
-        padding: var(--gw-space-4);
+        padding: var(--gw-card-padding, var(--gw-space-4));
         color: inherit;
         text-decoration: none;
-        background: var(--gw-color-surface-raised);
-        border: var(--gw-border-width) solid var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-panel);
-        box-shadow: var(--gw-shadow-s);
+        background: var(--gw-card-background, var(--gw-color-surface-raised));
+        border: var(--gw-border-width) solid
+          var(--gw-card-border-color, var(--gw-color-border-normal));
+        border-radius: var(--gw-card-radius, var(--gw-radius-panel));
+        box-shadow: var(--gw-card-shadow, var(--gw-shadow-s));
       }
 
       :host([flush]) .card {
@@ -171,9 +179,10 @@ export class GwCard extends GwElement {
         display: flex;
         flex-direction: column;
         gap: inherit;
-        margin-inline: calc(-1 * var(--gw-space-4));
-        padding: var(--gw-space-3) var(--gw-space-4) 0;
-        border-top: var(--gw-border-width) solid var(--gw-color-border-normal);
+        margin-inline: calc(-1 * var(--gw-card-padding, var(--gw-space-4)));
+        padding: var(--gw-space-3) var(--gw-card-padding, var(--gw-space-4)) 0;
+        border-top: var(--gw-border-width) solid
+          var(--gw-card-border-color, var(--gw-color-border-normal));
       }
 
       :host([flush]) footer:not([hidden]) {

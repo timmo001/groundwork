@@ -45,6 +45,11 @@ import { base } from "./styles.js";
  * @csspart actions - The actions' wrapper.
  * @csspart content - The content's wrapper.
  *
+ * @cssprop --gw-expansion-background - The surface. Defaults to `--gw-color-surface-raised`.
+ * @cssprop --gw-expansion-border-color - The border. Defaults to `--gw-color-border-normal`.
+ * @cssprop --gw-expansion-radius - The corners. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-expansion-summary-height - The summary row's least height. Defaults to `3rem`.
+ *
  * @fires {Event} toggle - When it opens or closes.
  */
 export class GwExpansion extends GwElement {
@@ -65,9 +70,13 @@ export class GwExpansion extends GwElement {
       }
 
       details {
-        background: var(--gw-color-surface-raised);
-        border: var(--gw-border-width) solid var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-panel);
+        background: var(
+          --gw-expansion-background,
+          var(--gw-color-surface-raised)
+        );
+        border: var(--gw-border-width) solid
+          var(--gw-expansion-border-color, var(--gw-color-border-normal));
+        border-radius: var(--gw-expansion-radius, var(--gw-radius-panel));
       }
 
       details::details-content {
@@ -86,11 +95,15 @@ export class GwExpansion extends GwElement {
         display: flex;
         gap: var(--gw-space-3);
         align-items: center;
-        min-height: 3rem;
+        min-height: var(--gw-expansion-summary-height, 3rem);
         padding: var(--gw-space-2) var(--gw-space-4);
         cursor: pointer;
         list-style: none;
-        border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width));
+        border-radius: calc(
+          var(--gw-expansion-radius, var(--gw-radius-panel)) - var(
+              --gw-border-width
+            )
+        );
         user-select: none;
         transition:
           background-color var(--gw-motion-fast) var(--gw-motion-easing),

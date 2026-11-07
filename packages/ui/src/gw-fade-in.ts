@@ -21,6 +21,8 @@ import { fadeEasing, fadeIn, motionDuration, reducedMotion } from "./motion.js";
  * @attr {number} duration - Milliseconds the fade takes. Defaults to `--gw-motion-slow`.
  *
  * @slot - The content to fade in.
+ *
+ * @csspart content - The slot holding the content.
  */
 export class GwFadeIn extends GwElement {
   static override properties = {
@@ -48,7 +50,7 @@ export class GwFadeIn extends GwElement {
   }
 
   protected override create(root: ShadowRoot) {
-    root.append(h("slot"));
+    root.append(h("slot", { part: "content" }));
   }
 
   override connectedCallback() {

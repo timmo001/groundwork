@@ -48,6 +48,12 @@ const sheetBelow = 600;
  * @csspart footer - The actions row.
  *
  * @cssprop --gw-popover-width - Its width beside a button. Defaults to `20rem`.
+ * @cssprop --gw-popover-padding - The space inside it. Defaults to `--gw-space-4`.
+ * @cssprop --gw-popover-background - The surface. Defaults to `--gw-color-surface-overlay`.
+ * @cssprop --gw-popover-border-color - The border. Defaults to `--gw-color-border-normal`.
+ * @cssprop --gw-popover-radius - The corners. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-popover-shadow - The shadow. Defaults to `--gw-shadow-l`.
+ * @cssprop --gw-popover-backdrop - The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.
  *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */
@@ -75,14 +81,17 @@ export class GwPopover extends GwElement {
         max-height: calc(100dvh - 2 * ${gap}px);
         overflow-y: auto;
         overscroll-behavior: contain;
-        padding: var(--gw-space-4);
+        padding: var(--gw-popover-padding, var(--gw-space-4));
         margin: 0;
         color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-overlay);
+        background: var(
+          --gw-popover-background,
+          var(--gw-color-surface-overlay)
+        );
         border: max(var(--gw-border-width), 1px) solid
-          var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-panel);
-        box-shadow: var(--gw-shadow-l);
+          var(--gw-popover-border-color, var(--gw-color-border-normal));
+        border-radius: var(--gw-popover-radius, var(--gw-radius-panel));
+        box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l));
         opacity: 0;
         scale: 0.96;
         transition:
@@ -129,7 +138,7 @@ export class GwPopover extends GwElement {
       }
 
       [data-placement="center"]::backdrop {
-        background: rgb(0 0 0 / 40%);
+        background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%));
       }
 
       /* A bottom sheet on narrow screens, sliding up from the edge */
@@ -138,7 +147,8 @@ export class GwPopover extends GwElement {
         width: 100%;
         max-width: none;
         padding-block-end: calc(
-          var(--gw-space-4) + env(safe-area-inset-bottom)
+          var(--gw-popover-padding, var(--gw-space-4)) +
+            env(safe-area-inset-bottom)
         );
         border-end-start-radius: 0;
         border-end-end-radius: 0;
@@ -157,7 +167,7 @@ export class GwPopover extends GwElement {
       }
 
       [data-placement="sheet"]::backdrop {
-        background: rgb(0 0 0 / 40%);
+        background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%));
       }
 
       header {

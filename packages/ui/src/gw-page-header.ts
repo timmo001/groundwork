@@ -28,6 +28,10 @@ const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
  * @csspart tile - The icon tile.
  * @csspart heading - The title.
  * @csspart description - The line under the title.
+ *
+ * @cssprop --gw-page-header-tile-size - The icon tile's size. Defaults to `3rem`, or `2.5rem` from level 2.
+ * @cssprop --gw-page-header-tile-color - The icon's color. Defaults to `--gw-color-accent`.
+ * @cssprop --gw-page-header-tile-background - The tile's fill. Defaults to `--gw-color-fill-accent-quiet`.
  */
 export class GwPageHeader extends GwElement {
   static override properties = {
@@ -61,10 +65,13 @@ export class GwPageHeader extends GwElement {
         display: grid;
         flex: none;
         place-items: center;
-        width: 3rem;
-        height: 3rem;
-        color: var(--gw-color-accent);
-        background: var(--gw-color-fill-accent-quiet);
+        width: var(--gw-page-header-tile-size, 3rem);
+        height: var(--gw-page-header-tile-size, 3rem);
+        color: var(--gw-page-header-tile-color, var(--gw-color-accent));
+        background: var(
+          --gw-page-header-tile-background,
+          var(--gw-color-fill-accent-quiet)
+        );
         border-radius: var(--gw-radius-l);
         --gw-icon-size: 1.625rem;
       }
@@ -78,8 +85,8 @@ export class GwPageHeader extends GwElement {
       }
 
       :host(:not([level="1"])) .tile {
-        width: 2.5rem;
-        height: 2.5rem;
+        width: var(--gw-page-header-tile-size, 2.5rem);
+        height: var(--gw-page-header-tile-size, 2.5rem);
         border-radius: var(--gw-radius-m);
         --gw-icon-size: 1.375rem;
       }
@@ -89,7 +96,7 @@ export class GwPageHeader extends GwElement {
       }
 
       :host(:not([level="1"])) .tile:not([hidden]) ~ .actions {
-        min-height: 2.5rem;
+        min-height: var(--gw-page-header-tile-size, 2.5rem);
       }
 
       .heading {
@@ -118,7 +125,7 @@ export class GwPageHeader extends GwElement {
 
       /* Centered on the tile when there is one */
       .tile:not([hidden]) ~ .actions {
-        min-height: 3rem;
+        min-height: var(--gw-page-header-tile-size, 3rem);
       }
     `,
   ];

@@ -329,7 +329,7 @@ export const fieldStyles = css`
     border-end-end-radius: 0;
     scale: 1;
     translate: 0 100%;
-    --gw-option-list-height: 60vh;
+    --gw-option-list-height: var(--gw-select-sheet-height, 60vh);
   }
 
   :where(gw-select) .gw-select-popup[data-placement="sheet"]:popover-open {
@@ -343,14 +343,14 @@ export const fieldStyles = css`
   }
 
   :where(gw-select) .gw-select-popup[data-placement="sheet"]::backdrop {
-    background: rgb(0 0 0 / 40%);
+    background: var(--gw-select-backdrop, rgb(0 0 0 / 40%));
   }
 
   /* With multiple, a full-width Clear under the list empties the choice */
   :where(gw-select) .gw-select-clear {
     display: block;
     width: 100%;
-    min-height: 2.5rem;
+    min-height: var(--gw-select-clear-height, 2.5rem);
     padding: 0 var(--gw-space-3);
     font: inherit;
     font-size: var(--gw-font-size-s);
@@ -434,8 +434,8 @@ export const fieldStyles = css`
   }
 
   :where(gw-checkbox) input {
-    width: 1.125rem;
-    height: 1.125rem;
+    width: var(--gw-checkbox-size, 1.125rem);
+    height: var(--gw-checkbox-size, 1.125rem);
     margin: 0;
     accent-color: var(--gw-color-fill-accent-resting);
   }
@@ -443,8 +443,8 @@ export const fieldStyles = css`
   :where(gw-switch) input {
     position: relative;
     flex: none;
-    width: 2.5rem;
-    height: 1.5rem;
+    width: var(--gw-switch-width, 2.5rem);
+    height: var(--gw-switch-height, 1.5rem);
     margin: 0;
     cursor: pointer;
     appearance: none;
@@ -460,8 +460,8 @@ export const fieldStyles = css`
     position: absolute;
     inset-block-start: 0.1875rem;
     inset-inline-start: 0.1875rem;
-    width: 1rem;
-    height: 1rem;
+    width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem);
+    height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem);
     content: "";
     background: var(--gw-color-text-secondary);
     border-radius: 50%;
@@ -476,7 +476,10 @@ export const fieldStyles = css`
   }
 
   :where(gw-switch) input:checked::after {
-    translate: 1rem 0;
+    translate: calc(
+        var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem)
+      )
+      0;
     background: var(--gw-color-on-accent);
   }
 

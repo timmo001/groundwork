@@ -38,6 +38,13 @@ const closeIcon =
  * @csspart body - The content.
  * @csspart footer - The actions row.
  *
+ * @cssprop --gw-dialog-width - The widest it grows. Defaults to `32rem`.
+ * @cssprop --gw-dialog-background - The surface. Defaults to `--gw-color-surface-overlay`.
+ * @cssprop --gw-dialog-border-color - The border. Defaults to `--gw-color-border-normal`.
+ * @cssprop --gw-dialog-radius - The corners. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-dialog-shadow - The shadow. Defaults to `--gw-shadow-l`.
+ * @cssprop --gw-dialog-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.
+ *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */
 export class GwDialog extends GwElement {
@@ -55,19 +62,26 @@ export class GwDialog extends GwElement {
     dismissalStyles,
     css`
       dialog {
-        width: min(32rem, calc(100vw - 2 * var(--gw-space-3)));
+        width: min(
+          var(--gw-dialog-width, 32rem),
+          calc(100vw - 2 * var(--gw-space-3))
+        );
         max-height: calc(100dvh - 2 * var(--gw-space-3));
         padding: 0;
         overflow: hidden;
         color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-overlay);
-        border: var(--gw-border-width) solid var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-panel);
-        box-shadow: var(--gw-shadow-l);
+        background: var(
+          --gw-dialog-background,
+          var(--gw-color-surface-overlay)
+        );
+        border: var(--gw-border-width) solid
+          var(--gw-dialog-border-color, var(--gw-color-border-normal));
+        border-radius: var(--gw-dialog-radius, var(--gw-radius-panel));
+        box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l));
       }
 
       dialog::backdrop {
-        background: rgb(0 0 0 / 50%);
+        background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%));
       }
 
       /* Fades and lifts in and out, the backdrop with it */

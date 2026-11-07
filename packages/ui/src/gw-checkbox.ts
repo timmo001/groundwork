@@ -20,6 +20,8 @@ import { LightElement, fieldId } from "./fields.js";
  * @attr {boolean} checked - Whether it's checked.
  * @attr {boolean} disabled - Disables it.
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
+ *
+ * @cssprop --gw-checkbox-size - The box's size. Defaults to `1.125rem`.
  */
 export class GwCheckbox extends LightElement {
   static override properties = {
@@ -94,6 +96,9 @@ export class GwCheckbox extends LightElement {
  *
  * @element gw-switch
  * @summary A labeled switch for a setting that applies at once.
+ *
+ * @cssprop --gw-switch-width - The track's width. Defaults to `2.5rem`.
+ * @cssprop --gw-switch-height - The track's height; the thumb is 0.5rem less. Defaults to `1.5rem`.
  */
 export class GwSwitch extends GwCheckbox {
   protected override get controlRole() {

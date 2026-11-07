@@ -33,6 +33,15 @@ const sheetBelow = 600;
  * @csspart list - The `gw-option-list` of commands.
  * @csspart footer - The row of key hints.
  *
+ * @cssprop --gw-command-menu-top - How far down the page it opens. Defaults to `12vh`.
+ * @cssprop --gw-command-menu-width - The widest it grows. Defaults to `36rem`.
+ * @cssprop --gw-command-menu-list-height - The tallest the list grows. Defaults to `min(24rem, 56vh)`.
+ * @cssprop --gw-command-menu-background - The surface. Defaults to `--gw-color-surface-overlay`.
+ * @cssprop --gw-command-menu-border-color - The border. Defaults to `--gw-color-border-loud`.
+ * @cssprop --gw-command-menu-radius - The corners. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-command-menu-shadow - The shadow. Defaults to `--gw-shadow-l`.
+ * @cssprop --gw-command-menu-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 60%)`.
+ *
  * @fires {CustomEvent<{ value: string }>} pick - When a command is picked, with its `value` in `detail`.
  */
 export class GwCommandMenu extends GwElement {
@@ -49,23 +58,32 @@ export class GwCommandMenu extends GwElement {
     base,
     css`
       dialog {
-        top: 12vh;
-        width: min(36rem, calc(100vw - 2 * var(--gw-space-3)));
+        top: var(--gw-command-menu-top, 12vh);
+        width: min(
+          var(--gw-command-menu-width, 36rem),
+          calc(100vw - 2 * var(--gw-space-3))
+        );
         max-height: 70vh;
         padding: 0;
         margin-block: 0;
         overflow: hidden;
         color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-overlay);
+        background: var(
+          --gw-command-menu-background,
+          var(--gw-color-surface-overlay)
+        );
         border: max(var(--gw-border-width), 1px) solid
-          var(--gw-color-border-loud);
-        border-radius: var(--gw-radius-panel);
-        box-shadow: var(--gw-shadow-l);
-        --gw-option-list-height: min(24rem, 56vh);
+          var(--gw-command-menu-border-color, var(--gw-color-border-loud));
+        border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel));
+        box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l));
+        --gw-option-list-height: var(
+          --gw-command-menu-list-height,
+          min(24rem, 56vh)
+        );
       }
 
       dialog::backdrop {
-        background: rgb(0 0 0 / 60%);
+        background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%));
       }
 
       dialog,

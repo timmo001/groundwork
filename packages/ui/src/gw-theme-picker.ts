@@ -98,6 +98,10 @@ const moreIcon =
  * @csspart gallery - The theme gallery, with `gallery`.
  * @csspart controls - The mode, theme and status.
  * @csspart actions - Reset and Import, with `inline`.
+ * @csspart popover - The `gw-popover` the controls move into.
+ *
+ * @cssprop --gw-theme-picker-gallery-width - The popover's width with `gallery`. Defaults to `34rem`.
+ * @cssprop --gw-theme-picker-gallery-height - The tallest the gallery grows before it scrolls. Defaults to `min(24rem, 50vh)`.
  *
  * @fires {CustomEvent<{ mode: string }>} mode - When a mode is picked.
  * @fires {CustomEvent<{ id: string }>} theme - When a theme is picked.
@@ -133,11 +137,11 @@ export class GwThemePicker extends GwElement {
       }
 
       :host([gallery]) gw-popover {
-        --gw-popover-width: 34rem;
+        --gw-popover-width: var(--gw-theme-picker-gallery-width, 34rem);
       }
 
       .gallery {
-        max-height: min(24rem, 50vh);
+        max-height: var(--gw-theme-picker-gallery-height, min(24rem, 50vh));
         overflow: auto;
         /* Room for the cards' focus rings */
         padding: var(--gw-space-1);
@@ -275,7 +279,7 @@ export class GwThemePicker extends GwElement {
 
   readonly #import = h("gw-button", { appearance: "outlined" });
 
-  readonly #popover = h("gw-popover");
+  readonly #popover = h("gw-popover", { part: "popover" });
 
   // Reset and Import on their own, once nothing else is left in the popover
   readonly #menu = h("gw-menu-button", {

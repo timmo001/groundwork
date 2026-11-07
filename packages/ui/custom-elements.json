@@ -340,7 +340,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element."
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning."
             },
             {
               "kind": "field",
@@ -677,7 +677,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: 2.5rem; padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, textarea, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: 1.125rem; height: 1.125rem; margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: 2.5rem; height: 1.5rem; margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: 1rem; height: 1rem; content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: 1rem 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
+          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: 1.5rem; height: 1.5rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: 1rem; height: 1rem; fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-select-sheet-height, 60vh); } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-select-backdrop, rgb(0 0 0 / 40%)); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: var(--gw-select-clear-height, 2.5rem); padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, textarea, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: var(--gw-checkbox-size, 1.125rem); height: var(--gw-checkbox-size, 1.125rem); margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: var(--gw-switch-width, 2.5rem); height: var(--gw-switch-height, 1.5rem); margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: calc( var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem) ) 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -756,7 +756,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1248,7 +1248,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1535,6 +1535,24 @@
           "kind": "class",
           "description": "A site or app header pinned to the top of the page, with a brand, nav\nlinks and actions, full width with its content kept to the content width.\nIt's transparent at first, then gets a blurred surface and a bottom border\nonce the page scrolls, or once the element\n`reveal-after` names scrolls out of view, such as a hero. With\n`reveal-after` the brand stays hidden, taking no room, until then, so a\nlarge logo in the hero hands over to the small one in the bar. The nav\nslides over as it opens.\n\n`overlay` lays it over the top of the page rather than taking room, for a\npage that opens with a hero. Below `menu-below`, 600px wide by default,\nthe nav moves into a menu opened from a button, which closes on Esc, a\nclick outside or a link. Raise it when the nav and actions need more room.\nWith no nav links there's no menu button, so a bar of only a brand and\nactions keeps its layout at every width.",
           "name": "GwAppBar",
+          "cssProperties": [
+            {
+              "description": "The bar's least height. Defaults to `3.5rem`.",
+              "name": "--gw-app-bar-height"
+            },
+            {
+              "description": "The surface once it floats. Defaults to `--gw-color-surface-default` at 82%.",
+              "name": "--gw-app-bar-background"
+            },
+            {
+              "description": "The bottom border once it floats. Defaults to `--gw-color-border-quiet`.",
+              "name": "--gw-app-bar-border-color"
+            },
+            {
+              "description": "The backdrop filter once it floats. Defaults to `blur(12px) saturate(1.4)`.",
+              "name": "--gw-app-bar-backdrop"
+            }
+          ],
           "cssParts": [
             {
               "description": "The bar.",
@@ -1588,7 +1606,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3.5rem; padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: color-mix( in oklab, var(--gw-color-surface-default) 82%, transparent ); border-color: var(--gw-color-border-quiet); backdrop-filter: blur(12px) saturate(1.4); } /* A one-column grid, so a hidden brand can fold its width to nothing and the nav slides over as it opens, rather than leaving a gap */ .brand { display: grid; flex: none; grid-template-columns: 1fr; align-items: center; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .brand > slot { display: flex; align-items: center; min-width: 0; overflow: clip; overflow-clip-margin: calc( var(--gw-focus-width) + var(--gw-focus-offset) ); } :host([reveal-after]:not([floating])) .brand { grid-template-columns: 0fr; margin-inline-end: calc(var(--gw-space-3) * -1); pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-slow) allow-discrete; } /* The nav keeps its room; the actions take the rest, which a theme picker fills or gives up by moving its controls into its popover */ .nav { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: 1 1 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } /* Below menu-below, which sets collapsed, the nav folds into a menu, unless there's no nav to fold */ :host([collapsed]) .bar:not(.no-nav) .menu { display: inline-grid; } .no-nav .nav { display: none; } :host([collapsed]) .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([collapsed][menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } `, ]",
+              "default": "[ base, css` :host { position: sticky; inset-block-start: 0; z-index: 50; display: block; } :host([overlay]) { position: fixed; inset-inline: 0; } .bar { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; min-height: var(--gw-app-bar-height, 3.5rem); padding: var(--gw-space-1) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); border-block-end: max(var(--gw-border-width), 1px) solid transparent; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing), backdrop-filter var(--gw-motion-normal) var(--gw-motion-easing); } :host([floating]) .bar, :host([menu-open]) .bar { background: var( --gw-app-bar-background, color-mix(in oklab, var(--gw-color-surface-default) 82%, transparent) ); border-color: var( --gw-app-bar-border-color, var(--gw-color-border-quiet) ); backdrop-filter: var(--gw-app-bar-backdrop, blur(12px) saturate(1.4)); } /* A one-column grid, so a hidden brand can fold its width to nothing and the nav slides over as it opens, rather than leaving a gap */ .brand { display: grid; flex: none; grid-template-columns: 1fr; align-items: center; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .brand > slot { display: flex; align-items: center; min-width: 0; overflow: clip; overflow-clip-margin: calc( var(--gw-focus-width) + var(--gw-focus-offset) ); } :host([reveal-after]:not([floating])) .brand { grid-template-columns: 0fr; margin-inline-end: calc(var(--gw-space-3) * -1); pointer-events: none; visibility: hidden; opacity: 0; translate: 0 -0.25rem; transition: grid-template-columns var(--gw-motion-slow) var(--gw-motion-easing), margin var(--gw-motion-slow) var(--gw-motion-easing), opacity var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-slow) allow-discrete; } /* The nav keeps its room; the actions take the rest, which a theme picker fills or gives up by moving its controls into its popover */ .nav { display: flex; flex: none; gap: var(--gw-space-1); align-items: center; min-width: 0; } .actions { display: flex; flex: 1 1 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } .menu { display: none; place-items: center; width: 2.5rem; height: 2.5rem; padding: 0; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } .menu:hover { background: var(--gw-color-fill-neutral-hovered); } /* Below menu-below, which sets collapsed, the nav folds into a menu, unless there's no nav to fold */ :host([collapsed]) .bar:not(.no-nav) .menu { display: inline-grid; } .no-nav .nav { display: none; } :host([collapsed]) .nav { position: absolute; inset-block-start: 100%; inset-inline: 0; flex-direction: column; gap: var(--gw-space-0-5); align-items: stretch; padding: var(--gw-space-2) max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2); visibility: hidden; background: var(--gw-color-surface-default); border-block-end: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.5rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), visibility var(--gw-motion-normal) allow-discrete; } :host([collapsed][menu-open]) .nav { visibility: visible; opacity: 1; translate: 0 0; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -1838,7 +1856,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -2378,7 +2396,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -2849,7 +2867,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -3444,7 +3462,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -3801,6 +3819,32 @@
           "kind": "class",
           "description": "A surface for one group of content, with an optional heading and actions.\nWith `href` the whole card is a link. While `loading`, lines of skeleton\nstand in for the content, and for the heading until it's known. The card\nglides to its new height and the content fades in once it's loaded.\n\nFor a link the page's HTML has to carry, such as one with a `target` or\n`rel`, put an `<a>` in the `heading` slot instead of `href`. A click\nanywhere on the card that isn't on another control follows it, the card\nshows the link's hover and focus, and the link stays a real one in the\npage, so the rest of the card's content stays plain text.",
           "name": "GwCard",
+          "cssProperties": [
+            {
+              "description": "The space inside the card. Defaults to `--gw-space-4`.",
+              "name": "--gw-card-padding"
+            },
+            {
+              "description": "The space between the header, content and footer. Defaults to `--gw-space-3`.",
+              "name": "--gw-card-gap"
+            },
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-raised`.",
+              "name": "--gw-card-background"
+            },
+            {
+              "description": "The border and footer divider. Defaults to `--gw-color-border-normal`.",
+              "name": "--gw-card-border-color"
+            },
+            {
+              "description": "The corners. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-card-radius"
+            },
+            {
+              "description": "The shadow. Defaults to `--gw-shadow-s`.",
+              "name": "--gw-card-shadow"
+            }
+          ],
           "cssParts": [
             {
               "description": "The card's surface.",
@@ -3866,7 +3910,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-space-3); height: 100%; padding: var(--gw-space-4); color: inherit; text-decoration: none; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-s); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover, .card.linked:hover { border-color: var(--gw-color-border-accent); } /* A card following a link in its heading slot */ .card.linked { cursor: pointer; transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } .card.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } ::slotted([slot=\"heading\"]) { font: inherit; color: inherit; } ::slotted(a[slot=\"heading\"]) { text-decoration: none; outline: none; } /* With title-link, only the heading is the link */ .title a { color: inherit; text-decoration: none; border-radius: var(--gw-radius-chip); } .title a[href]:hover, :host([title-link]) ::slotted(a[slot=\"heading\"]:hover) { color: var(--gw-color-accent); text-decoration: underline; } .title a[href]:focus-visible, :host([title-link]) ::slotted(a[slot=\"heading\"]:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } header { display: flex; gap: var(--gw-space-2); align-items: center; } header > .icon { flex-shrink: 0; margin-inline-end: var(--gw-space-1); color: var(--gw-color-accent); } .titles { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } .title { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The divider runs to the card's edges */ footer:not([hidden]) { display: flex; flex-direction: column; gap: inherit; margin-inline: calc(-1 * var(--gw-space-4)); padding: var(--gw-space-3) var(--gw-space-4) 0; border-top: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([flush]) footer:not([hidden]) { margin-inline: 0; padding-bottom: var(--gw-space-3); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
+              "default": "[ base, css` :host { display: block; } .card { display: flex; flex-direction: column; gap: var(--gw-card-gap, var(--gw-space-3)); height: 100%; padding: var(--gw-card-padding, var(--gw-space-4)); color: inherit; text-decoration: none; background: var(--gw-card-background, var(--gw-color-surface-raised)); border: var(--gw-border-width) solid var(--gw-card-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-card-radius, var(--gw-radius-panel)); box-shadow: var(--gw-card-shadow, var(--gw-shadow-s)); } :host([flush]) .card { padding: 0; overflow: hidden; } a.card { transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } a.card:hover, .card.linked:hover { border-color: var(--gw-color-border-accent); } /* A card following a link in its heading slot */ .card.linked { cursor: pointer; transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } .card.focused { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } ::slotted([slot=\"heading\"]) { font: inherit; color: inherit; } ::slotted(a[slot=\"heading\"]) { text-decoration: none; outline: none; } /* With title-link, only the heading is the link */ .title a { color: inherit; text-decoration: none; border-radius: var(--gw-radius-chip); } .title a[href]:hover, :host([title-link]) ::slotted(a[slot=\"heading\"]:hover) { color: var(--gw-color-accent); text-decoration: underline; } .title a[href]:focus-visible, :host([title-link]) ::slotted(a[slot=\"heading\"]:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } header { display: flex; gap: var(--gw-space-2); align-items: center; } header > .icon { flex-shrink: 0; margin-inline-end: var(--gw-space-1); color: var(--gw-color-accent); } .titles { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } .title { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The divider runs to the card's edges */ footer:not([hidden]) { display: flex; flex-direction: column; gap: inherit; margin-inline: calc(-1 * var(--gw-card-padding, var(--gw-space-4))); padding: var(--gw-space-3) var(--gw-card-padding, var(--gw-space-4)) 0; border-top: var(--gw-border-width) solid var(--gw-card-border-color, var(--gw-color-border-normal)); } :host([flush]) footer:not([hidden]) { margin-inline: 0; padding-bottom: var(--gw-space-3); } .body:not([hidden]) { display: flex; flex-direction: column; gap: inherit; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -4157,7 +4201,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -4486,6 +4530,12 @@
           "kind": "class",
           "description": "A labeled native checkbox. `gw-switch` draws the same control as a switch.",
           "name": "GwCheckbox",
+          "cssProperties": [
+            {
+              "description": "The box's size. Defaults to `1.125rem`.",
+              "name": "--gw-checkbox-size"
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -4680,7 +4730,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -4979,6 +5029,24 @@
           "kind": "class",
           "description": "A checkbox drawn as a switch, announced as a switch. It takes the same\nattributes as `gw-checkbox`.",
           "name": "GwSwitch",
+          "cssProperties": [
+            {
+              "description": "The track's width. Defaults to `2.5rem`.",
+              "name": "--gw-switch-width"
+            },
+            {
+              "description": "The track's height; the thumb is 0.5rem less. Defaults to `1.5rem`.",
+              "name": "--gw-switch-height"
+            },
+            {
+              "description": "The box's size. Defaults to `1.125rem`.",
+              "name": "--gw-checkbox-size",
+              "inheritedFrom": {
+                "name": "GwCheckbox",
+                "module": "src/gw-checkbox.ts"
+              }
+            }
+          ],
           "members": [
             {
               "kind": "field",
@@ -5221,7 +5289,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -5784,7 +5852,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6236,7 +6304,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6523,6 +6591,40 @@
           "kind": "class",
           "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet on phones. Picking one\ncloses the menu and fires `pick` with its value. Esc or a click outside\ncloses it. It won't open over another dialog, so only one overlay shows at\na time. Set `shortcut=\"none\"` to open it only with `show()`.",
           "name": "GwCommandMenu",
+          "cssProperties": [
+            {
+              "description": "How far down the page it opens. Defaults to `12vh`.",
+              "name": "--gw-command-menu-top"
+            },
+            {
+              "description": "The widest it grows. Defaults to `36rem`.",
+              "name": "--gw-command-menu-width"
+            },
+            {
+              "description": "The tallest the list grows. Defaults to `min(24rem, 56vh)`.",
+              "name": "--gw-command-menu-list-height"
+            },
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
+              "name": "--gw-command-menu-background"
+            },
+            {
+              "description": "The border. Defaults to `--gw-color-border-loud`.",
+              "name": "--gw-command-menu-border-color"
+            },
+            {
+              "description": "The corners. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-command-menu-radius"
+            },
+            {
+              "description": "The shadow. Defaults to `--gw-shadow-l`.",
+              "name": "--gw-command-menu-shadow"
+            },
+            {
+              "description": "The backdrop over the page. Defaults to `rgb(0 0 0 / 60%)`.",
+              "name": "--gw-command-menu-backdrop"
+            }
+          ],
           "cssParts": [
             {
               "description": "The menu's surface.",
@@ -6558,7 +6660,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` dialog { top: 12vh; width: min(36rem, calc(100vw - 2 * var(--gw-space-3))); max-height: 70vh; padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); --gw-option-list-height: min(24rem, 56vh); } dialog::backdrop { background: rgb(0 0 0 / 60%); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } dialog[data-placement=\"sheet\"][open] { opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
+              "default": "[ base, css` dialog { top: var(--gw-command-menu-top, 12vh); width: min( var(--gw-command-menu-width, 36rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: 70vh; padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-command-menu-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-command-menu-border-color, var(--gw-color-border-loud)); border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel)); box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l)); --gw-option-list-height: var( --gw-command-menu-list-height, min(24rem, 56vh) ); } dialog::backdrop { background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%)); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } dialog[data-placement=\"sheet\"][open] { opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6719,7 +6821,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -7036,6 +7138,32 @@
           "kind": "class",
           "description": "A modal on the native `<dialog>`, so focus is trapped and returned, Esc\ncloses it and the page behind is inert. Open it with `show()`. Put buttons\nin the `actions` slot; a click on one with a `value` closes the dialog with\nthat value, and fires `close`.",
           "name": "GwDialog",
+          "cssProperties": [
+            {
+              "description": "The widest it grows. Defaults to `32rem`.",
+              "name": "--gw-dialog-width"
+            },
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
+              "name": "--gw-dialog-background"
+            },
+            {
+              "description": "The border. Defaults to `--gw-color-border-normal`.",
+              "name": "--gw-dialog-border-color"
+            },
+            {
+              "description": "The corners. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-dialog-radius"
+            },
+            {
+              "description": "The shadow. Defaults to `--gw-shadow-l`.",
+              "name": "--gw-dialog-shadow"
+            },
+            {
+              "description": "The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.",
+              "name": "--gw-dialog-backdrop"
+            }
+          ],
           "cssParts": [
             {
               "description": "The dialog's surface.",
@@ -7089,7 +7217,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` dialog { width: min(32rem, calc(100vw - 2 * var(--gw-space-3))); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); } dialog::backdrop { background: rgb(0 0 0 / 50%); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` dialog { width: min( var(--gw-dialog-width, 32rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-dialog-background, var(--gw-color-surface-overlay) ); border: var(--gw-border-width) solid var(--gw-dialog-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-dialog-radius, var(--gw-radius-panel)); box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l)); } dialog::backdrop { background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%)); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -7303,7 +7431,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -7759,7 +7887,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8193,7 +8321,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8473,6 +8601,24 @@
           "kind": "class",
           "description": "A heading that opens and closes the content under it, on a native\n`<details>`, so find-in-page and the keyboard work as they do anywhere. The\ncontent glides open and shut rather than jumping, and the chevron turns\nwith it. `open` reflects its state and it fires `toggle`. Controls in\n`actions` sit in the summary row before the chevron, and pressing them\ndoesn't open or close it.\n\nContent that costs something to build goes in `draw` rather than the slot:\nit's called with a container the first time it opens, the frame after, so\nthe panel opens at once with skeleton lines and the content follows. While\nit's open, a new `draw` draws again; while it's shut, that waits until it\nopens. `storage-key` keeps whether it's open in this browser, once someone\nopens or shuts it, so it comes back as they left it.",
           "name": "GwExpansion",
+          "cssProperties": [
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-raised`.",
+              "name": "--gw-expansion-background"
+            },
+            {
+              "description": "The border. Defaults to `--gw-color-border-normal`.",
+              "name": "--gw-expansion-border-color"
+            },
+            {
+              "description": "The corners. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-expansion-radius"
+            },
+            {
+              "description": "The summary row's least height. Defaults to `3rem`.",
+              "name": "--gw-expansion-summary-height"
+            }
+          ],
           "cssParts": [
             {
               "description": "The native `<details>`.",
@@ -8534,7 +8680,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: 3rem; padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc(var(--gw-radius-panel) - var(--gw-border-width)); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } /* Hovering or pressing an action leaves the row alone, since it won't toggle */ summary:not(:has(.actions:hover)):hover { background: var(--gw-color-fill-neutral-hovered); } summary:not(:has(.actions:active)):active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:not(:has(.actions:hover)):hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:not(:has(.actions:active)):active .toggle { background: var(--gw-color-fill-neutral-selected); } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; cursor: auto; user-select: text; } .actions[hidden] { display: none; } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } gw-skeleton-lines[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: block; interpolate-size: allow-keywords; } details { background: var( --gw-expansion-background, var(--gw-color-surface-raised) ); border: var(--gw-border-width) solid var(--gw-expansion-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-expansion-radius, var(--gw-radius-panel)); } details::details-content { block-size: 0; overflow: clip; transition: block-size var(--gw-motion-normal) var(--gw-motion-easing), content-visibility var(--gw-motion-normal) allow-discrete; } details[open]::details-content { block-size: auto; } summary { display: flex; gap: var(--gw-space-3); align-items: center; min-height: var(--gw-expansion-summary-height, 3rem); padding: var(--gw-space-2) var(--gw-space-4); cursor: pointer; list-style: none; border-radius: calc( var(--gw-expansion-radius, var(--gw-radius-panel)) - var( --gw-border-width ) ); user-select: none; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-radius var(--gw-motion-normal) var(--gw-motion-easing); } summary::-webkit-details-marker { display: none; } details[open] summary { border-end-start-radius: 0; border-end-end-radius: 0; } /* Hovering or pressing an action leaves the row alone, since it won't toggle */ summary:not(:has(.actions:hover)):hover { background: var(--gw-color-fill-neutral-hovered); } summary:not(:has(.actions:active)):active { background: var(--gw-color-fill-neutral-pressed); } summary:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .text { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-0-5); } .heading { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } /* The chevron sits in a round neutral button, so the heading reads as something to press */ .toggle { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; background: var(--gw-color-fill-neutral-resting); border-radius: 50%; transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); } summary:not(:has(.actions:hover)):hover .toggle { background: var(--gw-color-fill-neutral-pressed); } summary:not(:has(.actions:active)):active .toggle { background: var(--gw-color-fill-neutral-selected); } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; cursor: auto; user-select: text; } .actions[hidden] { display: none; } .chevron { width: 0.45rem; height: 0.45rem; border-inline-end: 1.5px solid var(--gw-color-text-primary); border-block-end: 1.5px solid var(--gw-color-text-primary); rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } details[open] .chevron { rotate: 225deg; translate: 0 0.125rem; } .content { padding: var(--gw-space-3) var(--gw-space-4) var(--gw-space-4); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); font-size: var(--gw-font-size-s); } gw-skeleton-lines[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8760,7 +8906,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -9213,7 +9359,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -9500,6 +9646,12 @@
           "kind": "class",
           "description": "Waits `delay` milliseconds, then fades its content in over `duration`.\nWrap a skeleton in one with a delay, so a quick load never flashes a\nplaceholder, and wrap content as it arrives so it eases in rather than\npopping. With reduced motion it still waits, then shows at once. The tokens\nstylesheet hides it until it's defined, so its content never shows first.",
           "name": "GwFadeIn",
+          "cssParts": [
+            {
+              "description": "The slot holding the content.",
+              "name": "content"
+            }
+          ],
           "slots": [
             {
               "description": "The content to fade in.",
@@ -9625,7 +9777,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10229,7 +10381,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10907,7 +11059,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -11673,7 +11825,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -12550,7 +12702,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13032,7 +13184,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13663,7 +13815,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14329,7 +14481,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14672,6 +14824,12 @@
           "kind": "class",
           "description": "Where notifications wait until they're dealt with: a list of\n`gw-notification` cards with Clear all, and an empty state once nothing's\nleft. Put it in a page, a panel or a popover from a bell button. Each\ncard folds away when dismissed, and the list closes up smoothly. It fires\n`clear` when Clear all is pressed.",
           "name": "GwNotificationCenter",
+          "cssProperties": [
+            {
+              "description": "The space between the cards. Defaults to `--gw-space-2`.",
+              "name": "--gw-notification-center-gap"
+            }
+          ],
           "cssParts": [
             {
               "description": "The row with the heading and Clear all.",
@@ -14713,7 +14871,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } header { display: flex; gap: var(--gw-space-2); align-items: center; justify-content: space-between; margin-block-end: var(--gw-space-2); } h2 { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .list { display: grid; gap: var(--gw-space-2); } [hidden] { display: none; } gw-empty-state::part(empty) { padding-block: var(--gw-space-6); } `, ]",
+              "default": "[ base, css` :host { display: block; } header { display: flex; gap: var(--gw-space-2); align-items: center; justify-content: space-between; margin-block-end: var(--gw-space-2); } h2 { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .list { display: grid; gap: var(--gw-notification-center-gap, var(--gw-space-2)); } [hidden] { display: none; } gw-empty-state::part(empty) { padding-block: var(--gw-space-6); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14887,7 +15045,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15392,7 +15550,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16126,7 +16284,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16450,6 +16608,20 @@
           "kind": "class",
           "description": "A page's title, with an optional icon tile and description, a back button\nor similar in the `start` slot, and its controls at the top right in the\n`actions` slot.",
           "name": "GwPageHeader",
+          "cssProperties": [
+            {
+              "description": "The icon tile's size. Defaults to `3rem`, or `2.5rem` from level 2.",
+              "name": "--gw-page-header-tile-size"
+            },
+            {
+              "description": "The icon's color. Defaults to `--gw-color-accent`.",
+              "name": "--gw-page-header-tile-color"
+            },
+            {
+              "description": "The tile's fill. Defaults to `--gw-color-fill-accent-quiet`.",
+              "name": "--gw-page-header-tile-background"
+            }
+          ],
           "cssParts": [
             {
               "description": "The icon tile.",
@@ -16495,7 +16667,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: 3rem; height: 3rem; color: var(--gw-color-accent); background: var(--gw-color-fill-accent-quiet); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 0 1 auto; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } :host(:not([level=\"1\"])) .tile { width: 2.5rem; height: 2.5rem; border-radius: var(--gw-radius-m); --gw-icon-size: 1.375rem; } :host(:not([level=\"1\"])) .heading { font-size: var(--gw-font-size-l); } :host(:not([level=\"1\"])) .tile:not([hidden]) ~ .actions { min-height: 2.5rem; } .heading { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* Takes the room the titles leave, and gives it up before them, down to its items' smallest */ .actions { display: flex; flex: 1 1000 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: 3rem; } `, ]",
+              "default": "[ base, css` :host { display: flex; gap: var(--gw-space-3); align-items: flex-start; } .start { display: flex; flex: none; align-items: center; min-height: 3rem; } .start[hidden] { display: none; } .tile { display: grid; flex: none; place-items: center; width: var(--gw-page-header-tile-size, 3rem); height: var(--gw-page-header-tile-size, 3rem); color: var(--gw-page-header-tile-color, var(--gw-color-accent)); background: var( --gw-page-header-tile-background, var(--gw-color-fill-accent-quiet) ); border-radius: var(--gw-radius-l); --gw-icon-size: 1.625rem; } .titles { display: flex; flex: 0 1 auto; flex-direction: column; gap: var(--gw-space-0-5); min-width: 0; } :host(:not([level=\"1\"])) .tile { width: var(--gw-page-header-tile-size, 2.5rem); height: var(--gw-page-header-tile-size, 2.5rem); border-radius: var(--gw-radius-m); --gw-icon-size: 1.375rem; } :host(:not([level=\"1\"])) .heading { font-size: var(--gw-font-size-l); } :host(:not([level=\"1\"])) .tile:not([hidden]) ~ .actions { min-height: var(--gw-page-header-tile-size, 2.5rem); } .heading { margin: 0; font-size: var(--gw-font-size-2xl); font-weight: var(--gw-font-weight-strong); line-height: 1.2; color: var(--gw-color-text-strong); } p { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* Takes the room the titles leave, and gives it up before them, down to its items' smallest */ .actions { display: flex; flex: 1 1000 auto; gap: var(--gw-space-1); align-items: center; justify-content: flex-end; } /* Centered on the tile when there is one */ .tile:not([hidden]) ~ .actions { min-height: var(--gw-page-header-tile-size, 3rem); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16648,7 +16820,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16946,6 +17118,30 @@
             {
               "description": "Its width beside a button. Defaults to `20rem`.",
               "name": "--gw-popover-width"
+            },
+            {
+              "description": "The space inside it. Defaults to `--gw-space-4`.",
+              "name": "--gw-popover-padding"
+            },
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
+              "name": "--gw-popover-background"
+            },
+            {
+              "description": "The border. Defaults to `--gw-color-border-normal`.",
+              "name": "--gw-popover-border-color"
+            },
+            {
+              "description": "The corners. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-popover-radius"
+            },
+            {
+              "description": "The shadow. Defaults to `--gw-shadow-l`.",
+              "name": "--gw-popover-shadow"
+            },
+            {
+              "description": "The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.",
+              "name": "--gw-popover-backdrop"
             }
           ],
           "cssParts": [
@@ -16997,7 +17193,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-space-4); margin: 0; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: rgb(0 0 0 / 40%); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-space-4) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: rgb(0 0 0 / 40%); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-popover-padding, var(--gw-space-4)); margin: 0; color: var(--gw-color-text-primary); background: var( --gw-popover-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-popover-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-popover-radius, var(--gw-radius-panel)); box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l)); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-popover-padding, var(--gw-space-4)) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17243,7 +17439,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17825,7 +18021,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -18304,7 +18500,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -18809,7 +19005,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -19134,6 +19330,18 @@
             {
               "description": "Scales its height with the theme's density. The theme sets it.",
               "name": "--gw-control-scale"
+            },
+            {
+              "description": "The tallest the list grows as a bottom sheet on narrow screens. Defaults to `60vh`.",
+              "name": "--gw-select-sheet-height"
+            },
+            {
+              "description": "The backdrop behind the sheet. Defaults to `rgb(0 0 0 / 40%)`.",
+              "name": "--gw-select-backdrop"
+            },
+            {
+              "description": "The Clear button's height with `multiple`. Defaults to `2.5rem`.",
+              "name": "--gw-select-clear-height"
             }
           ],
           "members": [
@@ -19499,7 +19707,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -20103,7 +20311,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -20640,7 +20848,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21017,7 +21225,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21398,7 +21606,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21781,7 +21989,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22153,7 +22361,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -22610,7 +22818,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -23472,7 +23680,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24093,7 +24301,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24396,6 +24604,16 @@
           "kind": "class",
           "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button. Once the mode and theme are in place and only Reset and\nImport are left, they're a ⋮ menu instead, and with `no-reset` and\n`no-import` there's no button at all.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. With `gallery`, the cards take a row of their own\nunder it. `modes` picks which modes it offers, such as\n`light dark` without Auto.\n\nA theme that comes in one scheme only, such as Catppuccin Latte, sets\n`scheme`: the modes outside it, Auto among them, show but can't be picked,\nand `cycle` skips them.",
           "name": "GwThemePicker",
+          "cssProperties": [
+            {
+              "description": "The popover's width with `gallery`. Defaults to `34rem`.",
+              "name": "--gw-theme-picker-gallery-width"
+            },
+            {
+              "description": "The tallest the gallery grows before it scrolls. Defaults to `min(24rem, 50vh)`.",
+              "name": "--gw-theme-picker-gallery-height"
+            }
+          ],
           "cssParts": [
             {
               "description": "The theme gallery, with `gallery`.",
@@ -24408,6 +24626,10 @@
             {
               "description": "Reset and Import, with `inline`.",
               "name": "actions"
+            },
+            {
+              "description": "The `gw-popover` the controls move into.",
+              "name": "popover"
             }
           ],
           "members": [
@@ -24431,7 +24653,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: 34rem; } .gallery { max-height: min(24rem, 50vh); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* One wrapping row: the controls, then Reset and Import. The host is the flex container, so a page can set its justify-content */ :host([layout=\"inline\"]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center; } :host([layout=\"inline\"]) .controls { flex-flow: row wrap; align-items: center; margin-block-start: 0; } /* The cards get a row of their own under the mode, Reset and Import */ :host([layout=\"inline\"][gallery]) .controls { display: contents; } :host([layout=\"inline\"]) .gallery { flex: 1 0 100%; order: 1; max-height: none; overflow: visible; } :host([layout=\"inline\"][gallery]) .status { flex: 1 0 100%; order: 2; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } /* Asks for the room to have all of it in place, but gives it up down to the button before a flex row's other items shrink */ :host([layout=\"auto\"]) { display: flex; flex: 0 1000 var(--gw-theme-picker-fit, auto); gap: var(--gw-space-1); align-items: center; min-width: 2.5rem; contain: inline-size; } :host([layout=\"auto\"]) > * { flex: none; } `, ]",
+              "default": "[ base, css` :host { display: inline-block; } :host([gallery]) gw-popover { --gw-popover-width: var(--gw-theme-picker-gallery-width, 34rem); } .gallery { max-height: var(--gw-theme-picker-gallery-height, min(24rem, 50vh)); overflow: auto; /* Room for the cards' focus rings */ padding: var(--gw-space-1); margin: calc(var(--gw-space-1) * -1); } .controls { display: flex; flex-direction: column; gap: var(--gw-space-4); margin-block-start: var(--gw-space-2); } .status { margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } /* One wrapping row: the controls, then Reset and Import. The host is the flex container, so a page can set its justify-content */ :host([layout=\"inline\"]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center; } :host([layout=\"inline\"]) .controls { flex-flow: row wrap; align-items: center; margin-block-start: 0; } /* The cards get a row of their own under the mode, Reset and Import */ :host([layout=\"inline\"][gallery]) .controls { display: contents; } :host([layout=\"inline\"]) .gallery { flex: 1 0 100%; order: 1; max-height: none; overflow: visible; } :host([layout=\"inline\"][gallery]) .status { flex: 1 0 100%; order: 2; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } /* Asks for the room to have all of it in place, but gives it up down to the button before a flex row's other items shrink */ :host([layout=\"auto\"]) { display: flex; flex: 0 1000 var(--gw-theme-picker-fit, auto); gap: var(--gw-space-1); align-items: center; min-width: 2.5rem; contain: inline-size; } :host([layout=\"auto\"]) > * { flex: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24846,7 +25068,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -25397,7 +25619,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -26295,7 +26517,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -26667,7 +26889,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -27053,7 +27275,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -27454,7 +27676,7 @@
                   }
                 }
               ],
-              "description": "Adds the property accessors, then defines the element.",
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"

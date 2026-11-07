@@ -50,6 +50,11 @@ const closeIcon =
  * @csspart nav - The nav links' container, the menu panel on narrow screens.
  * @csspart actions - The actions' container.
  *
+ * @cssprop --gw-app-bar-height - The bar's least height. Defaults to `3.5rem`.
+ * @cssprop --gw-app-bar-background - The surface once it floats. Defaults to `--gw-color-surface-default` at 82%.
+ * @cssprop --gw-app-bar-border-color - The bottom border once it floats. Defaults to `--gw-color-border-quiet`.
+ * @cssprop --gw-app-bar-backdrop - The backdrop filter once it floats. Defaults to `blur(12px) saturate(1.4)`.
+ *
  * @fires {Event} toggle - When the nav menu opens or closes.
  */
 export class GwAppBar extends GwElement {
@@ -83,7 +88,7 @@ export class GwAppBar extends GwElement {
         display: flex;
         gap: var(--gw-space-3);
         align-items: center;
-        min-height: 3.5rem;
+        min-height: var(--gw-app-bar-height, 3.5rem);
         padding: var(--gw-space-1)
           max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2);
         border-block-end: max(var(--gw-border-width), 1px) solid transparent;
@@ -95,13 +100,15 @@ export class GwAppBar extends GwElement {
 
       :host([floating]) .bar,
       :host([menu-open]) .bar {
-        background: color-mix(
-          in oklab,
-          var(--gw-color-surface-default) 82%,
-          transparent
+        background: var(
+          --gw-app-bar-background,
+          color-mix(in oklab, var(--gw-color-surface-default) 82%, transparent)
         );
-        border-color: var(--gw-color-border-quiet);
-        backdrop-filter: blur(12px) saturate(1.4);
+        border-color: var(
+          --gw-app-bar-border-color,
+          var(--gw-color-border-quiet)
+        );
+        backdrop-filter: var(--gw-app-bar-backdrop, blur(12px) saturate(1.4));
       }
 
       /* A one-column grid, so a hidden brand can fold its width to nothing
