@@ -78,6 +78,11 @@ export default defineConfig(
           items: ["/desktop/building"],
         },
         {
+          label: "Phones",
+          root: "/phones",
+          items: ["/phones/pwa"],
+        },
+        {
           label: "Effect",
           root: "/effect",
           items: [
