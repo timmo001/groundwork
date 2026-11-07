@@ -52,13 +52,15 @@ export interface Theme {
 
 type ThemeId = keyof typeof opentuiThemes;
 
-type RoleName = keyof (typeof opentuiThemes)["base"]["dark"];
+/** A terminal role's name, such as `surface-lower` or `accent`. */
+export type RoleName = keyof (typeof opentuiThemes)["base"]["dark"];
 
 /**
- * Places a theme's terminal roles into the TUI's slots. A theme solved at
- * runtime has the same roles; Base's dark fills any it lacks.
+ * Places a theme's terminal roles into the TUI's slots, such as an app's own
+ * theme's from `hexModes(runtimeTheme(document).theme)` in one mode. Base's
+ * dark fills any it lacks.
  */
-const fromRoles = (roles: Partial<Record<RoleName, string>>): Theme => {
+export const fromRoles = (roles: Partial<Record<RoleName, string>>): Theme => {
   const role = (name: RoleName) => roles[name] ?? opentuiThemes.base.dark[name];
 
   return {

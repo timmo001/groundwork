@@ -75,11 +75,13 @@ export { surfaceBackground } from "./styles.ts";
 
 export {
   DEFAULT_THEME,
+  fromRoles,
   loadTheme,
   omarchyThemeFor,
   resolveTheme,
   themeFor,
   themeOptions,
+  type RoleName,
   type Theme,
   type ThemeOption,
   type ThemePick,

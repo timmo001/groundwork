@@ -11,7 +11,8 @@ import { AppHeader, formatHelpBar, loadTheme } from "@timmo001/groundwork-tui";
 - `loadTheme` reads `GW_THEME` and `GW_MODE`. Without `GW_THEME` it's the
   desktop's Omarchy theme where there is one, otherwise Base and dark.
   `themeFor` picks a theme and mode directly, and `omarchyThemeFor` maps an
-  Omarchy `colors.toml`.
+  Omarchy `colors.toml`. `fromRoles` takes any theme's terminal roles, such as
+  an app's own theme solved with `runtimeTheme` and `hexModes`.
 - `AppHeader` and `PaneHeader` are one-row titles. `HeaderBlock` is the
   app's name as ASCII art over `formatHeaderBar`, a breadcrumb with a status
   dot and details that drop off when the terminal is narrow.
