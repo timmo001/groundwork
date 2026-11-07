@@ -3,7 +3,13 @@ title: Writing a theme
 description: The theme document format, checked against a Schema so an agent can write one.
 ---
 
-Themes live in `packages/tokens/themes/`, one JSON file each, checked against the Schema in `packages/tokens/src/schema.ts`. Run `mise run gen` after adding or changing one: it regenerates every target and this site's theme pages. `mise run check` fails if the theme misses a contrast target.
+A theme is one JSON document, checked against the Schema in `packages/tokens/src/schema.ts`. An app's own theme lives in the app, as a file beside its code. Decode it with `parseTheme` from `@timmo001/groundwork-tokens/runtime`, then:
+
+- On a page, `runtimeTheme` solves it into CSS and checks its contrast, as [Your own theme](/themes#your-own-theme) shows. List it in `pageTheme`'s `themes` with that CSS on the page.
+- On a docs site, `blumeThemeCss` turns the solved theme into Blume's tokens, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows.
+- In a TUI, `hexModes` gives each mode's terminal roles, and `fromRoles` from `@timmo001/groundwork-tui` places them.
+
+Groundwork's own themes live in `packages/tokens/themes/`. Run `mise run gen` after adding or changing one: it regenerates every target and this site's theme pages. `mise run check` fails if one misses a contrast target.
 
 ## A core theme
 
