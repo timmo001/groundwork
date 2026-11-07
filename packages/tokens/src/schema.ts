@@ -73,6 +73,34 @@ export const BorderStrength = Schema.Union([
 
 export type BorderStrength = typeof BorderStrength.Type;
 
+/** A shadow's color and how strong it is, against the default for its mode. */
+export const ShadowMode = Schema.Struct({
+  /** The color shadows are cast in. Defaults to a near-black. */
+  ink: Schema.optionalKey(Hex),
+  /**
+   * How strong shadows are: 1 is light mode's default, 3 dark mode's, 0
+   * none.
+   */
+  strength: Schema.optionalKey(
+    Schema.Number.check(Schema.isBetween({ minimum: 0, maximum: 8 })),
+  ),
+});
+
+export interface ShadowMode extends Schema.Schema.Type<typeof ShadowMode> {}
+
+/**
+ * A theme's shadows: an ink and strength for every mode, and any mode's own
+ * in place of them. The small, medium and large offsets stay fixed.
+ */
+export const Shadow = Schema.Struct({
+  ...ShadowMode.fields,
+  light: Schema.optionalKey(ShadowMode),
+  dark: Schema.optionalKey(ShadowMode),
+  darker: Schema.optionalKey(ShadowMode),
+});
+
+export interface Shadow extends Schema.Schema.Type<typeof Shadow> {}
+
 /** How a theme looks beyond color: shape, density, type and surface accents. */
 export const Style = Schema.Struct({
   font: FontFamily,
@@ -105,6 +133,8 @@ export const Style = Schema.Struct({
   }),
   surfaceAccent: Schema.Literals(["none", "sheen", "marker", "flange"]),
   rows: Schema.Literals(["cards", "dense"]),
+  /** Shadow ink and strength. Defaults to near-black, stronger in dark. */
+  shadow: Schema.optionalKey(Shadow),
 });
 
 export interface Style extends Schema.Schema.Type<typeof Style> {}

@@ -182,14 +182,40 @@ const styleProperties = (style: Style) => ({
       : "var(--gw-space-3)",
 });
 
-const shadows = (dark: boolean) => {
-  const ink = dark ? "0 0 0" : "16 20 28";
-  const strength = dark ? 3 : 1;
+/** Shadows' default ink, as `r g b`, and strength in each scheme. */
+const shadowDefaults = {
+  light: { ink: "16 20 28", strength: 1 },
+  dark: { ink: "0 0 0", strength: 3 },
+};
+
+const rgbChannels = (hex: string) =>
+  [1, 3, 5].map((at) => parseInt(hex.slice(at, at + 2), 16)).join(" ");
+
+/**
+ * A mode's shadows: the theme's own ink and strength for that mode, then for
+ * every mode, then the default. Darker starts from dark's, as roles do.
+ */
+const shadows = (style: Style, mode: Mode) => {
+  const shadow = style.shadow;
+  const scheme = mode === "light" ? "light" : "dark";
+
+  const ink =
+    (mode === "darker" ? shadow?.darker?.ink : undefined) ??
+    shadow?.[scheme]?.ink ??
+    shadow?.ink;
+
+  const strength =
+    (mode === "darker" ? shadow?.darker?.strength : undefined) ??
+    shadow?.[scheme]?.strength ??
+    shadow?.strength ??
+    shadowDefaults[scheme].strength;
+
+  const rgb = ink === undefined ? shadowDefaults[scheme].ink : rgbChannels(ink);
 
   return {
-    "shadow-s": `0 1px 2px rgb(${ink} / ${0.06 * strength})`,
-    "shadow-m": `0 4px 12px rgb(${ink} / ${0.08 * strength})`,
-    "shadow-l": `0 12px 32px rgb(${ink} / ${0.12 * strength})`,
+    "shadow-s": `0 1px 2px rgb(${rgb} / ${0.06 * strength})`,
+    "shadow-m": `0 4px 12px rgb(${rgb} / ${0.08 * strength})`,
+    "shadow-l": `0 12px 32px rgb(${rgb} / ${0.12 * strength})`,
   };
 };
 
@@ -257,11 +283,24 @@ const colorProperties = (roles: Roles) =>
     ]),
   );
 
-const modeBlock = (roles: Roles, dark: boolean, indent = "  ") =>
-  [
-    `${indent}color-scheme: ${dark ? "dark" : "light"};`,
-    declarations({ ...colorProperties(roles), ...shadows(dark) }, indent),
-  ].join("\n");
+/** A mode's colors and shadows, which mode it is found from its roles. */
+const modeBlock =
+  (theme: ResolvedTheme) =>
+  (roles: Roles, dark: boolean, indent = "  ") => {
+    const mode: Mode = !dark
+      ? "light"
+      : roles === theme.modes.darker
+        ? "darker"
+        : "dark";
+
+    return [
+      `${indent}color-scheme: ${dark ? "dark" : "light"};`,
+      declarations(
+        { ...colorProperties(roles), ...shadows(theme.style, mode) },
+        indent,
+      ),
+    ].join("\n");
+  };
 
 /**
  * A rule under `theme`'s selector for each of its modes, matching how
@@ -306,7 +345,7 @@ export const modeRules = (
 const themeRules = (theme: ResolvedTheme) =>
   [
     `[data-gw-theme="${theme.id}"] {\n${declarations(styleProperties(theme.style))}\n}`,
-    ...modeRules(theme, modeBlock),
+    ...modeRules(theme, modeBlock(theme)),
   ].join("\n\n");
 
 /**

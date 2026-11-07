@@ -59,6 +59,7 @@ bun x groundwork-tokens build themes/kiln.json --out src/generated --with-ground
 | `style.link` | Accent or strong text, with a thin or thick underline. |
 | `style.surfaceAccent` | `none`, `sheen` (a faint accent gradient), `marker` (an accent bar on the left) or `flange` (an accent edge on top). |
 | `style.rows` | `cards` or `dense` table rows for lists. |
+| `style.shadow` | Optional. Shadows' `ink`, a hex color, and `strength`, from 0 (none) to 8, where 1 is light mode's default and 3 dark mode's. Set them for every mode, or under `light`, `dark` or `darker` for one; Darker starts from dark's. The small, medium and large offsets stay the same. |
 | `status` | Optional. The `info`, `success`, `important`, `warning` and `danger` colors to start from in place of the defaults. Each is solved to its contrast target the same way. |
 | `roles` | Optional. Any role set to a color in `light`, `dark` or `darker`, after solving and as given, such as `"surface-raised"` or `"accent"`. Darker starts from dark's overrides. A role that doesn't exist fails to decode, and an override's contrast is checked like the rest. |
 | `examples` | Optional. Apps that use the theme, listed on its page as examples. Any app can pick any theme. |
