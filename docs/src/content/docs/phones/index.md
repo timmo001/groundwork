@@ -36,7 +36,15 @@ mise run demo:pwa
 
 It serves the built template in the background at `https://pwa.groundwork.localhost`, and to a running emulator at `http://localhost:7370/`. Below the demo, a "This phone" card shows whether it's installed, whether it starts offline and the last share it took, with an install button while the browser can offer one.
 
-[Building PWAs](/phones/pwa) covers the template and every option, and [The Android shell](/phones/shell) covers the page side of the shell, which runs the same app.
+The same demo runs in the Kotlin shell, built and opened on a running emulator (`mise run android:emulator`):
+
+```sh
+mise run demo:android
+```
+
+Its "This phone" card shows the shell's version, the battery from the app's own request, the last share and deep link, and buttons for a notification and a Live Update.
+
+[Building PWAs](/phones/pwa) covers the template and every option, [Building Android apps](/phones/android) covers the Android template, and [The Android shell](/phones/shell) covers the shell's options, bridge and Kotlin side.
 
 ## References
 

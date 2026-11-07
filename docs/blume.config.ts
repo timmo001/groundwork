@@ -80,7 +80,7 @@ export default defineConfig(
         {
           label: "Phones",
           root: "/phones",
-          items: ["/phones/pwa", "/phones/shell"],
+          items: ["/phones/pwa", "/phones/android", "/phones/shell"],
         },
         {
           label: "Effect",
