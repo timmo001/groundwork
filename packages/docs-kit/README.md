@@ -157,7 +157,7 @@ Blume type-checks site scripts without Bun's types, so use `node:fs` rather
 than `Bun.file`.
 
 `HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
-Light, Dark and Darker. To let readers pick the theme as well, import every
+Auto, Light, Dark and Darker. Auto follows the system setting. To let readers pick the theme as well, import every
 theme after the site's default and pass the themes to `HeaderSearch` from a
 wrapper component. `all.css` has the core and optional themes.
 
