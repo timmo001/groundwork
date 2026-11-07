@@ -5,10 +5,22 @@ import data from "blume:data";
 import ThemePicker from "./theme-picker.astro";
 
 /**
- * `themes`, `group` and `defaultTheme` go to the theme picker; everything
- * else Blume passes goes to its search.
+ * `themes`, `group`, `defaultTheme` and the picker's labels (`label`,
+ * `modeLabel`, `modeLabels`, `unavailableHint`) go to the theme picker, and
+ * `githubLabel` names the GitHub link, `GitHub repository` by default;
+ * everything else Blume passes goes to its search.
  */
-const { themes, group, defaultTheme, ...searchProps } = Astro.props;
+const {
+  themes,
+  group,
+  defaultTheme,
+  label,
+  modeLabel,
+  modeLabels,
+  unavailableHint,
+  githubLabel = "GitHub repository",
+  ...searchProps
+} = Astro.props;
 
 const repoUrl = data.config.repoUrl;
 
@@ -16,13 +28,21 @@ const github = SOCIAL_ICONS.github;
 ---
 
 <Search {...searchProps} />
-<ThemePicker themes={themes} group={group} defaultTheme={defaultTheme} />
+<ThemePicker
+  themes={themes}
+  group={group}
+  defaultTheme={defaultTheme}
+  label={label}
+  modeLabel={modeLabel}
+  modeLabels={modeLabels}
+  unavailableHint={unavailableHint}
+/>
 {
   repoUrl && (
     <a
-      aria-label="GitHub repository"
+      aria-label={githubLabel}
       class="header-github"
-      data-blume-tooltip="GitHub repository"
+      data-blume-tooltip={githubLabel}
       href={repoUrl}
       rel="noreferrer"
       target="_blank"

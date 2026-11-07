@@ -192,6 +192,12 @@ const themes = [
 <HeaderSearch {...Astro.props} themes={themes} defaultTheme="bridge" />
 ```
 
+For a site in another language, `HeaderSearch` takes the text it shows:
+`label` for the theme select, `modeLabel` for the mode control, `modeLabels`
+for each mode (`{ auto: "Automatisch" }`), `unavailableHint` for a mode the
+theme doesn't come in (with `{mode}` and `{scheme}` filled in) and
+`githubLabel` for the GitHub link. Each defaults to its English text.
+
 Set these in `theme.css` to change the banner:
 
 ```css
