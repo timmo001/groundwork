@@ -59,7 +59,8 @@ const moreIcon =
  * then moves them into the popover, the theme first, as the room runs out.
  * Reset, Import, the gallery and `status` stay in the popover, opened from a
  * palette button. Once the mode and theme are in place and only Reset and
- * Import are left, they're a ⋮ menu instead.
+ * Import are left, they're a ⋮ menu instead, and with `no-reset` and
+ * `no-import` there's no button at all.
  * In a flex row, such as `gw-page-header`'s actions, it gives up room before
  * the title does. `popover` keeps everything behind the palette button. `cycle` is one button
  * showing the mode in use, which steps to the next mode on each press, for an
@@ -86,6 +87,7 @@ const moreIcon =
  * @attr {string} label - The button's accessible name, the popover's heading and the theme select's label. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.
  * @attr {"light"|"dark"} scheme - The one scheme the theme in use covers, such as `light` for Catppuccin Latte. The other modes are disabled. Leave it out for a theme with both.
  * @attr {boolean} no-import - Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.
+ * @attr {boolean} no-reset - Leaves Reset out, for a page whose mode and theme are reset by picking them.
  * @attr {string} mode-label - The mode control's name, for an app in another language. Defaults to `Mode`.
  * @attr {Record<string, string>} mode-labels - The modes' names by mode, as JSON, such as `{"auto":"Automatisch"}`. Each defaults to its English name.
  * @attr {string} unavailable-hint - The hint on a mode the theme doesn't come in, with `{mode}` and `{scheme}` filled in. Defaults to `{mode} isn't available: this theme is {scheme} only`.
@@ -114,6 +116,7 @@ export class GwThemePicker extends GwElement {
     modes: {},
     scheme: { reflect: true },
     noImport: { attribute: "no-import", type: "boolean", reflect: true },
+    noReset: { attribute: "no-reset", type: "boolean", reflect: true },
     modeLabel: { attribute: "mode-label" },
     modeLabels: { attribute: "mode-labels", type: "json" },
     unavailableHint: { attribute: "unavailable-hint" },
@@ -224,6 +227,8 @@ export class GwThemePicker extends GwElement {
   declare scheme: "" | "light" | "dark";
   /** Leaves Import out, so only the themes in `themes` are offered. */
   declare noImport: boolean;
+  /** Leaves Reset out. */
+  declare noReset: boolean;
   declare modeLabel: string;
   /** The modes' names by mode, each defaulting to its English name. */
   declare modeLabels: Readonly<Record<string, string>>;
@@ -294,6 +299,7 @@ export class GwThemePicker extends GwElement {
     this.modes = "auto light dark darker";
     this.scheme = "";
     this.noImport = false;
+    this.noReset = false;
     this.modeLabel = "Mode";
     this.modeLabels = {};
     this.unavailableHint =
@@ -427,7 +433,13 @@ export class GwThemePicker extends GwElement {
     if (menu && this.#menu.hidden) this.#popover.close();
 
     this.#button.hidden = menu;
-    this.#menu.hidden = !menu;
+    // With Reset and Import both left out, the menu would be empty
+    this.#menu.hidden = !menu || this.#bare();
+  }
+
+  /** Whether nothing's left for the menu: Reset and Import are both left out. */
+  #bare() {
+    return this.noReset && this.noImport && !this.gallery;
   }
 
   /**
@@ -479,17 +491,19 @@ export class GwThemePicker extends GwElement {
 
     const mode = this.#mode.getBoundingClientRect().width + gap;
     const select = theme ? this.#theme.getBoundingClientRect().width + gap : 0;
+    // The button takes no room once everything's in place and no menu is left
+    const bare = this.#bare() ? 0 : button;
 
     this.style.setProperty(
       "--gw-theme-picker-fit",
-      `${Math.ceil(button + mode + select)}px`,
+      `${Math.ceil(bare + mode + select)}px`,
     );
 
     const room = this.getBoundingClientRect().width + 0.5;
 
     this.#fits = {
-      mode: room >= button + mode,
-      theme: theme && room >= button + mode + select,
+      mode: room >= (theme ? button : bare) + mode,
+      theme: theme && room >= bare + mode + select,
     };
     this.#arrange(root);
   }
@@ -631,18 +645,19 @@ export class GwThemePicker extends GwElement {
     this.#status.textContent = this.status;
     this.#status.hidden = !this.status;
     this.#import.hidden = this.noImport;
+    this.#reset.hidden = this.noReset;
     this.#reset.textContent = this.resetLabel;
     this.#import.textContent = this.importLabel;
 
     if (
-      ["noImport", "resetLabel", "importFileLabel"].some((name) =>
+      ["noImport", "noReset", "resetLabel", "importFileLabel"].some((name) =>
         changed.has(name),
       )
     ) {
       this.#menu.setAttribute(
         "items",
         JSON.stringify([
-          { value: "reset", label: this.resetLabel },
+          ...(this.noReset ? [] : [{ value: "reset", label: this.resetLabel }]),
           ...(this.noImport
             ? []
             : [{ value: "import", label: this.importFileLabel }]),
@@ -664,6 +679,8 @@ export class GwThemePicker extends GwElement {
         "theme",
         "themes",
         "gallery",
+        "noImport",
+        "noReset",
       ].some((name) => changed.has(name))
     ) {
       void this.#fit();

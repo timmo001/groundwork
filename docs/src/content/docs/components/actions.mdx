@@ -298,7 +298,7 @@ Add `gallery` to show the themes as preview cards, as the [theme gallery](#theme
 
 ### Mode button and inline controls
 
-`layout` sets how the picker shows. `cycle` is a single button showing the mode in use, which steps to the next mode on each press, with nothing popping up. It suits an app bar. `inline` lays the controls out in place, in one wrapping row with Reset and Import, for a footer or a settings page. The picker is the row's flex container, so set `justify-content` on it to align the row. `modes` picks which modes to offer and in what order, such as leaving Auto out:
+`layout` sets how the picker shows. `cycle` is a single button showing the mode in use, which steps to the next mode on each press, with nothing popping up. It suits an app bar. `inline` lays the controls out in place, in one wrapping row with Reset and Import, for a footer or a settings page. The picker is the row's flex container, so set `justify-content` on it to align the row. `no-reset` and `no-import` leave Reset and Import out; with both, a picker whose mode and theme fit in place shows no ⋮ menu. `modes` picks which modes to offer and in what order, such as leaving Auto out:
 
 <Demo id="theme-picker-layouts" layout="stack">
   <gw-theme-picker layout="cycle" modes="light dark darker" mode="dark" label="Mode"></gw-theme-picker>

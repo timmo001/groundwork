@@ -24394,7 +24394,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button. Once the mode and theme are in place and only Reset and\nImport are left, they're a ⋮ menu instead.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. With `gallery`, the cards take a row of their own\nunder it. `modes` picks which modes it offers, such as\n`light dark` without Auto.\n\nA theme that comes in one scheme only, such as Catppuccin Latte, sets\n`scheme`: the modes outside it, Auto among them, show but can't be picked,\nand `cycle` skips them.",
+          "description": "The page's mode, theme and import, in place where there's room and in a\npopover where there isn't. Offers the mode (auto, light, dark or Darker),\nthe theme, and buttons to import a theme file (a Groundwork theme's `.json`\nor an Omarchy `colors.toml`) or reset.\n\nIt only asks: it fires `mode`, `theme`, `import` and `reset`, and the page\napplies them and sets `mode`, `theme` and `themes` back. `pageTheme` from\n`@timmo001/groundwork-tokens/page` does all of that. Show an import's\nresult, such as contrast misses, in `status`.\n\n`gallery` swaps the theme select for `gw-theme-gallery`'s cards, which\npreview each theme in the chosen mode.\n\n`layout` sets how it shows. `auto`, the default, lays the mode out as icons\nand the theme as a select in place while they fit the room it's given,\nthen moves them into the popover, the theme first, as the room runs out.\nReset, Import, the gallery and `status` stay in the popover, opened from a\npalette button. Once the mode and theme are in place and only Reset and\nImport are left, they're a ⋮ menu instead, and with `no-reset` and\n`no-import` there's no button at all.\nIn a flex row, such as `gw-page-header`'s actions, it gives up room before\nthe title does. `popover` keeps everything behind the palette button. `cycle` is one button\nshowing the mode in use, which steps to the next mode on each press, for an\napp bar. `inline` lays every control out in place, in one wrapping row with\nReset and Import, for a footer or a settings page; set `justify-content` on\nit to align the row. With `gallery`, the cards take a row of their own\nunder it. `modes` picks which modes it offers, such as\n`light dark` without Auto.\n\nA theme that comes in one scheme only, such as Catppuccin Latte, sets\n`scheme`: the modes outside it, Auto among them, show but can't be picked,\nand `cycle` skips them.",
           "name": "GwThemePicker",
           "cssParts": [
             {
@@ -24418,7 +24418,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, noReset: { attribute: \"no-reset\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24519,6 +24519,15 @@
                 "text": "boolean"
               },
               "description": "Leaves Import out, so only the themes in `themes` are offered.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "noReset",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves Reset out.",
               "default": "false"
             },
             {
@@ -24695,6 +24704,12 @@
                 }
               ],
               "description": "With `auto`, moves the mode and theme in place or back into the popover, as `#fits` says."
+            },
+            {
+              "kind": "method",
+              "name": "#bare",
+              "privacy": "private",
+              "description": "Whether nothing's left for the menu: Reset and Import are both left out."
             },
             {
               "kind": "method",
@@ -25167,6 +25182,13 @@
               },
               "description": "Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.",
               "name": "no-import"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves Reset out, for a page whose mode and theme are reset by picking them.",
+              "name": "no-reset"
             },
             {
               "type": {
