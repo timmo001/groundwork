@@ -62,6 +62,11 @@ import {
 } from "@timmo001/groundwork-tokens/omarchy-current";
 ```
 
+On a phone, the Android shell reads the system's dynamic color and
+`pageTheme`'s `setAndroidTheme` offers it the same way, solved with
+`androidRuntimeTheme` from the `runtime` export, which falls back when the
+wallpaper's colors miss a contrast target.
+
 The `translate` export maps a terminal palette (Ghostty, kitty, Alacritty,
 foot or an Omarchy `colors.toml`) onto the roles as a mapped theme, and
 works in the browser. The `desktop-themes` export finds a machine's

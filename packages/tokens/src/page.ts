@@ -9,7 +9,11 @@
  *
  * @module
  */
+import type { AndroidColors } from "./android.ts";
 import {
+  androidStorageKeys,
+  androidThemeId,
+  androidThemeStyleId,
   appThemeStorageKey,
   appThemeStyleId,
   customThemeId,
@@ -27,11 +31,13 @@ import {
 } from "./choices.ts";
 import type { OmarchyCurrentTheme } from "./omarchy.ts";
 import type { ThemeStore } from "./runtime.ts";
-import type { Theme } from "./schema.ts";
+import type { MappedTheme, Theme } from "./schema.ts";
 // Only for `document.modelContext`'s type; the tools themselves load lazily
 import type {} from "./webmcp.ts";
 
 export {
+  androidThemeId,
+  androidThemeStyleId,
   appThemeStorageKey,
   appThemeStyleId,
   coreThemeChoices,
@@ -58,7 +64,10 @@ export interface PageThemeState {
   readonly mode: ThemeMode;
   /** The scheme in use, with `auto` resolved from the system. */
   readonly scheme: ThemeScheme;
-  /** The theme id in use: a built-in one, an app theme's, `omarchy` or `custom`. */
+  /**
+   * The theme id in use: a built-in one, an app theme's, `omarchy`,
+   * `android` or `custom`.
+   */
   readonly theme: string;
   /**
    * The one scheme the theme in use covers, such as `light` for Catppuccin
@@ -70,6 +79,8 @@ export interface PageThemeState {
   readonly custom: string | null;
   /** The desktop's Omarchy theme as a choice, when the app passed one. */
   readonly omarchy: ThemeChoice | null;
+  /** The phone's dynamic color as a choice, when the Android shell passed it. */
+  readonly android: ThemeChoice | null;
 }
 
 /** What `importTheme` reports: the theme's name and any contrast misses, or why it failed. */
@@ -110,6 +121,13 @@ export interface PageThemeOptions extends ThemeBootOptions {
    * the CSS, so the theme applies before the first paint.
    */
   readonly store?: ThemeStore;
+  /** How the phone's dynamic color is named and solved when it's passed. */
+  readonly android?: {
+    /** The choice's name. Defaults to `Android`. */
+    readonly name?: string;
+    /** The theme used when the system's colors miss a contrast target. */
+    readonly fallback?: (theme: MappedTheme) => Theme;
+  };
 }
 
 export interface PageTheme {
@@ -131,6 +149,13 @@ export interface PageTheme {
   readonly setOmarchyTheme: (
     theme: OmarchyCurrentTheme | null,
   ) => Promise<void>;
+  /**
+   * Offers the phone's dynamic color, as the Android shell reads it, or
+   * drops it with `null`. Like the Omarchy theme, it's a choice that follows
+   * wallpaper changes while it's picked. Colors that miss a contrast target
+   * are solved from their surface and primary, or by `options.android`.
+   */
+  readonly setAndroidTheme: (colors: AndroidColors | null) => Promise<void>;
   /** Calls `listener` on every change; returns a function that stops it. */
   readonly subscribe: (listener: (state: PageThemeState) => void) => () => void;
 }
@@ -180,6 +205,7 @@ const schemeValue = (value: string | null): ThemeScheme | undefined =>
 export const pageTheme = (options: PageThemeOptions): PageTheme => {
   const stored = themeStorageKeys(options.key);
   const storedOmarchy = omarchyStorageKeys(options.key);
+  const storedAndroid = androidStorageKeys(options.key);
   const root = options.root ?? document.documentElement;
   const defaultMode = options.defaultMode ?? "auto";
   const listeners = new Set<(state: PageThemeState) => void>();
@@ -225,6 +251,22 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
     }
   }
 
+  /** The phone's dynamic color as a choice, from the last the shell passed. */
+  let android: ThemeChoice | null = null;
+
+  {
+    const css = read(storedAndroid.css);
+    const name = read(storedAndroid.name);
+
+    if (css !== null && name !== null) {
+      android = { id: androidThemeId, name };
+
+      if (document.getElementById(androidThemeStyleId) === null) {
+        setStyle(androidThemeStyleId, css);
+      }
+    }
+  }
+
   /** The visitor's own theme as a choice, when there's one. */
   let custom: ThemeChoice | null =
     read(stored.css) === null
@@ -241,6 +283,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
       : [
           ...offered,
           ...(omarchy === null ? [] : [omarchy]),
+          ...(android === null ? [] : [android]),
           ...(custom === null ? [] : [custom]),
         ].find((theme) => theme.id === id);
 
@@ -270,6 +313,7 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
       only: choice?.mode ?? null,
       custom: custom?.name ?? null,
       omarchy,
+      android,
     };
   };
 
@@ -456,6 +500,52 @@ export const pageTheme = (options: PageThemeOptions): PageTheme => {
           : next === null
             ? fallback()
             : resolve(omarchyThemeId, state.mode),
+      );
+    },
+    setAndroidTheme: async (colors) => {
+      let next: ThemeChoice | null = null;
+
+      if (colors !== null) {
+        const { Result } = await import("effect");
+
+        const { androidRuntimeTheme, androidTheme, appTonesCss } =
+          await import("./runtime.ts");
+
+        const name = options.android?.name ?? "Android";
+        const parsed = androidTheme(colors, name, androidThemeId);
+
+        if (Result.isSuccess(parsed)) {
+          const runtime = androidRuntimeTheme(
+            parsed.success,
+            options.android?.fallback,
+          );
+
+          const css =
+            options.tones === undefined
+              ? runtime.css
+              : `${runtime.css}\n\n${appTonesCss(options.tones, runtime.theme)}`;
+
+          setStyle(androidThemeStyleId, css);
+          write(storedAndroid.css, css);
+          write(storedAndroid.name, name);
+          next = { id: androidThemeId, name };
+        }
+      }
+
+      if (next === null) {
+        setStyle(androidThemeStyleId, null);
+
+        for (const key of Object.values(storedAndroid)) write(key, null);
+      }
+
+      android = next;
+
+      commit(
+        state.theme !== androidThemeId
+          ? resolve(state.theme, state.mode)
+          : next === null
+            ? fallback()
+            : resolve(androidThemeId, state.mode),
       );
     },
     subscribe: (listener) => {

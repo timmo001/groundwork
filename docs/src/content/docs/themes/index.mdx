@@ -165,6 +165,8 @@ if (mapped._tag === "Success") {
 }
 ```
 
+In a page, `pageTheme`'s `setAndroidTheme(colors)` does all of this and offers the result as a theme choice, named `Android` unless `options.android.name` says otherwise, with `options.android.fallback` in place of the default fallback. Like the Omarchy theme, it's only used once it's picked, and while it is, a wallpaper change follows through.
+
 ### Try it
 
 Design a theme with the controls, upload a theme document or an Omarchy `colors.toml`, or start from the sample, and the preview takes it as you go. Download saves the document, ready to upload elsewhere or hand to an agent. It's kept in this browser's local storage.

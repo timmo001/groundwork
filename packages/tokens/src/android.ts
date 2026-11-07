@@ -8,6 +8,7 @@
  */
 import { Schema } from "effect";
 import baseDocument from "../themes/base.json" with { type: "json" };
+import { androidThemeId } from "./choices.ts";
 import {
   contrast,
   fromHex,
@@ -47,7 +48,7 @@ export interface AndroidColors {
   readonly dark: AndroidScheme;
 }
 
-export const androidThemeId = "android";
+export { androidThemeId };
 
 const base = Schema.decodeUnknownSync(SolvedTheme)(baseDocument);
 const baseModes = resolve(base, base.style).modes;

@@ -42,6 +42,12 @@ export const omarchyThemeId = "omarchy";
 /** The id of the `<style>` holding the Omarchy theme's CSS. */
 export const omarchyThemeStyleId = "gw-omarchy-theme";
 
+/** The theme id the phone's dynamic color is solved under. */
+export const androidThemeId = "android";
+
+/** The id of the `<style>` holding the Android theme's CSS. */
+export const androidThemeStyleId = "gw-android-theme";
+
 /**
  * A theme to offer, by id and name. A `Theme` document is one. `mode` marks
  * a theme with only one scheme, such as Catppuccin Latte: while it's picked,
@@ -198,28 +204,43 @@ export const omarchyStorageKeys = (key: string) => ({
   mode: `${key}:omarchy-mode`,
 });
 
+/** The Android theme's cache, kept apart so a reset doesn't drop it. */
+export const androidStorageKeys = (key: string) => ({
+  css: `${key}:android-css`,
+  name: `${key}:android-name`,
+});
+
 /**
  * An inline script that applies the stored mode, theme and any custom,
- * Omarchy or app theme's cached CSS before the first paint. Takes the same
- * key and defaults as `pageTheme`. Picking a theme stores the mode it needs,
- * so the two stay in step.
+ * Omarchy, Android or app theme's cached CSS before the first paint. Takes
+ * the same key and defaults as `pageTheme`. Picking a theme stores the mode
+ * it needs, so the two stay in step.
  */
 export const themeBootScript = (options: ThemeBootOptions) => {
   const config = JSON.stringify({
     keys: themeStorageKeys(options.key),
-    omarchy: omarchyStorageKeys(options.key),
     theme: options.defaultTheme,
     mode: options.defaultMode ?? "auto",
     custom: customThemeId,
     style: customThemeStyleId,
-    omarchyId: omarchyThemeId,
-    omarchyStyle: omarchyThemeStyleId,
+    // Themes the app's host passes in, each cached under its own keys
+    system: {
+      [omarchyThemeId]: {
+        css: omarchyStorageKeys(options.key).css,
+        style: omarchyThemeStyleId,
+      },
+      [androidThemeId]: {
+        css: androidStorageKeys(options.key).css,
+        style: androidThemeStyleId,
+      },
+    },
     app: appThemeStorageKey(options.key, ""),
     appStyle: appThemeStyleId(""),
   });
 
-  // An imported or Omarchy theme only applies once it's been picked, and
-  // falls back to the default when its CSS has gone. Any other pick with
-  // cached CSS is an app theme; `pageTheme` solves it when nothing's cached
-  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};let m=g(c.keys.mode)??c.mode;let t=g(c.keys.theme)??c.theme;const o=t===c.custom?g(c.keys.css):t===c.omarchyId?g(c.omarchy.css):null;if(t===c.custom||t===c.omarchyId){if(o)a(t===c.custom?c.style:c.omarchyStyle,o);else{t=c.theme;m=c.mode}}else{const p=g(c.app+t);if(p)a(c.appStyle+t,p)}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
+  // An imported, Omarchy or Android theme only applies once it's been
+  // picked, and falls back to the default when its CSS has gone. Any other
+  // pick with cached CSS is an app theme; `pageTheme` solves it when
+  // nothing's cached
+  return `(()=>{const c=${config};let s;try{s=localStorage}catch{}const g=(k)=>{try{return s?.getItem(k)??null}catch{return null}};const r=document.documentElement;const a=(id,css)=>{const e=document.createElement("style");e.id=id;e.textContent=css;document.head.append(e)};let m=g(c.keys.mode)??c.mode;let t=g(c.keys.theme)??c.theme;const y=Object.hasOwn(c.system,t)?c.system[t]:null;const o=t===c.custom?g(c.keys.css):y?g(y.css):null;if(t===c.custom||y){if(o)a(t===c.custom?c.style:y.style,o);else{t=c.theme;m=c.mode}}else{const p=g(c.app+t);if(p)a(c.appStyle+t,p)}r.setAttribute("data-gw-theme",t);if(m==="auto")r.removeAttribute("data-gw-mode");else r.setAttribute("data-gw-mode",m)})();`;
 };
