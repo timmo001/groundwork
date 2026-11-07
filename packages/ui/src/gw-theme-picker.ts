@@ -83,9 +83,15 @@ const moreIcon =
  * @attr {OptionItem[]} themes - The themes to offer, as JSON. The select hides with fewer than two. With `gallery`, a `group` gathers a family's themes.
  * @attr {boolean} gallery - Shows the themes as preview cards rather than a select.
  * @attr {string} status - A line under the controls, such as an import's result.
- * @attr {string} label - The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.
+ * @attr {string} label - The button's accessible name, the popover's heading and the theme select's label. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.
  * @attr {"light"|"dark"} scheme - The one scheme the theme in use covers, such as `light` for Catppuccin Latte. The other modes are disabled. Leave it out for a theme with both.
  * @attr {boolean} no-import - Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.
+ * @attr {string} mode-label - The mode control's name, for an app in another language. Defaults to `Mode`.
+ * @attr {Record<string, string>} mode-labels - The modes' names by mode, as JSON, such as `{"auto":"Automatisch"}`. Each defaults to its English name.
+ * @attr {string} unavailable-hint - The hint on a mode the theme doesn't come in, with `{mode}` and `{scheme}` filled in. Defaults to `{mode} isn't available: this theme is {scheme} only`.
+ * @attr {string} reset-label - The Reset button. Defaults to `Reset`.
+ * @attr {string} import-label - The Import button. Defaults to `Import`.
+ * @attr {string} import-file-label - Import in the ⋮ menu. Defaults to `Import a theme file`.
  *
  * @csspart gallery - The theme gallery, with `gallery`.
  * @csspart controls - The mode, theme and status.
@@ -108,6 +114,12 @@ export class GwThemePicker extends GwElement {
     modes: {},
     scheme: { reflect: true },
     noImport: { attribute: "no-import", type: "boolean", reflect: true },
+    modeLabel: { attribute: "mode-label" },
+    modeLabels: { attribute: "mode-labels", type: "json" },
+    unavailableHint: { attribute: "unavailable-hint" },
+    resetLabel: { attribute: "reset-label" },
+    importLabel: { attribute: "import-label" },
+    importFileLabel: { attribute: "import-file-label" },
   } as const;
 
   static override styles = [
@@ -212,6 +224,14 @@ export class GwThemePicker extends GwElement {
   declare scheme: "" | "light" | "dark";
   /** Leaves Import out, so only the themes in `themes` are offered. */
   declare noImport: boolean;
+  declare modeLabel: string;
+  /** The modes' names by mode, each defaulting to its English name. */
+  declare modeLabels: Readonly<Record<string, string>>;
+  /** The hint on a mode the theme doesn't come in, with `{mode}` and `{scheme}` filled in. */
+  declare unavailableHint: string;
+  declare resetLabel: string;
+  declare importLabel: string;
+  declare importFileLabel: string;
 
   readonly #button = h("gw-button", {
     variant: "neutral",
@@ -222,7 +242,7 @@ export class GwThemePicker extends GwElement {
 
   readonly #mode = h("gw-segmented");
 
-  readonly #theme = h("gw-select", { label: "Theme" });
+  readonly #theme = h("gw-select");
 
   readonly #gallery = h("gw-theme-gallery", {
     class: "gallery",
@@ -246,13 +266,9 @@ export class GwThemePicker extends GwElement {
     this.#status,
   );
 
-  readonly #reset = h(
-    "gw-button",
-    { variant: "neutral", appearance: "plain" },
-    "Reset",
-  );
+  readonly #reset = h("gw-button", { variant: "neutral", appearance: "plain" });
 
-  readonly #import = h("gw-button", { appearance: "outlined" }, "Import");
+  readonly #import = h("gw-button", { appearance: "outlined" });
 
   readonly #popover = h("gw-popover");
 
@@ -262,10 +278,6 @@ export class GwThemePicker extends GwElement {
     icon: moreIcon,
     labels: "hide",
     hidden: true,
-    items: JSON.stringify([
-      { value: "reset", label: "Reset" },
-      { value: "import", label: "Import a theme file" },
-    ]),
   });
 
   readonly #actions = h("div", { class: "actions", part: "actions" });
@@ -282,14 +294,25 @@ export class GwThemePicker extends GwElement {
     this.modes = "auto light dark darker";
     this.scheme = "";
     this.noImport = false;
+    this.modeLabel = "Mode";
+    this.modeLabels = {};
+    this.unavailableHint =
+      "{mode} isn't available: this theme is {scheme} only";
+    this.resetLabel = "Reset";
+    this.importLabel = "Import";
+    this.importFileLabel = "Import a theme file";
   }
 
-  /** The modes on offer, in the order `modes` gives them. */
+  /** The modes on offer, in the order `modes` gives them, with their names. */
   #offered() {
     const wanted = String(this.modes).split(/\s+/);
     const offered = allModes.filter(({ value }) => wanted.includes(value));
+    const names = this.modeLabels ?? {};
 
-    return offered.length > 0 ? offered : allModes;
+    return (offered.length > 0 ? offered : allModes).map((entry) => ({
+      ...entry,
+      label: names[entry.value] ?? entry.label,
+    }));
   }
 
   /** Whether `mode` can be picked with the theme in use. */
@@ -581,7 +604,8 @@ export class GwThemePicker extends GwElement {
 
     this.#popover.heading = this.label;
     this.#menu.label = this.label;
-    this.#mode.label = "Mode";
+    this.#theme.label = this.label;
+    this.#mode.label = this.modeLabel;
     this.#mode.options = offered.map(({ value, label, icon }) =>
       this.#allowed(value)
         ? { value, label, icon }
@@ -590,7 +614,9 @@ export class GwThemePicker extends GwElement {
             label,
             icon,
             disabled: true,
-            hint: `${label} isn't available: this theme is ${this.scheme} only`,
+            hint: this.unavailableHint
+              .replaceAll("{mode}", label)
+              .replaceAll("{scheme}", this.scheme),
           },
     );
     this.#mode.value = this.mode;
@@ -605,15 +631,21 @@ export class GwThemePicker extends GwElement {
     this.#status.textContent = this.status;
     this.#status.hidden = !this.status;
     this.#import.hidden = this.noImport;
+    this.#reset.textContent = this.resetLabel;
+    this.#import.textContent = this.importLabel;
 
-    if (changed.has("noImport")) {
+    if (
+      ["noImport", "resetLabel", "importFileLabel"].some((name) =>
+        changed.has(name),
+      )
+    ) {
       this.#menu.setAttribute(
         "items",
         JSON.stringify([
-          { value: "reset", label: "Reset" },
+          { value: "reset", label: this.resetLabel },
           ...(this.noImport
             ? []
-            : [{ value: "import", label: "Import a theme file" }]),
+            : [{ value: "import", label: this.importFileLabel }]),
         ]),
       );
     }
@@ -624,9 +656,15 @@ export class GwThemePicker extends GwElement {
 
     // Measures again for the select's new value or the new set of controls
     if (
-      ["layout", "modes", "scheme", "theme", "themes", "gallery"].some((name) =>
-        changed.has(name),
-      )
+      [
+        "layout",
+        "modes",
+        "modeLabels",
+        "scheme",
+        "theme",
+        "themes",
+        "gallery",
+      ].some((name) => changed.has(name))
     ) {
       void this.#fit();
     }

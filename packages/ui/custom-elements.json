@@ -10626,7 +10626,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, display: {}, unit: {}, label: {}, caption: {}, warning: { type: \"number\" }, danger: { type: \"number\" }, inverted: { type: \"boolean\" }, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, display: {}, unit: {}, label: {}, caption: {}, warning: { type: \"number\" }, danger: { type: \"number\" }, inverted: { type: \"boolean\" }, loading: { type: \"boolean\", reflect: true }, loadingLabel: { attribute: \"loading-label\" }, unknownLabel: { attribute: \"unknown-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10734,6 +10734,22 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "loadingLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Loading\""
+            },
+            {
+              "kind": "field",
+              "name": "unknownLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Unknown\""
             },
             {
               "kind": "field",
@@ -11187,6 +11203,20 @@
               },
               "description": "Pulses the track and shows a skeleton for the reading.",
               "name": "loading"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What screen readers hear while loading, for an app in another language. Defaults to `Loading`.",
+              "name": "loading-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What screen readers hear with no reading. Defaults to `Unknown`.",
+              "name": "unknown-label"
             }
           ],
           "superclass": {
@@ -14643,7 +14673,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, }",
+              "default": "{ heading: {}, clearLabel: { attribute: \"clear-label\" }, emptyHeading: { attribute: \"empty-heading\" }, emptyText: { attribute: \"empty-text\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -14672,6 +14702,30 @@
             },
             {
               "kind": "field",
+              "name": "clearLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Clear all\""
+            },
+            {
+              "kind": "field",
+              "name": "emptyHeading",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"You're all caught up\""
+            },
+            {
+              "kind": "field",
+              "name": "emptyText",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"New notifications show up here.\""
+            },
+            {
+              "kind": "field",
               "name": "#heading",
               "privacy": "private",
               "readonly": true
@@ -14685,6 +14739,12 @@
             {
               "kind": "field",
               "name": "#list",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#emptyText",
               "privacy": "private",
               "readonly": true
             },
@@ -15052,6 +15112,27 @@
               },
               "description": "The list's heading. Defaults to `Notifications`.",
               "name": "heading"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Clear all button, for an app in another language. Defaults to `Clear all`.",
+              "name": "clear-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The empty state's heading. Defaults to `You're all caught up`.",
+              "name": "empty-heading"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The line under it. Defaults to `New notifications show up here.`",
+              "name": "empty-text"
             }
           ],
           "superclass": {
@@ -24243,7 +24324,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24348,6 +24429,56 @@
             },
             {
               "kind": "field",
+              "name": "modeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Mode\""
+            },
+            {
+              "kind": "field",
+              "name": "modeLabels",
+              "type": {
+                "text": "Readonly<Record<string, string>>"
+              },
+              "description": "The modes' names by mode, each defaulting to its English name.",
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "unavailableHint",
+              "type": {
+                "text": "string"
+              },
+              "description": "The hint on a mode the theme doesn't come in, with `{mode}` and `{scheme}` filled in.",
+              "default": "\"{mode} isn't available: this theme is {scheme} only\""
+            },
+            {
+              "kind": "field",
+              "name": "resetLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Reset\""
+            },
+            {
+              "kind": "field",
+              "name": "importLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Import\""
+            },
+            {
+              "kind": "field",
+              "name": "importFileLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Import a theme file\""
+            },
+            {
+              "kind": "field",
               "name": "#button",
               "privacy": "private",
               "readonly": true
@@ -24422,7 +24553,7 @@
               "kind": "method",
               "name": "#offered",
               "privacy": "private",
-              "description": "The modes on offer, in the order `modes` gives them."
+              "description": "The modes on offer, in the order `modes` gives them, with their names."
             },
             {
               "kind": "method",
@@ -24926,7 +25057,7 @@
               "type": {
                 "text": "string"
               },
-              "description": "The button's accessible name and the popover's heading. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.",
+              "description": "The button's accessible name, the popover's heading and the theme select's label. Defaults to `Theme`. With `cycle`, the button's name also gives the mode in use.",
               "name": "label"
             },
             {
@@ -24942,6 +25073,48 @@
               },
               "description": "Leaves Import out, for a page that offers only the themes it lists, such as one that passes the desktop's Omarchy theme itself.",
               "name": "no-import"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The mode control's name, for an app in another language. Defaults to `Mode`.",
+              "name": "mode-label"
+            },
+            {
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "description": "The modes' names by mode, as JSON, such as `{\"auto\":\"Automatisch\"}`. Each defaults to its English name.",
+              "name": "mode-labels"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The hint on a mode the theme doesn't come in, with `{mode}` and `{scheme}` filled in. Defaults to `{mode} isn't available: this theme is {scheme} only`.",
+              "name": "unavailable-hint"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Reset button. Defaults to `Reset`.",
+              "name": "reset-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Import button. Defaults to `Import`.",
+              "name": "import-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Import in the ⋮ menu. Defaults to `Import a theme file`.",
+              "name": "import-file-label"
             }
           ],
           "superclass": {

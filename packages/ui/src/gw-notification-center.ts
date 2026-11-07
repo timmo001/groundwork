@@ -26,6 +26,9 @@ const emptyIcon =
  * @summary A list of notifications with Clear all and an empty state.
  *
  * @attr {string} heading - The list's heading. Defaults to `Notifications`.
+ * @attr {string} clear-label - The Clear all button, for an app in another language. Defaults to `Clear all`.
+ * @attr {string} empty-heading - The empty state's heading. Defaults to `You're all caught up`.
+ * @attr {string} empty-text - The line under it. Defaults to `New notifications show up here.`
  *
  * @slot - The `gw-notification` cards.
  *
@@ -38,6 +41,9 @@ const emptyIcon =
 export class GwNotificationCenter extends GwElement {
   static override properties = {
     heading: {},
+    clearLabel: { attribute: "clear-label" },
+    emptyHeading: { attribute: "empty-heading" },
+    emptyText: { attribute: "empty-text" },
   } as const;
 
   static override styles = [
@@ -78,14 +84,17 @@ export class GwNotificationCenter extends GwElement {
   ];
 
   declare heading: string;
+  declare clearLabel: string;
+  declare emptyHeading: string;
+  declare emptyText: string;
 
   readonly #heading = h("h2", { part: "heading" });
 
-  readonly #clear = h(
-    "gw-button",
-    { size: "small", variant: "neutral", appearance: "plain" },
-    "Clear all",
-  );
+  readonly #clear = h("gw-button", {
+    size: "small",
+    variant: "neutral",
+    appearance: "plain",
+  });
 
   readonly #list = h(
     "div",
@@ -93,11 +102,9 @@ export class GwNotificationCenter extends GwElement {
     h("slot"),
   );
 
-  readonly #empty = h(
-    "gw-empty-state",
-    { icon: emptyIcon, heading: "You're all caught up" },
-    h("p", {}, "New notifications show up here."),
-  );
+  readonly #emptyText = h("p");
+
+  readonly #empty = h("gw-empty-state", { icon: emptyIcon }, this.#emptyText);
 
   readonly #body = h("div", {}, this.#list, this.#empty);
 
@@ -106,6 +113,9 @@ export class GwNotificationCenter extends GwElement {
   constructor() {
     super();
     this.heading = "Notifications";
+    this.clearLabel = "Clear all";
+    this.emptyHeading = "You're all caught up";
+    this.emptyText = "New notifications show up here.";
   }
 
   /** Dismisses every notification. */
@@ -154,6 +164,9 @@ export class GwNotificationCenter extends GwElement {
 
   protected override update() {
     this.#heading.textContent = this.heading;
+    this.#clear.textContent = this.clearLabel;
+    this.#empty.setAttribute("heading", this.emptyHeading);
+    this.#emptyText.textContent = this.emptyText;
   }
 }
 

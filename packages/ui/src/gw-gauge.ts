@@ -75,6 +75,8 @@ const circle = (className: string) => {
  * @attr {number} danger - From here it turns danger. Defaults to 90.
  * @attr {boolean} inverted - Lower is worse, such as for a battery.
  * @attr {boolean} loading - Pulses the track and shows a skeleton for the reading.
+ * @attr {string} loading-label - What screen readers hear while loading, for an app in another language. Defaults to `Loading`.
+ * @attr {string} unknown-label - What screen readers hear with no reading. Defaults to `Unknown`.
  *
  * @csspart dial - The dial, with the arc and the reading.
  * @csspart value - The reading's number.
@@ -98,6 +100,8 @@ export class GwGauge extends GwElement {
     danger: { type: "number" },
     inverted: { type: "boolean" },
     loading: { type: "boolean", reflect: true },
+    loadingLabel: { attribute: "loading-label" },
+    unknownLabel: { attribute: "unknown-label" },
   } as const;
 
   static override styles = [
@@ -211,6 +215,8 @@ export class GwGauge extends GwElement {
   /** Lower readings are worse, such as for a battery. */
   declare inverted: boolean;
   declare loading: boolean;
+  declare loadingLabel: string;
+  declare unknownLabel: string;
 
   readonly #fill = circle("fill");
 
@@ -249,6 +255,8 @@ export class GwGauge extends GwElement {
     this.danger = 90;
     this.inverted = false;
     this.loading = false;
+    this.loadingLabel = "Loading";
+    this.unknownLabel = "Unknown";
   }
 
   protected override create(root: ShadowRoot) {
@@ -281,9 +289,9 @@ export class GwGauge extends GwElement {
       this.display || (value === undefined ? "-" : String(Math.round(value)));
 
     const text = this.loading
-      ? "Loading"
+      ? this.loadingLabel
       : value === undefined
-        ? "Unknown"
+        ? this.unknownLabel
         : [`${shown}${this.unit}`, this.caption]
             .filter((part) => part !== "")
             .join(", ");
