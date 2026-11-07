@@ -6,6 +6,7 @@
  * @module
  */
 import { followPageScroll, scrollbars } from "./scrollbars.js";
+import { state } from "./state.js";
 
 /** How a property reads its attribute and writes it back. */
 export interface PropertyOptions {
@@ -35,7 +36,8 @@ export type PropertyValue = Json | undefined;
  * The cascade layer every element's styles sit in. A page's own CSS outside
  * a layer wins over the field styles adopted into the document, whatever
  * its specificity. In a shadow root every sheet is in it, so they keep
- * their order between themselves.
+ * their order between themselves, and the `hidden` and reduced motion rules
+ * sit in `groundwork.state` above it (`state.ts`).
  */
 export const componentsLayer = "groundwork.components";
 
@@ -237,7 +239,7 @@ export class GwElement extends HTMLElement {
     if (own.shadow) {
       const root = this.attachShadow(own.shadowRootOptions);
 
-      root.adoptedStyleSheets = [scrollbars, ...own.styles];
+      root.adoptedStyleSheets = [scrollbars, ...own.styles, state];
       this.renderRoot = root;
     } else {
       this.renderRoot = this;

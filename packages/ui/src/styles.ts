@@ -48,11 +48,6 @@ export const base = css`
     box-sizing: border-box;
   }
 
-  :host([hidden]),
-  [hidden] {
-    display: none !important;
-  }
-
   :focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
@@ -106,18 +101,6 @@ export const base = css`
   @keyframes gw-appear {
     from {
       opacity: 0;
-    }
-  }
-
-  /* :host too, since * in a shadow root doesn't match it, and the skeletons
-     pulse on their host */
-  @media (prefers-reduced-motion: reduce) {
-    :host,
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0s !important;
-      transition-duration: 0s !important;
     }
   }
 `;

@@ -194,7 +194,7 @@
             "text": "string"
           },
           "default": "\"groundwork.components\"",
-          "description": "The cascade layer every element's styles sit in. A page's own CSS outside\na layer wins over the field styles adopted into the document, whatever\nits specificity. In a shadow root every sheet is in it, so they keep\ntheir order between themselves."
+          "description": "The cascade layer every element's styles sit in. A page's own CSS outside\na layer wins over the field styles adopted into the document, whatever\nits specificity. In a shadow root every sheet is in it, so they keep\ntheir order between themselves, and the `hidden` and reduced motion rules\nsit in `groundwork.state` above it (`state.ts`)."
         },
         {
           "kind": "function",
@@ -25714,6 +25714,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/state.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/motion.js"
           }
         },
@@ -28010,6 +28018,45 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/state.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "stateLayer",
+          "type": {
+            "text": "string"
+          },
+          "default": "\"groundwork.state\"",
+          "description": "The cascade layer for the state rules. It's ordered after the components\nlayer, `componentsLayer` in `element.ts`, which imports this module, so the\nnames are written out here."
+        },
+        {
+          "kind": "variable",
+          "name": "state",
+          "default": "new CSSStyleSheet()",
+          "description": "Hides anything with `hidden`, and under reduced motion stops every\nanimation and transition except a loading ring's turn (`.ring`), which\nshows that something is still happening rather than decorating it. Every\n`gw-` element adopts it last. Being in a layer rather than `!important`, a\npage's own rules on a host or a part still win, so an app can keep a\nskeleton pulsing or show a hidden element its own way."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "stateLayer",
+          "declaration": {
+            "name": "stateLayer",
+            "module": "src/state.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "state",
+          "declaration": {
+            "name": "state",
+            "module": "src/state.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/storage.ts",
       "declarations": [
         {
@@ -28058,7 +28105,7 @@
         {
           "kind": "variable",
           "name": "base",
-          "default": "css` :host { font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } *, *::before, *::after { box-sizing: border-box; } :host([hidden]), [hidden] { display: none !important; } :focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :host([tone=\"accent\"]) { --gw-tone: var(--gw-color-accent); --gw-tone-fill: var(--gw-color-fill-accent-quiet); --gw-tone-border: var(--gw-color-border-accent); } :host([tone=\"info\"]) { --gw-tone: var(--gw-color-info); --gw-tone-fill: var(--gw-color-fill-info-quiet); --gw-tone-border: var(--gw-color-border-info); } :host([tone=\"success\"]) { --gw-tone: var(--gw-color-success); --gw-tone-fill: var(--gw-color-fill-success-quiet); --gw-tone-border: var(--gw-color-border-success); } :host([tone=\"warning\"]) { --gw-tone: var(--gw-color-warning); --gw-tone-fill: var(--gw-color-fill-warning-quiet); --gw-tone-border: var(--gw-color-border-warning); } :host([tone=\"danger\"]) { --gw-tone: var(--gw-color-danger); --gw-tone-fill: var(--gw-color-fill-danger-quiet); --gw-tone-border: var(--gw-color-border-danger); } :host([tone=\"important\"]) { --gw-tone: var(--gw-color-important); --gw-tone-fill: var(--gw-color-fill-important-quiet); --gw-tone-border: var(--gw-color-border-important); } /* A loading placeholder's entrance: hidden for --gw-motion-delay, so a quick load never flashes one, then a fade. Use it with appear below. */ @keyframes gw-appear { from { opacity: 0; } } /* :host too, since * in a shadow root doesn't match it, and the skeletons pulse on their host */ @media (prefers-reduced-motion: reduce) { :host, *, *::before, *::after { animation-duration: 0s !important; transition-duration: 0s !important; } } `",
+          "default": "css` :host { font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } *, *::before, *::after { box-sizing: border-box; } :focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :host([tone=\"accent\"]) { --gw-tone: var(--gw-color-accent); --gw-tone-fill: var(--gw-color-fill-accent-quiet); --gw-tone-border: var(--gw-color-border-accent); } :host([tone=\"info\"]) { --gw-tone: var(--gw-color-info); --gw-tone-fill: var(--gw-color-fill-info-quiet); --gw-tone-border: var(--gw-color-border-info); } :host([tone=\"success\"]) { --gw-tone: var(--gw-color-success); --gw-tone-fill: var(--gw-color-fill-success-quiet); --gw-tone-border: var(--gw-color-border-success); } :host([tone=\"warning\"]) { --gw-tone: var(--gw-color-warning); --gw-tone-fill: var(--gw-color-fill-warning-quiet); --gw-tone-border: var(--gw-color-border-warning); } :host([tone=\"danger\"]) { --gw-tone: var(--gw-color-danger); --gw-tone-fill: var(--gw-color-fill-danger-quiet); --gw-tone-border: var(--gw-color-border-danger); } :host([tone=\"important\"]) { --gw-tone: var(--gw-color-important); --gw-tone-fill: var(--gw-color-fill-important-quiet); --gw-tone-border: var(--gw-color-border-important); } /* A loading placeholder's entrance: hidden for --gw-motion-delay, so a quick load never flashes one, then a fade. Use it with appear below. */ @keyframes gw-appear { from { opacity: 0; } } `",
           "description": "What every component shares: box sizing, the focus ring, icons and the\ntones that set `--gw-tone` from a `tone` attribute."
         },
         {
