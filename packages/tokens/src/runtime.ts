@@ -14,7 +14,7 @@ import { appTonesCss, type AppTones } from "./tones.ts";
 
 export { omarchyTheme, type OmarchyCurrentTheme } from "./omarchy.ts";
 
-export { blumeThemeCss, hexModes } from "./generate.ts";
+export { blumeThemeCss, hexModes, layers } from "./generate.ts";
 
 export { appTonesCss, type AppTones } from "./tones.ts";
 
@@ -34,7 +34,8 @@ export const parseTheme = Schema.decodeUnknownResult(
 
 /**
  * Solves a theme into light, dark and Darker. Its CSS applies under
- * `data-gw-theme` set to `id`, which defaults to the theme's own.
+ * `data-gw-theme` set to `id`, which defaults to the theme's own, in the
+ * same tokens layer as the built-in themes.
  */
 export const runtimeTheme = (theme: Theme, id = theme.id): RuntimeTheme => {
   const resolved = resolve({ ...theme, id }, base.style);

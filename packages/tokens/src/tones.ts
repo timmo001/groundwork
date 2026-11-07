@@ -13,7 +13,7 @@ import {
   withAlpha,
   type Oklch,
 } from "./color.ts";
-import { modeRules } from "./generate.ts";
+import { inLayer, layers, modeRules } from "./generate.ts";
 import { targets, type ResolvedTheme, type Roles } from "./solve.ts";
 
 /** An app's tones: each name and the hex color it starts from. */
@@ -76,12 +76,15 @@ export const appToneRoles = (
 
 /**
  * `--app-tone-<name>`, `-fill` and `-border` for each tone, under the same
- * selectors as `theme`'s own CSS. Set a component's `--gw-tone`,
- * `--gw-tone-fill` and `--gw-tone-border` from them.
+ * selectors as `theme`'s own CSS and in the same tokens layer. Set a
+ * component's `--gw-tone`, `--gw-tone-fill` and `--gw-tone-border` from them.
  */
 export const appTonesCss = (tones: AppTones, theme: ResolvedTheme) =>
-  modeRules(theme, (roles, dark, indent) =>
-    Object.entries(appToneRoles(tones, roles, dark))
-      .map(([name, color]) => `${indent}--app-tone-${name}: ${toCss(color)};`)
-      .join("\n"),
-  ).join("\n\n");
+  inLayer(
+    layers.tokens,
+    modeRules(theme, (roles, dark, indent) =>
+      Object.entries(appToneRoles(tones, roles, dark))
+        .map(([name, color]) => `${indent}--app-tone-${name}: ${toCss(color)};`)
+        .join("\n"),
+    ).join("\n\n"),
+  );
