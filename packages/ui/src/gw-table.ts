@@ -23,6 +23,9 @@ import {
 } from "@tanstack/table-core";
 import { storeReactivityBindings } from "@tanstack/table-core/store-reactivity-bindings";
 import {
+  elementScroll,
+  observeElementOffset,
+  observeElementRect,
   observeWindowOffset,
   observeWindowRect,
   Virtualizer,
@@ -101,6 +104,7 @@ type Shown =
   | {
       readonly kind: "group";
       readonly key: string;
+      readonly value: string;
       readonly label: string;
       readonly count: number;
       readonly expanded: boolean;
@@ -111,7 +115,9 @@ type Shown =
  * Rows of data in a table that sorts by a header press and searches every
  * column, built on TanStack Table. Only the rows on screen are drawn, by
  * TanStack Virtual against the window's scroll, so a table of thousands
- * stays quick; rows can be any height.
+ * stays quick; rows can be any height. With `contained` it scrolls inside
+ * its own frame instead, up to `--gw-table-max-height`, with its header kept
+ * in view, and draws only the rows in that frame.
  *
  * Give it `columns` and `rows`, as JSON attributes for plain data or as
  * properties. Each column says how to read a row's value, which sorting and
@@ -119,12 +125,15 @@ type Shown =
  * a link or a `gw-chip`. `row-key` names the row property
  * that identifies it, so a row keeps its place across updates. The sort and
  * search are the table's own, set from their attributes to start with; it
- * fires `change` when they change, so a page can keep them in its URL.
+ * fires `change` when they change, so a page can keep them in its URL or
+ * storage.
  *
  * `group` gathers the rows under a heading for each value of a column, such
  * as a state, with its name (from the column's `groupLabel`) and a chip
  * counting its rows. Pressing a heading folds its rows away. That column
- * doesn't show, since each heading names its value.
+ * doesn't show, since each heading names its value. `toggled-groups` lists
+ * the groups, by value, pressed from how they start, and fires `change` too,
+ * so the folded groups can be kept with the sort.
  *
  * @element gw-table
  * @summary Rows of data that sort and search, windowed for long lists.
@@ -137,6 +146,8 @@ type Shown =
  * @attr {string} query - The search text.
  * @attr {string} group - The column whose values it groups the rows by, by id.
  * @attr {boolean} groups-collapsed - Starts with every group folded away, for long lists.
+ * @attr {string[]} toggled-groups - The groups, by value, toggled from how they start: folded away, or opened with `groups-collapsed`. As JSON or a property.
+ * @attr {boolean} contained - Scrolls inside its own frame, up to `--gw-table-max-height`, rather than with the page.
  * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.
  * @attr {string} search-label - The search field's name and placeholder. Defaults to `Search`.
  * @attr {string} row-key - The row property that identifies each row.
@@ -149,7 +160,9 @@ type Shown =
  * @csspart row - Each row.
  * @csspart group - Each group's heading row.
  *
- * @fires {Event} change - When the sort or search changes. Read `sort`, `descending` and `query`.
+ * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
+ *
+ * @fires {Event} change - When the sort, search or folded groups change. Read `sort`, `descending`, `query` and `toggledGroups`.
  */
 export class GwTable extends GwElement {
   static override properties = {
@@ -159,6 +172,8 @@ export class GwTable extends GwElement {
     query: {},
     group: { reflect: true },
     groupsCollapsed: { type: "boolean", attribute: "groups-collapsed" },
+    toggledGroups: { type: "json", attribute: "toggled-groups" },
+    contained: { type: "boolean", reflect: true },
     search: {},
     searchLabel: { attribute: "search-label" },
     rowKey: { attribute: "row-key" },
@@ -231,6 +246,25 @@ export class GwTable extends GwElement {
         background: var(--gw-color-surface-raised);
         border: var(--gw-border-width) solid var(--gw-color-border-normal);
         border-radius: var(--gw-radius-panel);
+      }
+
+      :host([contained]) .scroller {
+        max-height: var(--gw-table-max-height, 70vh);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      /* The header stays in view as a contained table scrolls */
+      :host([contained]) thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background:
+          linear-gradient(
+            var(--gw-color-surface-lower, transparent),
+            var(--gw-color-surface-lower, transparent)
+          ),
+          var(--gw-color-surface-raised);
       }
 
       table {
@@ -373,6 +407,8 @@ export class GwTable extends GwElement {
   declare query: string;
   declare group: string;
   declare groupsCollapsed: boolean;
+  declare toggledGroups: readonly string[];
+  declare contained: boolean;
   declare search: "auto" | "always" | "never";
   declare searchLabel: string;
   declare rowKey: string;
@@ -405,6 +441,13 @@ export class GwTable extends GwElement {
 
   readonly #none = h("div", { class: "none" });
 
+  readonly #scroller: HTMLDivElement = h(
+    "div",
+    { class: "scroller" },
+    this.#table,
+    this.#none,
+  );
+
   /**
    * The group headings and sorted, searched rows the body draws, rebuilt
    * only when what they depend on changes.
@@ -414,13 +457,8 @@ export class GwTable extends GwElement {
   /** How many rows there are after the search, without the headings. */
   #matched = 0;
 
-  /**
-   * The groups toggled from how they start, by their heading's key: folded
-   * away, or opened with `groupsCollapsed`.
-   */
-  readonly #toggled = new Set<string>();
-
-  readonly #virtualizer = new Virtualizer<Window, HTMLTableRowElement>({
+  /** Draws the rows on screen as the page scrolls. */
+  readonly #windowed = new Virtualizer<Window, HTMLTableRowElement>({
     count: 0,
     getScrollElement: () => window,
     estimateSize: () => 41,
@@ -432,7 +470,23 @@ export class GwTable extends GwElement {
     onChange: () => this.requestUpdate("window"),
   });
 
+  /** Draws the rows in view as a `contained` table's own frame scrolls. */
+  readonly #framed = new Virtualizer<HTMLDivElement, HTMLTableRowElement>({
+    count: 0,
+    getScrollElement: () => this.#scroller,
+    estimateSize: () => 41,
+    overscan: 10,
+    observeElementRect,
+    observeElementOffset,
+    scrollToFn: elementScroll,
+    initialOffset: () => this.#scroller.scrollTop,
+    onChange: () => this.requestUpdate("window"),
+  });
+
   #cleanup: () => void = () => {};
+
+  /** Whether the frame's virtualizer is the one mounted, once connected. */
+  #mounted: boolean | undefined;
 
   constructor() {
     super();
@@ -442,6 +496,8 @@ export class GwTable extends GwElement {
     this.query = "";
     this.group = "";
     this.groupsCollapsed = false;
+    this.toggledGroups = [];
+    this.contained = false;
     this.search = "auto";
     this.searchLabel = "Search";
     this.rowKey = "";
@@ -453,13 +509,36 @@ export class GwTable extends GwElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.#cleanup = this.#virtualizer._didMount();
-    this.#virtualizer._willUpdate();
+    this.#mount();
   }
 
   override disconnectedCallback() {
-    this.#cleanup();
+    this.#unmount();
     super.disconnectedCallback();
+  }
+
+  /** Mounts the virtualizer for how it scrolls, swapping out the other. */
+  #mount() {
+    if (this.#mounted === this.contained) return;
+
+    this.#unmount();
+
+    if (this.contained) {
+      this.#cleanup = this.#framed._didMount();
+      this.#framed._willUpdate();
+    } else {
+      this.#cleanup = this.#windowed._didMount();
+      this.#windowed._willUpdate();
+    }
+
+    this.#mounted = this.contained;
+  }
+
+  #unmount() {
+    this.#cleanup();
+    this.#cleanup = () => {};
+
+    this.#mounted = undefined;
   }
 
   #change() {
@@ -521,12 +600,16 @@ export class GwTable extends GwElement {
       }
 
       const value: TableValue = row.original[row.groupingColumnId ?? ""];
-      const expanded = this.#toggled.has(row.id) === this.groupsCollapsed;
+      const name = String(value ?? "");
+
+      const expanded =
+        this.toggledGroups.includes(name) === this.groupsCollapsed;
 
       const heading: Shown = {
         kind: "group",
         key: row.id,
-        label: grouping?.groupLabel?.(value) ?? String(value ?? ""),
+        value: name,
+        label: grouping?.groupLabel?.(value) ?? name,
         count: row.subRows.length,
         expanded,
       };
@@ -544,12 +627,12 @@ export class GwTable extends GwElement {
     });
   }
 
-  #toggleGroup(key: string) {
-    if (this.#toggled.has(key)) this.#toggled.delete(key);
-    else this.#toggled.add(key);
+  #toggleGroup(value: string) {
+    this.toggledGroups = this.toggledGroups.includes(value)
+      ? this.toggledGroups.filter((each) => each !== value)
+      : [...this.toggledGroups, value];
 
-    this.#process();
-    this.requestUpdate("window");
+    this.#change();
   }
 
   #sortBy(column: TableColumn) {
@@ -624,7 +707,7 @@ export class GwTable extends GwElement {
       count,
     );
 
-    toggle.addEventListener("click", () => this.#toggleGroup(group.key));
+    toggle.addEventListener("click", () => this.#toggleGroup(group.value));
 
     return h(
       "tr",
@@ -633,14 +716,30 @@ export class GwTable extends GwElement {
     );
   }
 
-  #renderBody() {
-    const virtualizer = this.#virtualizer;
+  /** Where the body starts, on the scale the virtualizer scrolls on. */
+  #bodyOffset() {
+    const top = this.#body.getBoundingClientRect().top;
 
+    return this.contained
+      ? top -
+          this.#scroller.getBoundingClientRect().top +
+          this.#scroller.scrollTop
+      : top + window.scrollY;
+  }
+
+  #renderBody() {
+    if (this.contained) this.#renderRows(this.#framed);
+    else this.#renderRows(this.#windowed);
+  }
+
+  #renderRows<S extends Window | HTMLDivElement>(
+    virtualizer: Virtualizer<S, HTMLTableRowElement>,
+  ) {
     virtualizer.setOptions({
       ...virtualizer.options,
       count: this.#shown.length,
       getItemKey: (index) => this.#shown[index]?.key ?? index,
-      scrollMargin: this.#body.getBoundingClientRect().top + window.scrollY,
+      scrollMargin: this.#bodyOffset(),
     });
 
     const items = virtualizer.getVirtualItems();
@@ -702,6 +801,8 @@ export class GwTable extends GwElement {
     );
 
     for (const row of rows) virtualizer.measureElement(row);
+
+    virtualizer._willUpdate();
   }
 
   protected override create(root: ShadowRoot) {
@@ -709,10 +810,7 @@ export class GwTable extends GwElement {
       this.query = this.#input.value;
       this.#change();
     });
-    root.append(
-      this.#toolbar,
-      h("div", { class: "scroller" }, this.#table, this.#none),
-    );
+    root.append(this.#toolbar, this.#scroller);
   }
 
   protected override update(changed: ReadonlySet<string>) {
@@ -724,11 +822,17 @@ export class GwTable extends GwElement {
       "query",
       "group",
       "groupsCollapsed",
+      "toggledGroups",
       "rowKey",
     ];
 
-    // A new starting state starts every group from it again
-    if (changed.has("groupsCollapsed")) this.#toggled.clear();
+    // A new starting state starts every group from it again, unless the
+    // groups toggled from it came with it
+    if (changed.has("groupsCollapsed") && !changed.has("toggledGroups")) {
+      this.toggledGroups = [];
+    }
+
+    if (changed.has("contained") && this.isConnected) this.#mount();
 
     if (data.some((name) => changed.has(name))) this.#process();
 
@@ -756,7 +860,6 @@ export class GwTable extends GwElement {
       this.rows.length === 0 ? this.emptyLabel : this.noMatchLabel;
 
     this.#renderBody();
-    this.#virtualizer._willUpdate();
   }
 }
 

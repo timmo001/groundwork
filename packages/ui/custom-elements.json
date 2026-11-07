@@ -21078,8 +21078,14 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change, so a page can keep them in its URL or\nstorage.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort.",
           "name": "GwTable",
+          "cssProperties": [
+            {
+              "description": "How tall a `contained` table grows before it scrolls. Defaults to `70vh`.",
+              "name": "--gw-table-max-height"
+            }
+          ],
           "cssParts": [
             {
               "description": "The table.",
@@ -21108,7 +21114,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21121,7 +21127,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } :host([contained]) .scroller { max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; overscroll-behavior: contain; } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21170,6 +21176,22 @@
             {
               "kind": "field",
               "name": "groupsCollapsed",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "toggledGroups",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "contained",
               "type": {
                 "text": "boolean"
               },
@@ -21278,6 +21300,15 @@
             },
             {
               "kind": "field",
+              "name": "#scroller",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#shown",
               "privacy": "private",
               "type": {
@@ -21298,18 +21329,19 @@
             },
             {
               "kind": "field",
-              "name": "#toggled",
+              "name": "#windowed",
               "privacy": "private",
               "readonly": true,
-              "default": "new Set<string>()",
-              "description": "The groups toggled from how they start, by their heading's key: folded\naway, or opened with `groupsCollapsed`."
+              "default": "new Virtualizer<Window, HTMLTableRowElement>({ count: 0, getScrollElement: () => window, estimateSize: () => 41, overscan: 10, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })",
+              "description": "Draws the rows on screen as the page scrolls."
             },
             {
               "kind": "field",
-              "name": "#virtualizer",
+              "name": "#framed",
               "privacy": "private",
               "readonly": true,
-              "default": "new Virtualizer<Window, HTMLTableRowElement>({ count: 0, getScrollElement: () => window, estimateSize: () => 41, overscan: 10, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })"
+              "default": "new Virtualizer<HTMLDivElement, HTMLTableRowElement>({ count: 0, getScrollElement: () => this.#scroller, estimateSize: () => 41, overscan: 10, observeElementRect, observeElementOffset, scrollToFn: elementScroll, initialOffset: () => this.#scroller.scrollTop, onChange: () => this.requestUpdate(\"window\"), })",
+              "description": "Draws the rows in view as a `contained` table's own frame scrolls."
             },
             {
               "kind": "field",
@@ -21318,6 +21350,26 @@
               "type": {
                 "text": "() => void"
               }
+            },
+            {
+              "kind": "field",
+              "name": "#mounted",
+              "privacy": "private",
+              "type": {
+                "text": "boolean | undefined"
+              },
+              "description": "Whether the frame's virtualizer is the one mounted, once connected."
+            },
+            {
+              "kind": "method",
+              "name": "#mount",
+              "privacy": "private",
+              "description": "Mounts the virtualizer for how it scrolls, swapping out the other."
+            },
+            {
+              "kind": "method",
+              "name": "#unmount",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -21376,7 +21428,7 @@
               "privacy": "private",
               "parameters": [
                 {
-                  "name": "key",
+                  "name": "value",
                   "type": {
                     "text": "string"
                   }
@@ -21429,8 +21481,27 @@
             },
             {
               "kind": "method",
+              "name": "#bodyOffset",
+              "privacy": "private",
+              "description": "Where the body starts, on the scale the virtualizer scrolls on."
+            },
+            {
+              "kind": "method",
               "name": "#renderBody",
               "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#renderRows",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "virtualizer",
+                  "type": {
+                    "text": "Virtualizer<S, HTMLTableRowElement>"
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -21750,7 +21821,7 @@
               "type": {
                 "text": "Event"
               },
-              "description": "When the sort or search changes. Read `sort`, `descending` and `query`."
+              "description": "When the sort, search or folded groups change. Read `sort`, `descending`, `query` and `toggledGroups`."
             }
           ],
           "attributes": [
@@ -21809,6 +21880,20 @@
               },
               "description": "Starts with every group folded away, for long lists.",
               "name": "groups-collapsed"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "The groups, by value, toggled from how they start: folded away, or opened with `groups-collapsed`. As JSON or a property.",
+              "name": "toggled-groups"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Scrolls inside its own frame, up to `--gw-table-max-height`, rather than with the page.",
+              "name": "contained"
             },
             {
               "type": {

@@ -201,7 +201,7 @@ A reading on a dial. The arc fills to `value` between `min` and `max` and glides
   <gw-table label="Processes" sort="cpu" descending row-key="pid" columns='[{"id":"name","header":"Name","wide":true},{"id":"pid","header":"PID","numeric":true},{"id":"cpu","header":"CPU %","numeric":true},{"id":"memory","header":"Memory MB","numeric":true}]' rows='[{"pid":1204,"name":"firefox","cpu":12.4,"memory":1840},{"pid":981,"name":"Hyprland","cpu":3.1,"memory":212},{"pid":2210,"name":"opencode","cpu":8.7,"memory":640},{"pid":1450,"name":"pipewire","cpu":0.6,"memory":38},{"pid":3301,"name":"bun","cpu":21.9,"memory":410},{"pid":2875,"name":"waybar","cpu":0.4,"memory":64},{"pid":1777,"name":"ghostty","cpu":1.2,"memory":180},{"pid":3020,"name":"node","cpu":4.8,"memory":290}]'></gw-table>
 </Demo>
 
-Rows of data that sort by a header press and search every column, built on TanStack Table. Only the rows on screen are drawn, by TanStack Virtual against the window's scroll, so thousands of rows stay quick, and rows can be any height.
+Rows of data that sort by a header press and search every column, built on TanStack Table. Only the rows on screen are drawn, by TanStack Virtual against the window's scroll, or the table's own frame with `contained`, so thousands of rows stay quick, and rows can be any height.
 
 | Attribute | What it does |
 | --- | --- |
@@ -211,6 +211,8 @@ Rows of data that sort by a header press and search every column, built on TanSt
 | `query`, `search` | The search text, and whether there's a search field: `auto` (from 8 rows), `always` or `never` |
 | `group` | The column whose values it groups the rows by. Each group gets a heading with its name and a chip counting its rows, which folds it away when pressed. That column doesn't show, since the headings name its values |
 | `groups-collapsed` | Starts every group folded away, for long lists. Pressing a group's chip still opens it |
+| `toggled-groups` | The groups, by value, pressed from how they start, so a page can keep which are folded |
+| `contained` | Scrolls inside its own frame, up to `--gw-table-max-height` (`70vh`), with the header kept in view, rather than with the page |
 | `row-key` | The row property that identifies each row, so it keeps its place across updates |
 | `label`, `search-label`, `empty-label`, `no-match-label` | Its name, and the text it shows, for an app in another language |
 
@@ -220,7 +222,7 @@ Grouped by state:
   <gw-table label="Issues" group="state" sort="seen" descending row-key="id" columns='[{"id":"title","header":"Issue","wide":true},{"id":"state","header":"State"},{"id":"host","header":"Host"},{"id":"seen","header":"Seen","numeric":true}]' rows='[{"id":"a","title":"waybar crashed on a monitor hotplug","state":"Regressed","host":"desktop","seen":14},{"id":"b","title":"pipewire lost its sink after suspend","state":"New","host":"laptop","seen":3},{"id":"c","title":"upkeep-worker.service failed","state":"New","host":"desktop","seen":1},{"id":"d","title":"Out of memory in the docs build","state":"Ongoing","host":"server","seen":27},{"id":"e","title":"ghostty crashed opening a tab","state":"Ongoing","host":"desktop","seen":6}]'></gw-table>
 </Demo>
 
-Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort or search changes; read `sort`, `descending` and `query`, such as to keep them in the URL.
+Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort, search or folded groups change; read `sort`, `descending`, `query` and `toggledGroups`, such as to keep them in the URL or storage.
 
 ```ts
 table.columns = [
