@@ -48,13 +48,31 @@ Groundwork's own themes live in `packages/tokens/themes/`. Run `mise run gen` af
 | `style.link` | Accent or strong text, with a thin or thick underline. |
 | `style.surfaceAccent` | `none`, `sheen` (a faint accent gradient), `marker` (an accent bar on the left) or `flange` (an accent edge on top). |
 | `style.rows` | `cards` or `dense` table rows for lists. |
+| `status` | Optional. The `info`, `success`, `important`, `warning` and `danger` colors to start from in place of the defaults. Each is solved to its contrast target the same way. |
+| `roles` | Optional. Any role set to a color in `light`, `dark` or `darker`, after solving and as given, such as `"surface-raised"` or `"accent"`. Darker starts from dark's overrides. A role that doesn't exist fails to decode, and an override's contrast is checked like the rest. |
 | `examples` | Optional. Apps that use the theme, listed on its page as examples. Any app can pick any theme. |
 
 Backgrounds stay plain: a style changes shape and accents, never the background itself.
 
+### Overriding colors
+
+`status` keeps the solver's contrast: give it a hue and it finds the lightness. `roles` is for a color that has to be exact, such as a brand's surface. Roles derived from one, such as `fill-accent-hovered` from `accent`, keep the solved value, so set those too when they should follow:
+
+```json
+{
+  "status": { "danger": "#ff4f5e" },
+  "roles": {
+    "dark": { "surface-raised": "#202830" },
+    "light": { "accent": "#0b63c5", "fill-accent-resting": "#0b63c5" }
+  }
+}
+```
+
+The roles are the `--gw-color-*` names on the [Color](/foundations/color) page.
+
 ## An optional theme
 
-Optional themes map an existing palette straight onto the roles, one mode per file, and take Base's style:
+Optional themes map an existing palette straight onto the roles, one mode per file, and take Base's style unless they give their own `style`, with the same fields as a core theme's:
 
 ```json
 {
