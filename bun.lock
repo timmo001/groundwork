@@ -128,6 +128,23 @@
         "typescript": "7.0.2",
       },
     },
+    "packages/mobile": {
+      "name": "@timmo001/groundwork-mobile",
+      "dependencies": {
+        "@timmo001/groundwork-pwa": "workspace:*",
+        "@timmo001/groundwork-tokens": "workspace:*",
+        "effect": "4.1.2",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.92.0",
+        "@timmo001/oxlint-rules": "0.6.4",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.92.0",
+        "oxlint-tsgolint": "7.0.2006",
+        "prettier": "3.9.10",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/pwa": {
       "name": "@timmo001/groundwork-pwa",
       "dependencies": {
@@ -1016,6 +1033,8 @@
     "@timmo001/groundwork-desktop": ["@timmo001/groundwork-desktop@workspace:packages/desktop"],
 
     "@timmo001/groundwork-lit-effect": ["@timmo001/groundwork-lit-effect@workspace:packages/lit-effect"],
+
+    "@timmo001/groundwork-mobile": ["@timmo001/groundwork-mobile@workspace:packages/mobile"],
 
     "@timmo001/groundwork-pwa": ["@timmo001/groundwork-pwa@workspace:packages/pwa"],
 
