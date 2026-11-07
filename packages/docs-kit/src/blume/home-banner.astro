@@ -12,14 +12,23 @@ const { page, route } = Astro.props;
 const home = route === "/" || page.route === "/";
 
 const description = page.description ?? data.config.description;
+
+// The site's own logo from its Blume config, with docs-kit's public/ files as
+// the fallback
+const light = data.config.logo?.light ?? "/logo-light.svg";
+const dark = data.config.logo?.dark ?? light;
+
+// The logo's own size, so one that isn't square keeps its shape
+const lightSize = data.config.logo?.dimensions?.light ?? { width: 208, height: 208 };
+const darkSize = data.config.logo?.dimensions?.dark ?? lightSize;
 ---
 
 {
   home && description && (
     <section aria-labelledby="home-banner-title" class="home-banner">
       <div class="home-banner-inner">
-        <img alt="" class="home-banner-logo home-banner-logo-light" height="208" src="/logo-light.svg" width="208" />
-        <img alt="" class="home-banner-logo home-banner-logo-dark" height="208" src="/logo-dark.svg" width="208" />
+        <img alt="" class="home-banner-logo home-banner-logo-light" height={lightSize.height} src={light} width={lightSize.width} />
+        <img alt="" class="home-banner-logo home-banner-logo-dark" height={darkSize.height} src={dark} width={darkSize.width} />
         <h1 class="home-banner-title" id="home-banner-title">
           {data.config.title}
         </h1>
@@ -55,7 +64,7 @@ const description = page.description ?? data.config.description;
   }
 
   .home-banner-logo {
-    width: var(--home-banner-logo-size, 9rem);
+    width: auto;
     height: var(--home-banner-logo-size, 9rem);
     margin-top: 1.5rem;
   }
@@ -108,7 +117,6 @@ const description = page.description ?? data.config.description;
     }
 
     .home-banner-logo {
-      width: var(--home-banner-logo-size, 13rem);
       height: var(--home-banner-logo-size, 13rem);
     }
 

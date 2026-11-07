@@ -51,6 +51,13 @@ const reposFlag = Flag.String("repos").pipe(
   Flag.atLeast(0),
 );
 
+const conventionsFlag = Flag.String("conventions").pipe(
+  Flag.withDescription(
+    "A directory with its own kinds.yml and labels.yml, for an organization's conventions; defaults to Groundwork's",
+  ),
+  Flag.optional,
+);
+
 /**
  * Repository files kept outside this public repository, such as for private
  * repositories, in `$XDG_CONFIG_HOME/groundwork/conventions/repos`.
@@ -75,11 +82,19 @@ const localRepos = Effect.gen(function* () {
 
 const loadManifest = Effect.fn("loadManifest")(function* (
   extra: readonly string[],
-  options: { readonly local: boolean } = { local: true },
+  options: {
+    readonly local: boolean;
+    readonly conventions?: Option.Option<string>;
+  } = { local: true },
 ) {
   const fs = yield* FileSystem.FileSystem;
   const path = yield* Path.Path;
-  const conventions = path.join(yield* root, "conventions");
+  const ownConventions = path.join(yield* root, "conventions");
+
+  const conventions = Option.getOrElse(
+    options.conventions ?? Option.none(),
+    () => ownConventions,
+  );
 
   const { kinds } = yield* readYaml(
     path.join(conventions, "kinds.yml"),
@@ -117,9 +132,9 @@ const loadManifest = Effect.fn("loadManifest")(function* (
 
 const checkCommand = Command.make(
   "check",
-  { repos: reposFlag },
-  Effect.fn("check")(function* ({ repos }) {
-    const manifest = yield* loadManifest(repos);
+  { repos: reposFlag, conventions: conventionsFlag },
+  Effect.fn("check")(function* ({ repos, conventions }) {
+    const manifest = yield* loadManifest(repos, { local: true, conventions });
     const problems = check(manifest);
 
     for (const item of problems) {
@@ -221,9 +236,10 @@ const labelsCommand = Command.make(
       Flag.withDefault(false),
     ),
     repos: reposFlag,
+    conventions: conventionsFlag,
   },
-  Effect.fn("labels")(function* ({ repo, all, repos }) {
-    const manifest = yield* loadManifest(repos);
+  Effect.fn("labels")(function* ({ repo, all, repos, conventions }) {
+    const manifest = yield* loadManifest(repos, { local: true, conventions });
 
     if (all) {
       yield* Console.log(

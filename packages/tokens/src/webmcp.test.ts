@@ -1,12 +1,15 @@
 /**
  * Tests the WebMCP theme tools against a fake model context: what they
- * register, and that set-theme applies and keeps a theme by id, by document
- * and from an Omarchy colors.toml.
+ * register, that set-theme applies and keeps a theme by id, by document
+ * and from an Omarchy colors.toml, and that an app's own theme works by id.
  *
  * @module
  */
 import { expect, test } from "bun:test";
+import { Schema } from "effect";
+import base from "../themes/base.json" with { type: "json" };
 import type { ThemeStore } from "./runtime.ts";
+import { Theme } from "./schema.ts";
 import {
   registerThemeTools,
   type ModelContext,
@@ -108,4 +111,38 @@ test("set-theme explains a bad id or input instead of throwing", async () => {
   expect(await call("set-theme", { id: "nope" })).toContain("list-themes");
   expect(await call("set-theme", { theme: "{}" })).toContain("isn't a theme");
   expect(applied).toEqual([]);
+});
+
+test("set-theme takes an app's own theme passed through themes", async () => {
+  const tools = new Map<string, Tool>();
+  const applied: string[] = [];
+
+  const app = Schema.decodeUnknownSync(Theme)({
+    ...base,
+    id: "app",
+    name: "App",
+  });
+
+  registerThemeTools({
+    store: {
+      load: async () => null,
+      save: async () => {},
+      clear: async () => {},
+    },
+    apply: ({ document }) => applied.push(document.id),
+    themes: [app],
+    context: {
+      registerTool: (tool) => {
+        tools.set(tool.name, tool);
+      },
+    },
+  });
+
+  expect(JSON.stringify(await tools.get("list-themes")?.execute({}))).toContain(
+    '\\"id\\": \\"app\\"',
+  );
+  expect(
+    JSON.stringify(await tools.get("set-theme")?.execute({ id: "app" })),
+  ).toContain("Applied App");
+  expect(applied).toEqual(["app"]);
 });

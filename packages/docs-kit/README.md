@@ -198,7 +198,9 @@ for each mode (`{ auto: "Automatisch" }`), `unavailableHint` for a mode the
 theme doesn't come in (with `{mode}` and `{scheme}` filled in) and
 `githubLabel` for the GitHub link. Each defaults to its English text.
 
-Set these in `theme.css` to change the banner:
+Set these in `theme.css` to change the banner. The banner shows the logo from
+the site's Blume `logo` config, at its own aspect ratio;
+`--home-banner-logo-size` sets its height.
 
 ```css
 .home-banner {

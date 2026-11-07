@@ -181,7 +181,7 @@ export const registerThemeTools = (options: ThemeToolsOptions): boolean => {
     {
       name: "list-themes",
       description:
-        "Lists the built-in themes by id and name, to pick one with set-theme.",
+        "Lists the themes this page offers by id and name, including any of the app's own, to pick one with set-theme.",
       execute: async () =>
         text(
           JSON.stringify(
@@ -198,13 +198,13 @@ export const registerThemeTools = (options: ThemeToolsOptions): boolean => {
     {
       name: "set-theme",
       description:
-        "Applies a theme to this page and keeps it. Give the id of a built-in theme, or a Groundwork theme document as JSON, or the text of an Omarchy colors.toml.",
+        "Applies a theme to this page and keeps it. Give the id of a theme from list-themes, or a Groundwork theme document as JSON, or the text of an Omarchy colors.toml.",
       inputSchema: {
         type: "object",
         properties: {
           id: {
             type: "string",
-            description: "A built-in theme's id, from list-themes.",
+            description: "A theme's id, from list-themes.",
           },
           theme: {
             type: "string",
@@ -226,7 +226,7 @@ export const registerThemeTools = (options: ThemeToolsOptions): boolean => {
 
           return found === undefined
             ? text(
-                `No built-in theme has the id "${id}". Call list-themes for the ids.`,
+                `No theme on this page has the id "${id}". Call list-themes for the ids.`,
               )
             : apply(found);
         }
