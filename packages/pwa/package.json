@@ -1,0 +1,31 @@
+{
+  "name": "@timmo001/groundwork-pwa",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/config.ts",
+    "./build": "./src/build.ts",
+    "./view": "./src/view.ts",
+    "./worker": "./src/worker.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "@timmo001/groundwork-tokens": "workspace:*",
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.92.0",
+    "@timmo001/oxlint-rules": "0.6.4",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.92.0",
+    "oxlint-tsgolint": "7.0.2006",
+    "prettier": "3.9.10",
+    "typescript": "7.0.2"
+  }
+}

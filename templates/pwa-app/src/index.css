@@ -1,0 +1,44 @@
+/* The app's page: the theme's surface and type, with the app centered. */
+html {
+  background: var(--gw-color-surface-default);
+  color: var(--gw-color-text-primary);
+  font-family: var(--gw-font-sans);
+}
+
+body {
+  margin: 0;
+}
+
+.brand {
+  display: inline-flex;
+  gap: var(--gw-space-2);
+  align-items: center;
+  color: var(--gw-color-text-strong);
+  font-weight: 600;
+}
+
+.brand svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+
+main {
+  box-sizing: border-box;
+  display: grid;
+  gap: var(--gw-space-6);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--gw-space-6) var(--gw-space-5);
+}
+
+.phone-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gw-space-2);
+  margin-top: var(--gw-space-4);
+}
+
+.phone-actions[hidden] {
+  display: none;
+}

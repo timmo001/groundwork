@@ -16,6 +16,15 @@ ready_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 health_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
 retry = true
 
+# Builds and serves the PWA template, for installing it in a browser or the
+# emulator. Rebuild by restarting it.
+[daemons.pwa]
+run = 'exec mise run pwa:start'
+port = { expect = [7370], bump = 10 }
+ready_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
+health_cmd = 'curl -fsS "http://127.0.0.1:$PORT/"'
+retry = true
+
 # Publishes the Omarchy panel demo into the local plugins folder while it
 # runs, and restores the folder when it stops.
 [daemons.panel]

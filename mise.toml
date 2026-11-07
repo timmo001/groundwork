@@ -124,6 +124,24 @@ depends = ["install"]
 dir = "templates/desktop-app"
 run = "bun run start"
 
+[tasks."pwa:start"]
+description = "Build the PWA template and serve it on 127.0.0.1"
+depends = ["install"]
+dir = "templates/pwa-app"
+run = "bun run start"
+
+[tasks."demo:pwa"]
+description = "Serve the PWA demo in the background through Pitchfork, and to the emulator when one is running"
+run = '''
+pitchfork start pwa
+port=$(pitchfork list --project --json | jq -r '.[] | select(.name == "pwa") | .active_port')
+if adb get-state >/dev/null 2>&1; then
+  adb reverse "tcp:$port" "tcp:$port" >/dev/null
+  echo "The emulator reaches it at http://localhost:$port/"
+fi
+echo "The PWA demo is at https://pwa.groundwork.localhost"
+'''
+
 [tasks."android:setup"]
 description = "Install the Android SDK packages and create the groundwork emulator, a medium phone on the latest Android"
 run = '''

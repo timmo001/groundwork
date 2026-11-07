@@ -19,6 +19,7 @@ document attached to it.
 | [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                            |
 | [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behavior conventions, with Code Mode and MCP                           |
 | [`templates/desktop-app`](templates/desktop-app)                          | A desktop app on Electrobun, running the web components in the system's webview           |
+| [`templates/pwa-app`](templates/pwa-app)                                  | A web app installable on phones, with `@timmo001/groundwork-pwa`'s manifest and worker    |
 | [`qml`](qml)                                                              | The shared Omarchy panel components                                                       |
 | [`registry.json`](registry.json)                                          | What apps can take through the sync                                                       |
 | [`packages/sync`](packages/sync)                                          | Copies items into apps and carries QML edits back                                         |
