@@ -22,7 +22,7 @@ What the web can't do on Android comes from a Kotlin shell around the system Web
 | Home screen widgets, quick settings tiles | No | Yes |
 | Background work, foreground services | No | Yes |
 | Biometrics and the system keystore | Passkeys only | Yes |
-| Store listing | No | Play, GitHub releases and F-Droid |
+| Releases | Wherever the page is hosted | GitHub releases and an F-Droid repository |
 
 An app ships as a PWA until it needs something from the shell's column.
 
