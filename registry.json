@@ -72,6 +72,8 @@
       "description": "The GwElement base, shared styles, tones, icons and motion every web component needs",
       "files": [
         "packages/ui/src/element.ts",
+        "packages/ui/src/scrollbars.ts",
+        "packages/ui/src/state.ts",
         "packages/ui/src/styles.ts",
         "packages/ui/src/fields.ts",
         "packages/ui/src/motion.ts"
