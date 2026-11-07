@@ -31,7 +31,21 @@ their own:
 import { parseTheme, runtimeTheme } from "@timmo001/groundwork-tokens/runtime";
 ```
 
-`blumeThemeCss` from the same export renders a solved theme as Blume's tokens,
+The `groundwork-tokens` command builds an app's own theme files into every
+target Groundwork ships for its own (CSS, JSON, TypeScript, QML, OpenTUI,
+ANSI and Blume's tokens), beside Groundwork's themes with
+`--with-groundwork`. It runs on Bun. The `build` export does the same in
+code, with no file system:
+
+```sh
+bun x groundwork-tokens build themes/kiln.json --out src/generated
+```
+
+```ts
+import { build } from "@timmo001/groundwork-tokens/build";
+```
+
+`blumeThemeCss` from the `runtime` export renders a solved theme as Blume's tokens,
 for a docs site on `@timmo001/docs-kit` whose app has its own theme. The
 [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#theme) shows the site script.
 

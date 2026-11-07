@@ -34,6 +34,8 @@ An Omarchy `colors.toml` maps with `omarchyTheme` from `@timmo001/groundwork-tok
 - Start from the closest theme's JSON, or from scratch as Writing a theme shows: a `solved` document with a background, an accent and a style. A palette that has to stay exact is a `mapped` one, with `otherPalette` when it covers both schemes.
 - Decode it with `parseTheme` and solve it with `runtimeTheme` from `@timmo001/groundwork-tokens/runtime`. Every entry in `checks` should pass for a solved theme; report any that miss.
 - Ship its CSS on the page, from `runtimeTheme(...).css` at build time, and pass its document in `documents` so agents can pick it through the theme tools.
+- For a panel, a TUI or plain CLI output, build its QML, OpenTUI and ANSI files with `bun x groundwork-tokens build <theme.json> --out <dir>`, adding `--with-groundwork` when the app offers Groundwork's themes too and `--strict` to fail on a contrast miss. `build` from `@timmo001/groundwork-tokens/build` does the same in code.
+- Edit or override a role, status color or a mapped theme's style in the document itself, as Writing a theme shows, rather than in the app's CSS.
 - docs-kit has stylesheets only for Groundwork's own themes. A docs site for an app with its own theme renders its stylesheet from the document with `blumeThemeCss`, failing on any contrast miss, and writes it into `theme.css` between marker comments in place of a docs-kit theme, as the docs-kit README shows. A separate generated file can't be imported, as Blume copies `theme.css` into its build folder.
 
 ## 4. Offer the themes

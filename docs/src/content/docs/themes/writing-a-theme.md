@@ -8,8 +8,19 @@ A theme is one JSON document, checked against the Schema in `packages/tokens/src
 - On a page, `runtimeTheme` solves it into CSS and checks its contrast, as [Your own theme](/themes#your-own-theme) shows. List it in `pageTheme`'s `themes` with that CSS on the page.
 - On a docs site, `blumeThemeCss` turns the solved theme into Blume's tokens, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows.
 - In a TUI, `hexModes` gives each mode's terminal roles, and `fromRoles` from `@timmo001/groundwork-tui` places them.
+- For every target at once, at build time, see [Building every target](#building-every-target).
 
 Groundwork's own themes live in `packages/tokens/themes/`. Run `mise run gen` after adding or changing one: it regenerates every target and this site's theme pages. `mise run check` fails if one misses a contrast target.
+
+## Building every target
+
+`groundwork-tokens build` turns an app's theme files into the same targets Groundwork ships for its own: `themes.css`, `themes.json`, `themes.ts`, `Themes.qml` for a panel, `opentui.ts` for a TUI, `ansi.json`, and Blume's tokens in `blume/<id>.css` with `blume/all.css`. It runs on Bun:
+
+```sh
+bun x groundwork-tokens build themes/kiln.json --out src/generated --with-groundwork
+```
+
+`--with-groundwork` adds Groundwork's own themes after the app's, so a picker can offer them all. A Blume site copies `theme.css` into its build, so it can't import `blume/<id>.css`; it writes the theme into `theme.css` with `blumeThemeCss` instead, as the docs-kit README shows. `--targets css,qml` builds only some, and it lists any of the app's roles below their contrast target, failing on them with `--strict`. In code, `build` from `@timmo001/groundwork-tokens/build` takes the decoded documents and returns each file's text, with no file system.
 
 ## A core theme
 
