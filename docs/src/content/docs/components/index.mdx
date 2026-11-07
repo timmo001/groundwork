@@ -52,6 +52,7 @@ An app can take the components without taking their look. Nothing is forced: eac
 - **Parts.** Each piece inside a shadow root is exposed as a part, listed under `@csspart` in the element's docs and editor hovers, so `::part()` reaches the surface, heading, body, rows and labels. A lint check fails the build when a rendered part goes undocumented, or a documented one no longer renders. The fields render in light DOM, so their classes are styled as they are.
 - **Wrapping.** For markup or behavior of your own, wrap the element in one of yours and keep its attributes and events.
 - **Your own tokens.** An app with its own variables can point them at Groundwork's, such as `--app-surface: var(--gw-color-surface-raised)`, and keep its stylesheets as they are.
+- **Plain CSS wins.** The elements' styles are in the `groundwork.components` cascade layer and the tokens in `groundwork.tokens`, so an app's CSS outside a layer wins over them without matching their selectors or adding `!important`. That's how the fields' light DOM classes take a page's own rules. See [Overriding tokens](/themes#overriding-tokens).
 
 The same badge, as it comes and with an app's own shape: square corners, a tone stripe, an uppercase label and a monospace value. Pick another theme and both follow it.
 
@@ -159,7 +160,7 @@ A page shouldn't move while its components load. Before a `gw-` element's script
 
 ## Scrollbars
 
-`themes.css` gives the page and everything in it small scrollbars: a rounded thumb in the theme's secondary text color on a clear track, with no arrow buttons, a little stronger on hover. The thumb squares off where it meets the top or bottom of its track, or either end of a sideways one. Components draw the same inside their own scrolling parts. There's nothing to set up. Restyle them anywhere with `--gw-scrollbar-size` (0.4rem by default), `--gw-scrollbar-thumb` and `--gw-scrollbar-track`, or hide one with `scrollbar-width: none`. The rules have no specificity, so any rule of a page's wins. Firefox, which has no WebKit scrollbar styling, shows its own thin scrollbar in the same colors.
+`themes.css` gives the page and everything in it small scrollbars: a rounded thumb in the theme's secondary text color on a clear track, with no arrow buttons, a little stronger on hover. The thumb squares off where it meets the top or bottom of its track, or either end of a sideways one. Components draw the same inside their own scrolling parts. There's nothing to set up. Restyle them anywhere with `--gw-scrollbar-size` (0.4rem by default), `--gw-scrollbar-thumb` and `--gw-scrollbar-track`, or hide one with `scrollbar-width: none`. The rules are in the tokens layer, so any rule of a page's wins. Firefox, which has no WebKit scrollbar styling, shows its own thin scrollbar in the same colors.
 
 The square ends follow each scroller's scroll through the `gw-scrollbar-edges-y` and `gw-scrollbar-edges-x` animations, which components run on their own scrolling parts and the ui package keeps in step for the page. A scroller of your own keeps round ends unless it runs them too:
 

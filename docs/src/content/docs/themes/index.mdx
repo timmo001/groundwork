@@ -76,6 +76,19 @@ A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "lig
 
 Where the page is given the desktop's Omarchy theme, it's offered as one choice among the rest, and used only once the visitor picks it. The page always starts on `defaultTheme`.
 
+### Overriding tokens
+
+Every rule in `themes.css`, and the CSS `runtimeTheme` and `appTonesCss` return, is in the `groundwork.tokens` cascade layer. CSS outside a layer wins over a layer whatever its specificity, so an app changes a token by setting it:
+
+```css
+:root {
+  --gw-radius-panel: 4px;
+  --gw-space-4: 1.25rem;
+}
+```
+
+Set it on the element with `data-gw-theme` or one inside it. Each theme declares its tokens on that element, so a `:root` override only reaches them when the attribute is on `<html>`, as `pageTheme` puts it. An app that puts its own CSS in layers declares them after Groundwork's, such as `@layer groundwork.tokens, groundwork.components, app;`, so they still win. `layers` from `@timmo001/groundwork-tokens/runtime` has the names.
+
 ## Your own theme
 
 Themes aren't only the built-in set. A user can upload a theme file, or an agent can write one, and the app applies it at runtime. The document is the same one the core themes use, checked against the same [Schema](/themes/writing-a-theme), so an agent can write a valid one from that page alone.
