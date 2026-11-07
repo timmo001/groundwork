@@ -126,6 +126,7 @@ open class ShellActivity : ComponentActivity() {
 
     if (savedInstanceState == null || webView.restoreState(savedInstanceState) == null) {
       webView.loadUrl(deepLinkUrl(intent) ?: startUrl)
+      shareOf(intent)?.let { bridge.send("share", it) }
     }
   }
 
@@ -169,12 +170,63 @@ open class ShellActivity : ComponentActivity() {
       reply.ok(openExternal(Uri.parse(request.paramsObject.getString("url"))))
     }
     bridge.handle("notify") { request, reply ->
-      reply.ok(notifications.show(request.paramsObject, javaClass))
+      reply.ok(notifications.show(request.paramsObject))
     }
     bridge.handle("androidTheme") { _, reply -> reply.ok(currentTheme()) }
-    bridge.handle("pushState") { _, reply -> reply.ok("unsupported") }
-    bridge.handle("subscribePush") { _, reply -> reply.ok("unsupported") }
-    bridge.handle("unsubscribePush") { _, reply -> reply.ok(false) }
+
+    if (!config.push) {
+      bridge.handle("pushState") { _, reply -> reply.ok("unsupported") }
+      bridge.handle("subscribePush") { _, reply -> reply.ok("unsupported") }
+      bridge.handle("unsubscribePush") { _, reply -> reply.ok(false) }
+      return
+    }
+
+    bridge.handle("pushState") { _, reply -> reply.ok(Push.state(this)) }
+    bridge.handle("subscribePush") { request, reply ->
+      withNotificationPermission { granted ->
+        if (granted) Push.subscribe(this, request.paramsObject) { reply.ok(it) } else reply.ok("denied")
+      }
+    }
+    bridge.handle("unsubscribePush") { request, reply ->
+      Push.unsubscribe(this, request.paramsObject) { reply.ok(true) }
+    }
+  }
+
+  private var pendingNotificationPermission: ((Boolean) -> Unit)? = null
+
+  private val askNotifications =
+    registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+      pendingNotificationPermission?.invoke(granted)
+      pendingNotificationPermission = null
+    }
+
+  /** Asks for notifications when they aren't allowed yet, then calls `then`. */
+  protected fun withNotificationPermission(then: (Boolean) -> Unit) {
+    if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+      then(true)
+      return
+    }
+
+    pendingNotificationPermission = then
+    askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+  }
+
+  /**
+   * A share from another app (`ACTION_SEND` with text or a link), as the
+   * view's `ShellShare`. Null when the intent isn't one or `shares` is off.
+   */
+  protected open fun shareOf(intent: Intent?): JSONObject? {
+    if (!config.shares || intent?.action != Intent.ACTION_SEND) return null
+
+    val text = intent.getStringExtra(Intent.EXTRA_TEXT) ?: return null
+    val title = intent.getStringExtra(Intent.EXTRA_SUBJECT) ?: intent.getStringExtra(Intent.EXTRA_TITLE)
+    val share = JSONObject()
+
+    title?.let { share.put("title", it) }
+
+    if (URLUtil.isNetworkUrl(text.trim())) share.put("url", text.trim()) else share.put("text", text)
+
+    return share
   }
 
   private fun currentTheme(): JSONObject =
@@ -204,6 +256,11 @@ open class ShellActivity : ComponentActivity() {
   override fun onNewIntent(intent: Intent) {
     super.onNewIntent(intent)
     setIntent(intent)
+
+    shareOf(intent)?.let {
+      bridge.send("share", it)
+      return
+    }
 
     val url = deepLinkUrl(intent) ?: return
 

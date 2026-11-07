@@ -110,3 +110,10 @@ The app's build writes `mobile.config.ts` as JSON to `assets/groundwork/mobile.c
 The app's manifest declares the activity, its deep link and App Link intent filters, and the camera or microphone permissions it wants the page to have. The shell's own manifest asks only for the internet and notifications.
 
 The page follows the phone's dark mode through the theme's `isLightTheme`, which the WebView passes on as `prefers-color-scheme`, and the WebView never darkens it itself.
+
+## Shares, tiles, Live Updates and push
+
+- **Shares.** Give the activity an `ACTION_SEND` intent filter for `text/plain`. A shared link arrives as `url`, other text as `text`, and the subject as `title`, through the `share` message and the `gw-share` event.
+- **Tiles.** Declare a service extending `ShellTileService` with the `BIND_QUICK_SETTINGS_TILE` permission, its label and icon, and a `groundwork.tileLink` meta-data entry for the page a tap opens. Override `onClick` to act without opening the app. Keep to two tiles at most.
+- **Live Updates.** A push whose payload has `ongoing` updates one notification per `id`, promoted to a Live Update with `ProgressStyle` on Android 16 and a plain ongoing notification with a progress bar below it, until `done`.
+- **Push.** `subscribePush` asks for notifications, fetches the service's VAPID key, and registers with UnifiedPush under the service's URL. Where the phone has no distributor app, the embedded FCM distributor takes over. The endpoint and its keys go to `push/subscriptions` as the [push contract](/behavior#push) describes, and each `PushPayload` that arrives shows as a notification. The shell declares its `ShellPushService` itself.

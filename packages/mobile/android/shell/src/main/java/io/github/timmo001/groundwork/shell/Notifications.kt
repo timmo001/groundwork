@@ -1,10 +1,13 @@
 /**
- * The shell's notification channels and the `notify` request: a Notice from
- * the view becomes a system notification that opens its link on a tap.
+ * The shell's notification channels, the `notify` request and pushes: a
+ * Notice from the view or a `PushPayload` becomes a system notification that
+ * opens its link on a tap, and ongoing work becomes a Live Update on Android
+ * 16 and a plain ongoing notification below it.
  */
 package io.github.timmo001.groundwork.shell
 
 import android.Manifest
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -12,6 +15,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import org.json.JSONObject
@@ -45,31 +49,87 @@ class Notifications(private val context: Context, private val config: ShellConfi
    * Shows a Notice (`heading`, `body`, `tag`, `link`), or returns false when
    * notifications are off or not allowed, for the view to show it itself.
    */
-  fun show(notice: JSONObject, activity: Class<*>): Boolean {
+  fun show(notice: JSONObject): Boolean =
+    post(
+      heading = notice.optString("heading"),
+      body = notice.optString("body").ifEmpty { null },
+      tag = notice.optString("tag").ifEmpty { null },
+      link = notice.optString("link").ifEmpty { null },
+      silent = false,
+    )
+
+  /**
+   * Shows a push's `PushPayload`: its ongoing work when it has some,
+   * otherwise a notification. False when it isn't a payload or can't show.
+   */
+  fun showPush(payload: JSONObject): Boolean {
+    val title = payload.optString("title").ifEmpty { return false }
+    val link = payload.optString("link").ifEmpty { null }
+
+    payload.optJSONObject("ongoing")?.let { return showOngoing(title, it, link) }
+
+    return post(
+      heading = title,
+      body = payload.optString("body").ifEmpty { null },
+      tag = payload.optString("tag").ifEmpty { null },
+      link = link,
+      silent = payload.optString("level") == "passive",
+    )
+  }
+
+  /**
+   * Ongoing work (`id`, `status`, `progress`, `done`): each call with the
+   * same id updates one notification, promoted to a Live Update on Android 16.
+   */
+  fun showOngoing(title: String, ongoing: JSONObject, link: String?): Boolean {
     if (!allowed) return false
 
-    val heading = notice.optString("heading").ifEmpty { return false }
-    val tag = notice.optString("tag").ifEmpty { null }
-    val open =
-      Intent(context, activity).apply {
-        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        notice.optString("link").ifEmpty { null }?.let { data = Uri.parse(it) }
-        action = Intent.ACTION_VIEW
+    val id = ongoing.optString("id").ifEmpty { return false }
+    val status = ongoing.optString("status")
+    val done = ongoing.optBoolean("done", false)
+    val progress = ongoing.optJSONObject("progress")
+    val value = progress?.optInt("value") ?: 0
+    val max = progress?.optInt("max") ?: 0
+    val builder =
+      Notification.Builder(context, CHANNEL_ONGOING)
+        .setSmallIcon(context.applicationInfo.icon)
+        .setContentTitle(title)
+        .setContentText(status)
+        .setContentIntent(tapIntent(link, id))
+        .setOngoing(!done)
+        .setAutoCancel(done)
+        .setOnlyAlertOnce(true)
+
+    if (!done && Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+      val style = Notification.ProgressStyle().setProgressIndeterminate(progress == null)
+
+      if (progress != null) {
+        style.setProgressSegments(listOf(Notification.ProgressStyle.Segment(max.coerceAtLeast(1))))
+        style.setProgress(value)
       }
-    val tap =
-      PendingIntent.getActivity(
-        context,
-        (tag ?: heading).hashCode(),
-        open,
-        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
-      )
+
+      builder.setStyle(style).setRequestPromotedOngoing(true).setShortCriticalText(status.take(7))
+    } else if (!done) {
+      builder.setProgress(max, value, progress == null)
+    }
+
+    @Suppress("MissingPermission")
+    NotificationManagerCompat.from(context).notify(ONGOING_TAG + id, 0, builder.build())
+
+    return true
+  }
+
+  private fun post(heading: String, body: String?, tag: String?, link: String?, silent: Boolean): Boolean {
+    if (!allowed || heading.isEmpty()) return false
+
     val notification =
       NotificationCompat.Builder(context, CHANNEL_NOTICES)
         .setSmallIcon(context.applicationInfo.icon)
         .setContentTitle(heading)
-        .apply { notice.optString("body").ifEmpty { null }?.let(::setContentText) }
-        .setContentIntent(tap)
+        .apply { body?.let(::setContentText) }
+        .setContentIntent(tapIntent(link, tag ?: heading))
         .setAutoCancel(true)
+        .setSilent(silent)
         .build()
 
     @Suppress("MissingPermission")
@@ -78,10 +138,30 @@ class Notifications(private val context: Context, private val config: ShellConfi
     return true
   }
 
+  /** Opens the app's launcher activity, at `link` when there is one. */
+  private fun tapIntent(link: String?, key: String): PendingIntent {
+    val open =
+      (context.packageManager.getLaunchIntentForPackage(context.packageName) ?: Intent()).apply {
+        flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+        link?.let {
+          action = Intent.ACTION_VIEW
+          data = Uri.parse(it)
+        }
+      }
+
+    return PendingIntent.getActivity(
+      context,
+      key.hashCode(),
+      open,
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+    )
+  }
+
   companion object {
     const val CHANNEL_NOTICES = "groundwork.notices"
     const val CHANNEL_ONGOING = "groundwork.ongoing"
 
+    private const val ONGOING_TAG = "groundwork.ongoing."
     private var nextId = 1
   }
 }

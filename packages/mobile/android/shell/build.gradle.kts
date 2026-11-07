@@ -27,4 +27,6 @@ dependencies {
   api("androidx.activity:activity:1.13.0")
   implementation("androidx.core:core:1.19.1")
   implementation("androidx.webkit:webkit:1.18.0")
+  implementation("org.unifiedpush.android:connector:3.3.5")
+  implementation("org.unifiedpush.android:embedded-fcm-distributor:3.1.0")
 }
