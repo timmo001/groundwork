@@ -156,6 +156,11 @@ if (rendered !== css) await writeFile("theme.css", rendered);
 Blume type-checks site scripts without Bun's types, so use `node:fs` rather
 than `Bun.file`.
 
+To offer an app's own theme in the theme picker beside Groundwork's, write
+`blumeThemesCss([theme])` between the markers as well. It puts the theme's
+rules under `data-gw-docs-theme` set to its id, as `all.css` does for
+Groundwork's, so the theme can be listed in `themes` like any other.
+
 `HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
 Auto, Light, Dark and Darker. Auto follows the system setting. To let readers pick the theme as well, import every
 theme after the site's default and pass the themes to `HeaderSearch` from a

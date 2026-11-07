@@ -679,12 +679,18 @@ export const blumeTheme = (theme: ResolvedTheme, note = header) =>
  * the picker keeps the page in it.
  */
 export const blumeThemes = (themes: readonly ResolvedTheme[], note = header) =>
-  [
-    `/* ${note} */`,
-    ...themes.flatMap((theme) =>
+  [`/* ${note} */`, blumeThemesCss(themes)].join("\n\n") + "\n";
+
+/**
+ * Themes as Blume's tokens, each under `data-gw-docs-theme` set to its id,
+ * so the theme picker can offer them.
+ */
+export const blumeThemesCss = (themes: readonly ResolvedTheme[]) =>
+  themes
+    .flatMap((theme) =>
       blumeRules(theme, `:root[data-gw-docs-theme="${theme.id}"]`),
-    ),
-  ].join("\n\n") + "\n";
+    )
+    .join("\n\n");
 
 const hexRoles = (roles: Roles) =>
   Object.fromEntries(

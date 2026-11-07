@@ -46,7 +46,9 @@ import { build } from "@timmo001/groundwork-tokens/build";
 ```
 
 `blumeThemeCss` from the `runtime` export renders a solved theme as Blume's tokens,
-for a docs site on `@timmo001/docs-kit` whose app has its own theme. The
+for a docs site on `@timmo001/docs-kit` whose app has its own theme, and
+`blumeThemesCss` renders themes under `data-gw-docs-theme`, so the theme
+picker can offer them. The
 [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#theme) shows the site script.
 
 The `omarchy-current` export reads and watches the Omarchy theme a machine

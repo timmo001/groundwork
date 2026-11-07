@@ -14,7 +14,7 @@ import { appTonesCss, type AppTones } from "./tones.ts";
 
 export { omarchyTheme, type OmarchyCurrentTheme } from "./omarchy.ts";
 
-export { blumeThemeCss, hexModes, layers } from "./generate.ts";
+export { blumeThemeCss, blumeThemesCss, hexModes, layers } from "./generate.ts";
 
 export { appTonesCss, type AppTones } from "./tones.ts";
 
