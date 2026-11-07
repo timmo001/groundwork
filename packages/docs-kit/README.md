@@ -101,25 +101,39 @@ Glazing, Survey, Slate, Bridge or Snag:
 ```
 
 It sets Blume's colors, radius and fonts from the theme in light, dark and
-Darker, so leave `theme.accent` out of `blume.config.ts`. The fonts are stacks,
+Darker, and the color of links in page text, so leave `theme.accent` out of
+`blume.config.ts`. The fonts are stacks,
 so load the theme's font files in `theme.css` too, for example with
 `@import "@fontsource-variable/inter";`. Use Base until the app has a theme of
 its own.
 
 An app whose own theme isn't in Groundwork's set keeps its theme document in
-the app and renders the stylesheet from a site script with `blumeThemeCss` from
-`@timmo001/groundwork-tokens/runtime`, then imports that file in place of a
-docs-kit theme. Fail the script on a missed contrast check, so a theme that
-reads badly never ships:
+the app and renders it with `blumeThemeCss` from
+`@timmo001/groundwork-tokens/runtime`, in place of a docs-kit theme. Blume
+copies `theme.css` into its own build folder, so a relative `@import` of a
+generated file there breaks the build. Have a site script write the rules into
+`theme.css` itself, between two marker comments, and run it before `dev`,
+`build` and `check`. Fail the script on a missed contrast check, so a theme
+that reads badly never ships:
+
+```css
+/* theme.json, rendered by scripts/theme.ts: start */
+/* theme.json, rendered by scripts/theme.ts: end */
+```
 
 ```ts
+import { readFile, writeFile } from "node:fs/promises";
+
 import {
   blumeThemeCss,
   parseTheme,
   runtimeTheme,
 } from "@timmo001/groundwork-tokens/runtime";
 
-const parsed = parseTheme(await Bun.file("theme.json").text());
+const start = "/* theme.json, rendered by scripts/theme.ts: start */";
+const end = "/* theme.json, rendered by scripts/theme.ts: end */";
+
+const parsed = parseTheme(await readFile("theme.json", "utf8"));
 
 if (parsed._tag === "Failure") throw new Error(String(parsed.failure));
 
@@ -128,8 +142,19 @@ const misses = checks.filter((check) => !check.passes);
 
 if (misses.length > 0) throw new Error(`Contrast misses: ${misses.length}`);
 
-await Bun.write("theme-app.css", `${blumeThemeCss(theme)}\n`);
+const css = await readFile("theme.css", "utf8");
+const from = css.indexOf(start);
+const to = css.indexOf(end);
+
+if (from === -1 || to < from) throw new Error("theme.css has no markers");
+
+const rendered = `${css.slice(0, from + start.length)}\n${blumeThemeCss(theme)}\n${css.slice(to)}`;
+
+if (rendered !== css) await writeFile("theme.css", rendered);
 ```
+
+Blume type-checks site scripts without Bun's types, so use `node:fs` rather
+than `Bun.file`.
 
 `HeaderSearch` adds a mode picker next to Blume's light and dark toggle, with
 Light, Dark and Darker. To let readers pick the theme as well, import every
