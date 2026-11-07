@@ -109,6 +109,78 @@ export const Style = Schema.Struct({
 
 export interface Style extends Schema.Schema.Type<typeof Style> {}
 
+/** Every color role a theme solves to, as its `--gw-color-*` name. */
+export const roleNames = [
+  "surface-lower",
+  "surface-low",
+  "surface-default",
+  "surface-raised",
+  "surface-overlay",
+  "border-quiet",
+  "border-normal",
+  "border-loud",
+  "text-strong",
+  "text-primary",
+  "text-secondary",
+  "text-disabled",
+  "fill-neutral-resting",
+  "fill-neutral-hovered",
+  "fill-neutral-pressed",
+  "fill-neutral-selected",
+  "fill-neutral-disabled",
+  "fill-primary-resting",
+  "fill-primary-hovered",
+  "fill-primary-pressed",
+  "on-primary",
+  "accent",
+  "fill-accent-resting",
+  "fill-accent-hovered",
+  "fill-accent-pressed",
+  "fill-accent-quiet",
+  "border-accent",
+  "on-accent",
+  "focus",
+  "link",
+  "info",
+  "fill-info-quiet",
+  "border-info",
+  "success",
+  "fill-success-quiet",
+  "border-success",
+  "important",
+  "fill-important-quiet",
+  "border-important",
+  "warning",
+  "fill-warning-quiet",
+  "border-warning",
+  "danger",
+  "fill-danger-quiet",
+  "border-danger",
+] as const;
+
+export const RoleName = Schema.Literals(roleNames);
+
+export type RoleName = typeof RoleName.Type;
+
+/** Roles set straight to a color, by name. Any other name fails to decode. */
+export const RoleOverrides = Schema.Record(Schema.String, Hex).check(
+  Schema.isPropertyNames(RoleName),
+);
+
+export type RoleOverrides = typeof RoleOverrides.Type;
+
+/**
+ * The status colors a solved theme starts from, each giving its status a
+ * hue and chroma, solved to contrast as the defaults are.
+ */
+export const StatusSeeds = Schema.Struct({
+  info: Schema.optionalKey(Hex),
+  success: Schema.optionalKey(Hex),
+  important: Schema.optionalKey(Hex),
+  warning: Schema.optionalKey(Hex),
+  danger: Schema.optionalKey(Hex),
+});
+
 /**
  * A core theme: two inputs solved into every role for light, dark and Darker.
  * The background sets the dark surface and the tint carried into light; the
@@ -121,6 +193,19 @@ export const SolvedTheme = Schema.Struct({
   description: Schema.String,
   background: Hex,
   accent: Hex,
+  /** Status colors in place of the defaults, solved to contrast the same way. */
+  status: Schema.optionalKey(StatusSeeds),
+  /**
+   * Roles set to a color in a mode, after solving, as they are. Darker
+   * starts from dark's overrides, then takes its own.
+   */
+  roles: Schema.optionalKey(
+    Schema.Struct({
+      light: Schema.optionalKey(RoleOverrides),
+      dark: Schema.optionalKey(RoleOverrides),
+      darker: Schema.optionalKey(RoleOverrides),
+    }),
+  ),
   style: Style,
   /** Apps that use the theme, as examples. Any app can pick any theme. */
   examples: Schema.optionalKey(Schema.Array(Schema.String)),
@@ -148,9 +233,9 @@ export interface Palette extends Schema.Schema.Type<typeof Palette> {}
 
 /**
  * An optional theme mapped from an existing palette, such as Catppuccin, so it
- * stays faithful. It takes Base's style. Some flavors are one mode, such as
- * Catppuccin's; one that comes in both, such as GitHub's or Tokyo Night's,
- * also gives the other mode's palette.
+ * stays faithful. It takes Base's style unless it gives its own. Some flavors
+ * are one mode, such as Catppuccin's; one that comes in both, such as
+ * GitHub's or Tokyo Night's, also gives the other mode's palette.
  */
 export const MappedTheme = Schema.Struct({
   kind: Schema.tag("mapped"),
@@ -162,6 +247,8 @@ export const MappedTheme = Schema.Struct({
   palette: Palette,
   /** The other mode's palette, for a theme that covers both. */
   otherPalette: Schema.optionalKey(Palette),
+  /** Its own shape, density and type. Defaults to Base's, with accent links. */
+  style: Schema.optionalKey(Style),
 });
 
 export interface MappedTheme extends Schema.Schema.Type<typeof MappedTheme> {}

@@ -14,7 +14,13 @@ import {
   withLightness,
   type Oklch,
 } from "./color.ts";
-import type { Palette, SolvedTheme, Style, Theme } from "./schema.ts";
+import type {
+  Palette,
+  RoleOverrides,
+  SolvedTheme,
+  Style,
+  Theme,
+} from "./schema.ts";
 
 export const statuses = [
   "info",
@@ -183,12 +189,15 @@ const solvedMode = (theme: SolvedTheme, mode: "light" | "dark") => {
   // An accent with no real color, as Base's, is the primary itself.
   const neutralAccent = accent.c < 0.02;
 
+  const seed = (status: Status) =>
+    fromHex(theme.status?.[status] ?? statusSeeds[status]);
+
   const seeds: Record<Status, Oklch> = {
-    info: fromHex(statusSeeds.info),
-    success: fromHex(statusSeeds.success),
-    important: fromHex(statusSeeds.important),
-    warning: fromHex(statusSeeds.warning),
-    danger: fromHex(statusSeeds.danger),
+    info: seed("info"),
+    success: seed("success"),
+    important: seed("important"),
+    warning: seed("warning"),
+    danger: seed("danger"),
   };
 
   return {
@@ -334,7 +343,21 @@ const mappedStyle = (base: Style): Style => ({
   rows: base.rows,
 });
 
-/** Resolve a theme into roles. Mapped themes take `baseStyle`, Base's style. */
+/** A mode's roles with the theme's own colors for some of them set as they are. */
+const withOverrides = (roles: Roles, overrides: RoleOverrides | undefined) =>
+  overrides === undefined
+    ? roles
+    : {
+        ...roles,
+        ...Object.fromEntries(
+          Object.entries(overrides).map(([role, hex]) => [role, fromHex(hex)]),
+        ),
+      };
+
+/**
+ * Resolve a theme into roles. Mapped themes take `baseStyle`, Base's style,
+ * unless they give their own.
+ */
 export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
   if (theme.kind === "mapped") {
     // `palette` is for its own mode, `otherPalette` for the opposite one
@@ -359,12 +382,12 @@ export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
       optional: true,
       family: theme.family,
       examples: [],
-      style: mappedStyle(baseStyle),
+      style: theme.style ?? mappedStyle(baseStyle),
       modes,
     };
   }
 
-  const dark = solvedMode(theme, "dark");
+  const dark = withOverrides(solvedMode(theme, "dark"), theme.roles?.dark);
 
   return {
     id: theme.id,
@@ -375,9 +398,9 @@ export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
     examples: theme.examples ?? [],
     style: theme.style,
     modes: {
-      light: solvedMode(theme, "light"),
+      light: withOverrides(solvedMode(theme, "light"), theme.roles?.light),
       dark,
-      darker: darker(dark, 0.015),
+      darker: withOverrides(darker(dark, 0.015), theme.roles?.darker),
     },
   };
 };
