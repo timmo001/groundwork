@@ -816,12 +816,19 @@ export class GwTable extends GwElement {
 
       if (shown === undefined) return [];
 
-      const row =
-        this.#drawnRows.get(shown) ??
-        (shown.kind === "group"
-          ? this.#renderGroup(shown, item.index)
-          : this.#renderRow(shown.row, item.index, drawn));
+      const kept = this.#drawnRows.get(shown);
 
+      if (kept !== undefined) return [kept];
+
+      const row =
+        shown.kind === "group"
+          ? this.#renderGroup(shown, item.index)
+          : this.#renderRow(shown.row, item.index, drawn);
+
+      // A new row starts at the height its key last had, until it's measured:
+      // what's in its cells can draw later, and until then the frame would
+      // shrink and its scroll clamp, as new data rebuilds every row
+      row.style.height = `${item.size}px`;
       this.#drawnRows.set(shown, row);
 
       return [row];
@@ -850,6 +857,8 @@ export class GwTable extends GwElement {
     // once, a new row is short, and the frame's scroll clamps to fit it
     cancelAnimationFrame(this.#measuring);
     this.#measuring = requestAnimationFrame(() => {
+      for (const row of rows) row.style.removeProperty("height");
+
       for (const row of rows) {
         if (row.isConnected) virtualizer.measureElement(row);
       }
