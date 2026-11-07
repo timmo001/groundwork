@@ -88,9 +88,21 @@ export class GwAppBar extends GwElement {
         display: flex;
         gap: var(--gw-space-3);
         align-items: center;
-        min-height: var(--gw-app-bar-height, 3.5rem);
-        padding: var(--gw-space-1)
-          max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2);
+        /* Edge to edge on a phone (viewport-fit=cover), the bar reaches up
+           under the status bar and cutout, so they take its surface */
+        min-height: calc(
+          var(--gw-app-bar-height, 3.5rem) + env(safe-area-inset-top, 0px)
+        );
+        padding: calc(var(--gw-space-1) + env(safe-area-inset-top, 0px))
+          max(
+            var(--gw-space-3) + env(safe-area-inset-right, 0px),
+            (100% - var(--gw-content-width)) / 2
+          )
+          var(--gw-space-1)
+          max(
+            var(--gw-space-3) + env(safe-area-inset-left, 0px),
+            (100% - var(--gw-content-width)) / 2
+          );
         border-block-end: max(var(--gw-border-width), 1px) solid transparent;
         transition:
           background-color var(--gw-motion-normal) var(--gw-motion-easing),
