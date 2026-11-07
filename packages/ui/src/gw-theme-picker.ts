@@ -213,12 +213,15 @@ export class GwThemePicker extends GwElement {
       }
 
       /* Asks for the room to have all of it in place, but gives it up down
-         to the button before a flex row's other items shrink */
+         to the button before a flex row's other items shrink. What it keeps
+         in place packs to the end, by the button, and a page can set
+         justify-content to pack it elsewhere */
       :host([layout="auto"]) {
         display: flex;
         flex: 0 1000 var(--gw-theme-picker-fit, auto);
         gap: var(--gw-space-1);
         align-items: center;
+        justify-content: flex-end;
         min-width: 2.5rem;
         contain: inline-size;
       }
