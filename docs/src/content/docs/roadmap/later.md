@@ -3,7 +3,4 @@ title: Later
 description: Larger rounds that come after the current work.
 ---
 
-| Work | Issue |
-| --- | --- |
-| Update system | [#48](https://github.com/timmo001/groundwork/issues/48) |
-| Dashboard | [#51](https://github.com/timmo001/groundwork/issues/51) |
+Nothing is queued after the current work. The update system and the dashboard moved to [Upkeep](https://github.com/timmo001/upkeep), which built them in [upkeep#1](https://github.com/timmo001/upkeep/issues/1).
