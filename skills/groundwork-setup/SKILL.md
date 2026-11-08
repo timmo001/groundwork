@@ -21,6 +21,7 @@ Load the skill a step needs when you reach it, where it's available:
 | --- | --- |
 | 1. Create the repository | `github-repository-setup`, then `groundwork-conventions` for its kind and labels |
 | 2. Tools and workspace | `install-timmo-oxlint-rules` for the Oxlint preset; `npm-jsr-first-publish` before a package's first release |
+| 2. Android app | the `android-app` template's README and the `android-cli` skill, where available; store the release key in 1Password as well as the Actions secrets |
 | 4. CI | `shared-workflows`, then `github-development-rulesets` once CI has run |
 | 5. Docs site | `docs-kit` |
 | 7. Agent surface | the `cli-tool` template's README |

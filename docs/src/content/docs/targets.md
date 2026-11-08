@@ -13,7 +13,7 @@ Every target reads the same theme document and the same roles. What changes is t
 | Docs site | The Blume sites | docs-kit's bridge onto Blume's variables |
 | Browser extension | Site Defluffer | CSS variables |
 | Desktop app | The multi-boot app on Windows, the desktop demo | The web app's components in an [Electrobun](/desktop) window |
-| Phone app | The System Bridge app, the Android demo | The web app as an [installed PWA](/phones), then the same components in a Kotlin shell around the system WebView. The shell is in progress, tracked in [#109](https://github.com/timmo001/groundwork/issues/109) |
+| Phone app | The System Bridge app, the Android demo | The web app as an [installed PWA](/phones), or the same components in the [Kotlin shell](/phones/shell) around the system WebView, built from the [Android template](/phones/android) and released as signed APKs and an F-Droid repository |
 | Terminal app | The OpenTUI TUIs, the OpenCode footer plugin | Resolved colors for OpenTUI |
 | CLI output | `dot up`, every SDK's CLI | Roles mapped onto the 16 ANSI colors |
 | Omarchy panel or widget | `timmo.updates`, System Bridge's plugin | The QML theme object and shared components |

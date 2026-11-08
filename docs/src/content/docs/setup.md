@@ -42,6 +42,15 @@ Only libraries that other repositories consume publish. Apps ship as binaries an
 - An Apache 2.0 license, its own README for the npm and JSR pages, and `repository.directory` pointing at its folder.
 - `effect` and other shared libraries as caret `peerDependencies`, with the exact pin in `devDependencies`.
 
+### Android app
+
+An app with a phone side starts from the [`android-app` template](/phones/android#the-template) in its own folder:
+
+- Pin the Android SDK tools, the JDK, Gradle, Kotlin and fdroidserver in mise, as Groundwork's `mise.toml` does, with `android:setup`, `android:emulator` and `android:build` tasks.
+- Take the shell as the `android-shell` [sync](/sync) item into the folder `settings.gradle.kts` includes as `:shell`, and extend it from the app's own Kotlin and `mobile.config.ts`, never by editing the copy.
+- Pick the app ID under `dev.timmo`, a deep link scheme, and bundled or hosted for its page.
+- Make the release key, store it in 1Password and the repository's Actions secrets, turn on GitHub Pages, and fill in `fdroid/`, as [Releases](/phones/android#releases) describes. There's no Play listing.
+
 ## 3. Agent files
 
 - `AGENTS.md`, saying what the repository is, its stack, how to run its checks and how changes roll out. Write it by hand and keep it short.
