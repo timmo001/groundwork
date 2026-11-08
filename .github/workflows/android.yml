@@ -2,7 +2,7 @@
 # Builds the Android demo template, so the Kotlin shell in packages/mobile and
 # the app around it keep building with the pinned SDK, JDK and Gradle. On a
 # published release it signs the APK, attaches it to the release, and rebuilds
-# the F-Droid repository on GitHub Pages from every release's APK.
+# the F-Droid repository on the fdroid branch from every release's APK.
 name: Android
 
 on:
@@ -67,8 +67,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    outputs:
-      signed: ${{ steps.key.outputs.signed }}
     env:
       ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -120,35 +118,25 @@ jobs:
       - name: Build the F-Droid repository
         if: steps.key.outputs.signed == 'true'
         run: |
-          mkdir -p _site/fdroid/repo
-          cp -r templates/android-app/fdroid/. _site/fdroid/
+          mkdir -p "$RUNNER_TEMP/fdroid/repo"
+          cp -r templates/android-app/fdroid/. "$RUNNER_TEMP/fdroid/"
           for tag in $(gh release list --limit 100 --json tagName --jq '.[].tagName'); do
-            gh release download "$tag" --pattern 'groundwork-demo-*.apk' --dir _site/fdroid/repo || true
+            gh release download "$tag" --pattern 'groundwork-demo-*.apk' --dir "$RUNNER_TEMP/fdroid/repo" || true
           done
-          cd _site/fdroid
+          cd "$RUNNER_TEMP/fdroid"
           chmod 600 config.yml
           fdroid update --pretty
           rm -f config.yml
           rm -rf metadata tmp
 
-      - name: Upload the F-Droid repository
+      # The fdroid branch holds one commit, replaced each release, so old
+      # APKs don't pile up in the history.
+      - name: Publish the F-Droid repository
         if: steps.key.outputs.signed == 'true'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: _site
-
-  pages:
-    name: Publish the F-Droid repository
-    needs: release
-    if: needs.release.outputs.signed == 'true'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}fdroid/repo
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+        working-directory: ${{ runner.temp }}/fdroid
+        run: |
+          git init -q -b fdroid
+          git add -A
+          git -c user.name=github-actions[bot] -c user.email=41898282+github-actions[bot]@users.noreply.github.com \
+            commit -q -m "F-Droid repository for $TAG"
+          git push -f "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" fdroid

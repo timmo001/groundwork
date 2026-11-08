@@ -50,7 +50,7 @@ Debug builds load `GROUNDWORK_DEV_URL` instead of the bundled page when it's set
 
 ## Releases
 
-There's no Play listing. Each published GitHub release gets a signed APK attached, and an F-Droid repository on GitHub Pages is rebuilt from every release's APK, so F-Droid clients and Obtainium see the update as soon as it's out. The Android workflow does both; a release without the signing secrets skips them.
+There's no Play listing. Each published GitHub release gets a signed APK attached, and an F-Droid repository is rebuilt from every release's APK and pushed to the repository's `fdroid` branch, so F-Droid clients and Obtainium see the update as soon as it's out. GitHub serves the branch raw, so the repository needs no site or domain of its own. The branch holds one commit, replaced each release, so old APKs don't pile up in the history. The Android workflow does all of this; a release without the signing secrets skips it.
 
 Release builds take their version from `APP_VERSION`, the release tag, and work out the version code from it, so each release's code is higher than the last.
 
@@ -63,13 +63,12 @@ Release builds take their version from `APP_VERSION`, the release tag, and work 
    ```
 
 2. Add it to the repository's Actions secrets: `ANDROID_KEYSTORE_BASE64` (the output of `base64 -w0 release.jks`), `ANDROID_KEYSTORE_PASSWORD`, `ANDROID_KEY_ALIAS` and `ANDROID_KEY_PASSWORD`. The same key signs the APK and the F-Droid index.
-3. Turn on GitHub Pages with GitHub Actions as its source.
-4. In `fdroid/config.yml`, set `repo_url` and the names, and rename `fdroid/metadata/<app id>.yml` to the app's ID with its own details.
-5. Android's developer verification: register the package name and the key's SHA-256 fingerprint (`keytool -list -v -keystore release.jks`) in the Android Developer Console. It isn't needed to publish, but without it people have to allow apps from unverified developers before installing. The F-Droid repository uses the same key, so there's nothing more to register for it.
+3. In `fdroid/config.yml`, set `repo_url` to `https://raw.githubusercontent.com/<owner>/<repo>/fdroid/repo` and the names, and rename `fdroid/metadata/<app id>.yml` to the app's ID with its own details.
+4. Android's developer verification: register the package name and the key's SHA-256 fingerprint (`keytool -list -v -keystore release.jks`) in the Android Developer Console. It isn't needed to publish, but without it people have to allow apps from unverified developers before installing. The F-Droid repository uses the same key, so there's nothing more to register for it.
 
 ### Adding the repository
 
-In an F-Droid client such as F-Droid or Droid-ify, add the repository by its URL, such as `https://timmo.dev/groundwork/fdroid/repo`, or open that URL on the phone and scan its QR code. In Obtainium, add the GitHub repository and it picks up the APK from each release.
+In an F-Droid client such as F-Droid or Droid-ify, add the repository by its URL, such as `https://raw.githubusercontent.com/timmo001/groundwork/fdroid/repo`. In Obtainium, add the GitHub repository and it picks up the APK from each release.
 
 ## The app's own code
 
