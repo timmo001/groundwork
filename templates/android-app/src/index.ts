@@ -2,8 +2,8 @@
  * The demo page's script: Base's fonts, the theme CSS, the components, the
  * demo app and the app bar's theme picker, kept with `pageTheme`. Then the
  * shell: the phone's dynamic color as a theme to pick, shares and deep
- * links, notifications, a Live Update and the app's own `battery` request,
- * shown in a "This phone" card. Outside the shell it runs as a plain page.
+ * links, notifications, a Live Update, launcher and sharing shortcuts and
+ * the app's own `battery` request, shown in a "This phone" card. Outside the shell it runs as a plain page.
  */
 import "@fontsource-variable/mona-sans";
 import "@fontsource-variable/geist-mono";
@@ -81,8 +81,25 @@ let lastLink = "None yet";
 let battery = "Unknown";
 let running = "In the browser";
 
-const describeShare = ({ title, text, url }: typeof ShellShare.Type) =>
-  [title, text, url].filter((part) => part !== undefined).join(" · ");
+const describeShare = ({ title, text, url, shortcutId }: ShellShare) =>
+  [title, text, url, shortcutId && `to ${shortcutId}`]
+    .filter((part) => part !== undefined)
+    .join(" · ");
+
+// Material Design Icons' cellphone and share-variant, as shortcut icons
+const phoneIcon =
+  "M17,19H7V5H17M17,1H7C5.89,1 5,1.89 5,3V21A2,2 0 0,0 7,23H17A2,2 0 0,0 19,21V3C19,1.89 18.1,1 17,1Z";
+
+const shareIcon =
+  "M18,16.08C17.24,16.08 16.56,16.38 16.04,16.85L8.91,12.7C8.96,12.47 9,12.24 9,12C9,11.76 8.96,11.53 8.91,11.3L15.96,7.19C16.5,7.69 17.21,8 18,8A3,3 0 0,0 21,5A3,3 0 0,0 18,2A3,3 0 0,0 15,5C15,5.24 15.04,5.47 15.09,5.7L8.04,9.81C7.5,9.31 6.79,9 6,9A3,3 0 0,0 3,12A3,3 0 0,0 6,15C6.79,15 7.5,14.69 8.04,14.19L15.16,18.34C15.11,18.55 15.08,18.77 15.08,19C15.08,20.61 16.39,21.91 18,21.91C19.61,21.91 20.92,20.61 20.92,19A2.92,2.92 0 0,0 18,16.08Z";
+
+const phoneShortcut = {
+  id: "phone",
+  label: "This phone",
+  longLabel: "What the shell adds",
+  url: "groundwork-demo://#phone",
+  icon: phoneIcon,
+};
 
 const mobile = await connectMobile(mobileConfig, {
   onShare: (share) => {
@@ -118,6 +135,18 @@ render();
 if (mobile.shell) {
   battery = `${await mobile.call("battery", Schema.Number)}%`;
   render();
+
+  // A long-press shortcut, then a sharing shortcut for the share sheet
+  await mobile.setShortcuts([
+    phoneShortcut,
+    {
+      id: "inbox",
+      label: "Demo inbox",
+      url: "groundwork-demo://#phone",
+      icon: shareIcon,
+      share: true,
+    },
+  ]);
 }
 
 const button = (selector: string, run: () => Promise<void>) =>
@@ -137,6 +166,10 @@ button("gw-button.notify", () =>
 // the app's own `ongoing` request
 button("gw-button.ongoing", async () => {
   await mobile.call("ongoing", Schema.Boolean, { id: "download", steps: 10 });
+});
+
+button("gw-button.pin", async () => {
+  await mobile.pinShortcut(phoneShortcut);
 });
 
 button("gw-button.external", () =>

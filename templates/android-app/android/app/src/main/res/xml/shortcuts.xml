@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The share target for the demo's sharing shortcuts, which the page
+  publishes with `share`. Shares sent to one carry its id as `shortcutId`.
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <share-target android:targetClass="dev.timmo.groundwork.demo.MainActivity">
+    <data android:mimeType="text/plain" />
+    <category android:name="dev.timmo.groundwork.shell.SHARE_TARGET" />
+  </share-target>
+</shortcuts>

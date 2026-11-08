@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   The demo's manifest: its activity with the share and deep link intent
-  filters, a quick settings tile, the camera for the page and the QR
+  filters and the sharing shortcuts' share target, a quick settings tile, the camera for the page and the QR
   scanner, and the local network, which Android 17 gates for apps that
   target it. The shell's own manifest adds the internet, notifications, the
   push service and the scanner.
@@ -37,6 +37,7 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="groundwork-demo" />
       </intent-filter>
+      <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
     </activity>
 
     <service
