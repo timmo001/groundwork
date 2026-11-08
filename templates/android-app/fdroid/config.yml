@@ -1,11 +1,12 @@
 ---
-# The F-Droid repository the release publishes to the repository's fdroid
-# branch, served raw from GitHub, signed with the same key as the APK. Every
-# secret comes from the environment, so this file holds none. Change repo_url
-# and the names for your app.
-repo_url: https://raw.githubusercontent.com/timmo001/groundwork/fdroid/repo
-repo_name: Groundwork
-repo_description: Apps built on Groundwork, signed by their author.
+# The F-Droid repository the release updates on R2, served at
+# android.timmo.dev and signed with the same key as the APK. It's shared by
+# every app of mine, so each app's release adds to it. Every secret comes from
+# the environment, so this file holds none. Change repo_url and the names for
+# your own repository.
+repo_url: https://android.timmo.dev/repo
+repo_name: timmo.dev
+repo_description: Android apps by Aidan Timson, signed by their author.
 repo_keyalias:
   env: ANDROID_KEY_ALIAS
 keystore:

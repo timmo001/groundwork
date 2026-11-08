@@ -49,7 +49,7 @@ An app with a phone side starts from the [`android-app` template](/phones/androi
 - Pin the Android SDK tools, the JDK, Gradle, Kotlin and fdroidserver in mise, as Groundwork's `mise.toml` does, with `android:setup`, `android:emulator` and `android:build` tasks.
 - Take the shell as the `android-shell` [sync](/sync) item into the folder `settings.gradle.kts` includes as `:shell`, and extend it from the app's own Kotlin and `mobile.config.ts`, never by editing the copy.
 - Pick the app ID under `dev.timmo`, a deep link scheme, and bundled or hosted for its page.
-- Make the release key, store it in 1Password and the repository's Actions secrets, and fill in `fdroid/`, as [Releases](/phones/android#releases) describes. There's no Play listing.
+- Make the release key, store it in 1Password and the repository's Actions secrets, add the R2 secrets, and fill in `fdroid/`, as [Releases](/phones/android#releases) describes. There's no Play listing.
 
 ## 3. Agent files
 

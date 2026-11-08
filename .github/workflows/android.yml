@@ -2,7 +2,7 @@
 # Builds the Android demo template, so the Kotlin shell in packages/mobile and
 # the app around it keep building with the pinned SDK, JDK and Gradle. On a
 # published release it signs the APK, attaches it to the release, and rebuilds
-# the F-Droid repository on the fdroid branch from every release's APK.
+# the shared F-Droid repository on R2 with it.
 name: Android
 
 on:
@@ -115,28 +115,45 @@ jobs:
           cp templates/android-app/android/app/build/outputs/apk/release/app-release.apk "groundwork-demo-$TAG.apk"
           gh release upload "$TAG" "groundwork-demo-$TAG.apk" --clobber
 
-      - name: Build the F-Droid repository
+      # The F-Droid repository at android.timmo.dev is shared by every app of
+      # mine, so this pulls its current state from R2, adds this release's
+      # APK and listing, re-signs the index and pushes it back. Without the R2
+      # secrets it's skipped.
+      - name: Check for the R2 secrets
+        id: r2
         if: steps.key.outputs.signed == 'true'
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
         run: |
-          mkdir -p "$RUNNER_TEMP/fdroid/repo"
-          cp -r templates/android-app/fdroid/. "$RUNNER_TEMP/fdroid/"
-          for tag in $(gh release list --limit 100 --json tagName --jq '.[].tagName'); do
-            gh release download "$tag" --pattern 'groundwork-demo-*.apk' --dir "$RUNNER_TEMP/fdroid/repo" || true
-          done
-          cd "$RUNNER_TEMP/fdroid"
+          if [ -z "$R2_ACCESS_KEY_ID" ]; then
+            echo "::notice::No R2 secrets, so the F-Droid repository isn't updated for this release"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update the F-Droid repository
+        if: steps.r2.outputs.publish == 'true'
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          R2_ENDPOINT: https://${{ secrets.R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: |
+          dir="$RUNNER_TEMP/fdroid"
+          mkdir -p "$dir/repo" "$dir/metadata"
+          aws s3 sync "s3://$R2_BUCKET/repo/" "$dir/repo/" --endpoint-url "$R2_ENDPOINT" --no-progress
+          aws s3 sync "s3://$R2_BUCKET/metadata/" "$dir/metadata/" --endpoint-url "$R2_ENDPOINT" --no-progress
+          cp -r templates/android-app/fdroid/. "$dir/"
+          cp "groundwork-demo-$TAG.apk" "$dir/repo/"
+          cd "$dir"
           chmod 600 config.yml
           fdroid update --pretty
-          rm -f config.yml
-          rm -rf metadata tmp
-
-      # The fdroid branch holds one commit, replaced each release, so old
-      # APKs don't pile up in the history.
-      - name: Publish the F-Droid repository
-        if: steps.key.outputs.signed == 'true'
-        working-directory: ${{ runner.temp }}/fdroid
-        run: |
-          git init -q -b fdroid
-          git add -A
-          git -c user.name=github-actions[bot] -c user.email=41898282+github-actions[bot]@users.noreply.github.com \
-            commit -q -m "F-Droid repository for $TAG"
-          git push -f "https://x-access-token:$GH_TOKEN@github.com/$GITHUB_REPOSITORY.git" fdroid
+          aws s3 sync repo/ "s3://$R2_BUCKET/repo/" --endpoint-url "$R2_ENDPOINT" --no-progress \
+            --exclude '*' --include '*.apk' \
+            --cache-control "public, max-age=31536000, immutable"
+          aws s3 sync repo/ "s3://$R2_BUCKET/repo/" --endpoint-url "$R2_ENDPOINT" --no-progress \
+            --exclude '*.apk' \
+            --cache-control "public, max-age=60, must-revalidate"
+          aws s3 sync metadata/ "s3://$R2_BUCKET/metadata/" --endpoint-url "$R2_ENDPOINT" --no-progress
