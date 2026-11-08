@@ -334,6 +334,7 @@
         "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellActivity.kt",
         "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellConfig.kt",
         "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellTileService.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/Shortcuts.kt",
         "packages/mobile/android/shell/src/main/res/drawable/gw_notification_icon.xml",
         "packages/mobile/android/shell/src/main/res/values/colors.xml",
         "packages/mobile/android/shell/src/main/res/values/themes.xml",
