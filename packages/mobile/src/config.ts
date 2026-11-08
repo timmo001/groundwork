@@ -18,6 +18,12 @@ export type ResolvedMobileLabels = Required<MobileLabels>;
 
 export interface MobileConfig {
   /**
+   * A hosted page to open instead of the bundled build, such as a service's
+   * own web UI, for an app that's a remote for a service elsewhere. Its
+   * origin may use the bridge. Without it the shell opens the bundled build.
+   */
+  readonly url?: string;
+  /**
    * Origins besides the app's own whose pages may use the bridge, such as a
    * paired service. The bundled app's origin is always allowed.
    */
@@ -55,6 +61,7 @@ export interface MobileConfig {
 
 /** Every option filled in. */
 export interface ResolvedMobileConfig {
+  readonly url: string | null;
   readonly origins: readonly string[];
   readonly shares: boolean;
   readonly notifications: boolean;
@@ -79,6 +86,7 @@ export const defineMobileConfig = (config: MobileConfig = {}): MobileConfig =>
 export const resolveConfig = (
   config: MobileConfig = {},
 ): ResolvedMobileConfig => ({
+  url: config.url ?? null,
   origins: config.origins ?? [],
   shares: config.shares ?? true,
   notifications: config.notifications ?? true,

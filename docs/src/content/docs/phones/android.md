@@ -26,6 +26,15 @@ An app starts as a PWA and moves into the shell once it needs something from the
 
 Copy the folder, rename `android-app` in `package.json`, and in `android/` change the `namespace`, `applicationId`, app name, deep link scheme and the package of `MainActivity`. Swap the icon, replace `gw-demo-app` in `src/index.html` with your own view, and point `settings.gradle.kts` at the app's synced copy of the shell.
 
+## Bundled or hosted
+
+The shell opens one of two pages:
+
+- **Bundled**, the default: the page built into the APK's assets, served at `https://appassets.androidplatform.net`. It starts offline and ships with each release, for a standalone app.
+- **Hosted**: `url` in `mobile.config.ts` opens a page a service serves, such as its own web UI, for an app that's a remote for a service elsewhere. Its origin may use the bridge, and a new page reaches phones without a new APK.
+
+An app that picks the service at run time, such as one the person pairs with, overrides `startUrl` in its activity and adds the service's origin to `allowedOrigins`.
+
 ## Build and run
 
 The root `mise.toml` pins the Android SDK command-line tools, the JDK, Gradle and Kotlin. `mise run android:setup` installs the SDK packages and creates the emulator, and `mise run android:emulator` starts it in dark mode.

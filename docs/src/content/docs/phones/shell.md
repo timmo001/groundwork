@@ -36,6 +36,7 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 
 | Option | Default | Does |
 | --- | --- | --- |
+| `url` | None | A hosted page to open instead of the bundled build; its origin may use the bridge |
 | `origins` | None | Origins besides the app's own whose pages may use the bridge |
 | `shares` | On | Shares from other apps, as `gw-share` |
 | `notifications` | On | System notifications from the view and from pushes |
