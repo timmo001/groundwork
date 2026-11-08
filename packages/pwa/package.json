@@ -1,6 +1,8 @@
 {
   "name": "@timmo001/groundwork-pwa",
-  "private": true,
+  "version": "0.12.1",
+  "description": "Groundwork's installable web app pieces: the manifest and icons from the theme, the service worker, Web Push and pairing contracts",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/config.ts",
@@ -10,7 +12,23 @@
     "./view": "./src/view.ts",
     "./worker": "./src/worker.ts"
   },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/pwa"
+  },
   "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "test": "bun test",
     "lint": "oxlint .",
     "typecheck": "tsc",
@@ -18,7 +36,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "workspace:*",
+    "@timmo001/groundwork-tokens": "0.12.1",
     "effect": "4.1.2",
     "sharp": "0.35.5"
   },

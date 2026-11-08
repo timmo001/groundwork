@@ -1,7 +1,8 @@
 ---
-# Publishes @timmo001/groundwork-tokens, -ui, -tui and -report to npm, and
-# @timmo001/docs-kit to npm and JSR, when a GitHub release is published, with
-# the tool versions mise pins. All five share one version, the release tag.
+# Publishes @timmo001/groundwork-tokens, -ui, -tui, -report, -pwa and -mobile
+# to npm, and @timmo001/docs-kit to npm and JSR, when a GitHub release is
+# published, with the tool versions mise pins. All share one version, the
+# release tag.
 name: Release
 
 on:
@@ -85,6 +86,36 @@ jobs:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
       package-path: packages/report
+      build-command: "true"
+
+  # pwa depends on tokens at the same version, so it waits for it
+  npm-pwa:
+    needs:
+      - tools
+      - npm-tokens
+    permissions:
+      contents: read
+      id-token: write
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@de4221cd9b24ad3d61aa1db87b6e4864cf56d5a1 # 20261027.0
+    with:
+      bun-version: ${{ needs.tools.outputs.bun }}
+      node-version: ${{ needs.tools.outputs.node }}
+      package-path: packages/pwa
+      build-command: "true"
+
+  # mobile depends on pwa and tokens at the same version, so it waits for pwa
+  npm-mobile:
+    needs:
+      - tools
+      - npm-pwa
+    permissions:
+      contents: read
+      id-token: write
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@de4221cd9b24ad3d61aa1db87b6e4864cf56d5a1 # 20261027.0
+    with:
+      bun-version: ${{ needs.tools.outputs.bun }}
+      node-version: ${{ needs.tools.outputs.node }}
+      package-path: packages/mobile
       build-command: "true"
 
   # docs-kit depends on ui and tokens at the same version, so it waits for

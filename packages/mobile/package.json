@@ -1,13 +1,31 @@
 {
   "name": "@timmo001/groundwork-mobile",
-  "private": true,
+  "version": "0.12.1",
+  "description": "The page side of Groundwork's Android shell: the app config, the typed bridge to the shell, and a fallback to the PWA outside it",
+  "license": "Apache-2.0",
   "type": "module",
   "exports": {
     ".": "./src/config.ts",
     "./bridge": "./src/bridge.ts",
     "./view": "./src/view.ts"
   },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/mobile"
+  },
   "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "test": "bun test",
     "lint": "oxlint .",
     "typecheck": "tsc",
@@ -15,8 +33,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-pwa": "workspace:*",
-    "@timmo001/groundwork-tokens": "workspace:*",
+    "@timmo001/groundwork-pwa": "0.12.1",
+    "@timmo001/groundwork-tokens": "0.12.1",
     "effect": "4.1.2"
   },
   "devDependencies": {
