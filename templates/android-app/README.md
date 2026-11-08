@@ -2,7 +2,7 @@
 
 A starting point for an Android app: the web page in Groundwork's Kotlin shell from `packages/mobile/android/shell`, with `@timmo001/groundwork-mobile` on the page side. It's also the Android target of Groundwork's [demo app](https://groundwork.timmo.dev/templates/app): `gw-demo-app` from `@timmo001/groundwork-demo/web`, in the shell. `mise run demo:android` builds it and opens it on a running emulator (`mise run android:emulator`), from the repository root.
 
-Copy the folder, rename `android-app` in `package.json`, and in `android/` change the `namespace`, `applicationId`, app name, deep link scheme and package of `MainActivity`. Swap the icon in `res/drawable/`, then replace `gw-demo-app` in `src/index.html` with your own view and drop the `@timmo001/groundwork-demo` dependency. Point `settings.gradle.kts` at the synced copy of the shell in your app.
+Copy the folder, rename `android-app` in `package.json`, and in `android/` change the `namespace`, `applicationId`, app name, deep link scheme and package of `MainActivity`. Swap the icon: `mipmap-anydpi/ic_launcher.xml` is an adaptive icon whose colors in `values/colors.xml` and `values-night/colors.xml` follow light and dark mode, and `drawable/ic_mark.xml` is the tile's. Add `gw_notification_icon` and `gw_notification_color` to replace the shell's notification icon and its accent. Then replace `gw-demo-app` in `src/index.html` with your own view and drop the `@timmo001/groundwork-demo` dependency. Point `settings.gradle.kts` at the synced copy of the shell in your app.
 
 ```sh
 bun run build                          # build the page into android/app/src/main/assets/

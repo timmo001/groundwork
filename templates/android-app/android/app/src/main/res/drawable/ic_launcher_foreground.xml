@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The launcher icon's foreground: the Groundwork mark in the mode's mark
+  color, inside the adaptive icon's safe zone. Also its monochrome layer.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+  android:width="108dp"
+  android:height="108dp"
+  android:viewportWidth="108"
+  android:viewportHeight="108">
+  <group android:translateX="25.2" android:translateY="25.2" android:scaleX="0.9" android:scaleY="0.9">
+    <path android:fillColor="@color/ic_launcher_mark" android:fillAlpha="0.5"
+      android:pathData="M22,13h20a2,2 0,0 1,2 2v5a2,2 0,0 1,-2 2h-20a2,2 0,0 1,-2 -2v-5a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="@color/ic_launcher_mark" android:fillAlpha="0.75"
+      android:pathData="M14,27.5h36a2,2 0,0 1,2 2v5a2,2 0,0 1,-2 2h-36a2,2 0,0 1,-2 -2v-5a2,2 0,0 1,2 -2z" />
+    <path android:fillColor="@color/ic_launcher_mark"
+      android:pathData="M6,42h52a2,2 0,0 1,2 2v5a2,2 0,0 1,-2 2h-52a2,2 0,0 1,-2 -2v-5a2,2 0,0 1,2 -2z" />
+  </group>
+</vector>

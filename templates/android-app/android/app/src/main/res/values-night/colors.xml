@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app icon's colors in dark mode: a light mark on a dark background. -->
+<resources>
+  <color name="ic_launcher_background">#1B1E23</color>
+  <color name="ic_launcher_mark">#E5E8EC</color>
+</resources>

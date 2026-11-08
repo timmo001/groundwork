@@ -22,7 +22,7 @@ An app starts as a PWA and moves into the shell once it needs something from the
 
 - `mobile.config.ts` is the shell's config, every piece on unless it's turned off. The build writes it into the assets as JSON for the shell.
 - `src/` is the page: `build.ts` bundles it into `android/app/src/main/assets/web/` with the theme boot script inlined, and `index.ts` connects with `connectMobile`.
-- `android/` is the Gradle project: the `app` module with `MainActivity`, the manifest and the icon, and the `shell` module from `packages/mobile/android/shell`.
+- `android/` is the Gradle project: the `app` module with `MainActivity`, the manifest and the adaptive icon, with light and dark colors, and the `shell` module from `packages/mobile/android/shell`.
 
 Copy the folder, rename `android-app` in `package.json`, and in `android/` change the `namespace`, `applicationId`, app name, deep link scheme and the package of `MainActivity`. Swap the icon, replace `gw-demo-app` in `src/index.html` with your own view, and point `settings.gradle.kts` at the app's synced copy of the shell.
 
