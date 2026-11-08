@@ -2,9 +2,7 @@
 
 The groundwork for designing and building apps, sites, CLIs, terminal UIs,
 Omarchy panels and agents: tokens and themes, repository conventions, the docs
-site and `@timmo001/docs-kit`. The plan is tracked in #32, with the working
-document attached to it; check it before adding a new part. The READMEs
-document usage and development.
+site and `@timmo001/docs-kit`. The READMEs document usage and development.
 
 ## Repository
 
