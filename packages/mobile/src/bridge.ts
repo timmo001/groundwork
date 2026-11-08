@@ -26,12 +26,42 @@ export const Notice = Schema.Struct({
 
 export interface Notice extends Schema.Schema.Type<typeof Notice> {}
 
-/** A share from another app, the same shape the PWA's share target gives. */
+/**
+ * A share from another app, the same shape the PWA's share target gives,
+ * plus the id of the sharing shortcut it was sent to, in the shell.
+ */
 export const ShellShare = Schema.Struct({
   title: Schema.optionalKey(Schema.String),
   text: Schema.optionalKey(Schema.String),
   url: Schema.optionalKey(Schema.String),
+  shortcutId: Schema.optionalKey(Schema.String),
 });
+
+export interface ShellShare extends Schema.Schema.Type<typeof ShellShare> {}
+
+/**
+ * A launcher shortcut that opens `url` as a deep link: on a long press of
+ * the app's icon, pinned to the home screen, and with `share` in the share
+ * sheet's direct row too.
+ */
+export const Shortcut = Schema.Struct({
+  /** Stays the same across updates, so a pinned one keeps working. */
+  id: Schema.String,
+  label: Schema.String,
+  /** Shown where there's room, such as in the long-press menu. */
+  longLabel: Schema.optionalKey(Schema.String),
+  /** An allowed origin's page, or the app's own scheme. */
+  url: Schema.String,
+  /** An SVG path on a 24 unit grid, such as a Material Design Icon. */
+  icon: Schema.optionalKey(Schema.String),
+  /**
+   * A sharing shortcut, whose shares carry its id as `shortcutId`. It shows
+   * on a long press as well, so list it after the ones meant for that.
+   */
+  share: Schema.optionalKey(Schema.Boolean),
+});
+
+export interface Shortcut extends Schema.Schema.Type<typeof Shortcut> {}
 
 export const DeepLink = Schema.Struct({ url: Schema.String });
 
@@ -145,6 +175,12 @@ export const mobileRequests = {
   discoverServices: Schema.Array(DiscoveredService),
   /** Scans a QR code with the camera: its text, or `null` when cancelled. */
   scanQr: Schema.NullOr(Schema.String),
+  /** Replaces the dynamic shortcuts: how many the launcher took. */
+  setShortcuts: Schema.Number,
+  /** Asks the launcher to pin a shortcut: false where it can't. */
+  pinShortcut: Schema.Boolean,
+  /** Removes shortcuts, greying out pinned ones. */
+  disableShortcuts: Schema.Boolean,
 } as const;
 
 /** The shell's messages, each with the schema its data is read with. */

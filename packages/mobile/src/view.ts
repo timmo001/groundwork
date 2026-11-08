@@ -23,7 +23,6 @@ import {
   unsubscribePush,
   type Pwa,
   type PwaConfig,
-  type Share,
 } from "@timmo001/groundwork-pwa/view";
 import { Option, Schema } from "effect";
 
@@ -35,6 +34,7 @@ import {
   mobileRequests,
   Notice,
   ShellShare,
+  Shortcut,
   type BridgeMessage,
   type DiscoveredService,
   type DiscoveryMode,
@@ -77,8 +77,11 @@ export interface MobilePushOptions {
 export interface ConnectMobileOptions {
   /** The PWA config, for the floor's service worker, install and share target. */
   readonly pwa?: PwaConfig;
-  /** Called with each share, from the shell or the share target. */
-  readonly onShare?: (share: Share) => void;
+  /**
+   * Called with each share, from the shell or the share target, with the
+   * sharing shortcut's id when it was sent to one.
+   */
+  readonly onShare?: (share: ShellShare) => void;
   /** Called with each deep link the shell opens the app with. */
   readonly onDeepLink?: (url: string) => void;
   /**
@@ -146,6 +149,25 @@ export interface Mobile {
   readonly scanQr: (options?: {
     readonly hint?: string;
   }) => Promise<string | undefined>;
+  /**
+   * Replaces the dynamic shortcuts with these, in order, and answers how
+   * many the launcher took. Answers 0 outside the shell, where the PWA
+   * manifest's `shortcuts` give the long-press menu.
+   */
+  readonly setShortcuts: (shortcuts: readonly Shortcut[]) => Promise<number>;
+  /**
+   * Asks the launcher to pin a shortcut to the home screen. False where it
+   * can't, and outside the shell.
+   */
+  readonly pinShortcut: (shortcut: Shortcut) => Promise<boolean>;
+  /**
+   * Removes the shortcuts with these ids. Pinned ones stay, greyed out,
+   * showing `message` when tapped. Does nothing outside the shell.
+   */
+  readonly disableShortcuts: (
+    ids: readonly string[],
+    message?: string,
+  ) => Promise<void>;
 }
 
 interface Waiting {
@@ -171,13 +193,18 @@ const read = <S extends Schema.ConstraintDecoder<unknown>>(
 
 const noticeJson = Schema.encodeSync(Schema.toCodecJson(Notice));
 
+const shortcutJson = Schema.encodeSync(Schema.toCodecJson(Shortcut));
+
+/** The `disableShortcuts` request's params. */
+type DisableParams = { ids: string[]; message?: string };
+
 const pushParams = ({ service, client, headers = {} }: MobilePushOptions) => ({
   service,
   client: { id: client.id, name: client.name, platform: client.platform },
   headers: { ...headers },
 });
 
-const dispatchShare = (share: Share) =>
+const dispatchShare = (share: ShellShare) =>
   window.dispatchEvent(new CustomEvent("gw-share", { detail: share }));
 
 const dispatchDeepLink = (link: DeepLink) =>
@@ -240,6 +267,9 @@ const connectFloor = (
     scanQr: async () => {
       throw new Error("The QR scanner needs the Android shell");
     },
+    setShortcuts: async () => 0,
+    pinShortcut: async () => false,
+    disableShortcuts: async () => {},
   };
 };
 
@@ -394,6 +424,19 @@ export const connectMobile = async (
       if (hint !== undefined) params["hint"] = hint;
 
       return (await call("scanQr", mobileRequests.scanQr, params)) ?? undefined;
+    },
+    setShortcuts: (shortcuts) =>
+      call("setShortcuts", mobileRequests.setShortcuts, {
+        shortcuts: shortcuts.map((shortcut) => shortcutJson(shortcut)),
+      }),
+    pinShortcut: (shortcut) =>
+      call("pinShortcut", mobileRequests.pinShortcut, shortcutJson(shortcut)),
+    disableShortcuts: async (ids, message) => {
+      const params: DisableParams = { ids: [...ids] };
+
+      if (message !== undefined) params["message"] = message;
+
+      await call("disableShortcuts", mobileRequests.disableShortcuts, params);
     },
   };
 };

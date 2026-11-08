@@ -64,6 +64,9 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 | `localNetwork` | Asks for `ACCESS_LOCAL_NETWORK` on Android 17 | `granted`; the browser decides |
 | `discoverServices` | mDNS through NsdManager, or the system's picker | Rejects |
 | `scanQr` | The shell's scanner | Rejects; scan in the page with `scanPairingLink` |
+| `setShortcuts` | The launcher's long-press menu and the share sheet | Answers 0; the manifest's `shortcuts` give the menu |
+| `pinShortcut` | Asks the launcher to pin one | Answers false |
+| `disableShortcuts` | Removes them, greying out pinned ones | Does nothing |
 | `call` | The app's own Kotlin handlers | Rejects |
 
 Both push paths post the same subscription to the service, as the [push contract](/behavior#push) describes, so a service doesn't care which one a client uses.
@@ -78,7 +81,7 @@ The shell injects a `groundworkShell` object into allowed pages with `WebViewCom
 | `reply` | The shell | The request's `id`, `ok`, and `value` or `error` |
 | `message` | The shell | `name` and `data`, whenever it has news |
 
-The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush`, `pushState`, `localNetwork`, `discoverServices` and `scanQr`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
+The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush`, `pushState`, `localNetwork`, `discoverServices`, `scanQr`, `setShortcuts`, `pinShortcut` and `disableShortcuts`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
 
 ## The local network, discovery and QR codes
 
@@ -99,6 +102,38 @@ const link = text === undefined ? undefined : parsePairingLink(text);
 - **`scanQr`.** Opens the shell's scanner, CameraX with zxing-cpp, and answers the first QR code's text, or `undefined` when the person backs out. It needs no Google Play services: the WebView's `BarcodeDetector` relies on them on Android, so it finds nothing on a phone without them. The app declares `CAMERA`.
 
 A page served over plain http, such as a service's own UI on the network, needs the app to allow cleartext in its own manifest or network security config; the shell sets neither.
+
+## Shortcuts
+
+Shortcuts open a page from outside the app: on a long press of the app's icon, pinned to the home screen, or in the share sheet's direct row. Each opens its `url` as a deep link, an allowed origin's page or the app's own scheme, through the same `deepLinkUrl` as any other link, so an open app gets it as `onDeepLink` without reloading.
+
+```ts
+await mobile.setShortcuts([
+  { id: "updates", label: "Updates", url: "my-app://updates", icon: mdiUpdate },
+  { id: "office", label: "Office PC", url: "my-app://office", share: true },
+]);
+
+const pinned = await mobile.pinShortcut({ id: "logs", label: "Logs", url: "my-app://logs" });
+
+await mobile.disableShortcuts(["office"], "Office PC was removed");
+```
+
+- **`setShortcuts`** replaces the dynamic shortcuts, ranked in order. Most launchers show the first 4 on a long press, and the launcher caps the whole list, often at 15; it answers how many it took.
+- **`pinShortcut`** asks the launcher to put one on the home screen, and answers false where it can't. A pinned shortcut lasts until the person removes it, so keep its `id` stable.
+- **`disableShortcuts`** removes the shortcuts with those ids. Pinned ones stay, greyed out, showing the message when tapped, until `setShortcuts` or `pinShortcut` publishes the same id again.
+- **`icon`** is an SVG path on a 24 unit grid, such as a Material Design Icon's, drawn in `gw_shortcut_foreground` on `gw_shortcut_background`. Without one, the shortcut shows the app's icon. Override either color as the notification icon's are.
+- **Sharing shortcuts.** One with `share: true` shows in the share sheet's direct row, and a share sent to it arrives with its id as `shortcutId`. Android only offers the share sheet shortcuts the launcher can show too, so list sharing shortcuts after the ones meant for the long-press menu. The activity needs a `share-target` with the shell's category, in `res/xml/shortcuts.xml`, named by an `android.app.shortcuts` meta-data entry on the activity:
+
+```xml
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+  <share-target android:targetClass="com.example.app.MainActivity">
+    <data android:mimeType="text/plain" />
+    <category android:name="dev.timmo.groundwork.shell.SHARE_TARGET" />
+  </share-target>
+</shortcuts>
+```
+
+The app's own Kotlin can publish them too, through the activity's `shortcuts`, whose `ids()` lists every dynamic and pinned one.
 
 ## The app's own requests
 
@@ -155,7 +190,7 @@ The shell draws edge to edge, under the status bar, the cutout and the navigatio
 
 ## Shares, tiles, Live Updates and push
 
-- **Shares.** Give the activity an `ACTION_SEND` intent filter for `text/plain`. A shared link arrives as `url`, other text as `text`, and the subject as `title`, through the `share` message and the `gw-share` event.
+- **Shares.** Give the activity an `ACTION_SEND` intent filter for `text/plain`. A shared link arrives as `url`, other text as `text`, the subject as `title`, and the [sharing shortcut](#shortcuts) it was sent to as `shortcutId`, through the `share` message and the `gw-share` event.
 - **Tiles.** Declare a service extending `ShellTileService` with the `BIND_QUICK_SETTINGS_TILE` permission, its label and icon, and a `groundwork.tileLink` meta-data entry for the page a tap opens. Override `onClick` to act without opening the app. Keep to two tiles at most.
 - **Notification icon.** Notifications show `gw_notification_icon`, a white Groundwork mark the system tints, on `gw_notification_color`, which has a light and a dark mode value. Override either by adding a drawable or color of the same name to the app, with a `values-night` color for dark mode.
 - **Live Updates.** A push whose payload has `ongoing` updates one notification per `id`, promoted to a Live Update with `ProgressStyle` on Android 16 and a plain ongoing notification with a progress bar below it, until `done`.
