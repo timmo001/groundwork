@@ -7,7 +7,13 @@
 import { Schema } from "effect";
 
 /** QML copies mirror both ways; every other kind only travels out. */
-export const Kind = Schema.Literals(["qml", "tokens", "lit", "element"]);
+export const Kind = Schema.Literals([
+  "qml",
+  "tokens",
+  "lit",
+  "element",
+  "android",
+]);
 
 export type Kind = typeof Kind.Type;
 
@@ -16,6 +22,11 @@ export const Item = Schema.Struct({
   kind: Kind,
   description: Schema.String,
   files: Schema.Array(Schema.String),
+  /**
+   * Keeps each file's path under this folder, such as a Gradle module's
+   * `src/main/...`. Without it, files land side by side in the app's folder.
+   */
+  root: Schema.optionalKey(Schema.String),
   needs: Schema.optionalKey(Schema.Array(Schema.String)),
 });
 

@@ -315,6 +315,26 @@
         "packages/lit-effect/src/router.ts",
         "packages/lit-effect/src/storage.ts"
       ]
+    },
+    {
+      "name": "android-shell",
+      "kind": "android",
+      "description": "The Kotlin shell around the system WebView, as a Gradle module an app includes and extends from its own code",
+      "root": "packages/mobile/android/shell",
+      "files": [
+        "packages/mobile/android/shell/build.gradle.kts",
+        "packages/mobile/android/shell/consumer-rules.pro",
+        "packages/mobile/android/shell/src/main/AndroidManifest.xml",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/AndroidTheme.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/Bridge.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/Notifications.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/Push.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellActivity.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellConfig.kt",
+        "packages/mobile/android/shell/src/main/java/dev/timmo/groundwork/shell/ShellTileService.kt",
+        "packages/mobile/android/shell/src/main/res/values/themes.xml",
+        "packages/mobile/android/shell/src/main/res/values-night/themes.xml"
+      ]
     }
   ]
 }

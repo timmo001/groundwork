@@ -8,6 +8,7 @@ Everything Groundwork makes reaches what uses it on its own, as soon as it chang
 - Packages roll out to every consumer on each release: docs-kit, and the web components, tokens and [lit-effect](/effect/lit) once they publish.
 - QML panel components reach apps as copies. Each app owns its copy, and the sync keeps it current and carries edits back.
 - Until the web packages publish, web components and token files travel as copies too.
+- The Android shell reaches Android apps as a copy of its Gradle module, `android-shell`. Apps extend it from their own Kotlin and config beside the copy, never by editing it.
 
 [Upkeep](https://upkeep.timmo.dev/running/#sync) runs the sync every hour over every app with a `sync.json`: it carries edits back, copies changes out, checks and pushes each repository, and hands a flagged copy to an agent. Run `mise run sync` to sync straight away.
 
@@ -26,6 +27,16 @@ An app's `sync.json` looks like this:
   "items": {
     "panel-header": "omarchy-plugin",
     "panel-flickable": "omarchy-plugin"
+  }
+}
+```
+
+Files land side by side in the item's folder, unless the item has a `root`: then each keeps its path under it, so `android-shell` arrives as a whole Gradle module. An Android app maps it to the folder its `settings.gradle.kts` includes as `:shell`:
+
+```json
+{
+  "items": {
+    "android-shell": "android/shell"
   }
 }
 ```

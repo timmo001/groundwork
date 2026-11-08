@@ -175,7 +175,13 @@ export const planApp = Effect.fn("planApp")(function* (
     const folder = file.items[item.name] ?? Object.values(file.items)[0] ?? ".";
 
     for (const source of item.files) {
-      const copyPath = path.join(folder, path.basename(source));
+      const copyPath = path.join(
+        folder,
+        item.root === undefined
+          ? path.basename(source)
+          : path.relative(item.root, source),
+      );
+
       const sourceText = yield* readIfThere(path.join(root, source));
 
       if (sourceText === undefined) {
