@@ -87,6 +87,16 @@ class Bridge internal constructor(private val allowedOrigins: () -> Set<String>)
     }
   }
 
+  /**
+   * Injects the object again with the current allowed origins, which the
+   * WebView only reads when it's added. Takes effect from the next page load.
+   */
+  internal fun reattach(webView: WebView) {
+    WebViewCompat.removeWebMessageListener(webView, OBJECT_NAME)
+    detach()
+    attach(webView)
+  }
+
   /** A new page loaded: messages wait for it to connect again. */
   internal fun detach() {
     proxy = null

@@ -185,6 +185,31 @@ open class ShellActivity : ComponentActivity() {
       reply.ok(notifications.show(request.paramsObject))
     }
     bridge.handle("androidTheme") { _, reply -> reply.ok(currentTheme()) }
+    bridge.handle("localNetwork") { _, reply -> withLocalNetwork { reply.ok(it) } }
+    bridge.handle("discoverServices") { request, reply ->
+      val params = request.paramsObject
+      val type = params.getString("type")
+      val timeoutMs = params.optLong("timeoutMs", ServiceDiscovery.DEFAULT_TIMEOUT_MS)
+      val run = { picker: Boolean ->
+        discovery.discover(type, picker, timeoutMs) { result ->
+          result.fold({ reply.ok(it) }, { reply.error(it.message ?: "Discovery failed") })
+        }
+      }
+
+      // The picker unless asked not to, or the app may browse already
+      when {
+        params.optString("mode") == "picker" -> run(true)
+        params.optString("mode") == "browse" -> withLocalNetwork { run(false) }
+        !discovery.localNetworkGated ||
+          checkSelfPermission(ACCESS_LOCAL_NETWORK) == PackageManager.PERMISSION_GRANTED -> run(false)
+        else -> run(true)
+      }
+    }
+    bridge.handle("scanQr") { request, reply ->
+      scanQr(request.paramsObject.optString("hint").ifBlank { null }) { result ->
+        result.fold({ reply.ok(it) }, { reply.error(it.message ?: "Scanning failed") })
+      }
+    }
 
     if (!config.push) {
       bridge.handle("pushState") { _, reply -> reply.ok("unsupported") }
@@ -204,23 +229,83 @@ open class ShellActivity : ComponentActivity() {
     }
   }
 
-  private var pendingNotificationPermission: ((Boolean) -> Unit)? = null
+  private var pendingPermissionResult: ((Boolean) -> Unit)? = null
 
-  private val askNotifications =
+  private val askPermission =
     registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-      pendingNotificationPermission?.invoke(granted)
-      pendingNotificationPermission = null
+      pendingPermissionResult?.invoke(granted)
+      pendingPermissionResult = null
     }
 
-  /** Asks for notifications when they aren't allowed yet, then calls `then`. */
-  protected fun withNotificationPermission(then: (Boolean) -> Unit) {
-    if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+  private var pendingScan: ((String?) -> Unit)? = null
+
+  private val scan =
+    registerForActivityResult(ScanActivity.Scan()) { text ->
+      pendingScan?.invoke(text)
+      pendingScan = null
+    }
+
+  private val discovery by lazy { ServiceDiscovery(this) }
+
+  /** True when the app's manifest declares `permission`. */
+  protected fun declares(permission: String): Boolean =
+    packageManager
+      .getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(PackageManager.GET_PERMISSIONS.toLong()))
+      .requestedPermissions
+      ?.contains(permission) == true
+
+  /** Asks for `permission` when it isn't granted yet, then calls `then`. */
+  protected fun withPermission(permission: String, then: (Boolean) -> Unit) {
+    if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
       then(true)
       return
     }
 
-    pendingNotificationPermission = then
-    askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
+    pendingPermissionResult?.invoke(false)
+    pendingPermissionResult = then
+    askPermission.launch(permission)
+  }
+
+  /** Asks for notifications when they aren't allowed yet, then calls `then`. */
+  protected fun withNotificationPermission(then: (Boolean) -> Unit) =
+    withPermission(Manifest.permission.POST_NOTIFICATIONS, then)
+
+  /**
+   * Local network access: `granted` where it isn't gated (before Android 17,
+   * or an app targeting less) or the person allowed it, `denied`, or
+   * `undeclared` when the app's manifest lacks ACCESS_LOCAL_NETWORK.
+   */
+  protected fun withLocalNetwork(then: (String) -> Unit) {
+    if (!discovery.localNetworkGated) return then("granted")
+    if (!declares(ACCESS_LOCAL_NETWORK)) return then("undeclared")
+
+    withPermission(ACCESS_LOCAL_NETWORK) { then(if (it) "granted" else "denied") }
+  }
+
+  /** Opens the QR scanner, with the camera permission, and passes on its text or null. */
+  protected fun scanQr(hint: String?, then: (Result<String?>) -> Unit) {
+    if (!declares(Manifest.permission.CAMERA)) {
+      then(Result.failure(IllegalStateException("The app's manifest doesn't declare the CAMERA permission")))
+      return
+    }
+
+    withPermission(Manifest.permission.CAMERA) { granted ->
+      if (!granted) return@withPermission then(Result.success(null))
+
+      pendingScan?.invoke(null)
+      pendingScan = { then(Result.success(it)) }
+      scan.launch(hint)
+    }
+  }
+
+  /**
+   * Applies a change to `allowedOrigins` and opens `url`, such as a service
+   * the person just paired with. The WebView only reads the origins when the
+   * bridge is injected, so it's injected again before the page loads.
+   */
+  fun refreshOrigins(url: String = startUrl) {
+    bridge.reattach(webView)
+    webView.loadUrl(url)
   }
 
   /**
@@ -413,7 +498,10 @@ open class ShellActivity : ComponentActivity() {
     const val APP_ORIGIN = "https://${WebViewAssetLoader.DEFAULT_DOMAIN}"
 
     /** The shell's version, reported to the view by `info`. */
-    const val VERSION = "0.1.0"
+    const val VERSION = "0.2.0"
+
+    /** Android 17's local network permission, by name so older SDKs compile. */
+    const val ACCESS_LOCAL_NETWORK = "android.permission.ACCESS_LOCAL_NETWORK"
 
     private fun originOf(url: String): String =
       Uri.parse(url).let { uri ->

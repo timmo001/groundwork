@@ -61,6 +61,9 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 | `openExternal` | The browser or the app that handles the link | A new tab |
 | Shares | The share sheet, through the shell | The share target |
 | Dynamic color | `onAndroidTheme` | None |
+| `localNetwork` | Asks for `ACCESS_LOCAL_NETWORK` on Android 17 | `granted`; the browser decides |
+| `discoverServices` | mDNS through NsdManager, or the system's picker | Rejects |
+| `scanQr` | The shell's scanner | Rejects; scan in the page with `scanPairingLink` |
 | `call` | The app's own Kotlin handlers | Rejects |
 
 Both push paths post the same subscription to the service, as the [push contract](/behavior#push) describes, so a service doesn't care which one a client uses.
@@ -75,7 +78,27 @@ The shell injects a `groundworkShell` object into allowed pages with `WebViewCom
 | `reply` | The shell | The request's `id`, `ok`, and `value` or `error` |
 | `message` | The shell | `name` and `data`, whenever it has news |
 
-The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush` and `pushState`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
+The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush`, `pushState`, `localNetwork`, `discoverServices` and `scanQr`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
+
+## The local network, discovery and QR codes
+
+An app that pairs with a service on the person's network, such as a computer, finds it, scans its pairing code and reaches it through three requests:
+
+```ts
+if ((await mobile.localNetwork()) !== "granted") showWhyItNeedsTheNetwork();
+
+const [found] = await mobile.discoverServices({ type: "_my-service._tcp" });
+const service = found && `http://${found.host}:${found.port}`;
+
+const text = await mobile.scanQr({ hint: "Scan the code on your computer" });
+const link = text === undefined ? undefined : parsePairingLink(text);
+```
+
+- **`localNetwork`.** From Android 17, an app that targets it can't reach the local network, from its own code or its WebView, until the person allows it. The app declares `ACCESS_LOCAL_NETWORK` in its manifest; this asks for it and answers `granted`, `denied`, or `undeclared` when the manifest lacks it. Before Android 17 it answers `granted`.
+- **`discoverServices`.** Finds mDNS services of a type through NsdManager. With the permission it browses for `timeoutMs` (3 seconds by default) and lists every service it resolved. Without it, the system's picker asks the person to choose one, which grants the app that device alone, and the list holds it or nothing. `mode: "browse"` or `"picker"` picks one way. Each service has its `name`, `type`, `hostname`, a `host` ready for a URL (IPv4 first, IPv6 in brackets), every address, its `port` and its TXT record as `txt`.
+- **`scanQr`.** Opens the shell's scanner, CameraX with zxing-cpp, and answers the first QR code's text, or `undefined` when the person backs out. It needs no Google Play services: the WebView's `BarcodeDetector` relies on them on Android, so it finds nothing on a phone without them. The app declares `CAMERA`.
+
+A page served over plain http, such as a service's own UI on the network, needs the app to allow cleartext in its own manifest or network security config; the shell sets neither.
 
 ## The app's own requests
 
@@ -106,9 +129,25 @@ class MainActivity : ShellActivity() {
 
 `bridge.send(name, data)` sends a message to the view, held until the page connects. A handler under one of the shell's names replaces the shell's own, and `bridge.remove(name)` takes one away. Every other hook, such as `startUrl`, `allowedOrigins`, `createWebView`, `deepLinkUrl` and `openExternal`, is open to override.
 
+The WebView reads the allowed origins only when the bridge is injected. When they change at run time, such as after pairing with a new service, `refreshOrigins(url)` injects it again with the current `allowedOrigins()` and loads `url`, `startUrl` by default:
+
+```kotlin
+override val startUrl get() = paired?.url ?: super.startUrl
+override fun allowedOrigins() = super.allowedOrigins() + listOfNotNull(paired?.origin)
+
+fun onPaired(service: Service) {
+  paired = service
+  refreshOrigins()
+}
+```
+
+An origin is a scheme, host and port, such as `http://192.168.1.5:9170`, with IPv6 hosts in brackets.
+
+`withPermission`, `withNotificationPermission`, `withLocalNetwork`, `scanQr` and `declares` are there for the app's own handlers too.
+
 The app's build writes `mobile.config.ts` as JSON to `assets/groundwork/mobile.config.json`, and its web build to `assets/web/`, which the shell serves from `https://appassets.androidplatform.net`. In debug builds a `groundwork.devUrl` meta-data entry in the app's manifest points the shell at the dev server instead.
 
-The app's manifest declares the activity, its deep link and App Link intent filters, and the camera or microphone permissions it wants the page to have. The shell's own manifest asks only for the internet and notifications.
+The app's manifest declares the activity, its deep link and App Link intent filters, and the permissions it wants: the camera or microphone for the page and `scanQr`, and `ACCESS_LOCAL_NETWORK` for the local network. The shell's own manifest asks only for the internet and notifications, and declares the scanner's activity.
 
 The page follows the phone's dark mode through the theme's `isLightTheme`, which the WebView passes on as `prefers-color-scheme`, and the WebView never darkens it itself.
 

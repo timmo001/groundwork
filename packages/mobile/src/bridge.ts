@@ -82,6 +82,48 @@ export const ShellInfo = Schema.Struct({
 export interface ShellInfo extends Schema.Schema.Type<typeof ShellInfo> {}
 
 /**
+ * Whether the app may reach the local network: `granted` (or not gated,
+ * before Android 17), `denied`, or `undeclared` when the app's manifest
+ * lacks ACCESS_LOCAL_NETWORK.
+ */
+export const LocalNetworkState = Schema.Literals([
+  "granted",
+  "denied",
+  "undeclared",
+]);
+
+export type LocalNetworkState = Schema.Schema.Type<typeof LocalNetworkState>;
+
+/** One mDNS service, resolved. */
+export const DiscoveredService = Schema.Struct({
+  /** The instance name, such as `Office PC`. */
+  name: Schema.String,
+  type: Schema.String,
+  /** The `.local` hostname, on Android 17 and up. */
+  hostname: Schema.NullOr(Schema.String),
+  /** An address ready for a URL, IPv4 first, IPv6 in brackets. */
+  host: Schema.NullOr(Schema.String),
+  addresses: Schema.Array(Schema.String),
+  port: Schema.Number,
+  /** The TXT record's attributes, `null` for one with no value. */
+  txt: Schema.Record(Schema.String, Schema.NullOr(Schema.String)),
+});
+
+export interface DiscoveredService extends Schema.Schema.Type<
+  typeof DiscoveredService
+> {}
+
+/**
+ * How `discoverServices` finds them: `picker` asks the person to choose one
+ * in the system's picker, which grants the app that device alone; `browse`
+ * lists every service, asking for the local network permission first. Left
+ * out, it browses when it may and shows the picker otherwise.
+ */
+export const DiscoveryMode = Schema.Literals(["picker", "browse"]);
+
+export type DiscoveryMode = Schema.Schema.Type<typeof DiscoveryMode>;
+
+/**
  * The shell's requests, each with the schema its reply is read with. The
  * Kotlin side answers the same names.
  */
@@ -97,6 +139,12 @@ export const mobileRequests = {
   subscribePush: ShellPushState,
   unsubscribePush: Schema.Boolean,
   pushState: ShellPushState,
+  /** Asks for local network access where Android gates it. */
+  localNetwork: LocalNetworkState,
+  /** Finds mDNS services of a type, such as `_http._tcp`. */
+  discoverServices: Schema.Array(DiscoveredService),
+  /** Scans a QR code with the camera: its text, or `null` when cancelled. */
+  scanQr: Schema.NullOr(Schema.String),
 } as const;
 
 /** The shell's messages, each with the schema its data is read with. */

@@ -36,6 +36,9 @@ import {
   Notice,
   ShellShare,
   type BridgeMessage,
+  type DiscoveredService,
+  type DiscoveryMode,
+  type LocalNetworkState,
   type ShellInfo,
   type ShellPushState,
 } from "./bridge.ts";
@@ -121,12 +124,44 @@ export interface Mobile {
   ) => Promise<ShellPushState>;
   readonly unsubscribePush: (options: MobilePushOptions) => Promise<void>;
   readonly pushState: () => Promise<ShellPushState>;
+  /**
+   * Asks for local network access where Android gates it. Always `granted`
+   * outside the shell, where the browser decides.
+   */
+  readonly localNetwork: () => Promise<LocalNetworkState>;
+  /**
+   * Finds mDNS services of `type`, such as `_http._tcp`, for
+   * `timeoutMs` (3 seconds by default) when it browses. Rejects outside the shell.
+   */
+  readonly discoverServices: (options: {
+    readonly type: string;
+    readonly mode?: DiscoveryMode;
+    readonly timeoutMs?: number;
+  }) => Promise<readonly DiscoveredService[]>;
+  /**
+   * Scans a QR code with the shell's scanner, which needs no Google Play
+   * services: its text, or `undefined` when the person cancels. Rejects
+   * outside the shell, where `scanPairingLink` scans in the page.
+   */
+  readonly scanQr: (options?: {
+    readonly hint?: string;
+  }) => Promise<string | undefined>;
 }
 
 interface Waiting {
   readonly resolve: (value: Schema.Json) => void;
   readonly reject: (error: Error) => void;
 }
+
+/** The `discoverServices` request's params; a type so it stays JSON. */
+type DiscoveryParams = {
+  type: string;
+  mode?: DiscoveryMode;
+  timeoutMs?: number;
+};
+
+/** The `scanQr` request's params. */
+type ScanParams = { hint?: string };
 
 const read = <S extends Schema.ConstraintDecoder<unknown>>(
   schema: S,
@@ -198,6 +233,13 @@ const connectFloor = (
     unsubscribePush: async (push) =>
       unsubscribePush(await registration(), push),
     pushState: async () => pushState(await registration()),
+    localNetwork: async () => "granted",
+    discoverServices: async () => {
+      throw new Error("Service discovery needs the Android shell");
+    },
+    scanQr: async () => {
+      throw new Error("The QR scanner needs the Android shell");
+    },
   };
 };
 
@@ -336,5 +378,22 @@ export const connectMobile = async (
       );
     },
     pushState: () => call("pushState", mobileRequests.pushState),
+    localNetwork: () => call("localNetwork", mobileRequests.localNetwork),
+    discoverServices: ({ type, mode, timeoutMs }) => {
+      const params: DiscoveryParams = { type };
+
+      if (mode !== undefined) params["mode"] = mode;
+
+      if (timeoutMs !== undefined) params["timeoutMs"] = timeoutMs;
+
+      return call("discoverServices", mobileRequests.discoverServices, params);
+    },
+    scanQr: async ({ hint } = {}) => {
+      const params: ScanParams = {};
+
+      if (hint !== undefined) params["hint"] = hint;
+
+      return (await call("scanQr", mobileRequests.scanQr, params)) ?? undefined;
+    },
   };
 };

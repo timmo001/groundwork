@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   The demo's manifest: its activity with the share and deep link intent
-  filters, a quick settings tile, and the camera for the page. The shell's
-  own manifest adds the internet, notifications and the push service.
+  filters, a quick settings tile, the camera for the page and the QR
+  scanner, and the local network, which Android 17 gates for apps that
+  target it. The shell's own manifest adds the internet, notifications, the
+  push service and the scanner.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <uses-permission android:name="android.permission.CAMERA" />
+  <uses-permission android:name="android.permission.ACCESS_LOCAL_NETWORK" />
 
   <application
     android:icon="@mipmap/ic_launcher"
