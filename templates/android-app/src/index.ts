@@ -2,8 +2,9 @@
  * The demo page's script: Base's fonts, the theme CSS, the components, the
  * demo app and the app bar's theme picker, kept with `pageTheme`. Then the
  * shell: the phone's dynamic color as a theme to pick, shares and deep
- * links, notifications, a Live Update, launcher and sharing shortcuts and
- * the app's own `battery` request, shown in a "This phone" card. Outside the shell it runs as a plain page.
+ * links, notifications, a Live Update, launcher and sharing shortcuts,
+ * saving a file and the app's own `battery` request, shown in a "This
+ * phone" card. Outside the shell it runs as a plain page.
  */
 import "@fontsource-variable/mona-sans";
 import "@fontsource-variable/geist-mono";
@@ -171,6 +172,15 @@ button("gw-button.ongoing", async () => {
 button("gw-button.pin", async () => {
   await mobile.pinShortcut(phoneShortcut);
 });
+
+// A file the page makes, saved to Downloads in the shell
+button("gw-button.save", () =>
+  mobile.saveFile({
+    name: "groundwork-demo.txt",
+    type: "text/plain",
+    contents: `Saved from the Groundwork demo at ${new Date().toISOString()}\n`,
+  }),
+);
 
 button("gw-button.external", () =>
   mobile.openExternal("https://groundwork.timmo.dev/phones/shell"),
