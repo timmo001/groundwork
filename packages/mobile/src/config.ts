@@ -12,6 +12,8 @@ export interface MobileLabels {
   readonly ongoing?: string;
   /** Defaults to `Download finished`. */
   readonly downloadFinished?: string;
+  /** Shown once a file the page made is saved. Defaults to `Saved to Downloads`. */
+  readonly fileSaved?: string;
 }
 
 export type ResolvedMobileLabels = Required<MobileLabels>;
@@ -104,6 +106,7 @@ export const resolveConfig = (
     notifications: "Notifications",
     ongoing: "Ongoing",
     downloadFinished: "Download finished",
+    fileSaved: "Saved to Downloads",
     ...config.labels,
   },
 });

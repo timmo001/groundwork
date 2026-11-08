@@ -181,6 +181,8 @@ export const mobileRequests = {
   pinShortcut: Schema.Boolean,
   /** Removes shortcuts, greying out pinned ones. */
   disableShortcuts: Schema.Boolean,
+  /** Saves a file the page made to Downloads, from `{ name, type, data }` in base64. */
+  saveFile: Schema.Boolean,
 } as const;
 
 /** The shell's messages, each with the schema its data is read with. */

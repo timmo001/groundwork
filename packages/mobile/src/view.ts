@@ -168,7 +168,52 @@ export interface Mobile {
     ids: readonly string[],
     message?: string,
   ) => Promise<void>;
+  /**
+   * Saves a file the page made, such as an export: to the phone's Downloads
+   * in the shell, through the browser's download outside it.
+   */
+  readonly saveFile: (file: SavedFile) => Promise<void>;
 }
+
+/** A file for `saveFile`: its name, its type and what's in it. */
+export interface SavedFile {
+  readonly name: string;
+  readonly type: string;
+  readonly contents: string | Blob;
+}
+
+const blobOf = ({ type, contents }: SavedFile) =>
+  contents instanceof Blob ? contents : new Blob([contents], { type });
+
+/** Saves a file through the browser's download. */
+const downloadFile = (file: SavedFile) => {
+  const url = URL.createObjectURL(blobOf(file));
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = file.name;
+  link.click();
+  URL.revokeObjectURL(url);
+};
+
+const decodeText = Schema.decodeUnknownOption(Schema.String);
+
+/** A blob's bytes in base64, for the bridge's JSON. */
+const base64Of = (blob: Blob) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+
+    // readAsDataURL gives data:<type>;base64,<data>
+    reader.addEventListener("load", () => {
+      const url = Option.getOrElse(decodeText(reader.result), () => "");
+
+      resolve(url.split(",")[1] ?? "");
+    });
+    reader.addEventListener("error", () =>
+      reject(reader.error ?? new Error("Couldn't read the file")),
+    );
+    reader.readAsDataURL(blob);
+  });
 
 interface Waiting {
   readonly resolve: (value: Schema.Json) => void;
@@ -270,6 +315,7 @@ const connectFloor = (
     setShortcuts: async () => 0,
     pinShortcut: async () => false,
     disableShortcuts: async () => {},
+    saveFile: async (file) => downloadFile(file),
   };
 };
 
@@ -437,6 +483,15 @@ export const connectMobile = async (
       if (message !== undefined) params["message"] = message;
 
       await call("disableShortcuts", mobileRequests.disableShortcuts, params);
+    },
+    saveFile: async (file) => {
+      const blob = blobOf(file);
+
+      await call("saveFile", mobileRequests.saveFile, {
+        name: file.name,
+        type: blob.type || file.type,
+        data: await base64Of(blob),
+      });
     },
   };
 };

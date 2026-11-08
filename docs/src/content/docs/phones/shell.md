@@ -50,7 +50,7 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 | `files` | On | The file chooser for `<input type="file">` |
 | `androidTheme` | On | The phone's dynamic color, passed to the view on start and on every change |
 | `devTools` | On | WebView debugging through Chrome, in debug builds only |
-| `labels` | English | The notification channels' names and the download notice |
+| `labels` | English | The notification channels' names, the download notice and the saved file notice |
 
 ## What works where
 
@@ -67,6 +67,7 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 | `setShortcuts` | The launcher's long-press menu and the share sheet | Answers 0; the manifest's `shortcuts` give the menu |
 | `pinShortcut` | Asks the launcher to pin one | Answers false |
 | `disableShortcuts` | Removes them, greying out pinned ones | Does nothing |
+| `saveFile` | Saves a file the page made to Downloads | The browser's download |
 | `call` | The app's own Kotlin handlers | Rejects |
 
 Both push paths post the same subscription to the service, as the [push contract](/behavior#push) describes, so a service doesn't care which one a client uses.
@@ -81,7 +82,7 @@ The shell injects a `groundworkShell` object into allowed pages with `WebViewCom
 | `reply` | The shell | The request's `id`, `ok`, and `value` or `error` |
 | `message` | The shell | `name` and `data`, whenever it has news |
 
-The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush`, `pushState`, `localNetwork`, `discoverServices`, `scanQr`, `setShortcuts`, `pinShortcut` and `disableShortcuts`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
+The shell's own requests are `info`, `openExternal`, `notify`, `androidTheme`, `subscribePush`, `unsubscribePush`, `pushState`, `localNetwork`, `discoverServices`, `scanQr`, `setShortcuts`, `pinShortcut`, `disableShortcuts` and `saveFile`, and its messages are `notice`, `deepLink`, `share` and `androidTheme`. `@timmo001/groundwork-mobile/bridge` exports each one's schema, and every reply and message is parsed with it as it comes in.
 
 ## The local network, discovery and QR codes
 
@@ -134,6 +135,16 @@ await mobile.disableShortcuts(["office"], "Office PC was removed");
 ```
 
 The app's own Kotlin can publish them too, through the activity's `shortcuts`, whose `ids()` lists every dynamic and pinned one.
+
+## Saving files
+
+A file the page makes itself, such as an export, goes through `saveFile`, which saves it to the phone's Downloads in the shell and downloads it in a browser:
+
+```ts
+await mobile.saveFile({ name: "readings.csv", type: "text/csv", contents: csv });
+```
+
+`contents` is text or a `Blob`. The shell writes it through MediaStore, which needs no permission, and shows the `fileSaved` label. The Android WebView ignores `<a download>` on the `blob:` and `data:` links a page makes, so such a link does nothing in the shell; use `saveFile` instead.
 
 ## The app's own requests
 
