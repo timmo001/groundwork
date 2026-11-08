@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-pwa",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Groundwork's installable web app pieces: the manifest and icons from the theme, the service worker, Web Push and pairing contracts",
   "license": "Apache-2.0",
   "type": "module",
@@ -36,7 +36,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "0.13.0",
+    "@timmo001/groundwork-tokens": "0.14.0",
     "effect": "4.1.2",
     "sharp": "0.35.5"
   },
