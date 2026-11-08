@@ -418,9 +418,9 @@ backend = "npm:markdownlint-cli2"
 specifiers = ["0.24.0"]
 
 [[tools."pipx:awscli"]]
-version = "1.45.63"
+version = "1.46.3"
 backend = "pipx:awscli"
-specifiers = ["1.45.63"]
+specifiers = ["1.46.3"]
 
 [[tools."pipx:fdroidserver"]]
 version = "2.4.5"

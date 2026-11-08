@@ -23,7 +23,7 @@ kotlin = "2.4.21"
 # Builds and signs the F-Droid repository the Android release publishes, and
 # syncs it with its R2 bucket.
 "pipx:fdroidserver" = "2.4.5"
-"pipx:awscli" = "1.45.63"
+"pipx:awscli" = "1.46.3"
 
 [env]
 ANDROID_AVD = "groundwork"
