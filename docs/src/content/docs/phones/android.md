@@ -69,7 +69,7 @@ Release builds take their version from `APP_VERSION`, the release tag, and work 
 
 ### Adding the repository
 
-In an F-Droid client such as F-Droid or Droid-ify, add the repository by its URL, such as `https://timmo001.github.io/groundwork/fdroid/repo`, or open that URL on the phone and scan its QR code. In Obtainium, add the GitHub repository and it picks up the APK from each release.
+In an F-Droid client such as F-Droid or Droid-ify, add the repository by its URL, such as `https://timmo.dev/groundwork/fdroid/repo`, or open that URL on the phone and scan its QR code. In Obtainium, add the GitHub repository and it picks up the APK from each release.
 
 ## The app's own code
 
