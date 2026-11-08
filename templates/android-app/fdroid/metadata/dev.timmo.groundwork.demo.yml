@@ -1,0 +1,11 @@
+---
+# What F-Droid clients show for the app. Rename the file to your app ID.
+Name: Groundwork demo
+Summary: The Groundwork demo app in the Android shell
+AuthorName: timmo001
+License: Apache-2.0
+Categories:
+  - Development
+WebSite: https://groundwork.timmo.dev
+SourceCode: https://github.com/timmo001/groundwork
+IssueTracker: https://github.com/timmo001/groundwork/issues

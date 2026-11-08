@@ -417,6 +417,11 @@ version = "0.24.0"
 backend = "npm:markdownlint-cli2"
 specifiers = ["0.24.0"]
 
+[[tools."pipx:fdroidserver"]]
+version = "2.4.5"
+backend = "pipx:fdroidserver"
+specifiers = ["2.4.5"]
+
 [[tools."pipx:yamllint"]]
 version = "1.38.0"
 backend = "pipx:yamllint"

@@ -20,6 +20,8 @@ android-sdk = "23.0"
 java = "temurin-25.0.5+8.0.LTS"
 gradle = "9.9.0"
 kotlin = "2.4.21"
+# Builds and signs the F-Droid repository the Android release publishes.
+"pipx:fdroidserver" = "2.4.5"
 
 [env]
 ANDROID_AVD = "groundwork"

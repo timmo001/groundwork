@@ -1,9 +1,14 @@
 ---
 # Builds the Android demo template, so the Kotlin shell in packages/mobile and
-# the app around it keep building with the pinned SDK, JDK and Gradle.
+# the app around it keep building with the pinned SDK, JDK and Gradle. On a
+# published release it signs the APK, attaches it to the release, and rebuilds
+# the F-Droid repository on GitHub Pages from every release's APK.
 name: Android
 
 on:
+  release:
+    types:
+      - published
   pull_request:
     paths:
       - .github/workflows/android.yml
@@ -55,3 +60,95 @@ jobs:
           name: android-demo
           path: templates/android-app/android/app/build/outputs/apk/
           if-no-files-found: error
+
+  release:
+    name: Release
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      signed: ${{ steps.key.outputs.signed }}
+    env:
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      APP_VERSION: ${{ github.event.release.tag_name }}
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.event.release.tag_name }}
+    steps:
+      - name: Write the signing key
+        id: key
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "::notice::No ANDROID_KEYSTORE_BASE64 secret, so no signed APK or F-Droid repository for this release"
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "ANDROID_KEYSTORE_FILE=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          echo "signed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout repository
+        if: steps.key.outputs.signed == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Set up mise
+        if: steps.key.outputs.signed == 'true'
+        uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566
+
+      - name: Install the SDK packages
+        if: steps.key.outputs.signed == 'true'
+        run: android --no-metrics sdk install platform-tools "platforms/$ANDROID_API" build-tools/37.0.0
+
+      - name: Install dependencies
+        if: steps.key.outputs.signed == 'true'
+        run: bun install --frozen-lockfile
+
+      - name: Build the signed APK
+        if: steps.key.outputs.signed == 'true'
+        run: mise run android:build
+
+      - name: Attach the APK to the release
+        if: steps.key.outputs.signed == 'true'
+        run: |
+          cp templates/android-app/android/app/build/outputs/apk/release/app-release.apk "groundwork-demo-$TAG.apk"
+          gh release upload "$TAG" "groundwork-demo-$TAG.apk" --clobber
+
+      - name: Build the F-Droid repository
+        if: steps.key.outputs.signed == 'true'
+        run: |
+          mkdir -p _site/fdroid/repo
+          cp -r templates/android-app/fdroid/. _site/fdroid/
+          for tag in $(gh release list --limit 100 --json tagName --jq '.[].tagName'); do
+            gh release download "$tag" --pattern 'groundwork-demo-*.apk' --dir _site/fdroid/repo || true
+          done
+          cd _site/fdroid
+          chmod 600 config.yml
+          fdroid update --pretty
+          rm -f config.yml
+          rm -rf metadata tmp
+
+      - name: Upload the F-Droid repository
+        if: steps.key.outputs.signed == 'true'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  pages:
+    name: Publish the F-Droid repository
+    needs: release
+    if: needs.release.outputs.signed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}fdroid/repo
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
