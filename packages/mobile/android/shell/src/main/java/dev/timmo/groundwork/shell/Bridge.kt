@@ -4,7 +4,7 @@
  * shapes `@timmo001/groundwork-mobile/bridge` reads. The shell's handlers and
  * the app's own are registered here by name.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.net.Uri
 import android.webkit.WebView

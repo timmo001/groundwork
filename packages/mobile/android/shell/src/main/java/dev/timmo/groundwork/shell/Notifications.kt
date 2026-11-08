@@ -4,7 +4,7 @@
  * opens its link on a tap, and ongoing work becomes a Live Update on Android
  * 16 and a plain ongoing notification below it.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.Manifest
 import android.app.Notification
@@ -36,6 +36,13 @@ class Notifications(private val context: Context, private val config: ShellConfi
       )
     )
   }
+
+  /**
+   * The color behind the small icon, from `gw_notification_color`, read at
+   * each post so it follows the phone's light or dark mode.
+   */
+  private val accent: Int
+    get() = context.getColor(R.color.gw_notification_color)
 
   /** Whether a notification can show now. */
   val allowed: Boolean
@@ -92,7 +99,8 @@ class Notifications(private val context: Context, private val config: ShellConfi
     val max = progress?.optInt("max") ?: 0
     val builder =
       Notification.Builder(context, CHANNEL_ONGOING)
-        .setSmallIcon(context.applicationInfo.icon)
+        .setSmallIcon(R.drawable.gw_notification_icon)
+        .setColor(accent)
         .setContentTitle(title)
         .setContentText(status)
         .setContentIntent(tapIntent(link, id))
@@ -124,7 +132,8 @@ class Notifications(private val context: Context, private val config: ShellConfi
 
     val notification =
       NotificationCompat.Builder(context, CHANNEL_NOTICES)
-        .setSmallIcon(context.applicationInfo.icon)
+        .setSmallIcon(R.drawable.gw_notification_icon)
+        .setColor(accent)
         .setContentTitle(heading)
         .apply { body?.let(::setContentText) }
         .setContentIntent(tapIntent(link, tag ?: heading))

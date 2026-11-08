@@ -3,7 +3,7 @@
  * modes and sent to the view as `androidTheme`, the shape
  * `AndroidSchemeColors` in the view package reads.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.content.Context
 import org.json.JSONObject

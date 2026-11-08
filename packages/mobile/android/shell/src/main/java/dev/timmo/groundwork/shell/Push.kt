@@ -4,7 +4,7 @@
  * then posts the endpoint and its keys to the service's `push/subscriptions`
  * as the push contract describes, and shows each `PushPayload` it receives.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.app.Activity
 import android.content.Context

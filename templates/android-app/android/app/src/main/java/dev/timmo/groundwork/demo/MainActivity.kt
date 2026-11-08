@@ -3,13 +3,13 @@
  * shell's. `battery` reads the charge, and `ongoing` counts a pretend
  * download down as ongoing work, a Live Update on Android 16.
  */
-package io.github.timmo001.groundwork.demo
+package dev.timmo.groundwork.demo
 
 import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
-import io.github.timmo001.groundwork.shell.Bridge
-import io.github.timmo001.groundwork.shell.ShellActivity
+import dev.timmo.groundwork.shell.Bridge
+import dev.timmo.groundwork.shell.ShellActivity
 import org.json.JSONObject
 
 class MainActivity : ShellActivity() {

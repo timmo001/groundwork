@@ -4,7 +4,7 @@
  * the page a tap opens. An app subclasses it to do something else on a tap.
  * At most two per app, so the shade stays tidy.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.app.PendingIntent
 import android.content.ComponentName

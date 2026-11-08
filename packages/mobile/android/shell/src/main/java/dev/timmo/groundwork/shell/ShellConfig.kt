@@ -3,7 +3,7 @@
  * `assets/groundwork/mobile.config.json`. Every default is on unless the
  * config turns it off, matching `resolveConfig` in the view package.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.content.Context
 import org.json.JSONObject
@@ -15,6 +15,8 @@ data class ShellLabels(
 )
 
 data class ShellConfig(
+  /** A hosted page to open instead of the bundled build. */
+  val url: String? = null,
   val origins: List<String> = emptyList(),
   val shares: Boolean = true,
   val notifications: Boolean = true,
@@ -50,6 +52,7 @@ data class ShellConfig(
           ?: default
 
       return ShellConfig(
+        url = if (json.isNull("url")) null else json.getString("url").ifBlank { null },
         origins = strings("origins", defaults.origins),
         shares = flag("shares", defaults.shares),
         notifications = flag("notifications", defaults.notifications),

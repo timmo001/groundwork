@@ -4,7 +4,7 @@
  * turns on. An app subclasses it, registers its own handlers in
  * `onBridgeReady`, and overrides any hook rather than editing this file.
  */
-package io.github.timmo001.groundwork.shell
+package dev.timmo.groundwork.shell
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -64,15 +64,16 @@ open class ShellActivity : ComponentActivity() {
 
   /**
    * The page the shell opens: the dev server in debug builds when the app's
-   * manifest names one in `groundwork.devUrl`, otherwise the bundled build
-   * under `assets/web/`.
+   * manifest names one in `groundwork.devUrl`, then the hosted page in
+   * `config.url`, otherwise the bundled build under `assets/web/`. Override
+   * it to pick one at run time, such as a service the person paired with.
    */
   open val startUrl: String
-    get() = devUrl.takeIf { dev } ?: "$APP_ORIGIN/index.html"
+    get() = devUrl.takeIf { dev } ?: config.url ?: "$APP_ORIGIN/index.html"
 
   /** The app's own origin, always allowed to use the bridge. */
   val appOrigin: String
-    get() = devUrl?.takeIf { dev }?.let(::originOf) ?: APP_ORIGIN
+    get() = originOf(startUrl)
 
   private val devUrl: String?
     get() =
