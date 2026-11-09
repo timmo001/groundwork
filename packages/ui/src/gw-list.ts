@@ -85,6 +85,7 @@ interface Drawn<T> {
  * @csspart item - Each item's row.
  * @csspart group - Each group's heading.
  * @csspart group-count - The chip counting a group's items, a `gw-chip`.
+ * @csspart none - What it says with no items.
  *
  * @cssprop --gw-list-max-height - How tall a `contained` list grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-list-gap - The space after each item. Defaults to `--gw-space-2`.
@@ -197,7 +198,7 @@ export class GwList<T extends object = object> extends GwElement {
 
   readonly #body = h("div", { role: "list", part: "list" });
 
-  readonly #none = h("div", { class: "none", hidden: true });
+  readonly #none = h("div", { class: "none", part: "none", hidden: true });
 
   readonly #scroller: HTMLDivElement = h(
     "div",

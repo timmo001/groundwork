@@ -49,6 +49,7 @@ const closeIcon =
  * @csspart bar - The bar.
  * @csspart brand - The brand's container.
  * @csspart nav - The nav links' container, the menu panel on narrow screens.
+ * @csspart menu - The button that opens the nav menu on narrow screens.
  * @csspart actions - The actions' container.
  *
  * @cssprop --gw-app-bar-height - The bar's least height. Defaults to `3.5rem`.
@@ -266,7 +267,7 @@ export class GwAppBar extends GwElement {
 
   readonly #menu = h(
     "button",
-    { type: "button", class: "menu", "aria-expanded": "false" },
+    { type: "button", class: "menu", part: "menu", "aria-expanded": "false" },
     this.#menuIcon,
   );
 

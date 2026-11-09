@@ -28,6 +28,7 @@ import { base, type Tone } from "./styles.js";
  * @attr {string} caption - A quiet line under the bar.
  * @attr {"neutral"|"accent"|"info"|"success"|"warning"|"danger"|"important"} tone - A fixed color, overriding `high` and `critical`.
  * @attr {boolean} loading - Pulses the track and shows a skeleton for the value.
+ * @attr {string} unknown-label - What screen readers hear with no value, for an app in another language. Defaults to `Unknown`.
  *
  * @csspart top - The row with the label and value.
  * @csspart value - The value as shown.
@@ -50,6 +51,7 @@ export class GwMeter extends GwElement {
     caption: {},
     tone: { reflect: true },
     loading: { type: "boolean", reflect: true },
+    unknownLabel: { attribute: "unknown-label" },
   } as const;
 
   static override styles = [
@@ -120,6 +122,7 @@ export class GwMeter extends GwElement {
   declare caption: string;
   declare tone: Tone | undefined;
   declare loading: boolean;
+  declare unknownLabel: string;
 
   readonly #top = h("div", { class: "top", part: "top" });
 
@@ -166,6 +169,7 @@ export class GwMeter extends GwElement {
     this.caption = "";
     this.tone = undefined;
     this.loading = false;
+    this.unknownLabel = "Unknown";
   }
 
   get #known() {
@@ -232,7 +236,7 @@ export class GwMeter extends GwElement {
     setAttribute(
       this.#track,
       "aria-valuetext",
-      value !== undefined || this.display !== "" ? text : "Unknown",
+      value !== undefined || this.display !== "" ? text : this.unknownLabel,
     );
     this.#fill.style.width = `${percent}%`;
     this.#fill.style.setProperty("--gw-meter-color", this.#color);

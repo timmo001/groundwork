@@ -25,10 +25,13 @@ const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
  * @slot start - Before the icon tile, such as a back button.
  * @slot actions - The page's controls.
  *
+ * @csspart start - The `start` slot's wrapper.
  * @csspart tile - The icon tile.
  * @csspart icon - The icon in the tile.
+ * @csspart titles - The title and the line under it.
  * @csspart heading - The title.
  * @csspart description - The line under the title.
+ * @csspart actions - The `actions` slot's wrapper.
  *
  * @cssprop --gw-page-header-tile-size - The icon tile's size. Defaults to `3rem`, or `2.5rem` from level 2.
  * @cssprop --gw-page-header-tile-color - The icon's color. Defaults to `--gw-color-accent`.
@@ -142,7 +145,11 @@ export class GwPageHeader extends GwElement {
   readonly #startSlot = h("slot", { name: "start" });
 
   // Centered on the tile's height, and out of the row while it's empty
-  readonly #start = h("div", { class: "start", hidden: true }, this.#startSlot);
+  readonly #start = h(
+    "div",
+    { class: "start", part: "start", hidden: true },
+    this.#startSlot,
+  );
 
   readonly #tile = h("span", { class: "tile", part: "tile" }, this.#icon);
 
@@ -165,8 +172,17 @@ export class GwPageHeader extends GwElement {
     root.append(
       this.#start,
       this.#tile,
-      h("div", { class: "titles" }, this.#heading, this.#description),
-      h("div", { class: "actions" }, h("slot", { name: "actions" })),
+      h(
+        "div",
+        { class: "titles", part: "titles" },
+        this.#heading,
+        this.#description,
+      ),
+      h(
+        "div",
+        { class: "actions", part: "actions" },
+        h("slot", { name: "actions" }),
+      ),
     );
   }
 

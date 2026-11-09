@@ -80,7 +80,7 @@ const downIcon =
 const searchIcon =
   "M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z";
 
-/** From this many rows, `search="auto"` adds a search field. */
+/** From this many rows, `search="auto"` adds a search field by default. */
 const searchFrom = 8;
 
 /** A table's view state as kept: only the parts someone has changed. */
@@ -159,7 +159,8 @@ type Shown =
  * @attr {string[]} toggled-groups - The groups, by value, toggled from how they start: folded away, or opened with `groups-collapsed`. As JSON or a property.
  * @attr {boolean} contained - Scrolls inside its own frame, up to `--gw-table-max-height`, rather than with the page.
  * @attr {string} storage-key - Keeps the sort, search and folded groups someone set in `localStorage` under this key.
- * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.
+ * @attr {"auto"|"always"|"never"} search - Whether it has a search field; `auto` adds one from `search-from` rows. Defaults to `auto`.
+ * @attr {number} search-from - How many rows `search="auto"` adds a search field from. Defaults to `8`.
  * @attr {string} search-label - The search field's name and placeholder. Defaults to `Search`.
  * @attr {string} row-key - The row property that identifies each row.
  * @attr {string} empty-label - What it says with no rows. Defaults to `Nothing to show`.
@@ -167,10 +168,16 @@ type Shown =
  *
  * @slot toolbar - Controls beside the search field, such as a Filters button.
  *
+ * @csspart toolbar - The row with the search field and the `toolbar` slot.
+ * @csspart search - The search field's box, with its icon.
  * @csspart table - The table.
+ * @csspart header - Each column's heading cell.
+ * @csspart sort - Each sortable column's heading button.
  * @csspart row - Each row.
+ * @csspart cell - Each cell.
  * @csspart group - Each group's heading row.
  * @csspart group-count - The chip counting a group's rows, a `gw-chip`.
+ * @csspart none - What it says with no rows, or none matching the search.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
@@ -189,6 +196,7 @@ export class GwTable extends GwElement {
     contained: { type: "boolean", reflect: true },
     storageKey: { attribute: "storage-key" },
     search: {},
+    searchFrom: { type: "number", attribute: "search-from" },
     searchLabel: { attribute: "search-label" },
     rowKey: { attribute: "row-key" },
     emptyLabel: { attribute: "empty-label" },
@@ -426,6 +434,7 @@ export class GwTable extends GwElement {
   declare contained: boolean;
   declare storageKey: string;
   declare search: "auto" | "always" | "never";
+  declare searchFrom: number;
   declare searchLabel: string;
   declare rowKey: string;
   declare emptyLabel: string;
@@ -437,14 +446,14 @@ export class GwTable extends GwElement {
 
   readonly #search = h(
     "label",
-    { class: "search" },
+    { class: "search", part: "search" },
     createIcon(searchIcon),
     this.#input,
   );
 
   readonly #toolbar: HTMLDivElement = h(
     "div",
-    { class: "toolbar" },
+    { class: "toolbar", part: "toolbar" },
     this.#search,
     h("slot", { name: "toolbar" }),
   );
@@ -455,7 +464,7 @@ export class GwTable extends GwElement {
 
   readonly #table = h("table", { part: "table" }, this.#head, this.#body);
 
-  readonly #none = h("div", { class: "none" });
+  readonly #none = h("div", { class: "none", part: "none" });
 
   readonly #scroller: HTMLDivElement = h(
     "div",
@@ -541,6 +550,7 @@ export class GwTable extends GwElement {
     this.contained = false;
     this.storageKey = "";
     this.search = "auto";
+    this.searchFrom = searchFrom;
     this.searchLabel = "Search";
     this.rowKey = "";
     this.emptyLabel = "Nothing to show";
@@ -728,6 +738,7 @@ export class GwTable extends GwElement {
 
           const th = h("th", {
             class: column.numeric ? "numeric" : "",
+            part: "header",
             "aria-sort": sorted
               ? this.descending
                 ? "descending"
@@ -741,7 +752,11 @@ export class GwTable extends GwElement {
             return th;
           }
 
-          const button = h("button", { type: "button" }, column.header);
+          const button = h(
+            "button",
+            { type: "button", part: "sort" },
+            column.header,
+          );
 
           if (sorted)
             button.append(createIcon(this.descending ? downIcon : upIcon));
@@ -897,6 +912,7 @@ export class GwTable extends GwElement {
             class: [column.numeric ? "numeric" : "", column.wide ? "wide" : ""]
               .join(" ")
               .trim(),
+            part: "cell",
           },
           cell,
         ),
@@ -957,7 +973,7 @@ export class GwTable extends GwElement {
     setAttribute(this.#input, "placeholder", this.searchLabel);
     this.#search.hidden =
       this.search === "never" ||
-      (this.search !== "always" && this.rows.length < searchFrom);
+      (this.search !== "always" && this.rows.length < this.searchFrom);
 
     this.#none.hidden = this.#matched > 0;
     this.#none.textContent =
