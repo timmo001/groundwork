@@ -103,6 +103,13 @@ export interface TableOptions {
   readonly group?: string | undefined;
   /** Starts with every group folded away, for long lists. */
   readonly groupsCollapsed?: boolean | undefined;
+  /**
+   * Scrolls inside its own frame rather than with the page, for long tables:
+   * the header and each group's heading stay pinned while the rows scroll.
+   */
+  readonly contained?: boolean | undefined;
+  /** How tall a `contained` table grows before it scrolls, as a CSS length. Defaults to `70vh`. */
+  readonly maxHeight?: string | undefined;
   /** Whether it has a search field. Defaults to `auto`, from 8 rows. */
   readonly search?: "auto" | "always" | "never" | undefined;
   readonly searchLabel?: string | undefined;
@@ -169,7 +176,13 @@ export const table = (options: TableOptions) => {
         options.sort === undefined ? "" : html` sort="${options.sort}"`
       }${options.descending === true ? html` descending` : ""}${
         options.group === undefined ? "" : html` group="${options.group}"`
-      }${options.groupsCollapsed === true ? html` groups-collapsed` : ""}
+      }${options.groupsCollapsed === true ? html` groups-collapsed` : ""}${
+        options.contained === true ? html` contained` : ""
+      }${
+        options.maxHeight === undefined
+          ? ""
+          : html` style="--gw-table-max-height: ${options.maxHeight}"`
+      }
       search="${options.search ?? "auto"}"
       ${
         options.searchLabel === undefined

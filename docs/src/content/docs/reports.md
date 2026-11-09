@@ -45,7 +45,7 @@ Text is escaped. `html` marks a template as markup and `raw` a string. Only the 
 
 `table` is `gw-table`, so long tables window their rows and keep scrolling smooth. Cells are described as data, and the page's script draws them: text, a link, monospace, a quieter color, a second line, badges, chips or a breakdown bar. A cell's `value` is what it sorts and searches by.
 
-`group` groups the rows by a column, and `groupsCollapsed` starts every group folded away, for long lists. `filters` add a Filters button beside the search field, opening a sheet of `gw-filter`s, each matched against values the rows carry under the filter's id.
+`group` groups the rows by a column, and `groupsCollapsed` starts every group folded away, for long lists. `contained` scrolls a long table inside its own frame, up to `maxHeight` (`70vh`), with the header and each group's heading pinned while its rows scroll past. `filters` add a Filters button beside the search field, opening a sheet of `gw-filter`s, each matched against values the rows carry under the filter's id.
 
 Every word the table shows can change, for a report in another language: `searchLabel` names the search field, `empty` is the line when nothing matches, and `filtersLabel` is the Filters button's text and its sheet's heading.
 

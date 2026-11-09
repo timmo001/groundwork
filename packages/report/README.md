@@ -35,7 +35,9 @@ const html = reportPage({
 - `table` is `gw-table`, sorting, searching, grouping and windowing its
   rows. Cells are described as data (text, links, a second line, badges,
   chips or a breakdown bar), and `filters` add a Filters button and sheet.
-  `groupsCollapsed` starts every group folded away. `searchLabel`, `empty`
+  `groupsCollapsed` starts every group folded away, and `contained` scrolls a
+  long table in its own frame, up to `maxHeight`, with the header and group
+  headings pinned. `searchLabel`, `empty`
   and `filtersLabel` set its words, for a report in another language.
 - States go on `badge`, with an icon for each tone. Chips are for counts,
   names, dates and links.
