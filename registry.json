@@ -258,6 +258,13 @@
       "needs": ["ui-base", "gw-button"]
     },
     {
+      "name": "gw-section",
+      "kind": "element",
+      "description": "A section of a page under a heading that folds it away, with a count chip",
+      "files": ["packages/ui/src/gw-section.ts"],
+      "needs": ["ui-base", "ui-storage", "gw-chip"]
+    },
+    {
       "name": "gw-section-title",
       "kind": "element",
       "description": "A small heading between groups",

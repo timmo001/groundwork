@@ -40,6 +40,9 @@ export interface GwEventMap {
   "gw-popover": {
     close: Event;
   };
+  "gw-section": {
+    toggle: Event;
+  };
   "gw-segmented": {
     change: Event;
   };

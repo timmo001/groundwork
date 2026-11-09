@@ -242,6 +242,10 @@
     align-items: center;
   }
 
+  gw-section:not(:defined) {
+    display: block;
+  }
+
   gw-app-bar:not(:defined) {
     position: sticky;
     inset-block-start: 0;

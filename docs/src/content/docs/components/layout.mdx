@@ -1,6 +1,6 @@
 ---
 title: Layout
-description: App bars, pages, page headers, section titles, stacks, rows and grids.
+description: App bars, pages, page headers, section titles, sections, stacks, rows and grids.
 ---
 
 ## App bar
@@ -104,6 +104,30 @@ A `size` sets `--gw-content-width` for its element. To pick any other width, set
 
 The page header holds the page's `<h1>`, with an optional `icon` tile and `description`, its controls at the top right in the `actions` slot, and a back button or similar before the tile in the `start` slot. Set `level` for a part of a page that reads like a page of its own, such as a section shown only on some systems: from 2 the heading is that level and the header is smaller. A section title is an `<h2>` by default; set `level` for another. `--gw-page-header-start-height` is the `start` slot's least height (`3rem`), so a back button centers on the heading's first line.
 
+## Section
+
+<Demo id="section" layout="stack">
+  <gw-section heading="Sensors" count="3">
+    <gw-button slot="actions" size="small" variant="neutral" appearance="outlined">Refresh</gw-button>
+    <gw-grid style="--gw-grid-min: 10rem">
+      <gw-card heading="CPU"><gw-meter label="Load" value="23"></gw-meter></gw-card>
+      <gw-card heading="Memory"><gw-meter label="Used" value="61"></gw-meter></gw-card>
+      <gw-card heading="Disk"><gw-meter label="Used" value="88" high="80"></gw-meter></gw-card>
+    </gw-grid>
+  </gw-section>
+  <gw-section heading="Older sensors" count="12" collapsed>
+    <p>Folded away to start with.</p>
+  </gw-section>
+</Demo>
+
+A section of a page under a heading that folds it away. It sits flat on the page's own surface, the same as the groups in a [list](/components/display/#list) or [table](/components/display/#table): a chevron, the `heading`, and a chip saying what `count` gives, such as how many items it holds. Pressing the heading folds the content away and pressing it again opens it. A section starts open, and `collapsed` starts it folded. It fires `toggle` when it changes.
+
+`storage-key` keeps whether a section is open in this browser through the shared store, once someone folds or opens it, so it comes back as they left it. Content that's folded away stays in the page, hidden until found, so find-in-page still reaches it and opens the section.
+
+Controls in the `actions` slot sit at the end of the heading's row and don't fold it. The heading is an `<h2>`, and `level` sets another. `--gw-section-gap` is the space between the heading and the content (`--gw-space-2`), and `--gw-section-count-scale` scales the chip (`0.8`).
+
+Use a [section title](#page-header-and-section-title) for a heading that doesn't fold, and an [expansion panel](/components/display/#expansion-panel) for a raised panel of its own.
+
 ## Stack, row and grid
 
 <Demo id="grid" layout="stack">
@@ -154,4 +178,4 @@ On a wide screen a grid keeps adding columns. `max` (2 to 6) caps how many it sh
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-app-bar", "gw-page-header", "gw-section-title", "gw-page", "gw-stack", "gw-row", "gw-grid"]} />
+<ElementApi tags={["gw-app-bar", "gw-page-header", "gw-section-title", "gw-section", "gw-page", "gw-stack", "gw-row", "gw-grid"]} />

@@ -91,6 +91,8 @@ export * from "./gw-popover.js";
 
 export * from "./gw-range.js";
 
+export * from "./gw-section.js";
+
 export * from "./gw-section-title.js";
 
 export * from "./gw-segmented.js";

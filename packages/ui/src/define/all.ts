@@ -32,6 +32,7 @@ import "./gw-option-list.js";
 import "./gw-page-header.js";
 import "./gw-popover.js";
 import "./gw-range.js";
+import "./gw-section.js";
 import "./gw-section-title.js";
 import "./gw-segmented.js";
 import "./gw-select.js";

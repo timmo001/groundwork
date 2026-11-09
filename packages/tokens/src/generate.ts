@@ -411,6 +411,7 @@ const preUpgrade = {
   "gw-page-header": { display: "flex", "min-block-size": "3rem" },
   "gw-page-header[description]": { "min-block-size": "3.6875rem" },
   "gw-section-title": { display: "flex", "align-items": "center" },
+  "gw-section": { display: "block" },
   "gw-app-bar": {
     position: "sticky",
     "inset-block-start": "0",
