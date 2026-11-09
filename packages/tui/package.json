@@ -5,10 +5,12 @@
   "license": "Apache-2.0",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./*": "./src/*"
   },
   "files": [
     "src",
+    "!src/*.test.ts",
     "README.md",
     "LICENSE"
   ],

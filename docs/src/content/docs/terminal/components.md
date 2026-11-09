@@ -5,6 +5,27 @@ description: The header, lists, grid, controls, dialogs and toast in @timmo001/g
 
 Each component takes the `Theme` from [`loadTheme`](/terminal#themes). The demo in `templates/tui-menu` uses every one.
 
+## Taking only some
+
+Each component is its own module, so an app imports only what it uses rather than the whole package and its dependencies, such as the fuzzy search behind `MenuList`:
+
+```ts
+import { Button } from "@timmo001/groundwork-tui/button.ts";
+import { loadTheme } from "@timmo001/groundwork-tui/theme.ts";
+```
+
+## Your own look
+
+The colors are the `Theme`'s roles, read when a component is built, so a theme with roles of its own restyles every component that takes it, and one passed to a single component restyles only that one:
+
+```ts
+const warm = { ...theme, accent: "#e8a33d", bgSelected: "#3a2f1f" };
+
+new Button(renderer, { id: "save", theme: warm, label: "Save", variant: "primary" });
+```
+
+The components are OpenTUI renderables, so an app wraps one by adding it to a `BoxRenderable` of its own, beside its own content, and passes words through each one's options.
+
 ## Header
 
 `HeaderBlock` shows the app's name as ASCII art when there's room, over `formatHeaderBar`: a breadcrumb of where you are, a status dot and details that drop off as the terminal narrows. `AppHeader` and `PaneHeader` are one-row titles for smaller views.
