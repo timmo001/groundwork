@@ -38,6 +38,14 @@ On the web, load `themes.css` and set the theme and mode on any element:
 
 Leave `data-gw-mode` off to follow the system's light or dark setting. Darker is opt-in with `data-gw-mode="darker"`.
 
+`themes.css` holds every Groundwork theme. An app that offers only some builds its own from their files, which the package ships in `themes/`, so its page carries only those. One theme's CSS is about a tenth of the whole:
+
+```sh
+bun x groundwork-tokens build node_modules/@timmo001/groundwork-tokens/themes/glazing.json --out src/generated --targets css
+```
+
+See [Building every target](/themes/writing-a-theme#building-every-target) for the other targets.
+
 ### On a page
 
 `pageTheme` from `@timmo001/groundwork-tokens/page` runs a page's theme and mode for it: it keeps the visitor's pick in local storage, sets the attributes on `<html>`, imports their own theme or an Omarchy `colors.toml` under the id `custom`, and registers the [theme tools](/agents#theme-tools) where the browser offers WebMCP. The solver and the tools load only when a custom theme or an agent needs them, so a page that only switches built-in themes stays small. Pair it with a [theme picker](/components/actions/#theme-picker).

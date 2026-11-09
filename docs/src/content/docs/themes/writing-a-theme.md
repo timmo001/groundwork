@@ -20,7 +20,7 @@ Groundwork's own themes live in `packages/tokens/themes/`. Run `mise run gen` af
 bun x groundwork-tokens build themes/kiln.json --out src/generated --with-groundwork
 ```
 
-`--with-groundwork` adds Groundwork's own themes after the app's, so a picker can offer them all. A Blume site copies `theme.css` into its build, so it can't import `blume/<id>.css`; it writes the theme into `theme.css` with `blumeThemeCss` instead, as the docs-kit README shows. `--targets css,qml` builds only some, and it lists any of the app's roles below their contrast target, failing on them with `--strict`. In code, `build` from `@timmo001/groundwork-tokens/build` takes the decoded documents and returns each file's text, with no file system.
+`--with-groundwork` adds Groundwork's own themes after the app's, so a picker can offer them all. To offer only some of Groundwork's, pass their files from the package's `themes/` folder in place of `--with-groundwork`. A Blume site copies `theme.css` into its build, so it can't import `blume/<id>.css`; it writes the theme into `theme.css` with `blumeThemeCss` instead, as the docs-kit README shows. `--targets css,qml` builds only some, and it lists any of the app's roles below their contrast target, failing on them with `--strict`. In code, `build` from `@timmo001/groundwork-tokens/build` takes the decoded documents and returns each file's text, with no file system.
 
 ## A core theme
 
