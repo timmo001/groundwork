@@ -81,6 +81,11 @@ const searchFrom = 8;
  * @cssprop --gw-filter-options-height - The tallest the options' list grows before it scrolls. Defaults to `18rem`.
  * @cssprop --gw-filter-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
  * @cssprop --gw-filter-checkbox-size - Each option's checkbox size. Defaults to `1.1rem`.
+ * @cssprop --gw-filter-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-filter-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-filter-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-filter-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-filter-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {Event} change - When the ticked options change. Read `value`.
  * @fires {Event} toggle - When the options open or close. Read `expanded`.

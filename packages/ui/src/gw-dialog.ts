@@ -52,6 +52,11 @@ const closeIcon =
  * @cssprop --gw-dialog-radius - The corners. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-dialog-shadow - The shadow. Defaults to `--gw-shadow-l`.
  * @cssprop --gw-dialog-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.
+ * @cssprop --gw-dialog-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-dialog-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-dialog-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-dialog-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-dialog-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {Event} close - When it closes; `returnValue` holds the button's value.
  */

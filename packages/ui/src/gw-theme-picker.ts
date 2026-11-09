@@ -123,6 +123,11 @@ const moreIcon =
  *
  * @cssprop --gw-theme-picker-gallery-width - The popover's width with `gallery`. Defaults to `34rem`.
  * @cssprop --gw-theme-picker-gallery-height - The tallest the gallery grows before it scrolls. Defaults to `min(24rem, 50vh)`.
+ * @cssprop --gw-theme-picker-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-theme-picker-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-theme-picker-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-theme-picker-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-theme-picker-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {CustomEvent<{ mode: string }>} mode - When a mode is picked.
  * @fires {CustomEvent<{ id: string }>} theme - When a theme is picked.

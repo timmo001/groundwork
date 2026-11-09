@@ -5,7 +5,7 @@
  *
  * @module
  */
-import { followPageScroll, scrollbars } from "./scrollbars.js";
+import { followPageScroll, scrollbarHooks, scrollbars } from "./scrollbars.js";
 import { state } from "./state.js";
 
 /** How a property reads its attribute and writes it back. */
@@ -266,7 +266,12 @@ export class GwElement extends HTMLElement {
     if (own.shadow) {
       const root = this.attachShadow(own.shadowRootOptions);
 
-      root.adoptedStyleSheets = [scrollbars, ...own.styles, state];
+      root.adoptedStyleSheets = [
+        scrollbars,
+        scrollbarHooks(this.localName),
+        ...own.styles,
+        state,
+      ];
       this.renderRoot = root;
     } else {
       this.renderRoot = this;

@@ -94,7 +94,7 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 | `gw-select` | `gw-option-list`, `gw-popover` |
 | `gw-setting-row` | `gw-skeleton`, `gw-skeleton-text` |
 | `gw-sheet` | `gw-button` |
-| `gw-table` | `gw-chip`, `gw-input` |
+| `gw-table` | `gw-chip`, `gw-input`, `gw-skeleton-text` |
 | `gw-theme-picker` | `gw-button`, `gw-menu-button`, `gw-popover`, `gw-segmented`, `gw-select`, `gw-theme-gallery` |
 
 {/* End of the generated table. */}
@@ -269,7 +269,22 @@ A page shouldn't move while its components load. Before a `gw-` element's script
 
 ## Scrollbars
 
-`themes.css` gives the page and everything in it small scrollbars: a rounded thumb in the theme's secondary text color on a clear track, with no arrow buttons, a little stronger on hover. The thumb squares off where it meets the top or bottom of its track, or either end of a sideways one. Components draw the same inside their own scrolling parts. There's nothing to set up. Restyle them anywhere with `--gw-scrollbar-size` (0.4rem by default), `--gw-scrollbar-thumb` and `--gw-scrollbar-track`, or hide one with `scrollbar-width: none`. The rules are in the tokens layer, so any rule of a page's wins. Firefox, which has no WebKit scrollbar styling, shows its own thin scrollbar in the same colors.
+`themes.css` gives the page and everything in it small scrollbars: a rounded thumb in the theme's secondary text color on a clear track, with no arrow buttons, a little stronger on hover. The thumb squares off where it meets the top or bottom of its track, or either end of a sideways one. There's nothing to set up. Restyle them anywhere with `--gw-scrollbar-size` (0.4rem by default), `--gw-scrollbar-thumb` and `--gw-scrollbar-track`, or hide one with `scrollbar-width: none`. The rules are in the tokens layer, so any rule of a page's wins. Firefox, which has no WebKit scrollbar styling, shows its own thin scrollbar in the same colors.
+
+Inside components, such as a menu's items, a list or a table, the scrollbars are thinner and fainter until hovered, so they keep out of the way of what they scroll. Restyle every component's with `--gw-scrollbar-inner-size` (`0.25rem`), `--gw-scrollbar-inner-radius` (the size, fully round), `--gw-scrollbar-inner-thumb`, `--gw-scrollbar-inner-thumb-hovered` and `--gw-scrollbar-inner-track`; unset, they follow the page's `--gw-scrollbar-*` properties. Each element also takes its own, named after it, so one can differ from the rest:
+
+```css
+gw-menu-button {
+  --gw-menu-button-scrollbar-radius: 0;
+}
+
+gw-table {
+  --gw-table-scrollbar-size: 0.375rem;
+  --gw-table-scrollbar-thumb: var(--gw-color-accent);
+}
+```
+
+Every element has `--gw-<element>-scrollbar-size`, `-radius`, `-thumb`, `-thumb-hovered` and `-track`. Add `scrollbars` and `scrollbarHooks("my-element")` to an app's own component's styles to give it the same scrollbars and hooks.
 
 The square ends follow each scroller's scroll through the `gw-scrollbar-edges-y` and `gw-scrollbar-edges-x` animations, which components run on their own scrolling parts and the ui package keeps in step for the page. A scroller of your own keeps round ends unless it runs them too:
 

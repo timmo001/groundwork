@@ -104,6 +104,11 @@ const boxEmpty =
  * @cssprop --gw-menu-button-menu-width - The menu's least width. Defaults to `15rem`.
  * @cssprop --gw-menu-button-menu-height - The tallest the menu grows before its items scroll. Defaults to `24rem`.
  * @cssprop --gw-menu-button-item-height - Each item's least height. Defaults to `2.5rem`.
+ * @cssprop --gw-menu-button-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-menu-button-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-menu-button-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-menu-button-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-menu-button-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {CustomEvent<{ value: string }>} select - When an item or action is chosen, with its `value` in `detail`.
  * @fires {CustomEvent<{ value: string, checked: boolean }>} check - When a checkbox item is toggled, with its `value` and the state it should change to in `detail`.

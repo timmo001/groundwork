@@ -108,6 +108,11 @@ let lastList = 0;
  * @cssprop --gw-option-list-option-height - Each option's height in pixels, as a number. Defaults to `40`.
  * @cssprop --gw-option-list-described-height - An option with a description's height in pixels. Defaults to `52`.
  * @cssprop --gw-option-list-group-height - A group heading's height in pixels. Defaults to `32`.
+ * @cssprop --gw-option-list-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-option-list-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-option-list-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-option-list-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-option-list-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {CustomEvent<{ value: string }>} pick - When an option is picked, with its `value` in `detail`.
  */

@@ -7,19 +7,79 @@
  */
 
 /**
- * The page's scrollbars for a shadow root: a small rounded thumb on a clear
- * track with no arrow buttons, squaring off at the ends of its track. Every
- * `gw-` element adopts it; add it to an app's own components' styles to match.
- * The `--gw-scrollbar-*` properties restyle it as they do the page's. It's
- * in the components layer, `componentsLayer` in `element.ts`, which imports
- * this module, so the name is written out here.
+ * The scrollbars inside a shadow root, which the page's rules can't reach: a
+ * rounded thumb on a clear track with no arrow buttons, squaring off at the
+ * ends of its track, as the page's are, but thinner and fainter until it's
+ * hovered, so a menu's, list's or table's scrollbar keeps out of the way of
+ * what it scrolls. Every `gw-` element adopts it; add it to an app's own
+ * components' styles to match.
+ *
+ * Each element restyles its own through `--gw-<element>-scrollbar-size`,
+ * `-radius`, `-thumb`, `-thumb-hovered` and `-track`, such as
+ * `--gw-table-scrollbar-radius: 0` (`scrollbarHooks` maps them). Unset, they
+ * fall back to `--gw-scrollbar-inner-*` for every element's, then the page's
+ * `--gw-scrollbar-size`, `--gw-scrollbar-thumb` and `--gw-scrollbar-track`.
+ * It's in the components layer, `componentsLayer` in `element.ts`, which
+ * imports this module, so the name is written out here.
  */
 export const scrollbars = new CSSStyleSheet();
+
+/** One of the scrollbar's hooks: the element's own, every element's, then the page's. */
+const hook = (name: string, page: string) =>
+  `var(--_gw-scrollbar-${name}, var(--gw-scrollbar-inner-${name}, ${page}))`;
+
+const size = hook("size", "var(--gw-scrollbar-size, 0.25rem)");
+
+const radius = hook("radius", size);
+
+const track = hook("track", "var(--gw-scrollbar-track, transparent)");
+
+const thumb = (name: string, strength: number) =>
+  hook(
+    name,
+    `var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) ${strength}%, transparent))`,
+  );
+
+const scrollbarParts = [
+  "size",
+  "radius",
+  "thumb",
+  "thumb-hovered",
+  "track",
+] as const;
+
+const hookSheets = new Map<string, CSSStyleSheet>();
+
+/**
+ * The sheet that gives an element its own scrollbar hooks,
+ * `--gw-<element>-scrollbar-*`, named from its tag without the `gw-`, so a
+ * menu's scrollbar can differ from a table's. Each is set on the host, where
+ * an unset hook leaves its scrollbars to the shared ones rather than taking
+ * the enclosing element's. `GwElement` adopts it beside `scrollbars`.
+ */
+export const scrollbarHooks = (tag: string) => {
+  const name = tag.replace(/^gw-/, "");
+  const kept = hookSheets.get(name);
+
+  if (kept !== undefined) return kept;
+
+  const sheet = new CSSStyleSheet();
+
+  sheet.replaceSync(`@layer groundwork.components {
+  :host {
+${scrollbarParts.map((part) => `    --_gw-scrollbar-${part}: var(--gw-${name}-scrollbar-${part});`).join("\n")}
+  }
+}`);
+  hookSheets.set(name, sheet);
+
+  return sheet;
+};
 
 scrollbars.replaceSync(`@layer groundwork.components {
   @supports not selector(::-webkit-scrollbar) {
     * {
       scrollbar-width: thin;
+      scrollbar-color: ${thumb("thumb", 25)} ${track};
     }
   }
 
@@ -67,44 +127,30 @@ scrollbars.replaceSync(`@layer groundwork.components {
   }
 
   ::-webkit-scrollbar {
-    width: var(--gw-scrollbar-size, 0.4rem);
-    height: var(--gw-scrollbar-size, 0.4rem);
-    background: var(--gw-scrollbar-track, transparent);
+    width: ${size};
+    height: ${size};
+    background: ${track};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(
-      --gw-scrollbar-thumb,
-      color-mix(
-        in oklab,
-        var(--gw-color-text-secondary, currentColor) 45%,
-        transparent
-      )
-    );
+    background: ${thumb("thumb", 25)};
     border-radius:
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-top, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-top, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-bottom, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-bottom, 1));
+      calc(${radius} * var(--gw-scrollbar-top, 1))
+      calc(${radius} * var(--gw-scrollbar-top, 1))
+      calc(${radius} * var(--gw-scrollbar-bottom, 1))
+      calc(${radius} * var(--gw-scrollbar-bottom, 1));
   }
 
   ::-webkit-scrollbar-thumb:horizontal {
     border-radius:
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-left, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-right, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-right, 1))
-      calc(var(--gw-scrollbar-size, 0.4rem) * var(--gw-scrollbar-left, 1));
+      calc(${radius} * var(--gw-scrollbar-left, 1))
+      calc(${radius} * var(--gw-scrollbar-right, 1))
+      calc(${radius} * var(--gw-scrollbar-right, 1))
+      calc(${radius} * var(--gw-scrollbar-left, 1));
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(
-      --gw-scrollbar-thumb,
-      color-mix(
-        in oklab,
-        var(--gw-color-text-secondary, currentColor) 70%,
-        transparent
-      )
-    );
+    background: ${thumb("thumb-hovered", 60)};
   }
 
   ::-webkit-scrollbar-corner {

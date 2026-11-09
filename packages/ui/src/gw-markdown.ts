@@ -65,6 +65,12 @@ const toBlocks = (markdown: string) => {
  * @attr {string} content - The markdown.
  *
  * @csspart content - The rendered text.
+ *
+ * @cssprop --gw-markdown-scrollbar-size - Its scrollbars' thickness, on code blocks and wide tables. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-markdown-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-markdown-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-markdown-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-markdown-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  */
 export class GwMarkdown extends GwElement {
   static override properties = {
