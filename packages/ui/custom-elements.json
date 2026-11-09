@@ -9,7 +9,7 @@
         {
           "kind": "variable",
           "name": "dismissalStyles",
-          "default": "css` .discard { display: none; } [data-view=\"discard\"] > :not(.discard) { display: none; } [data-view=\"discard\"] > .discard { display: block; } .discard p { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .discard footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); padding: 0; } `",
+          "default": "css` .discard { display: none; } [data-view=\"discard\"] > :not(.discard) { display: none; } [data-view=\"discard\"] > .discard { display: block; } .discard p { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .discard footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); padding: 0; } .discard gw-button { --gw-button-scale: var(--gw-discard-scale, 0.8); } `",
           "description": "The discard view's styles, for any surface that uses `Dismissal`. While it\nasks, the surface shows only the question, in place of its content, since\nan overlay never opens another over itself."
         },
         {
@@ -1107,6 +1107,18 @@
             {
               "description": "The alert.",
               "name": "alert"
+            },
+            {
+              "description": "The tone's icon, until one is slotted.",
+              "name": "icon"
+            },
+            {
+              "description": "The heading and message.",
+              "name": "body"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
             }
           ],
           "slots": [
@@ -2263,6 +2275,10 @@
               "name": "badge"
             },
             {
+              "description": "The icon.",
+              "name": "icon"
+            },
+            {
               "description": "The label above the value.",
               "name": "label"
             },
@@ -3263,6 +3279,14 @@
             {
               "description": "The native button or link, or the pill around a slotted link.",
               "name": "button"
+            },
+            {
+              "description": "The icon `icon` sets.",
+              "name": "icon"
+            },
+            {
+              "description": "The color dot `swatch` shows.",
+              "name": "swatch"
             }
           ],
           "slots": [
@@ -3956,6 +3980,10 @@
             {
               "description": "The heading.",
               "name": "heading"
+            },
+            {
+              "description": "The icon `icon` sets.",
+              "name": "icon"
             },
             {
               "description": "The line under the heading.",
@@ -5797,6 +5825,14 @@
             {
               "description": "The chip.",
               "name": "chip"
+            },
+            {
+              "description": "The icon `icon` sets.",
+              "name": "icon"
+            },
+            {
+              "description": "The color dot `swatch` shows.",
+              "name": "swatch"
             }
           ],
           "slots": [
@@ -6302,9 +6338,13 @@
         },
         {
           "kind": "class",
-          "description": "Code or a diff, such as a patch waiting on review or a module's data, in\na read-only view that scrolls up to `--gw-code-max-height`, so a long one\nnever stretches the page. A toolbar wraps its lines, finds in it (with\nmatch case, regex and whole word) and copies it. The view takes focus, so\nthe keyboard can select text, and Ctrl+F finds in it while it's focused.\n\nWith `diff`, added and removed lines are tinted and hunk headers are\nquiet. `language=\"json\"` highlights JSON and lets its objects fold.\n`storage-key` keeps whether someone turned wrapping on or off. A viewer\nthat fills the page can set `--gw-code-height` and take Ctrl+F anywhere\non the page with `find-shortcut`. Put it in a `gw-expansion`'s `draw`, so\na folded one isn't built until it's opened.",
+          "description": "Code or a diff, such as a patch waiting on review or a module's data, in\na read-only view that scrolls up to `--gw-code-max-height`, so a long one\nnever stretches the page. A toolbar wraps its lines, finds in it (with\nmatch case, regex and whole word) and copies it. The view takes focus, so\nthe keyboard can select text, and Ctrl+F finds in it while it's focused.\n\nWith `diff`, added and removed lines are tinted and hunk headers are\nquiet. `language=\"json\"` highlights JSON and lets its objects fold.\n`storage-key` keeps whether someone turned wrapping on or off. A viewer\nthat fills the page can set `--gw-code-height` and take Ctrl+F anywhere\non the page with `find-shortcut`. Put it in a `gw-expansion`'s `draw`, so\na folded one isn't built until it's opened.\n\nIt's open to more: buttons in the `actions` slot join the toolbar before\nthe built-in ones, `tools` picks which of those show, and the\n`extensions` property takes CodeMirror extensions of the app's own, such\nas another language, its highlighting or a gutter.",
           "name": "GwCode",
           "cssProperties": [
+            {
+              "description": "The selected text's background. Defaults to `--gw-color-fill-accent-quiet`.",
+              "name": "--gw-code-selection"
+            },
             {
               "description": "How tall it grows before it scrolls. Defaults to `32rem`.",
               "name": "--gw-code-max-height"
@@ -6324,8 +6364,26 @@
               "name": "tools"
             },
             {
+              "description": "The Wrap button, a `gw-button`.",
+              "name": "wrap"
+            },
+            {
+              "description": "The Find button, a `gw-button`.",
+              "name": "find"
+            },
+            {
+              "description": "The Copy button, a `gw-button`.",
+              "name": "copy"
+            },
+            {
               "description": "The view.",
               "name": "code"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Buttons of the app's own, before the built-in tools, such as Download.",
+              "name": "actions"
             }
           ],
           "members": [
@@ -6336,7 +6394,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ content: {}, diff: { type: \"boolean\", reflect: true }, language: {}, label: {}, wrap: { type: \"boolean\", reflect: true }, lineNumbers: { type: \"boolean\", attribute: \"line-numbers\" }, findShortcut: { type: \"boolean\", attribute: \"find-shortcut\" }, storageKey: { attribute: \"storage-key\" }, size: { reflect: true }, }",
+              "default": "{ content: {}, diff: { type: \"boolean\", reflect: true }, language: {}, label: {}, wrap: { type: \"boolean\", reflect: true }, lineNumbers: { type: \"boolean\", attribute: \"line-numbers\" }, findShortcut: { type: \"boolean\", attribute: \"find-shortcut\" }, storageKey: { attribute: \"storage-key\" }, size: { reflect: true }, tools: {}, toolbarLabel: { attribute: \"toolbar-label\" }, wrapLabel: { attribute: \"wrap-label\" }, findLabel: { attribute: \"find-label\" }, copyLabel: { attribute: \"copy-label\" }, copiedLabel: { attribute: \"copied-label\" }, copyFailedLabel: { attribute: \"copy-failed-label\" }, phrases: { type: \"json\" }, extensions: { attribute: false }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6349,7 +6407,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"code-tools\"), css` :host { display: flex; flex-direction: column; min-width: 0; height: var(--gw-code-height, auto); overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } .tools { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: var(--gw-space-1); padding: var(--gw-space-1) var(--gw-space-2); background: var(--gw-color-surface-default); border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet); } /* The buttons take their size from the toolbar's, so an app sets it with size or --gw-code-tools-scale rather than reaching inside */ .tools gw-button { --gw-button-scale: var(--gw-code-tools-scale, 0.8); } :host([size=\"medium\"]) { --gw-code-tools-scale: 1; } .code { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; } `, ]",
+              "default": "[ base, controlSizes(\"code-tools\"), css` :host { display: flex; flex-direction: column; min-width: 0; height: var(--gw-code-height, auto); overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } .tools { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: var(--gw-space-1); padding: var(--gw-space-1) var(--gw-space-2); background: var(--gw-color-surface-default); border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet); } /* The buttons take their size from the toolbar's, so an app sets it with size or --gw-code-tools-scale rather than reaching inside */ .tools gw-button { --gw-button-scale: var(--gw-code-tools-scale, 0.8); } .tools[hidden], .tools gw-button[hidden] { display: none; } :host([size=\"medium\"]) { --gw-code-tools-scale: 1; } .code { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6429,6 +6487,78 @@
             },
             {
               "kind": "field",
+              "name": "tools",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "toolbarLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Code\""
+            },
+            {
+              "kind": "field",
+              "name": "wrapLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Wrap\""
+            },
+            {
+              "kind": "field",
+              "name": "findLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Find\""
+            },
+            {
+              "kind": "field",
+              "name": "copyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Copy\""
+            },
+            {
+              "kind": "field",
+              "name": "copiedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Copied\""
+            },
+            {
+              "kind": "field",
+              "name": "copyFailedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Couldn't copy\""
+            },
+            {
+              "kind": "field",
+              "name": "phrases",
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "default": "{}"
+            },
+            {
+              "kind": "field",
+              "name": "extensions",
+              "type": {
+                "text": "Extension"
+              },
+              "description": "CodeMirror extensions of the app's own, added after Groundwork's.",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
               "name": "#wrapButton",
               "privacy": "private",
               "readonly": true
@@ -6442,6 +6572,12 @@
             {
               "kind": "field",
               "name": "#copyButton",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#actions",
               "privacy": "private",
               "readonly": true
             },
@@ -6487,6 +6623,13 @@
             },
             {
               "kind": "field",
+              "name": "#words",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Compartment()"
+            },
+            {
+              "kind": "field",
               "name": "#view",
               "privacy": "private",
               "type": {
@@ -6499,6 +6642,14 @@
               "privacy": "private",
               "type": {
                 "text": "ReturnType<typeof setTimeout> | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#copied",
+              "privacy": "private",
+              "type": {
+                "text": "\"copied\" | \"failed\" | undefined"
               }
             },
             {
@@ -6527,7 +6678,23 @@
             },
             {
               "kind": "method",
+              "name": "#showCopied",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#showTools",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
               "name": "#syntaxFor",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#wordsFor",
               "privacy": "private"
             },
             {
@@ -6879,7 +7046,7 @@
               "type": {
                 "text": "\"json\""
               },
-              "description": "Highlights it as this language, with folds.",
+              "description": "Highlights it as this language, with folds. For any other, pass its CodeMirror extension in `extensions`.",
               "name": "language"
             },
             {
@@ -6923,6 +7090,62 @@
               },
               "description": "The toolbar buttons' size, as `gw-button`'s. Defaults to `small`.",
               "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The built-in tools that show, from `wrap`, `find` and `copy`, separated by spaces. Empty shows none, and the toolbar hides when nothing's in `actions` either. Defaults to `wrap find copy`.",
+              "name": "tools"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The toolbar's accessible name. Defaults to `Code`.",
+              "name": "toolbar-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Wrap button's text, for an app in another language. Defaults to `Wrap`.",
+              "name": "wrap-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Find button's text. Defaults to `Find`.",
+              "name": "find-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Copy button's text. Defaults to `Copy`.",
+              "name": "copy-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the Copy button says once it's copied. Defaults to `Copied`.",
+              "name": "copied-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the Copy button says when copying fails. Defaults to `Couldn't copy`.",
+              "name": "copy-failed-label"
+            },
+            {
+              "type": {
+                "text": "Record<string, string>"
+              },
+              "description": "The find panel's words, as JSON keyed by CodeMirror's phrase, such as `{\"next\": \"Weiter\"}`. Unset ones keep their default.",
+              "name": "phrases"
             }
           ],
           "superclass": {
@@ -7514,6 +7737,14 @@
           "name": "GwDialog",
           "cssProperties": [
             {
+              "description": "Scales the close button, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-dialog-close-scale"
+            },
+            {
+              "description": "Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-discard-scale"
+            },
+            {
               "description": "The widest it grows. Defaults to `32rem`.",
               "name": "--gw-dialog-width"
             },
@@ -7550,6 +7781,10 @@
             {
               "description": "The heading.",
               "name": "heading"
+            },
+            {
+              "description": "The close button, a `gw-button`.",
+              "name": "close"
             },
             {
               "description": "The content.",
@@ -7591,7 +7826,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` dialog { width: min( var(--gw-dialog-width, 32rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-dialog-background, var(--gw-color-surface-overlay) ); border: var(--gw-border-width) solid var(--gw-dialog-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-dialog-radius, var(--gw-radius-panel)); box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l)); } dialog::backdrop { background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%)); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` dialog { width: min( var(--gw-dialog-width, 32rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-dialog-background, var(--gw-color-surface-overlay) ); border: var(--gw-border-width) solid var(--gw-dialog-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-dialog-radius, var(--gw-radius-panel)); box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l)); } dialog::backdrop { background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%)); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-dialog-close-scale, 0.8); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8572,16 +8807,38 @@
           "kind": "class",
           "description": "What a list or page shows when there's nothing in it, or nothing to do:\nan icon, a heading, a line of text and an optional action.",
           "name": "GwEmptyState",
+          "cssProperties": [
+            {
+              "description": "The icon's size. Defaults to `2.5rem`.",
+              "name": "--gw-empty-state-icon-size"
+            },
+            {
+              "description": "The space around it. Defaults to `--gw-space-12` above and below, `--gw-space-3` at the sides.",
+              "name": "--gw-empty-state-padding"
+            }
+          ],
           "cssParts": [
             {
               "description": "The block.",
               "name": "empty"
+            },
+            {
+              "description": "The icon `icon` sets.",
+              "name": "icon"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
             }
           ],
           "slots": [
             {
               "description": "A line of text.",
               "name": ""
+            },
+            {
+              "description": "An icon or illustration in place of `icon`.",
+              "name": "icon"
             },
             {
               "description": "An action, such as adding the first item.",
@@ -8609,7 +8866,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .empty { display: flex; flex-direction: column; gap: var(--gw-space-1); align-items: center; justify-content: center; padding: var(--gw-space-12) var(--gw-space-3); color: var(--gw-color-text-secondary); text-align: center; --gw-icon-size: 2.5rem; } h2 { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } ::slotted(p) { margin: 0; } ::slotted([slot=\"actions\"]) { margin-block-start: var(--gw-space-2); } `, ]",
+              "default": "[ base, css` :host { display: block; } .empty { display: flex; flex-direction: column; gap: var(--gw-space-1); align-items: center; justify-content: center; padding: var( --gw-empty-state-padding, var(--gw-space-12) var(--gw-space-3) ); color: var(--gw-color-text-secondary); text-align: center; --gw-icon-size: var(--gw-empty-state-icon-size, 2.5rem); } h2 { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } ::slotted(p) { margin: 0; } ::slotted([slot=\"actions\"]) { margin-block-start: var(--gw-space-2); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10521,10 +10778,36 @@
           "kind": "class",
           "description": "One filter of a list, such as its state or where it came from: a header\nthat opens and closes it, then its options to tick, each with an optional\ndescription and count. An item shows when it has any ticked value, and\nticking nothing, the same as ticking everything, shows it all, so the last\nticked option can't be unticked. The header counts how many options show,\nin the accent while the filter narrows the list, with a button to clear it\nback to `default-value`. Long lists get a search field. Stack several in a\n`gw-sheet`, edge to edge.",
           "name": "GwFilter",
+          "cssProperties": [
+            {
+              "description": "How far the header and options reach past its edges, such as to a sheet's edge. Defaults to `0rem`.",
+              "name": "--gw-filter-inset"
+            },
+            {
+              "description": "Scales the count chip, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-filter-count-scale"
+            }
+          ],
           "cssParts": [
             {
               "description": "The row with the name and the clear button.",
               "name": "header"
+            },
+            {
+              "description": "The icon `icon` sets.",
+              "name": "icon"
+            },
+            {
+              "description": "The chip counting the options that show, a `gw-chip`.",
+              "name": "count"
+            },
+            {
+              "description": "The clear button.",
+              "name": "clear"
+            },
+            {
+              "description": "The search field.",
+              "name": "search"
             },
             {
               "description": "The options' list.",
@@ -10552,7 +10835,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } /* The heading row sits on the page's own surface, darker than the sheet, so each filter reads as a section */ .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); font-size: var(--gw-font-size-m); background: var(--gw-color-surface-default); border-block-start: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; } .shown[hidden] { display: none; } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } /* The heading row sits on the page's own surface, darker than the sheet, so each filter reads as a section */ .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); font-size: var(--gw-font-size-m); background: var(--gw-color-surface-default); border-block-start: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { --gw-chip-scale: var(--gw-filter-count-scale, 0.8); font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; } .shown[hidden] { display: none; } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -12749,6 +13032,10 @@
             {
               "description": "The space after each item. Defaults to `--gw-space-2`.",
               "name": "--gw-list-gap"
+            },
+            {
+              "description": "Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-list-count-scale"
             }
           ],
           "cssParts": [
@@ -12763,6 +13050,10 @@
             {
               "description": "Each group's heading.",
               "name": "group"
+            },
+            {
+              "description": "The chip counting a group's items, a `gw-chip`.",
+              "name": "group-count"
             }
           ],
           "slots": [
@@ -12792,7 +13083,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; min-width: 0; } :host([contained]) .scroller { max-height: var(--gw-list-max-height, 70vh); overflow-y: auto; } .item { padding-block-end: var(--gw-list-gap, var(--gw-space-2)); } /* A group's heading sits flat on the page's own surface, under the items raised on it */ .group { padding-block: var(--gw-space-3) var(--gw-space-2); } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-1) var(--gw-space-2); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); text-align: start; cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); --gw-icon-size: 1.35em; } .group-toggle:hover { color: var(--gw-color-text-primary); background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } `, ]",
+              "default": "[ base, css` :host { display: block; min-width: 0; } :host([contained]) .scroller { max-height: var(--gw-list-max-height, 70vh); overflow-y: auto; } .item { padding-block-end: var(--gw-list-gap, var(--gw-space-2)); } /* A group's heading sits flat on the page's own surface, under the items raised on it */ .group { padding-block: var(--gw-space-3) var(--gw-space-2); } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-1) var(--gw-space-2); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); text-align: start; cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); --gw-icon-size: 1.35em; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-list-count-scale, 0.8); } .group-toggle:hover { color: var(--gw-color-text-primary); background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -13961,7 +14252,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them.",
+          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them; style them through the `menu`, `item` and other parts.",
           "name": "GwMenuButton",
           "cssProperties": [
             {
@@ -13977,6 +14268,42 @@
             {
               "description": "The button that opens the menu.",
               "name": "trigger"
+            },
+            {
+              "description": "The trigger's icon.",
+              "name": "trigger-icon"
+            },
+            {
+              "description": "The menu's surface.",
+              "name": "menu"
+            },
+            {
+              "description": "The scrolling list of items.",
+              "name": "items"
+            },
+            {
+              "description": "The actions pinned under the items.",
+              "name": "actions"
+            },
+            {
+              "description": "Each item and action.",
+              "name": "item"
+            },
+            {
+              "description": "An item's icon.",
+              "name": "item-icon"
+            },
+            {
+              "description": "An item's line under its label.",
+              "name": "item-description"
+            },
+            {
+              "description": "A group's heading.",
+              "name": "group-heading"
+            },
+            {
+              "description": "The line before an item with `separator`.",
+              "name": "separator"
             }
           ],
           "members": [
@@ -15358,11 +15685,15 @@
             {
               "description": "The space between the cards. Defaults to `--gw-space-2`.",
               "name": "--gw-notification-center-gap"
+            },
+            {
+              "description": "Scales Clear all, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-notification-center-clear-scale"
             }
           ],
           "cssParts": [
             {
-              "description": "The row with the heading and Clear all.",
+              "description": "The row with the heading, actions and Clear all.",
               "name": "header"
             },
             {
@@ -15370,14 +15701,30 @@
               "name": "heading"
             },
             {
+              "description": "The Clear all button, a `gw-button`.",
+              "name": "clear"
+            },
+            {
               "description": "The list of cards.",
               "name": "list"
+            },
+            {
+              "description": "The empty state, a `gw-empty-state`.",
+              "name": "empty"
             }
           ],
           "slots": [
             {
               "description": "The `gw-notification` cards.",
               "name": ""
+            },
+            {
+              "description": "Buttons of the app's own in the header, before Clear all, such as Mark all read.",
+              "name": "actions"
+            },
+            {
+              "description": "What shows once nothing's left, in place of the empty state.",
+              "name": "empty"
             }
           ],
           "members": [
@@ -15401,7 +15748,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } header { display: flex; gap: var(--gw-space-2); align-items: center; justify-content: space-between; margin-block-end: var(--gw-space-2); } h2 { margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .list { display: grid; gap: var(--gw-notification-center-gap, var(--gw-space-2)); } [hidden] { display: none; } gw-empty-state::part(empty) { padding-block: var(--gw-space-6); } `, ]",
+              "default": "[ base, css` :host { display: block; } header { display: flex; gap: var(--gw-space-2); align-items: center; justify-content: space-between; margin-block-end: var(--gw-space-2); } .clear { --gw-button-scale: var(--gw-notification-center-clear-scale, 0.8); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .list { display: grid; gap: var(--gw-notification-center-gap, var(--gw-space-2)); } [hidden] { display: none; } /* Through its property, so ::part(empty) can still change it */ gw-empty-state { --gw-empty-state-padding: var(--gw-space-6) var(--gw-space-3); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15466,6 +15813,12 @@
             {
               "kind": "field",
               "name": "#empty",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#emptySlot",
               "privacy": "private",
               "readonly": true
             },
@@ -15894,12 +16247,40 @@
             {
               "description": "The icon's color, for a tone of your own. `tone` sets it.",
               "name": "--gw-tone"
+            },
+            {
+              "description": "Scales the dismiss button, around 1 for medium. Defaults to `0.6`, xs.",
+              "name": "--gw-notification-dismiss-scale"
             }
           ],
           "cssParts": [
             {
               "description": "The card.",
               "name": "card"
+            },
+            {
+              "description": "The icon.",
+              "name": "icon"
+            },
+            {
+              "description": "The heading, text, time and actions.",
+              "name": "body"
+            },
+            {
+              "description": "The heading.",
+              "name": "heading"
+            },
+            {
+              "description": "When it happened.",
+              "name": "time"
+            },
+            {
+              "description": "The actions row.",
+              "name": "actions"
+            },
+            {
+              "description": "The dismiss button, a `gw-button`.",
+              "name": "dismiss"
             }
           ],
           "slots": [
@@ -15933,7 +16314,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } .card { display: grid; grid-template-columns: auto 1fr auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: start; padding: var(--gw-space-3); font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); } /* An inset stripe, so unread and read cards line up */ :host([unread]) .card { box-shadow: inset calc(var(--gw-border-width) * 4) 0 0 var(--gw-tone, var(--gw-color-accent)); } :host([unread]:dir(rtl)) .card { box-shadow: inset calc(var(--gw-border-width) * -4) 0 0 var(--gw-tone, var(--gw-color-accent)); } .card > .icon { margin-block-start: 0.1em; color: var(--gw-tone, var(--gw-color-text-secondary)); } .card > .icon[hidden] { display: none; } .body { display: grid; gap: var(--gw-space-1); min-width: 0; } strong { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } time { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } time:empty { display: none; } ::slotted(p) { margin: 0; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); margin-block-start: var(--gw-space-1); } .close { margin: calc(var(--gw-space-1) * -1); } `, ]",
+              "default": "[ base, css` :host { display: block; } .card { display: grid; grid-template-columns: auto 1fr auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: start; padding: var(--gw-space-3); font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); } /* An inset stripe, so unread and read cards line up */ :host([unread]) .card { box-shadow: inset calc(var(--gw-border-width) * 4) 0 0 var(--gw-tone, var(--gw-color-accent)); } :host([unread]:dir(rtl)) .card { box-shadow: inset calc(var(--gw-border-width) * -4) 0 0 var(--gw-tone, var(--gw-color-accent)); } .card > .icon { margin-block-start: 0.1em; color: var(--gw-tone, var(--gw-color-text-secondary)); } .card > .icon[hidden] { display: none; } .body { display: grid; gap: var(--gw-space-1); min-width: 0; } strong { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } time { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } time:empty { display: none; } ::slotted(p) { margin: 0; } .actions { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); margin-block-start: var(--gw-space-1); } .close { --gw-button-scale: var(--gw-notification-dismiss-scale, 0.6); margin: calc(var(--gw-space-1) * -1); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17194,6 +17575,10 @@
               "name": "tile"
             },
             {
+              "description": "The icon in the tile.",
+              "name": "icon"
+            },
+            {
               "description": "The title.",
               "name": "heading"
             },
@@ -17694,6 +18079,14 @@
           "name": "GwPopover",
           "cssProperties": [
             {
+              "description": "Scales the close button, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-popover-close-scale"
+            },
+            {
+              "description": "Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-discard-scale"
+            },
+            {
               "description": "Its width beside a button. Defaults to `20rem`.",
               "name": "--gw-popover-width"
             },
@@ -17728,8 +18121,16 @@
               "name": "surface"
             },
             {
+              "description": "The row with the heading, content and close button.",
+              "name": "header"
+            },
+            {
               "description": "The heading.",
               "name": "heading"
+            },
+            {
+              "description": "The close button, a `gw-button`.",
+              "name": "close"
             },
             {
               "description": "The content.",
@@ -17771,7 +18172,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-popover-padding, var(--gw-space-4)); margin: 0; color: var(--gw-color-text-primary); background: var( --gw-popover-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-popover-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-popover-radius, var(--gw-radius-panel)); box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l)); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-popover-padding, var(--gw-space-4)) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-popover-padding, var(--gw-space-4)); margin: 0; color: var(--gw-color-text-primary); background: var( --gw-popover-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-popover-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-popover-radius, var(--gw-radius-panel)); box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l)); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-popover-padding, var(--gw-space-4)) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-popover-close-scale, 0.8); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -20746,6 +21147,22 @@
             {
               "description": "The row.",
               "name": "row"
+            },
+            {
+              "description": "The name and description.",
+              "name": "text"
+            },
+            {
+              "description": "The setting's name.",
+              "name": "heading"
+            },
+            {
+              "description": "What it does.",
+              "name": "description"
+            },
+            {
+              "description": "Around the control.",
+              "name": "control"
             }
           ],
           "slots": [
@@ -21263,6 +21680,30 @@
             {
               "description": "Its greatest height from the bottom. Defaults to `85vh`.",
               "name": "--gw-sheet-height"
+            },
+            {
+              "description": "Scales the close button, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-sheet-close-scale"
+            },
+            {
+              "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
+              "name": "--gw-sheet-background"
+            },
+            {
+              "description": "The border on its open edge. Defaults to `--gw-color-border-normal`.",
+              "name": "--gw-sheet-border-color"
+            },
+            {
+              "description": "The corners of a bottom sheet. Defaults to `--gw-radius-panel`.",
+              "name": "--gw-sheet-radius"
+            },
+            {
+              "description": "The shadow. Defaults to `--gw-shadow-l`.",
+              "name": "--gw-sheet-shadow"
+            },
+            {
+              "description": "The backdrop over the page. Defaults to `rgb(0 0 0 / 40%)`.",
+              "name": "--gw-sheet-backdrop"
             }
           ],
           "cssParts": [
@@ -21273,6 +21714,10 @@
             {
               "description": "The row with the close button, heading and actions.",
               "name": "header"
+            },
+            {
+              "description": "The close button, a `gw-button`.",
+              "name": "close"
             },
             {
               "description": "The heading.",
@@ -21314,7 +21759,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` [popover] { position: fixed; box-sizing: border-box; flex-direction: column; padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: 0 solid var(--gw-color-border-normal); box-shadow: var(--gw-shadow-l); transition: translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; translate: 0 0; } /* The page dims as the sheet slides in, and back as it leaves */ [popover]::backdrop { background: rgb(0 0 0 / 0%); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open::backdrop { background: rgb(0 0 0 / 40%); } @starting-style { [popover]:popover-open::backdrop { background: rgb(0 0 0 / 0%); } } /* Full height from the start or end edge */ [data-side=\"start\"], [data-side=\"end\"] { inset: 0 auto; width: min(var(--gw-sheet-width, 20rem), 100vw); height: 100%; max-height: none; } [data-side=\"start\"] { inset-inline-start: 0; border-inline-end-width: max(var(--gw-border-width), 1px); translate: -100% 0; } [data-side=\"end\"] { inset-inline-end: 0; border-inline-start-width: max(var(--gw-border-width), 1px); translate: 100% 0; } :host(:dir(rtl)) [data-side=\"start\"] { translate: 100% 0; } :host(:dir(rtl)) [data-side=\"end\"] { translate: -100% 0; } /* Up from the bottom, with room for the phone's home bar */ [data-side=\"bottom\"] { inset: auto 0 0; width: 100%; max-width: none; max-height: var(--gw-sheet-height, 85vh); padding-block-end: env(safe-area-inset-bottom); border-block-start-width: max(var(--gw-border-width), 1px); border-start-start-radius: var(--gw-radius-panel); border-start-end-radius: var(--gw-radius-panel); translate: 0 100%; } @starting-style { [data-side=\"start\"]:popover-open { translate: -100% 0; } [data-side=\"end\"]:popover-open { translate: 100% 0; } [data-side=\"bottom\"]:popover-open { translate: 0 100%; } } header { display: flex; flex: none; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-2) var(--gw-space-3); border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .body { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-3); min-height: 0; padding: var(--gw-space-4); /* It scrolls down only, so content reaching into its padding never makes it scroll sideways */ overflow: hidden auto; overscroll-behavior: contain; } `, ]",
+              "default": "[ base, css` [popover] { position: fixed; box-sizing: border-box; flex-direction: column; padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-sheet-background, var(--gw-color-surface-overlay)); border: 0 solid var(--gw-sheet-border-color, var(--gw-color-border-normal)); box-shadow: var(--gw-sheet-shadow, var(--gw-shadow-l)); transition: translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; translate: 0 0; } /* The page dims as the sheet slides in, and back as it leaves */ [popover]::backdrop { background: rgb(0 0 0 / 0%); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open::backdrop { background: var(--gw-sheet-backdrop, rgb(0 0 0 / 40%)); } @starting-style { [popover]:popover-open::backdrop { background: rgb(0 0 0 / 0%); } } /* Full height from the start or end edge */ [data-side=\"start\"], [data-side=\"end\"] { inset: 0 auto; width: min(var(--gw-sheet-width, 20rem), 100vw); height: 100%; max-height: none; } [data-side=\"start\"] { inset-inline-start: 0; border-inline-end-width: max(var(--gw-border-width), 1px); translate: -100% 0; } [data-side=\"end\"] { inset-inline-end: 0; border-inline-start-width: max(var(--gw-border-width), 1px); translate: 100% 0; } :host(:dir(rtl)) [data-side=\"start\"] { translate: 100% 0; } :host(:dir(rtl)) [data-side=\"end\"] { translate: -100% 0; } /* Up from the bottom, with room for the phone's home bar */ [data-side=\"bottom\"] { inset: auto 0 0; width: 100%; max-width: none; max-height: var(--gw-sheet-height, 85vh); padding-block-end: env(safe-area-inset-bottom); border-block-start-width: max(var(--gw-border-width), 1px); border-start-start-radius: var( --gw-sheet-radius, var(--gw-radius-panel) ); border-start-end-radius: var(--gw-sheet-radius, var(--gw-radius-panel)); translate: 0 100%; } @starting-style { [data-side=\"start\"]:popover-open { translate: -100% 0; } [data-side=\"end\"]:popover-open { translate: 100% 0; } [data-side=\"bottom\"]:popover-open { translate: 0 100%; } } header { display: flex; flex: none; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-2) var(--gw-space-3); border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } h2 { flex: 1; min-width: 0; margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-sheet-close-scale, 0.8); } .body { display: flex; flex: 1; flex-direction: column; gap: var(--gw-space-3); min-height: 0; padding: var(--gw-space-4); /* It scrolls down only, so content reaching into its padding never makes it scroll sideways */ overflow: hidden auto; overscroll-behavior: contain; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -23817,6 +24262,10 @@
             {
               "description": "How tall a `contained` table grows before it scrolls. Defaults to `70vh`.",
               "name": "--gw-table-max-height"
+            },
+            {
+              "description": "Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-table-count-scale"
             }
           ],
           "cssParts": [
@@ -23831,6 +24280,10 @@
             {
               "description": "Each group's heading row.",
               "name": "group"
+            },
+            {
+              "description": "The chip counting a group's rows, a `gw-chip`.",
+              "name": "group-count"
             }
           ],
           "slots": [
@@ -23860,7 +24313,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } :host([contained]) .scroller { max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } .search { position: relative; flex: 1 1 14rem; max-width: 24rem; --gw-icon-size: 1.1rem; } .search[hidden] { display: none; } .search .icon { position: absolute; inset-block: 0; inset-inline-start: var(--gw-space-3); margin-block: auto; color: var(--gw-color-text-secondary); pointer-events: none; } .search input { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } :host([contained]) .scroller { max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: 2.5rem; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: 0.875rem; } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-table-count-scale, 0.8); margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -29218,14 +29671,14 @@
               }
             },
             {
-              "name": "label",
-              "optional": true,
+              "name": "{ label, part }",
+              "default": "{}",
               "type": {
-                "text": "string"
+                "text": "{ label?: string; part?: string }"
               }
             }
           ],
-          "description": "An icon from SVG path data, such as one of `@mdi/js`'s or Lucide's paths,\nso each app picks its own set. Without a label it's hidden from assistive\ntechnology. Change its path later with `setIconPath`."
+          "description": "An icon from SVG path data, such as one of `@mdi/js`'s or Lucide's paths,\nso each app picks its own set. Without a label it's hidden from assistive\ntechnology. A `part` exposes it to `::part()`, so an app can restyle it.\nChange its path later with `setIconPath`."
         },
         {
           "kind": "function",

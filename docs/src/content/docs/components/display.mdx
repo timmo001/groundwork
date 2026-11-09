@@ -290,15 +290,28 @@ Code or a diff in a read-only view, which scrolls up to `--gw-code-max-height` (
 | Attribute | What it does |
 | --- | --- |
 | `diff` | Reads it as a unified diff: added and removed lines are tinted and hunk headers are quiet |
-| `language` | Highlights it as this language, with folds. `json` for now |
+| `language` | Highlights it as this language, with folds. `json` for now; any other goes in `extensions` |
 | `wrap` | Wraps long lines rather than scrolling sideways; how it starts when it has a `storage-key` |
 | `line-numbers` | Numbers the lines |
 | `storage-key` | Keeps whether someone turned wrapping on or off in `localStorage` under this key |
 | `find-shortcut` | Ctrl+F anywhere on the page finds in it while it's shown, for a viewer that fills the page |
 | `label` | The view's accessible name, such as the file's name |
 | `size` | The toolbar buttons' size, `xs` to `xl` as a button's (`small`). `--gw-code-tools-scale` sets any size in between |
+| `tools` | The built-in tools that show, from `wrap find copy` (all three). Empty shows none |
+| `wrap-label`, `find-label`, `copy-label`, `copied-label`, `copy-failed-label`, `toolbar-label` | The toolbar's words, for an app in another language |
+| `phrases` | The find panel's words, as JSON keyed by CodeMirror's phrase, such as `{"next": "Weiter"}` |
 
 It fires `change` when someone turns wrapping on or off. To fill the page, set `--gw-code-height` and `--gw-code-max-height: none`. In a fold, draw it with the expansion panel's `draw`, so the view isn't built until someone opens it.
+
+Buttons in its `actions` slot join the toolbar before the built-in ones, such as a Download. The `extensions` property takes CodeMirror extensions of the app's own, added after Groundwork's, such as another language, its highlighting or a gutter:
+
+```ts
+import { javascript } from "@codemirror/lang-javascript";
+
+code.extensions = [javascript()];
+```
+
+The toolbar's buttons are the `wrap`, `find` and `copy` parts, and `--gw-code-selection` colors selected text.
 
 ## References
 

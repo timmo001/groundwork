@@ -21,6 +21,7 @@ import {
 import {
   Compartment,
   EditorState,
+  type Extension,
   RangeSetBuilder,
   type StateEffect,
 } from "@codemirror/state";
@@ -141,9 +142,13 @@ const editorTheme = EditorView.theme({
     border: "none",
     padding: "0 var(--gw-space-1)",
   },
-  ".cm-selectionBackground, &.cm-focused .cm-selectionBackground": {
-    backgroundColor: "var(--gw-color-fill-accent-quiet) !important",
-  },
+  // The same selectors as CodeMirror's base theme, which this one follows,
+  // so it wins without !important
+  "& .cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground":
+    {
+      backgroundColor:
+        "var(--gw-code-selection, var(--gw-color-fill-accent-quiet))",
+    },
   ".cm-searchMatch": {
     backgroundColor:
       "color-mix(in oklab, var(--gw-color-warning) 30%, transparent)",
@@ -214,8 +219,8 @@ const editorTheme = EditorView.theme({
   },
 });
 
-/** The find panel's words, in sentence case. */
-const searchPhrases = EditorState.phrases.of({
+/** The find panel's words, in sentence case, until `phrases` changes them. */
+const searchPhrases = {
   Find: "Find",
   next: "Next",
   previous: "Previous",
@@ -224,7 +229,10 @@ const searchPhrases = EditorState.phrases.of({
   regexp: "Regex",
   "by word": "Whole word",
   close: "Close",
-});
+};
+
+/** The toolbar's built-in tools, in the order they show. */
+const builtInTools = ["wrap", "find", "copy"] as const;
 
 /**
  * Code or a diff, such as a patch waiting on review or a module's data, in
@@ -240,24 +248,43 @@ const searchPhrases = EditorState.phrases.of({
  * on the page with `find-shortcut`. Put it in a `gw-expansion`'s `draw`, so
  * a folded one isn't built until it's opened.
  *
+ * It's open to more: buttons in the `actions` slot join the toolbar before
+ * the built-in ones, `tools` picks which of those show, and the
+ * `extensions` property takes CodeMirror extensions of the app's own, such
+ * as another language, its highlighting or a gutter.
+ *
  * @element gw-code
  * @summary Code or a diff in a read-only view, to wrap, find in and copy.
  *
  * @attr {string} content - The code.
  * @attr {boolean} diff - Reads it as a unified diff and tints its lines.
- * @attr {"json"} language - Highlights it as this language, with folds.
+ * @attr {"json"} language - Highlights it as this language, with folds. For any other, pass its CodeMirror extension in `extensions`.
  * @attr {string} label - The view's accessible name, such as the file's name.
  * @attr {boolean} wrap - Wraps long lines rather than scrolling sideways; how it starts when it has a `storage-key`.
  * @attr {boolean} line-numbers - Numbers the lines.
  * @attr {boolean} find-shortcut - Ctrl+F anywhere on the page finds in it while it's shown, rather than in the page.
  * @attr {string} storage-key - Keeps whether someone turned wrapping on or off in `localStorage` under this key.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The toolbar buttons' size, as `gw-button`'s. Defaults to `small`.
+ * @attr {string} tools - The built-in tools that show, from `wrap`, `find` and `copy`, separated by spaces. Empty shows none, and the toolbar hides when nothing's in `actions` either. Defaults to `wrap find copy`.
+ * @attr {string} toolbar-label - The toolbar's accessible name. Defaults to `Code`.
+ * @attr {string} wrap-label - The Wrap button's text, for an app in another language. Defaults to `Wrap`.
+ * @attr {string} find-label - The Find button's text. Defaults to `Find`.
+ * @attr {string} copy-label - The Copy button's text. Defaults to `Copy`.
+ * @attr {string} copied-label - What the Copy button says once it's copied. Defaults to `Copied`.
+ * @attr {string} copy-failed-label - What the Copy button says when copying fails. Defaults to `Couldn't copy`.
+ * @attr {Record<string, string>} phrases - The find panel's words, as JSON keyed by CodeMirror's phrase, such as `{"next": "Weiter"}`. Unset ones keep their default.
+ *
+ * @slot actions - Buttons of the app's own, before the built-in tools, such as Download.
  *
  * @fires change - When someone turns wrapping on or off. Read `wrap`.
  *
  * @csspart tools - The toolbar.
+ * @csspart wrap - The Wrap button, a `gw-button`.
+ * @csspart find - The Find button, a `gw-button`.
+ * @csspart copy - The Copy button, a `gw-button`.
  * @csspart code - The view.
  *
+ * @cssprop --gw-code-selection - The selected text's background. Defaults to `--gw-color-fill-accent-quiet`.
  * @cssprop --gw-code-max-height - How tall it grows before it scrolls. Defaults to `32rem`.
  * @cssprop --gw-code-height - A fixed height, such as to fill the page with `--gw-code-max-height: none`. Defaults to `auto`.
  * @cssprop --gw-code-tools-scale - Scales the toolbar buttons to any size, around 1 for medium. `size` sets it.
@@ -273,6 +300,15 @@ export class GwCode extends GwElement {
     findShortcut: { type: "boolean", attribute: "find-shortcut" },
     storageKey: { attribute: "storage-key" },
     size: { reflect: true },
+    tools: {},
+    toolbarLabel: { attribute: "toolbar-label" },
+    wrapLabel: { attribute: "wrap-label" },
+    findLabel: { attribute: "find-label" },
+    copyLabel: { attribute: "copy-label" },
+    copiedLabel: { attribute: "copied-label" },
+    copyFailedLabel: { attribute: "copy-failed-label" },
+    phrases: { type: "json" },
+    extensions: { attribute: false },
   } as const;
 
   static override styles = [
@@ -307,6 +343,11 @@ export class GwCode extends GwElement {
         --gw-button-scale: var(--gw-code-tools-scale, 0.8);
       }
 
+      .tools[hidden],
+      .tools gw-button[hidden] {
+        display: none;
+      }
+
       :host([size="medium"]) {
         --gw-code-tools-scale: 1;
       }
@@ -329,45 +370,48 @@ export class GwCode extends GwElement {
   declare findShortcut: boolean;
   declare storageKey: string;
   declare size: string;
+  declare tools: string;
+  declare toolbarLabel: string;
+  declare wrapLabel: string;
+  declare findLabel: string;
+  declare copyLabel: string;
+  declare copiedLabel: string;
+  declare copyFailedLabel: string;
+  declare phrases: Record<string, string>;
+  /** CodeMirror extensions of the app's own, added after Groundwork's. */
+  declare extensions: Extension;
 
-  readonly #wrapButton = h(
-    "gw-button",
-    {
-      variant: "neutral",
-      appearance: "plain",
-      labels: "auto",
-      icon: wrapIcon,
-      toggle: true,
-    },
-    "Wrap",
-  );
+  readonly #wrapButton = h("gw-button", {
+    part: "wrap",
+    variant: "neutral",
+    appearance: "plain",
+    labels: "auto",
+    icon: wrapIcon,
+    toggle: true,
+  });
 
-  readonly #findButton = h(
-    "gw-button",
-    {
-      variant: "neutral",
-      appearance: "plain",
-      labels: "auto",
-      icon: findIcon,
-      title: "Find (Ctrl+F)",
-    },
-    "Find",
-  );
+  readonly #findButton = h("gw-button", {
+    part: "find",
+    variant: "neutral",
+    appearance: "plain",
+    labels: "auto",
+    icon: findIcon,
+  });
 
-  readonly #copyButton = h(
-    "gw-button",
-    {
-      variant: "neutral",
-      appearance: "plain",
-      labels: "auto",
-      icon: copyIcon,
-    },
-    "Copy",
-  );
+  readonly #copyButton = h("gw-button", {
+    part: "copy",
+    variant: "neutral",
+    appearance: "plain",
+    labels: "auto",
+    icon: copyIcon,
+  });
+
+  readonly #actions = h("slot", { name: "actions" });
 
   readonly #tools = h(
     "div",
-    { class: "tools", part: "tools", role: "toolbar", "aria-label": "Code" },
+    { class: "tools", part: "tools", role: "toolbar" },
+    this.#actions,
     this.#wrapButton,
     this.#findButton,
     this.#copyButton,
@@ -383,9 +427,14 @@ export class GwCode extends GwElement {
 
   readonly #name = new Compartment();
 
+  readonly #words = new Compartment();
+
   #view: EditorView | undefined;
 
   #copiedTimer: ReturnType<typeof setTimeout> | undefined;
+
+  // Whether the Copy button shows what happened rather than its label
+  #copied: "copied" | "failed" | undefined;
 
   constructor() {
     super();
@@ -398,6 +447,15 @@ export class GwCode extends GwElement {
     this.findShortcut = false;
     this.storageKey = "";
     this.size = "small";
+    this.tools = builtInTools.join(" ");
+    this.toolbarLabel = "Code";
+    this.wrapLabel = "Wrap";
+    this.findLabel = "Find";
+    this.copyLabel = "Copy";
+    this.copiedLabel = "Copied";
+    this.copyFailedLabel = "Couldn't copy";
+    this.phrases = {};
+    this.extensions = [];
   }
 
   override connectedCallback() {
@@ -457,26 +515,58 @@ export class GwCode extends GwElement {
       copied = false;
     }
 
-    setAttribute(this.#copyButton, "icon", copied ? copiedIcon : copyIcon);
-    this.#copyButton.textContent = copied ? "Copied" : "Couldn't copy";
+    this.#copied = copied ? "copied" : "failed";
+    this.#showCopied();
     clearTimeout(this.#copiedTimer);
     this.#copiedTimer = setTimeout(() => {
-      setAttribute(this.#copyButton, "icon", copyIcon);
-      this.#copyButton.textContent = "Copy";
+      this.#copied = undefined;
+      this.#showCopied();
     }, copiedFor);
+  };
+
+  #showCopied() {
+    setAttribute(
+      this.#copyButton,
+      "icon",
+      this.#copied === "copied" ? copiedIcon : copyIcon,
+    );
+    this.#copyButton.textContent =
+      this.#copied === "copied"
+        ? this.copiedLabel
+        : this.#copied === "failed"
+          ? this.copyFailedLabel
+          : this.copyLabel;
+  }
+
+  // Shown while it has a built-in tool or an action of the app's own
+  readonly #showTools = () => {
+    const shown = new Set(this.tools.split(/\s+/));
+
+    this.#wrapButton.hidden = !shown.has("wrap");
+    this.#findButton.hidden = !shown.has("find");
+    this.#copyButton.hidden = !shown.has("copy");
+    this.#tools.hidden =
+      !builtInTools.some((tool) => shown.has(tool)) &&
+      this.#actions.assignedElements().length === 0;
   };
 
   #syntaxFor() {
     return [
       this.diff ? diffLines : [],
       isLanguage(this.language) ? languages[this.language] : [],
+      this.extensions,
     ];
+  }
+
+  #wordsFor() {
+    return EditorState.phrases.of({ ...searchPhrases, ...this.phrases });
   }
 
   protected override create(root: ShadowRoot) {
     this.#wrapButton.addEventListener("click", this.#onWrapClick);
     this.#findButton.addEventListener("click", () => this.toggleFind());
     this.#copyButton.addEventListener("click", this.#onCopyClick);
+    this.#actions.addEventListener("slotchange", this.#showTools);
     root.append(this.#tools, this.#code);
 
     this.#view = new EditorView({
@@ -495,7 +585,7 @@ export class GwCode extends GwElement {
               }),
           }),
           keymap.of(searchKeymap),
-          searchPhrases,
+          this.#words.of(this.#wordsFor()),
           editorTheme,
           this.#wrapping.of(this.wrap ? EditorView.lineWrapping : []),
           this.#numbers.of(this.lineNumbers ? lineNumbers() : []),
@@ -516,6 +606,12 @@ export class GwCode extends GwElement {
     }
 
     setAttribute(this.#wrapButton, "pressed", this.wrap);
+    setAttribute(this.#tools, "aria-label", this.toolbarLabel);
+    this.#wrapButton.textContent = this.wrapLabel;
+    this.#findButton.textContent = this.findLabel;
+    setAttribute(this.#findButton, "title", `${this.findLabel} (Ctrl+F)`);
+    this.#showCopied();
+    this.#showTools();
 
     const view = this.#view;
 
@@ -535,8 +631,16 @@ export class GwCode extends GwElement {
       );
     }
 
-    if (changed.has("diff") || changed.has("language")) {
+    if (
+      changed.has("diff") ||
+      changed.has("language") ||
+      changed.has("extensions")
+    ) {
       effects.push(this.#syntax.reconfigure(this.#syntaxFor()));
+    }
+
+    if (changed.has("phrases")) {
+      effects.push(this.#words.reconfigure(this.#wordsFor()));
     }
 
     if (changed.has("label")) {
