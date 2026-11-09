@@ -41,6 +41,10 @@ export const dismissalStyles = css`
     margin-block-start: var(--gw-space-4);
     padding: 0;
   }
+
+  .discard gw-button {
+    --gw-button-scale: var(--gw-discard-scale, 0.8);
+  }
 `;
 
 /**
@@ -64,15 +68,11 @@ export class Dismissal {
 
   readonly #keep = h(
     "gw-button",
-    { size: "small", variant: "neutral", appearance: "plain" },
+    { variant: "neutral", appearance: "plain" },
     "Keep editing",
   );
 
-  readonly #discard = h(
-    "gw-button",
-    { size: "small", variant: "danger" },
-    "Discard",
-  );
+  readonly #discard = h("gw-button", { variant: "danger" }, "Discard");
 
   readonly #question = h("p", {}, "Discard your changes?");
 

@@ -43,10 +43,14 @@ const sheetBelow = 600;
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
  * @csspart surface - The popover's surface.
+ * @csspart header - The row with the heading, content and close button.
  * @csspart heading - The heading.
+ * @csspart close - The close button, a `gw-button`.
  * @csspart body - The content.
  * @csspart footer - The actions row.
  *
+ * @cssprop --gw-popover-close-scale - Scales the close button, around 1 for medium. Defaults to `0.8`, small.
+ * @cssprop --gw-discard-scale - Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-popover-width - Its width beside a button. Defaults to `20rem`.
  * @cssprop --gw-popover-padding - The space inside it. Defaults to `--gw-space-4`.
  * @cssprop --gw-popover-background - The surface. Defaults to `--gw-color-surface-overlay`.
@@ -191,6 +195,10 @@ export class GwPopover extends GwElement {
         color: var(--gw-color-text-strong);
       }
 
+      .close {
+        --gw-button-scale: var(--gw-popover-close-scale, 0.8);
+      }
+
       .body {
         font-size: var(--gw-font-size-s);
       }
@@ -226,9 +234,9 @@ export class GwPopover extends GwElement {
     "gw-button",
     {
       class: "close",
+      part: "close",
       variant: "neutral",
       appearance: "plain",
-      size: "small",
       labels: "hide",
       icon: closeIcon,
     },
@@ -245,7 +253,7 @@ export class GwPopover extends GwElement {
     },
     h(
       "header",
-      {},
+      { part: "header" },
       h(
         "div",
         { class: "content" },

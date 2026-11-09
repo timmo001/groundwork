@@ -44,11 +44,18 @@ const narrow = "(width < 40rem)";
  *
  * @csspart surface - The sheet's surface.
  * @csspart header - The row with the close button, heading and actions.
+ * @csspart close - The close button, a `gw-button`.
  * @csspart heading - The heading.
  * @csspart body - The content.
  *
  * @cssprop --gw-sheet-width - Its width from the start or end edge. Defaults to `20rem`.
  * @cssprop --gw-sheet-height - Its greatest height from the bottom. Defaults to `85vh`.
+ * @cssprop --gw-sheet-close-scale - Scales the close button, around 1 for medium. Defaults to `0.8`, small.
+ * @cssprop --gw-sheet-background - The surface. Defaults to `--gw-color-surface-overlay`.
+ * @cssprop --gw-sheet-border-color - The border on its open edge. Defaults to `--gw-color-border-normal`.
+ * @cssprop --gw-sheet-radius - The corners of a bottom sheet. Defaults to `--gw-radius-panel`.
+ * @cssprop --gw-sheet-shadow - The shadow. Defaults to `--gw-shadow-l`.
+ * @cssprop --gw-sheet-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 40%)`.
  *
  * @fires {Event} close - When it closes.
  */
@@ -70,9 +77,10 @@ export class GwSheet extends GwElement {
         margin: 0;
         overflow: hidden;
         color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-overlay);
-        border: 0 solid var(--gw-color-border-normal);
-        box-shadow: var(--gw-shadow-l);
+        background: var(--gw-sheet-background, var(--gw-color-surface-overlay));
+        border: 0 solid
+          var(--gw-sheet-border-color, var(--gw-color-border-normal));
+        box-shadow: var(--gw-sheet-shadow, var(--gw-shadow-l));
         transition:
           translate var(--gw-motion-normal) var(--gw-motion-easing),
           display var(--gw-motion-normal) allow-discrete,
@@ -94,7 +102,7 @@ export class GwSheet extends GwElement {
       }
 
       [popover]:popover-open::backdrop {
-        background: rgb(0 0 0 / 40%);
+        background: var(--gw-sheet-backdrop, rgb(0 0 0 / 40%));
       }
 
       @starting-style {
@@ -140,8 +148,11 @@ export class GwSheet extends GwElement {
         max-height: var(--gw-sheet-height, 85vh);
         padding-block-end: env(safe-area-inset-bottom);
         border-block-start-width: max(var(--gw-border-width), 1px);
-        border-start-start-radius: var(--gw-radius-panel);
-        border-start-end-radius: var(--gw-radius-panel);
+        border-start-start-radius: var(
+          --gw-sheet-radius,
+          var(--gw-radius-panel)
+        );
+        border-start-end-radius: var(--gw-sheet-radius, var(--gw-radius-panel));
         translate: 0 100%;
       }
 
@@ -178,6 +189,10 @@ export class GwSheet extends GwElement {
         color: var(--gw-color-text-strong);
       }
 
+      .close {
+        --gw-button-scale: var(--gw-sheet-close-scale, 0.8);
+      }
+
       .body {
         display: flex;
         flex: 1;
@@ -203,9 +218,10 @@ export class GwSheet extends GwElement {
   readonly #closeButton = h(
     "gw-button",
     {
+      class: "close",
+      part: "close",
       variant: "neutral",
       appearance: "plain",
-      size: "small",
       labels: "hide",
     },
     "Close",

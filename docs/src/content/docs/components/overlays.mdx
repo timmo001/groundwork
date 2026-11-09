@@ -81,7 +81,9 @@ A panel of filters, settings or details that slides in from an edge over the pag
 | `open` | Whether it's open |
 | `close-label` | The close button's name, for an app in another language |
 
-It's on the Popover API, in the top layer. Esc, a click outside or the close button closes it, focus starts on the close button and goes back to where it was, and it fires `close`. Set `--gw-sheet-width` for the side edges and `--gw-sheet-height` for the bottom.
+It's on the Popover API, in the top layer. Esc, a click outside or the close button closes it, focus starts on the close button and goes back to where it was, and it fires `close`. Set `--gw-sheet-width` for the side edges and `--gw-sheet-height` for the bottom, and `--gw-sheet-background`, `--gw-sheet-border-color`, `--gw-sheet-radius`, `--gw-sheet-shadow` and `--gw-sheet-backdrop` for its look.
+
+The close buttons in a sheet, popover and dialog are the `close` part, sized with `--gw-sheet-close-scale`, `--gw-popover-close-scale` and `--gw-dialog-close-scale` (small by default). `--gw-discard-scale` sizes the Keep editing and Discard buttons.
 
 ## Filter
 

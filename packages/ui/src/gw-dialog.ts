@@ -35,9 +35,12 @@ const closeIcon =
  * @csspart dialog - The dialog's surface.
  * @csspart header - The row with the heading and close button.
  * @csspart heading - The heading.
+ * @csspart close - The close button, a `gw-button`.
  * @csspart body - The content.
  * @csspart footer - The actions row.
  *
+ * @cssprop --gw-dialog-close-scale - Scales the close button, around 1 for medium. Defaults to `0.8`, small.
+ * @cssprop --gw-discard-scale - Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-dialog-width - The widest it grows. Defaults to `32rem`.
  * @cssprop --gw-dialog-background - The surface. Defaults to `--gw-color-surface-overlay`.
  * @cssprop --gw-dialog-border-color - The border. Defaults to `--gw-color-border-normal`.
@@ -141,6 +144,10 @@ export class GwDialog extends GwElement {
         color: var(--gw-color-text-strong);
       }
 
+      .close {
+        --gw-button-scale: var(--gw-dialog-close-scale, 0.8);
+      }
+
       .body {
         flex: 1 1 auto;
         min-height: 0;
@@ -197,9 +204,9 @@ export class GwDialog extends GwElement {
     "gw-button",
     {
       class: "close",
+      part: "close",
       variant: "neutral",
       appearance: "plain",
-      size: "small",
       labels: "hide",
       icon: closeIcon,
     },
