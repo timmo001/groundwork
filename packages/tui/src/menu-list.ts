@@ -80,6 +80,8 @@ export interface MenuListOptions<Item extends MenuListItem> {
    * unset.
    */
   readonly pageSize?: number;
+  /** The paging rows' text, for an app in another language. "Previous page" and "Next page" by default */
+  readonly pageLabels?: { readonly previous?: string; readonly next?: string };
   /** Called when the page changes, for a page indicator */
   readonly onPageChange?: (page: number, totalPages: number) => void;
   /**
@@ -694,9 +696,15 @@ export class MenuList<
     if (entry.kind !== "item") {
       const color = selected ? theme.accent : theme.fgSubtle;
       const next = entry.kind === "next";
+      const labels = this.options.pageLabels;
+
+      const label = next
+        ? (labels?.next ?? "Next page")
+        : (labels?.previous ?? "Previous page");
 
       row.iconText.content = t`${fg(color)(next ? "→" : "←")}`;
-      row.titleText.content = t`${fg(color)(next ? "Next page" : "Previous page")}`;
+
+      row.titleText.content = t`${fg(color)(label)}`;
       row.descText.content = "";
 
       return;

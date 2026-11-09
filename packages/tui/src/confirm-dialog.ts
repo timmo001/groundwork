@@ -8,6 +8,7 @@ import { BoxRenderable, TextRenderable, fg, t } from "@opentui/core";
 import type { CliRenderer, KeyEvent } from "@opentui/core";
 import { Button } from "./button.ts";
 import { Dialog } from "./dialog.ts";
+import type { HelpEntry } from "./help-bar.ts";
 import type { Theme } from "./theme.ts";
 
 export interface ConfirmDialogOptions {
@@ -17,6 +18,10 @@ export interface ConfirmDialogOptions {
   readonly destructive?: boolean | undefined;
   /** "Confirm" by default */
   readonly confirmLabel?: string | undefined;
+  /** "Cancel" by default, for an app in another language */
+  readonly cancelLabel?: string | undefined;
+  /** The key hints along the bottom, for an app in another language; y to confirm, Tab to move and Esc to cancel by default */
+  readonly help?: readonly HelpEntry[] | undefined;
   readonly onConfirm: () => void;
   /** Runs when it closes without confirming */
   readonly onCancel?: (() => void) | undefined;
@@ -41,7 +46,7 @@ export class ConfirmDialog {
       title: "",
       color: options.destructive === true ? options.theme.red : undefined,
       height: 8,
-      help: [
+      help: options.help ?? [
         { key: "y", action: "confirm" },
         { key: "Tab", action: "move" },
         { key: "Esc", action: "cancel" },
@@ -66,7 +71,7 @@ export class ConfirmDialog {
     const cancel = new Button(renderer, {
       id: `${options.id}-cancel`,
       theme: options.theme,
-      label: "Cancel",
+      label: options.cancelLabel ?? "Cancel",
       onPress: () => this.dialog.close(),
     });
 

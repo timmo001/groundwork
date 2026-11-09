@@ -8,6 +8,7 @@
 import { SelectRenderable, SelectRenderableEvents } from "@opentui/core";
 import type { CliRenderer } from "@opentui/core";
 import { Dialog } from "./dialog.ts";
+import type { HelpEntry } from "./help-bar.ts";
 import type { Theme } from "./theme.ts";
 
 export interface Choice<Value> {
@@ -21,6 +22,8 @@ export interface ChoiceDialogOptions<Value> {
   readonly theme: Theme;
   /** 50 by default */
   readonly width?: number | undefined;
+  /** The key hints along the bottom, for an app in another language; ↑↓ to move, Enter to choose and Esc to cancel by default */
+  readonly help?: readonly HelpEntry[] | undefined;
   readonly onChoose: (value: Value) => void;
   /** Runs when it closes without a choice */
   readonly onCancel?: (() => void) | undefined;
@@ -43,7 +46,7 @@ export class ChoiceDialog<Value> {
       theme,
       title: "",
       width: options.width ?? 50,
-      help: [
+      help: options.help ?? [
         { key: "↑↓", action: "move" },
         { key: "Enter", action: "choose" },
         { key: "Esc", action: "cancel" },

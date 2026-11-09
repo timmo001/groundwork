@@ -22,7 +22,7 @@ import { AppHeader, formatHelpBar, loadTheme } from "@timmo001/groundwork-tui";
 - `formatBreadcrumb`, `formatFilterBar` and `formatHelpBar` build the title
   trail, the filter line and the key hints along the bottom.
 - `MenuList` is a filterable list of two-line rows, with group headings and
-  paging. `StatusList` is a plain list of labelled values.
+  paging. `StatusList` is a plain list of labeled values.
 - `MenuGrid` lays out `Tile` cards under `SectionHeading` rows, with arrow
   keys moving to the nearest tile.
 - `ScrollSurface` is a themed scroll box, and `surfaceBackground` its color.
@@ -32,5 +32,9 @@ import { AppHeader, formatHelpBar, loadTheme } from "@timmo001/groundwork-tui";
   click outside. `ConfirmDialog` asks yes or no (Cancel has focus), and
   `ChoiceDialog` picks from a list. `Toast` is a single self-closing message
   for results nothing else on screen can show.
+
+Every word a component shows takes an option for an app in another language:
+`pageLabels` on `MenuList`, `confirmLabel` and `cancelLabel` on
+`ConfirmDialog`, and `help` on each dialog for its key hints.
 
 `templates/tui-menu` shows the components, and runs with `mise run demo:tui`.

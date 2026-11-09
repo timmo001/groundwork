@@ -20,6 +20,19 @@ Each component takes the `Theme` from [`loadTheme`](/terminal#themes). The demo 
 
 `MenuList` is a filterable list of two-line rows: an icon, a title and a description. Typing filters it, and the filter shows above it through `formatFilterBar`, always in place so the list doesn't move. Long lists page, and rows can sit under group headings. Enter or a click runs a row. `StatusList` is a plain list of labeled values.
 
+`pageSize` turns paging on, and `pageLabels` sets the paging rows' text for an app in another language:
+
+```ts
+new MenuList(renderer, {
+  id: "commands",
+  theme,
+  items,
+  pageSize: 8,
+  pageLabels: { previous: "Page précédente", next: "Page suivante" },
+  onSelect: (item) => run(item.id),
+});
+```
+
 ## Grid
 
 `MenuGrid` lays out `Tile` cards in sections, each under a `SectionHeading`. Tiles wrap to the terminal's width, and the arrow keys move to the nearest tile in that direction, across sections too. A click highlights a tile and calls `onActivate` with its id.
@@ -38,6 +51,24 @@ Each component takes the `Theme` from [`loadTheme`](/terminal#themes). The demo 
 
 - `ChoiceDialog` picks one of a list, each with a description, such as the ways to run an action.
 - `ConfirmDialog` asks yes or no. Focus starts on Cancel, so Enter alone never confirms, and `y` confirms. Mark it `destructive` when the action can't be undone.
+
+Every word a dialog shows can change, for an app in another language: `confirmLabel` and `cancelLabel` on `ConfirmDialog`, and `help` on all three for the key hints along the bottom.
+
+```ts
+new ConfirmDialog(renderer, {
+  id: "remove",
+  theme,
+  destructive: true,
+  confirmLabel: "Supprimer",
+  cancelLabel: "Annuler",
+  help: [
+    { key: "y", action: "confirmer" },
+    { key: "Tab", action: "changer" },
+    { key: "Échap", action: "annuler" },
+  ],
+  onConfirm: remove,
+});
+```
 
 ![A choice dialog on Base, dark](/screenshots/terminal/choice-base-dark.png)
 
