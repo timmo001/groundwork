@@ -46,11 +46,11 @@ const entries: Entry[] = await Promise.all(
       return {
         file,
         module: /from "\.\.\/([a-z-]+)\.js"/.exec(text)?.[1] ?? "",
-        tags: [...text.matchAll(/\.define\("(gw-[a-z-]+)"\)/g)].map(
-          ([, tag]) => tag,
+        tags: [...text.matchAll(/\.define\("(gw-[a-z-]+)"\)/g)].flatMap(
+          ([, tag]) => (tag === undefined ? [] : [tag]),
         ),
-        imports: [...text.matchAll(/^import "\.\/([a-z-]+)\.js";/gm)].map(
-          ([, name]) => `${name}.ts`,
+        imports: [...text.matchAll(/^import "\.\/([a-z-]+)\.js";/gm)].flatMap(
+          ([, name]) => (name === undefined ? [] : [`${name}.ts`]),
         ),
       };
     }),
@@ -69,14 +69,18 @@ const rendered = async (module: string, seen = new Set<string>()) => {
   const text = await readFile(join(src, `${module}.ts`), "utf8");
 
   const tags = new Set(
-    [...text.matchAll(/\bh\(\s*"(gw-[a-z-]+)"/g)].map(([, tag]) => tag),
+    [...text.matchAll(/\bh\(\s*"(gw-[a-z-]+)"/g)].flatMap(([, tag]) =>
+      tag === undefined ? [] : [tag],
+    ),
   );
 
   // Helpers such as dismiss.ts and field-info.ts render for the element, but
   // other elements' modules (gw-*.ts) are only imported for their types
   const helpers = [
     ...text.matchAll(/^import (?!type )[^;]*?from "\.\/([a-z-]+)\.js";/gms),
-  ].flatMap(([, name]) => (name.startsWith("gw-") ? [] : [name]));
+  ].flatMap(([, name]) =>
+    name === undefined || name.startsWith("gw-") ? [] : [name],
+  );
 
   for (const helper of helpers) {
     for (const tag of await rendered(helper, seen)) tags.add(tag);
