@@ -68,19 +68,27 @@ export class Dismissal {
 
   readonly #keep = h(
     "gw-button",
-    { variant: "neutral", appearance: "plain" },
+    { part: "discard-keep", variant: "neutral", appearance: "plain" },
     "Keep editing",
   );
 
-  readonly #discard = h("gw-button", { variant: "danger" }, "Discard");
+  readonly #discard = h(
+    "gw-button",
+    { part: "discard-confirm", variant: "danger" },
+    "Discard",
+  );
 
-  readonly #question = h("p", {}, "Discard your changes?");
+  readonly #question = h(
+    "p",
+    { part: "discard-question" },
+    "Discard your changes?",
+  );
 
   readonly #view = h(
     "div",
-    { class: "discard", role: "alert" },
+    { class: "discard", part: "discard", role: "alert" },
     this.#question,
-    h("footer", {}, this.#keep, this.#discard),
+    h("footer", { part: "discard-actions" }, this.#keep, this.#discard),
   );
 
   constructor(

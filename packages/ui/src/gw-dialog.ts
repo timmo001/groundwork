@@ -38,6 +38,11 @@ const closeIcon =
  * @csspart close - The close button, a `gw-button`.
  * @csspart body - The content.
  * @csspart footer - The actions row.
+ * @csspart discard - The view asking whether to discard edits, in place of the content.
+ * @csspart discard-question - Its question.
+ * @csspart discard-actions - The row with Keep editing and Discard.
+ * @csspart discard-keep - The Keep editing button, a `gw-button`.
+ * @csspart discard-confirm - The Discard button, a `gw-button`.
  *
  * @cssprop --gw-dialog-close-scale - Scales the close button, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-discard-scale - Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.

@@ -7793,6 +7793,26 @@
             {
               "description": "The actions row.",
               "name": "footer"
+            },
+            {
+              "description": "The view asking whether to discard edits, in place of the content.",
+              "name": "discard"
+            },
+            {
+              "description": "Its question.",
+              "name": "discard-question"
+            },
+            {
+              "description": "The row with Keep editing and Discard.",
+              "name": "discard-actions"
+            },
+            {
+              "description": "The Keep editing button, a `gw-button`.",
+              "name": "discard-keep"
+            },
+            {
+              "description": "The Discard button, a `gw-button`.",
+              "name": "discard-confirm"
             }
           ],
           "slots": [
@@ -18139,6 +18159,26 @@
             {
               "description": "The actions row.",
               "name": "footer"
+            },
+            {
+              "description": "The view asking whether to discard edits, in place of the content.",
+              "name": "discard"
+            },
+            {
+              "description": "Its question.",
+              "name": "discard-question"
+            },
+            {
+              "description": "The row with Keep editing and Discard.",
+              "name": "discard-actions"
+            },
+            {
+              "description": "The Keep editing button, a `gw-button`.",
+              "name": "discard-keep"
+            },
+            {
+              "description": "The Discard button, a `gw-button`.",
+              "name": "discard-confirm"
             }
           ],
           "slots": [

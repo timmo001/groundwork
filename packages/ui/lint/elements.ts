@@ -4,12 +4,17 @@
  * and the Custom Elements Manifest: `@element`, `@summary`, then an `@attr`
  * for each property with an attribute, a `@slot` for each slot, a `@csspart`
  * for each part and a typed `@fires` for each event it dispatches. A
- * `@csspart` for a part the class doesn't render fails too.
+ * `@csspart` for a part the class doesn't render fails too. Parts a helper
+ * class renders, such as the discard view in `dismiss.ts`, count for any
+ * element class that constructs it from a relative import.
  *
  * Moving it to the shared rules is tracked in timmo001/oxlint-rules#107.
  *
  * @module
  */
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+
 import { defineRule, eslintCompatPlugin } from "@oxlint/plugins";
 import type { ESTree } from "@oxlint/plugins";
 
@@ -121,6 +126,26 @@ const dispatchedOnDocument = (node: Node) => {
 
 const escape = (text: string) => text.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+const helperParts = new Map<string, readonly string[]>();
+
+/** The `part: "..."` literals in a relative module, such as a shared helper's. */
+const partsIn = (from: string, specifier: string): readonly string[] => {
+  const path = resolve(dirname(from), specifier.replace(/\.js$/, ".ts"));
+  const cached = helperParts.get(path);
+
+  if (cached) return cached;
+
+  const parts = existsSync(path)
+    ? [...readFileSync(path, "utf8").matchAll(/\bpart:\s*"([^"]+)"/g)].map(
+        ([, part = ""]) => part,
+      )
+    : [];
+
+  helperParts.set(path, parts);
+
+  return parts;
+};
+
 const elementDocsRule = defineRule({
   meta: {
     type: "problem",
@@ -140,6 +165,8 @@ const elementDocsRule = defineRule({
   create(context) {
     const classes = new Map<string, ElementApi>();
     const defined = new Map<string, string>();
+    // Local names imported from relative modules, to their specifiers
+    const relativeImports = new Map<string, string>();
 
     const apiFor = (node: Node) => {
       const owner = enclosingClass(node);
@@ -165,6 +192,15 @@ const elementDocsRule = defineRule({
     };
 
     return {
+      ImportDeclaration(node) {
+        const specifier = String(node.source.value);
+
+        if (!specifier.startsWith(".")) return;
+
+        for (const imported of node.specifiers) {
+          relativeImports.set(imported.local.name, specifier);
+        }
+      },
       ClassDeclaration(node) {
         if (node.id && !classes.has(node.id.name)) {
           classes.set(node.id.name, emptyApi(node));
@@ -188,6 +224,17 @@ const elementDocsRule = defineRule({
       },
       NewExpression(node) {
         const name = stringValue(node.arguments[0]);
+
+        const helper =
+          node.callee.type === "Identifier"
+            ? relativeImports.get(node.callee.name)
+            : undefined;
+
+        if (helper !== undefined) {
+          for (const part of partsIn(context.filename, helper)) {
+            apiFor(node)?.parts.add(part);
+          }
+        }
 
         if (
           node.callee.type === "Identifier" &&
