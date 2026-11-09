@@ -24,6 +24,7 @@ import {
   type GwSegmented,
   type GwSelect,
 } from "@timmo001/groundwork-ui";
+import { Result } from "effect";
 
 const storageKey = "groundwork:custom-theme";
 
@@ -84,11 +85,11 @@ const sample: SolvedTheme = {
   },
 };
 
-const modeLabels: Record<string, string> = {
-  light: "Light",
-  dark: "Dark",
-  darker: "Darker",
-};
+const modeLabels = new Map([
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["darker", "Darker"],
+]);
 
 const slug = (name: string) =>
   name
@@ -399,7 +400,7 @@ export class GwThemeEditor extends GwElement {
 
   /** The document the controls describe, as JSON for the decoder to check. */
   #read() {
-    const theme = this.#document;
+    const { style, ...theme } = this.#document;
 
     return JSON.stringify(
       {
@@ -410,7 +411,7 @@ export class GwThemeEditor extends GwElement {
         background: this.#background.value,
         accent: this.#accent.value,
         style: {
-          ...theme.style,
+          ...style,
           font: this.#chosen(this.#choices.font),
           mono: this.#chosen(this.#choices.mono),
           radius: {
@@ -418,7 +419,7 @@ export class GwThemeEditor extends GwElement {
             control: Number(this.#control.value),
             chip: Number(this.#chip.value),
           },
-          border: { ...theme.style.border, strength: this.#level(this.#choices.border) },
+          border: { ...style.border, strength: this.#level(this.#choices.border) },
           density: this.#level(this.#choices.density),
           capitals: this.#capitals.checked,
           link: { color: this.#linkColor.value, underline: this.#underline.value },
@@ -450,7 +451,7 @@ export class GwThemeEditor extends GwElement {
 
     const mapped = omarchyTheme(text);
 
-    if (mapped._tag === "Success") {
+    if (Result.isSuccess(mapped)) {
       this.#load(JSON.stringify(mapped.success, null, 2));
     } else {
       this.#status.setAttribute("tone", "danger");
@@ -478,7 +479,7 @@ export class GwThemeEditor extends GwElement {
   #apply(text: string, fill: boolean) {
     const parsed = parseTheme(text);
 
-    if (parsed._tag === "Failure") {
+    if (Result.isFailure(parsed)) {
       this.#status.setAttribute("tone", "danger");
       this.#status.setAttribute("heading", "That isn't a theme document");
       this.#status.textContent = String(parsed.failure).slice(0, 400);
@@ -503,7 +504,7 @@ export class GwThemeEditor extends GwElement {
 
     this.#mode.options = modes.map((mode) => ({
       value: mode,
-      label: modeLabels[mode] ?? mode,
+      label: modeLabels.get(mode) ?? mode,
     }));
 
     if (!modes.includes(this.#mode.value)) this.#mode.value = modes.includes("dark") ? "dark" : (modes[0] ?? "dark");
@@ -514,7 +515,7 @@ export class GwThemeEditor extends GwElement {
 
     this.#status.textContent =
       misses.length === 0
-        ? `Solved into ${modes.map((mode) => modeLabels[mode] ?? mode).join(", ")}, and every role meets its contrast target.`
+        ? `Solved into ${modes.map((mode) => modeLabels.get(mode) ?? mode).join(", ")}, and every role meets its contrast target.`
         : `Applied, with ${misses.length} roles below target: ${misses
             .slice(0, 4)
             .map((miss) => `${miss.role} in ${miss.mode} (${miss.ratio.toFixed(2)})`)

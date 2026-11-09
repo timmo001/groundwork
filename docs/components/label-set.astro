@@ -15,6 +15,7 @@ const set = conventions.sets.find((item) => item.id === Astro.props.set);
 if (set === undefined) throw new Error(`Unknown label set: ${Astro.props.set}`);
 
 type Label = (typeof set.labels)[number] & { aliases?: string[] };
+
 const labels: Label[] = set.labels;
 ---
 

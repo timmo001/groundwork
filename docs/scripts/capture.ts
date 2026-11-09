@@ -8,9 +8,14 @@
  * It reads the page list from the running dev server (`mise run serve:docs`),
  * or from `GW_DOCS_URL`.
  */
-import { mkdir } from "node:fs/promises";
 import { parseArgs } from "node:util";
+import { Schema } from "effect";
 import { chromium } from "playwright";
+
+/** The page list Blume serves at `/api/docs/pages.json`. */
+const PageIndex = Schema.Struct({
+  pages: Schema.Array(Schema.Struct({ route: Schema.String })),
+});
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -27,11 +32,10 @@ const themes = values.themes.split(",");
 const modes = values.modes.split(",");
 
 const index = await fetch(`${site}/api/docs/pages.json`, { tls: { rejectUnauthorized: false } });
-const { pages } = (await index.json()) as { pages: { route: string }[] };
+const { pages } = Schema.decodeUnknownSync(PageIndex)(await index.json());
 const routes = pages.map((page) => page.route).filter((route) => route.startsWith(values.only));
 
-await mkdir(out, { recursive: true });
-
+// Playwright creates `out` with the first screenshot
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1400, height: 1000 }, ignoreHTTPSErrors: true });
 const written: string[] = [];
@@ -68,4 +72,5 @@ for (const route of routes) {
 }
 
 await browser.close();
+
 console.log(`Captured ${written.length} screenshots of ${routes.length} pages in ${out}`);

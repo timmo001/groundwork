@@ -27,6 +27,19 @@ declare global {
     gwShift: number;
     gwShifted: string[];
   }
+
+  /** A layout-shift entry, which Chromium has but TypeScript's DOM types don't. */
+  interface LayoutShift extends PerformanceEntry {
+    readonly hadRecentInput: boolean;
+    readonly value: number;
+    readonly sources: readonly {
+      readonly node: Node | null;
+      readonly previousRect: DOMRectReadOnly;
+      readonly currentRect: DOMRectReadOnly;
+    }[];
+  }
+
+  var LayoutShift: { prototype: LayoutShift; new (): LayoutShift };
 }
 
 // Under a full parallel run, a web font can occasionally land late and nudge
@@ -46,19 +59,17 @@ for (const route of routes) {
       window.gwShifted = [];
 
       new PerformanceObserver((list) => {
-        for (const entry of list.getEntries() as (PerformanceEntry & {
-          hadRecentInput: boolean;
-          value: number;
-          sources: { node: Node | null; previousRect: DOMRect; currentRect: DOMRect }[];
-        })[]) {
-          if (entry.hadRecentInput) continue;
+        for (const entry of list.getEntries()) {
+          if (!(entry instanceof LayoutShift) || entry.hadRecentInput) continue;
 
           window.gwShift += entry.value;
 
           for (const { node, previousRect, currentRect } of entry.sources) {
             const element = node instanceof Element ? node : node?.parentElement;
+
             const describe = (item: Element) =>
               `${item.localName}${item.id ? `#${item.id}` : ""}`;
+
             const name = element
               ? `${element.parentElement ? `${describe(element.parentElement)} > ` : ""}${describe(element)} "${(element.textContent ?? "").trim().slice(0, 24)}"`
               : "?";

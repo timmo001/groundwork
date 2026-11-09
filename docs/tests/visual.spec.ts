@@ -38,7 +38,7 @@ const channels = (page: Page, color: string) =>
     context.fillStyle = value;
     context.fillRect(0, 0, 1, 1);
 
-    return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+    return context.getImageData(0, 0, 1, 1).data.slice(0, 3);
   }, color);
 
 /** The color Blume's page background resolves to. */
@@ -92,6 +92,7 @@ for (const route of routes) {
           await settle(page);
 
           const colors = theme.modes[mode];
+
           if (!colors) throw new Error(`${theme.id} has no ${mode} mode`);
           const expected = await channels(page, colors["surface-default"]);
           const actual = await channels(page, await pageBackground(page));

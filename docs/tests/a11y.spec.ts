@@ -10,6 +10,7 @@ import { createRequire } from "node:module";
 import { join } from "node:path";
 import tokens from "@timmo001/groundwork-tokens/themes.json" with { type: "json" };
 import { expect, test, type Page } from "@playwright/test";
+import type axeCore from "axe-core";
 
 const content = join(import.meta.dirname, "../src/content/docs");
 
@@ -29,11 +30,18 @@ const optional = tokens.themes
 
 const axe = readFileSync(createRequire(import.meta.url).resolve("axe-core"), "utf8");
 
-interface Violation {
-  id: string;
-  impact: string | null;
-  help: string;
-  nodes: { target: string[]; any: { data?: unknown }[] }[];
+declare global {
+  interface Window {
+    /** axe-core, added to the page by `audit`. */
+    axe: typeof axeCore;
+  }
+}
+
+/** What axe's color-contrast check reports about a node. */
+interface ContrastData {
+  fgColor?: string;
+  bgColor?: string;
+  contrastRatio?: number;
 }
 
 const pick = (page: Page, theme: string, mode: (typeof modes)[number]) =>
@@ -61,13 +69,7 @@ const audit = async (page: Page) => {
   await page.addScriptTag({ content: axe });
 
   return page.evaluate(async (exclude) => {
-    const { violations } = await (
-      window as unknown as {
-        axe: {
-          run: (context: object, options: object) => Promise<{ violations: Violation[] }>;
-        };
-      }
-    ).axe.run(
+    const { violations } = await window.axe.run(
       { include: [["html"]], exclude },
       { runOnly: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"] },
     );
@@ -77,9 +79,7 @@ const audit = async (page: Page) => {
       impact,
       help,
       nodes: nodes.slice(0, 5).map(({ target, any }) => {
-        const data = any[0]?.data as
-          | { fgColor?: string; bgColor?: string; contrastRatio?: number }
-          | undefined;
+        const data: ContrastData | undefined = any[0]?.data;
 
         return data?.contrastRatio
           ? `${target.join(" ")} (${data.fgColor} on ${data.bgColor}, ${data.contrastRatio})`

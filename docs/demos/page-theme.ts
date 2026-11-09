@@ -10,6 +10,7 @@ const follow = () => {
   const picker = document.querySelector("div[data-gw-theme-picker]");
   const fallback = picker instanceof HTMLElement ? picker.dataset.defaultTheme : undefined;
   const theme = root.dataset.gwDocsTheme ?? fallback ?? "base";
+
   const mode =
     root.dataset.theme !== "dark"
       ? "light"

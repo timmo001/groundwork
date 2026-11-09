@@ -17,6 +17,7 @@ interface Entry {
 }
 
 interface Declaration {
+  kind: string;
   tagName?: string;
   summary?: string;
   attributes?: Entry[] | null;
@@ -27,7 +28,7 @@ interface Declaration {
 }
 
 const declarations: Declaration[] = manifest.modules.flatMap(
-  (module) => (module.declarations ?? []) as Declaration[],
+  (module): Declaration[] => module.declarations ?? [],
 );
 
 const elements = Astro.props.tags.map((tag) => {

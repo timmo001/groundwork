@@ -269,6 +269,7 @@ export class GwAnatomy extends GwElement {
     if (rect.width === 0) return;
 
     const style = getComputedStyle(part);
+
     const box: Box = {
       x: rect.x - origin.x,
       y: rect.y - origin.y,
@@ -284,21 +285,27 @@ export class GwAnatomy extends GwElement {
     };
 
     // Gaps between the part's laid-out children, in its own direction
-    const children = [...(part.children.length > 0 ? part.children : [])]
-      .map((child) => child.getBoundingClientRect())
-      .filter((child) => child.width > 0 && child.height > 0);
+    const children = [...part.children].flatMap((child) => {
+      const bounds = child.getBoundingClientRect();
+
+      return bounds.width > 0 && bounds.height > 0 ? [bounds] : [];
+    });
+
     const gap = px(style.columnGap) || px(style.rowGap);
     const column = style.flexDirection.startsWith("column");
 
-    const shapes: string[] = [];
+    const marks: string[] = [];
+
     const rectangle = (cls: string, x: number, y: number, width: number, height: number) =>
       width > 0 && height > 0
-        ? shapes.push(`<rect class="${cls}" x="${x}" y="${y}" width="${width}" height="${height}"/>`)
+        ? marks.push(`<rect class="${cls}" x="${x}" y="${y}" width="${width}" height="${height}"/>`)
         : 0;
+
     const line = (x1: number, y1: number, x2: number, y2: number) =>
-      shapes.push(`<line class="line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`);
+      marks.push(`<line class="line" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`);
+
     const label = (x: number, y: number, text: string, anchor = "middle", cls = "") =>
-      shapes.push(
+      marks.push(
         `<text class="${cls}" x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle">${text}</text>`,
       );
 
@@ -306,6 +313,7 @@ export class GwAnatomy extends GwElement {
     // from computed styles at their real size, so they're scaled to draw
     const { x, y, width, height } = box;
     const zoom = this.scale;
+
     const drawn = {
       top: padding.top * zoom,
       right: padding.right * zoom,
@@ -341,7 +349,7 @@ export class GwAnatomy extends GwElement {
     const radius = px(style.borderTopLeftRadius);
     const real = { width: width / zoom, height: height / zoom };
 
-    shapes.push(
+    marks.push(
       `<rect class="outline" x="${x}" y="${y}" width="${width}" height="${height}" rx="${Math.min(radius * zoom, height / 2)}"/>`,
     );
 
@@ -370,7 +378,7 @@ export class GwAnatomy extends GwElement {
       label(gx, gy, `${round(gap)}`, column ? "start" : "middle", "info");
     }
 
-    this.#svg.innerHTML = shapes.join("");
+    this.#svg.innerHTML = marks.join("");
 
     const facts: [string, string][] = [
       ["Height", this.describe("space", real.height)],

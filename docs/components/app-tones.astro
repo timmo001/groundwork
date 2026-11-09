@@ -4,6 +4,7 @@
  * theme, for the App tones demo on the Themes page.
  */
 import { appTones, parseTheme } from "@timmo001/groundwork-tokens/runtime";
+import { Result } from "effect";
 
 /** Triage's issue states, as an app would pass them. */
 const tones = {
@@ -23,7 +24,7 @@ const documents = Object.values(
 ).flatMap((text) => {
   const parsed = parseTheme(text);
 
-  return parsed._tag === "Success" ? [parsed.success] : [];
+  return Result.isSuccess(parsed) ? [parsed.success] : [];
 });
 
 const css = appTones(tones, documents);

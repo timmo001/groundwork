@@ -17,11 +17,11 @@ const theme = tokens.themes.find((item) => item.id === id);
 
 if (theme === undefined) throw new Error(`Unknown theme: ${id}`);
 
-const labels: Record<string, string> = {
-  light: "Light",
-  dark: "Dark",
-  darker: "Darker",
-};
+const labels = new Map([
+  ["light", "Light"],
+  ["dark", "Dark"],
+  ["darker", "Darker"],
+]);
 
 const modes = Object.keys(theme.modes).filter(
   (mode) => only === undefined || only.includes(mode),
@@ -40,14 +40,14 @@ const statuses = [
   {
     modes.map((mode) => (
       <section
-        aria-label={`${theme.name}, ${labels[mode] ?? mode}`}
+        aria-label={`${theme.name}, ${labels.get(mode) ?? mode}`}
         class="preview"
         data-gw-mode={mode}
         data-gw-theme={theme.id}
       >
         <header class="bar">
           <span class="title">{theme.name}</span>
-          <span class="mode">{labels[mode] ?? mode}</span>
+          <span class="mode">{labels.get(mode) ?? mode}</span>
         </header>
         <div class="body">
           <div class="panel">

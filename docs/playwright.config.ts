@@ -11,7 +11,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const url = process.env.GW_DOCS_URL;
 
-export default defineConfig({
+const config = defineConfig({
   testDir: "tests",
   fullyParallel: true,
   reporter: [["list"], ["html", { open: "never" }]],
@@ -20,13 +20,14 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     ...devices["Desktop Chrome"],
   },
-  ...(url === undefined
-    ? {
-        webServer: {
-          command: "bun scripts/serve-build.ts",
-          url: "http://127.0.0.1:7360",
-          reuseExistingServer: false,
-        },
-      }
-    : {}),
 });
+
+if (url === undefined) {
+  config.webServer = {
+    command: "bun scripts/serve-build.ts",
+    url: "http://127.0.0.1:7360",
+    reuseExistingServer: false,
+  };
+}
+
+export default config;
