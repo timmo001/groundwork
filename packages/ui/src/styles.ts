@@ -33,6 +33,25 @@ export const controlSizes = (name: string) => css`
 `;
 
 /**
+ * The standard page widths on a `size` attribute, for `gw-page` and
+ * `gw-app-bar`: each sets `--gw-content-width` for the element, so a page and
+ * a bar with the same size line up.
+ */
+export const contentWidths = css`
+  :host([size="narrow"]) {
+    --gw-content-width: var(--gw-content-width-narrow);
+  }
+
+  :host([size="wide"]) {
+    --gw-content-width: var(--gw-content-width-wide);
+  }
+
+  :host([size="full"]) {
+    --gw-content-width: 100%;
+  }
+`;
+
+/**
  * What every component shares: box sizing, the focus ring, icons and the
  * tones that set `--gw-tone` from a `tone` attribute.
  */

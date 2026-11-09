@@ -109,8 +109,9 @@
     --gw-motion-delay: 500ms;
     --gw-focus-width: 2px;
     --gw-focus-offset: 2px;
-    --gw-content-width: 72rem;
+    --gw-content-width: 90rem;
     --gw-content-width-narrow: 44rem;
+    --gw-content-width-wide: 120rem;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -255,6 +256,18 @@
   gw-app-bar[overlay]:not(:defined) {
     position: fixed;
     inset-inline: 0;
+  }
+
+  gw-app-bar[size="narrow"]:not(:defined) {
+    --gw-content-width: var(--gw-content-width-narrow);
+  }
+
+  gw-app-bar[size="wide"]:not(:defined) {
+    --gw-content-width: var(--gw-content-width-wide);
+  }
+
+  gw-app-bar[size="full"]:not(:defined) {
+    --gw-content-width: 100%;
   }
 
   gw-app-bar[reveal-after]:not(:defined) > [slot="brand"] {

@@ -5,7 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import { base, createIcon, setIconPath } from "./styles.js";
+import { base, contentWidths, createIcon, setIconPath } from "./styles.js";
 
 // MDI's menu and close
 const menuIcon = "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z";
@@ -15,8 +15,8 @@ const closeIcon =
 
 /**
  * A site or app header pinned to the top of the page, with a brand, nav
- * links and actions, full width with its content kept to the content width.
- * It's transparent at first, then gets a blurred surface and a bottom border
+ * links and actions, full width with its content kept to the content width,
+ * or to the standard width `size` picks, matching `gw-page`'s. It's transparent at first, then gets a blurred surface and a bottom border
  * once the page scrolls, or once the element
  * `reveal-after` names scrolls out of view, such as a hero. With
  * `reveal-after` the brand stays hidden, taking no room, until then, so a
@@ -40,6 +40,7 @@ const closeIcon =
  * @attr {boolean} collapsed - Whether the nav is in the menu. Set by the bar from `menu-below`.
  * @attr {boolean} menu-open - Whether the nav menu is open on narrow screens.
  * @attr {string} menu-label - The menu button's accessible name. Defaults to `Menu`.
+ * @attr {"narrow"|"default"|"wide"|"full"} size - The standard width its content keeps to, as on `gw-page`. Defaults to `default`.
  *
  * @slot brand - A logo or name linking home.
  * @slot - The nav links.
@@ -54,6 +55,7 @@ const closeIcon =
  * @cssprop --gw-app-bar-background - The surface once it floats. Defaults to `--gw-color-surface-default` at 82%.
  * @cssprop --gw-app-bar-border-color - The bottom border once it floats. Defaults to `--gw-color-border-quiet`.
  * @cssprop --gw-app-bar-backdrop - The backdrop filter once it floats. Defaults to `blur(12px) saturate(1.4)`.
+ * @cssprop --gw-content-width - The content's widest. Defaults to the theme's, 90rem; `size` sets it from `--gw-content-width-narrow` or `--gw-content-width-wide`.
  *
  * @fires {Event} toggle - When the nav menu opens or closes.
  */
@@ -66,10 +68,12 @@ export class GwAppBar extends GwElement {
     menuLabel: { attribute: "menu-label" },
     menuBelow: { type: "number", attribute: "menu-below" },
     collapsed: { type: "boolean", reflect: true },
+    size: { reflect: true },
   } as const;
 
   static override styles = [
     base,
+    contentWidths,
     css`
       :host {
         position: sticky;
@@ -248,6 +252,7 @@ export class GwAppBar extends GwElement {
   declare menuBelow: number;
   /** Whether the nav is in the menu. Set by the bar from `menuBelow`. */
   declare collapsed: boolean;
+  declare size: "narrow" | "default" | "wide" | "full";
 
   #narrow: MediaQueryList | undefined;
 
@@ -288,6 +293,7 @@ export class GwAppBar extends GwElement {
     this.menuLabel = "Menu";
     this.menuBelow = 600;
     this.collapsed = false;
+    this.size = "default";
   }
 
   /** Follows the viewport across `menuBelow`, setting `collapsed`. */

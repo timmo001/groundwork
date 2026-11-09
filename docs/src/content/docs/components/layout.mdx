@@ -14,7 +14,7 @@ description: App bars, pages, page headers, section titles, stacks, rows and gri
   </gw-app-bar>
 </Demo>
 
-A site or app header pinned to the top of the page: a brand in the `brand` slot, nav links in the default slot and icon buttons in `actions`. It runs the full width of the page with its content kept to `--gw-content-width`, and stays transparent until the page scrolls; then it gets a blurred surface and a bottom border, and sets `floating`.
+A site or app header pinned to the top of the page: a brand in the `brand` slot, nav links in the default slot and icon buttons in `actions`. It runs the full width of the page with its content kept to `--gw-content-width`, or the [standard width](#lining-up-with-the-page) its `size` picks, and stays transparent until the page scrolls; then it gets a blurred surface and a bottom border, and sets `floating`.
 
 For a page that opens with a hero, set `reveal-after` to a selector for it, such as `[data-hero]`. The bar then stays transparent and hides its brand until the hero scrolls out from under it, so the hero's large logo hands over to the bar's small one. A hidden brand takes no room: the nav starts at the edge, then slides over as the brand opens. `overlay` lays the bar over the top of the page instead of taking room, so the hero starts at the very top.
 
@@ -61,12 +61,28 @@ A site whose pages open with a hero, with a nav too long to share a row with its
 
 ### Lining up with the page
 
-The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` either side. `gw-page` uses the same box, so a page inside it lines up with the bar at every width. Set `--gw-content-width` to change the width for both:
+The bar keeps its content to `--gw-content-width`, with at least `--gw-space-3` either side. `gw-page` uses the same box, so a page inside it lines up with the bar at every width.
+
+Both take a `size` for one of the standard widths. Give the bar and the page the same one so they line up:
+
+| `size` | Width | For |
+| --- | --- | --- |
+| `narrow` | `--gw-content-width-narrow`, 44rem | Forms and settings |
+| `default` | `--gw-content-width`, 90rem | Most pages |
+| `wide` | `--gw-content-width-wide`, 120rem | Tables and dashboards |
+| `full` | The whole window, less `--gw-space-3` either side | Boards and canvases |
+
+```html
+<gw-app-bar size="wide">…</gw-app-bar>
+<gw-page size="wide">…</gw-page>
+```
+
+A `size` sets `--gw-content-width` for its element. To pick any other width, set `--gw-content-width` yourself: on `:root` for the whole app, or on one bar or page. Set the `--gw-content-width-narrow` or `--gw-content-width-wide` tokens to change what those sizes mean:
 
 ```html
 <style>
   :root {
-    --gw-content-width: min(87.5rem, 100vw - 6rem);
+    --gw-content-width: min(100rem, 100vw - 6rem);
   }
 </style>
 <gw-app-bar>…</gw-app-bar>
@@ -101,7 +117,7 @@ The page header holds the page's `<h1>`, with an optional `icon` tile and `descr
 
 | Element | What it does |
 | --- | --- |
-| `gw-page` | Centers a page's content at `--gw-content-width`, or the narrow width with `narrow` |
+| `gw-page` | Centers a page's content at `--gw-content-width`, or the standard width `size` picks |
 | `gw-stack` | Stacks its children with the theme's gap |
 | `gw-row` | Lines its children up and wraps them; `nowrap` stops that |
 | `gw-grid` | Fills columns at least `--gw-grid-min` (18rem) wide, and at most `max` of them |

@@ -5,28 +5,34 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import { base } from "./styles.js";
+import { base, contentWidths } from "./styles.js";
 
 /**
- * Centers a page's content at the theme's width, with the page gap between
- * its children.
+ * Centers a page's content at `--gw-content-width`, with the page gap between
+ * its children. `size` picks one of the standard widths instead; give
+ * `gw-app-bar` the same `size` so its content lines up.
  *
  * @element gw-page
  * @summary A page's content column.
  *
- * @attr {boolean} narrow - Uses the narrow content width, for forms and settings.
+ * @attr {"narrow"|"default"|"wide"|"full"} size - The standard width it keeps to: `narrow` for forms and settings, `wide` for tables and dashboards, `full` for the whole window less the edge gap. Defaults to `default`.
+ * @attr {boolean} narrow - The same as `size="narrow"`.
  *
  * @slot - The page's content.
  *
  * @csspart page - The content column.
+ *
+ * @cssprop --gw-content-width - The content's widest. Defaults to the theme's, 90rem; `size` sets it from `--gw-content-width-narrow` or `--gw-content-width-wide`.
  */
 export class GwPage extends GwElement {
   static override properties = {
+    size: { reflect: true },
     narrow: { type: "boolean", reflect: true },
   } as const;
 
   static override styles = [
     base,
+    contentWidths,
     css`
       :host {
         display: block;
@@ -41,19 +47,18 @@ export class GwPage extends GwElement {
         margin-inline: auto;
       }
 
-      :host([narrow]) .page {
-        width: min(
-          100% - 2 * var(--gw-space-3),
-          var(--gw-content-width-narrow)
-        );
+      :host([narrow]) {
+        --gw-content-width: var(--gw-content-width-narrow);
       }
     `,
   ];
 
+  declare size: "narrow" | "default" | "wide" | "full";
   declare narrow: boolean;
 
   constructor() {
     super();
+    this.size = "default";
     this.narrow = false;
   }
 

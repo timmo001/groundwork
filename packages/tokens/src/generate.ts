@@ -266,8 +266,10 @@ const foundations = {
   "motion-delay": "500ms",
   "focus-width": "2px",
   "focus-offset": "2px",
-  "content-width": "72rem",
+  // The page widths: gw-page and gw-app-bar's size picks one
+  "content-width": "90rem",
   "content-width-narrow": "44rem",
+  "content-width-wide": "120rem",
 };
 
 const declarations = (properties: Record<string, string>, indent = "  ") =>
@@ -422,6 +424,14 @@ const preUpgrade = {
       "max(var(--gw-space-3), (100% - var(--gw-content-width)) / 2)",
   },
   "gw-app-bar[overlay]": { position: "fixed", "inset-inline": "0" },
+  // The bar's size sets the width its padding keeps the content to
+  'gw-app-bar[size="narrow"]': {
+    "--gw-content-width": "var(--gw-content-width-narrow)",
+  },
+  'gw-app-bar[size="wide"]': {
+    "--gw-content-width": "var(--gw-content-width-wide)",
+  },
+  'gw-app-bar[size="full"]': { "--gw-content-width": "100%" },
   'gw-app-bar[reveal-after]:not(:defined) > [slot="brand"]': {
     visibility: "hidden",
   },
