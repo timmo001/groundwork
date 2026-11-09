@@ -6,6 +6,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./custom-elements.json": "./custom-elements.json",
     "./*": "./src/*"
   },
   "files": [
@@ -34,8 +35,8 @@
     "typecheck": "tsc && bun run scripts/typecheck-alone.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "gen": "bun run scripts/manifest.ts",
-    "gen:check": "bun run scripts/manifest.ts --check"
+    "gen": "bun run scripts/manifest.ts && bun run scripts/composition.ts",
+    "gen:check": "bun run scripts/manifest.ts --check && bun run scripts/composition.ts --check"
   },
   "devDependencies": {
     "@custom-elements-manifest/analyzer": "0.11.0",

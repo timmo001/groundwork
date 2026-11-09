@@ -65,7 +65,7 @@ run = [
 ]
 
 [tasks."gen:check"]
-description = "Check generated files match the theme documents, conventions and element docstrings"
+description = "Check generated files match the theme documents, conventions and element docstrings, and that each define/ entry defines what its element renders"
 depends = ["install"]
 run = [
   "bun run --cwd packages/tokens gen:check",

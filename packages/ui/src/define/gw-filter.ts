@@ -4,6 +4,7 @@
  * @module
  */
 import "./gw-chip.js";
+import "./gw-input.js";
 import { GwFilter } from "../gw-filter.js";
 
 GwFilter.define("gw-filter");
