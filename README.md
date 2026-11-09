@@ -22,6 +22,9 @@ document attached to it.
 | [`packages/report`](packages/report)                                      | `@timmo001/groundwork-report`, a self-contained HTML report page built from blocks        |
 | [`packages/pwa`](packages/pwa)                                            | `@timmo001/groundwork-pwa`, the manifest, service worker, Web Push and pairing            |
 | [`packages/mobile`](packages/mobile)                                      | `@timmo001/groundwork-mobile`, the page side of the Android shell                         |
+| [`packages/desktop`](packages/desktop)                                    | The desktop app config and the main process and view halves for Electrobun                |
+| [`packages/lit-effect`](packages/lit-effect)                              | Effect for Lit apps: an atom controller, a typed router and `@storage`                    |
+| [`packages/demo`](packages/demo)                                          | The demo app's `Items` service and fixture data, shared by every template                 |
 | [`docs`](docs)                                                            | The Groundwork docs site, showing every theme live                                        |
 | [`conventions`](conventions)                                              | Repository kinds, the label manifest and a file per repository                            |
 | [`templates/cli-tool`](templates/cli-tool)                                | A CLI built to the behavior conventions, with Code Mode and MCP                           |
