@@ -40,6 +40,9 @@ const toneIcons: Readonly<Record<Tone, string>> = {
  * @slot actions - Buttons beside the message.
  *
  * @csspart alert - The alert.
+ * @csspart icon - The tone's icon, until one is slotted.
+ * @csspart body - The heading and message.
+ * @csspart heading - The heading.
  *
  * @cssprop --gw-tone - The icon color, for a tone of your own. `tone` sets it.
  * @cssprop --gw-tone-fill - The background. `tone` sets it.
@@ -106,10 +109,10 @@ export class GwAlert extends GwElement {
 
   readonly #alert = h("div", { class: "alert", part: "alert" });
 
-  readonly #heading = h("strong");
+  readonly #heading = h("strong", { part: "heading" });
 
   // The tone's icon, shown until an icon is slotted in its place
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
   constructor() {
     super();
@@ -121,7 +124,7 @@ export class GwAlert extends GwElement {
   protected override create(root: ShadowRoot) {
     this.#alert.append(
       h("slot", { name: "icon" }, this.#icon),
-      h("div", { class: "body" }, this.#heading, h("slot")),
+      h("div", { class: "body", part: "body" }, this.#heading, h("slot")),
       h("slot", { name: "actions" }),
     );
     root.append(this.#alert);

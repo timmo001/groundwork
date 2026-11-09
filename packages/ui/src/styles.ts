@@ -137,9 +137,13 @@ export type Tone =
 /**
  * An icon from SVG path data, such as one of `@mdi/js`'s or Lucide's paths,
  * so each app picks its own set. Without a label it's hidden from assistive
- * technology. Change its path later with `setIconPath`.
+ * technology. A `part` exposes it to `::part()`, so an app can restyle it.
+ * Change its path later with `setIconPath`.
  */
-export const createIcon = (path: string, label?: string) => {
+export const createIcon = (
+  path: string,
+  { label, part }: { label?: string; part?: string } = {},
+) => {
   const element = document.createElementNS(svgNamespace, "svg");
 
   element.classList.add("icon");
@@ -148,6 +152,8 @@ export const createIcon = (path: string, label?: string) => {
   element.setAttribute("aria-hidden", label === undefined ? "true" : "false");
 
   if (label !== undefined) element.setAttribute("aria-label", label);
+
+  if (part !== undefined) element.setAttribute("part", part);
 
   element.append(document.createElementNS(svgNamespace, "path"));
   setIconPath(element, path);

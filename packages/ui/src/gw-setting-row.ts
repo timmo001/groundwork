@@ -26,6 +26,10 @@ import { base, controlSizes } from "./styles.js";
  * @slot - The control.
  *
  * @csspart row - The row.
+ * @csspart text - The name and description.
+ * @csspart heading - The setting's name.
+ * @csspart description - What it does.
+ * @csspart control - Around the control.
  *
  * @cssprop --gw-row-padding - The padding above and below. Defaults to `--gw-space-2`.
  * @cssprop --gw-setting-row-scale - Scales the text and spacing, around 1 for medium.
@@ -113,7 +117,10 @@ export class GwSettingRow extends GwElement {
     style: "--gw-skeleton-width: 8rem",
   });
 
-  readonly #description = h("div", { class: "description" });
+  readonly #description = h("div", {
+    class: "description",
+    part: "description",
+  });
 
   readonly #descriptionSkeleton: HTMLDivElement = h(
     "div",
@@ -127,7 +134,7 @@ export class GwSettingRow extends GwElement {
 
   readonly #control = h(
     "div",
-    { class: "control" },
+    { class: "control", part: "control" },
     this.#controlSkeleton,
     this.#slot,
   );
@@ -146,8 +153,13 @@ export class GwSettingRow extends GwElement {
     this.#row.append(
       h(
         "div",
-        { class: "text" },
-        h("div", { class: "heading" }, this.#heading, this.#headingSkeleton),
+        { class: "text", part: "text" },
+        h(
+          "div",
+          { class: "heading", part: "heading" },
+          this.#heading,
+          this.#headingSkeleton,
+        ),
         this.#description,
         this.#descriptionSkeleton,
       ),

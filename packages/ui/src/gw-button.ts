@@ -47,6 +47,8 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @slot icon - An icon before the text, in place of `icon`.
  *
  * @csspart button - The native button or link, or the pill around a slotted link.
+ * @csspart icon - The icon `icon` sets.
+ * @csspart swatch - The color dot `swatch` shows.
  *
  * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
@@ -378,11 +380,15 @@ export class GwButton extends GwElement {
   /** Whether a toggle button is on. */
   declare pressed: boolean;
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
   readonly #iconSlot = h("slot", { name: "icon" });
 
-  readonly #swatch = h("span", { class: "swatch", "aria-hidden": "true" });
+  readonly #swatch = h("span", {
+    class: "swatch",
+    part: "swatch",
+    "aria-hidden": "true",
+  });
 
   // Typed, since inferring through h() and the tag map that holds this
   // element is circular for consumers that type-check the source

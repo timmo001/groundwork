@@ -42,6 +42,7 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @csspart card - The card's surface.
  * @csspart header - The row with the heading and actions.
  * @csspart heading - The heading.
+ * @csspart icon - The icon `icon` sets.
  * @csspart description - The line under the heading.
  * @csspart body - The content.
  * @csspart footer - The area under the divider.
@@ -234,7 +235,7 @@ export class GwCard extends GwElement {
     part: "description",
   });
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
   readonly #header: HTMLElement = h(
     "header",

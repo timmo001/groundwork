@@ -26,6 +26,7 @@ const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"] as const;
  * @slot actions - The page's controls.
  *
  * @csspart tile - The icon tile.
+ * @csspart icon - The icon in the tile.
  * @csspart heading - The title.
  * @csspart description - The line under the title.
  *
@@ -136,7 +137,7 @@ export class GwPageHeader extends GwElement {
   /** The heading level, 1 to 6. */
   declare level: number;
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
   readonly #startSlot = h("slot", { name: "start" });
 

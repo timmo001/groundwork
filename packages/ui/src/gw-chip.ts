@@ -32,6 +32,8 @@ import {
  * @slot icon - An icon before the text, in place of `icon`.
  *
  * @csspart chip - The chip.
+ * @csspart icon - The icon `icon` sets.
+ * @csspart swatch - The color dot `swatch` shows.
  *
  * @cssprop --gw-tone-fill - The tint, for a tone of your own. `tone` sets it.
  * @cssprop --gw-tone-border - The border. `tone` sets it.
@@ -105,9 +107,13 @@ export class GwChip extends GwElement {
   declare loading: boolean;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
-  readonly #swatch = h("span", { class: "swatch", "aria-hidden": "true" });
+  readonly #swatch = h("span", {
+    class: "swatch",
+    part: "swatch",
+    "aria-hidden": "true",
+  });
 
   readonly #chip = h("span", { class: "chip", part: "chip" });
 

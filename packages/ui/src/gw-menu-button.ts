@@ -61,7 +61,7 @@ const boxEmpty =
  * open, and `group` lists items under a heading.
  *
  * Items render inside the component, so a page's own button styles can't
- * reach them.
+ * reach them; style them through the `menu`, `item` and other parts.
  *
  * @element gw-menu-button
  * @summary A button that opens a menu of items and actions.
@@ -79,6 +79,15 @@ const boxEmpty =
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.
  *
  * @csspart trigger - The button that opens the menu.
+ * @csspart trigger-icon - The trigger's icon.
+ * @csspart menu - The menu's surface.
+ * @csspart items - The scrolling list of items.
+ * @csspart actions - The actions pinned under the items.
+ * @csspart item - Each item and action.
+ * @csspart item-icon - An item's icon.
+ * @csspart item-description - An item's line under its label.
+ * @csspart group-heading - A group's heading.
+ * @csspart separator - The line before an item with `separator`.
  *
  * @cssprop --gw-menu-button-scale - Scales the trigger, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
@@ -520,15 +529,19 @@ export class GwMenuButton extends GwElement {
     hidden: true,
   });
 
-  readonly #triggerIcon = createIcon("");
+  readonly #triggerIcon = createIcon("", { part: "trigger-icon" });
 
-  readonly #items = h("div", { class: "items", role: "none" });
+  readonly #items = h("div", { class: "items", part: "items", role: "none" });
 
-  readonly #actions = h("div", { class: "actions", role: "none" });
+  readonly #actions = h("div", {
+    class: "actions",
+    part: "actions",
+    role: "none",
+  });
 
   readonly #popover = h(
     "div",
-    { id: "menu", popover: "auto", role: "menu" },
+    { id: "menu", part: "menu", popover: "auto", role: "menu" },
     this.#items,
     this.#actions,
   );
@@ -633,6 +646,7 @@ export class GwMenuButton extends GwElement {
       "button",
       {
         class: kind === "action" ? "item action" : "item",
+        part: "item",
         role: checkbox
           ? "menuitemcheckbox"
           : choice
@@ -645,13 +659,17 @@ export class GwMenuButton extends GwElement {
       },
       checkbox ? this.#box(item.checked === true) : null,
       choice ? this.#tick() : null,
-      item.icon ? createIcon(item.icon) : null,
+      item.icon ? createIcon(item.icon, { part: "item-icon" }) : null,
       h(
         "span",
         { class: "text" },
         h("span", {}, item.label),
         item.description
-          ? h("span", { class: "description" }, item.description)
+          ? h(
+              "span",
+              { class: "description", part: "item-description" },
+              item.description,
+            )
           : null,
       ),
     );
@@ -665,7 +683,10 @@ export class GwMenuButton extends GwElement {
     });
 
     return item.separator === true
-      ? [h("hr", { class: "separator", role: "separator" }), button]
+      ? [
+          h("hr", { class: "separator", part: "separator", role: "separator" }),
+          button,
+        ]
       : [button];
   }
 
@@ -699,7 +720,16 @@ export class GwMenuButton extends GwElement {
         },
         group === undefined
           ? null
-          : h("p", { class: "group-heading", id, role: "none" }, group),
+          : h(
+              "p",
+              {
+                class: "group-heading",
+                part: "group-heading",
+                id,
+                role: "none",
+              },
+              group,
+            ),
         ...grouped.flatMap((item) => this.#renderItem(item, "item")),
       );
     });

@@ -33,6 +33,7 @@ import {
  * @slot - The value.
  *
  * @csspart badge - The badge.
+ * @csspart icon - The icon.
  * @csspart label - The label above the value.
  * @csspart value - The value.
  *
@@ -124,7 +125,7 @@ export class GwBadge extends GwElement {
 
   readonly #badge = h("span", { class: "badge", part: "badge" });
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
   readonly #iconSkeleton = h("gw-skeleton-icon");
 
