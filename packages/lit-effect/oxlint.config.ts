@@ -4,6 +4,7 @@ export default {
   extends: [recommended],
   options: {
     typeAware: true,
+    typeCheck: true,
     maxWarnings: 0,
   },
 };

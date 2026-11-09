@@ -36,9 +36,9 @@ description = "Install dependencies"
 run = "bun install --frozen-lockfile"
 
 [tasks.lint]
-description = "Lint every package with the shared Oxlint rules"
+description = "Lint every package, template and the docs site with the shared Oxlint rules"
 depends = ["install"]
-run = "bun run --filter './packages/*' --filter './templates/*' lint"
+run = "bun run --filter './packages/*' --filter './templates/*' --filter './docs' lint"
 
 [tasks.typecheck]
 description = "Type-check every package"

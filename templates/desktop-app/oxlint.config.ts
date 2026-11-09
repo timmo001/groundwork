@@ -10,6 +10,7 @@ export default {
   ],
   options: {
     typeAware: true,
+    typeCheck: true,
     maxWarnings: 0,
   },
 };

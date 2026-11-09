@@ -32,7 +32,7 @@
   "scripts": {
     "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
     "lint": "oxlint .",
-    "typecheck": "tsc && bun run scripts/typecheck-alone.ts",
+    "typecheck": "tsc && tsc -p scripts && bun run scripts/typecheck-alone.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "gen": "bun run scripts/manifest.ts && bun run scripts/composition.ts",
@@ -42,6 +42,7 @@
     "@custom-elements-manifest/analyzer": "0.11.0",
     "@oxlint/plugins": "1.92.0",
     "@timmo001/oxlint-rules": "0.6.5",
+    "@types/bun": "1.4.4",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
     "prettier": "3.9.10",
