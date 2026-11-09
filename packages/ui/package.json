@@ -47,6 +47,12 @@
     "typescript": "7.0.2"
   },
   "dependencies": {
+    "@codemirror/lang-json": "6.0.2",
+    "@codemirror/language": "6.13.1",
+    "@codemirror/search": "6.7.2",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.15",
+    "@lezer/highlight": "1.2.5",
     "@tanstack/table-core": "9.3.1",
     "@tanstack/virtual-core": "3.19.11",
     "micromark": "4.0.3",

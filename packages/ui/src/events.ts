@@ -5,6 +5,9 @@ export interface GwEventMap {
   "gw-app-bar": {
     toggle: Event;
   };
+  "gw-code": {
+    change: Event;
+  };
   "gw-command-menu": {
     pick: CustomEvent<{ value: string }>;
   };
