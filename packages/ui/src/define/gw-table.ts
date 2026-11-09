@@ -5,6 +5,7 @@
  */
 import "./gw-chip.js";
 import "./gw-input.js";
+import "./gw-skeleton.js";
 import { GwTable } from "../gw-table.js";
 
 GwTable.define("gw-table");

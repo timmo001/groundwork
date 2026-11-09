@@ -8034,6 +8034,26 @@
             {
               "description": "The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.",
               "name": "--gw-dialog-backdrop"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-dialog-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-dialog-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-dialog-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-dialog-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-dialog-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -11131,6 +11151,26 @@
             {
               "description": "Each option's checkbox size. Defaults to `1.1rem`.",
               "name": "--gw-filter-checkbox-size"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-filter-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-filter-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-filter-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-filter-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-filter-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -13501,6 +13541,26 @@
             {
               "description": "Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.",
               "name": "--gw-list-count-scale"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-list-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-list-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-list-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-list-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-list-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -14280,6 +14340,28 @@
           "kind": "class",
           "description": "Written text, such as a description, a reason or an agent's summary,\nrendered from markdown with GitHub's extensions: tables, task lists,\nstrikethrough and bare links. HTML in the text shows as text, and links\nwith unsafe protocols are dropped, so text from anyone is safe to show.\nLinks open in another tab.\n\nShort text renders at once. Long text is parsed when the page is idle,\nbehind skeleton lines, and added a few blocks a frame, so it never holds\nup a click or a scroll. Headings are sized for text inside a page, not as\nthe page's own headings. Code blocks scroll sideways in their own frame.",
           "name": "GwMarkdown",
+          "cssProperties": [
+            {
+              "description": "Its scrollbars' thickness, on code blocks and wide tables. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-markdown-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-markdown-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-markdown-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-markdown-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-markdown-scrollbar-track"
+            }
+          ],
           "cssParts": [
             {
               "description": "The rendered text.",
@@ -14743,6 +14825,26 @@
             {
               "description": "Each item's least height. Defaults to `2.5rem`.",
               "name": "--gw-menu-button-item-height"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-menu-button-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-menu-button-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-menu-button-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-menu-button-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-menu-button-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -17373,6 +17475,26 @@
             {
               "description": "A group heading's height in pixels. Defaults to `32`.",
               "name": "--gw-option-list-group-height"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-option-list-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-option-list-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-option-list-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-option-list-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-option-list-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -18749,6 +18871,26 @@
             {
               "description": "The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.",
               "name": "--gw-popover-backdrop"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-popover-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-popover-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-popover-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-popover-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-popover-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -25636,7 +25778,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change. With `storage-key` it keeps them, and the\nfolded groups, in this browser itself: only what someone changed, so the\npage's attributes still set the rest.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change. With `storage-key` it keeps them, and the\nfolded groups, in this browser itself: only what someone changed, so the\npage's attributes still set the rest.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort. In a `contained` table a\ngroup's heading stays pinned under the column headings while its rows\nscroll past.\n\n`more` says there are rows still to load after these, such as older pages\nfrom a server. Skeleton rows stand in for them after the last row, and as\nthey come within `more-margin` pixels of view the table fires `more`, once,\nand is `aria-busy` until its `rows` change: append the next page then, and\ntake `more` off once there's nothing left to load.",
           "name": "GwTable",
           "cssProperties": [
             {
@@ -25666,6 +25808,26 @@
             {
               "description": "The sort arrow's size. Defaults to `0.875rem`.",
               "name": "--gw-table-sort-icon-size"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-table-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-table-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-table-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-table-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-table-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -25724,6 +25886,14 @@
             {
               "description": "What it says with no rows, or none matching the search.",
               "name": "none"
+            },
+            {
+              "description": "Each row standing in for the rows still to load, with `more`.",
+              "name": "skeleton-row"
+            },
+            {
+              "description": "Each cell's skeleton in those rows, a `gw-skeleton-text`.",
+              "name": "skeleton"
             }
           ],
           "slots": [
@@ -25740,7 +25910,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, more: { type: \"boolean\", reflect: true }, moreRows: { type: \"number\", attribute: \"more-rows\" }, moreMargin: { type: \"number\", attribute: \"more-margin\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -25753,7 +25923,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } /* The search is a gw-input, a little smaller than a form's fields to sit in a toolbar */ .search { --gw-field-scale: var(--gw-table-search-scale, 0.9); flex: 1 1 var(--gw-table-search-width, 14rem); max-width: var(--gw-table-search-max-width, 24rem); } .search[hidden] { display: none; } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } :host([contained]) .scroller { max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } table { width: 100%; border-collapse: collapse; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: var(--gw-table-header-height, 2.5rem); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem); } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-table-count-scale, 0.8); margin-inline-start: auto; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } /* The search is a gw-input, a little smaller than a form's fields to sit in a toolbar */ .search { --gw-field-scale: var(--gw-table-search-scale, 0.9); flex: 1 1 var(--gw-table-search-width, 14rem); max-width: var(--gw-table-search-max-width, 24rem); } .search[hidden] { display: none; } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } /* The header's fill, the pinned group heading's and their borders run on under the scrollbar, as bands in the frame's own background that stay put as it scrolls, so the header keeps both its corners */ :host([contained]) .scroller { --_head: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem)); --_group: var(--_gw-table-group, 0px); max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; background: linear-gradient( var(--gw-color-border-quiet), var(--gw-color-border-quiet) ) 0 calc(var(--_head) - var(--gw-border-width)) / 100% var(--gw-border-width) no-repeat, linear-gradient( var(--gw-color-border-normal), var(--gw-color-border-normal) ) 0 calc(var(--_head) + var(--_group) - var(--gw-border-width)) / 100% min(var(--_group), var(--gw-border-width)) no-repeat, linear-gradient( var(--gw-color-surface-default), var(--gw-color-surface-default) ) 0 var(--_head) / 100% var(--_group) no-repeat, linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ) top / 100% var(--_head) no-repeat, var(--gw-color-surface-raised); } /* The scrollbar's track starts under the header and pinned group heading, so its thumb never sits over them */ :host([contained]) .scroller::-webkit-scrollbar-track:vertical { margin-block-start: calc(var(--_head) + var(--_group)); } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } /* Whatever a cell raises with a z-index stays in its own row, under the header and the pinned group headings */ tbody { isolation: isolate; /* Solid, so the rows read against one color rather than the frame's bands, which contrast checkers can't resolve */ background: var(--gw-color-surface-raised); } tbody tr:not(.group) { isolation: isolate; } /* A group's heading stays pinned under the header while its rows scroll past, and the next group's heading takes its place */ :host([contained]) tr.group td { position: sticky; top: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem)); z-index: 1; } /* Separate borders belong to their cells, so a pinned header or group heading takes its border with it; collapsed ones stay put and let the rows show through */ table { width: 100%; border-spacing: 0; border-collapse: separate; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer, .skeleton):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: var(--gw-table-header-height, 2.5rem); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem); } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-table-count-scale, 0.8); margin-inline-start: auto; } tr.skeleton gw-skeleton-text { --gw-skeleton-width: 70%; } tr.skeleton td.wide gw-skeleton-text { --gw-skeleton-width: 50%; } tr.skeleton td.numeric gw-skeleton-text { --gw-skeleton-width: 2.5rem; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -25897,6 +26067,30 @@
             },
             {
               "kind": "field",
+              "name": "more",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "moreRows",
+              "type": {
+                "text": "number"
+              },
+              "default": "3"
+            },
+            {
+              "kind": "field",
+              "name": "moreMargin",
+              "type": {
+                "text": "number"
+              },
+              "default": "400"
+            },
+            {
+              "kind": "field",
               "name": "#search",
               "privacy": "private",
               "readonly": true,
@@ -25956,6 +26150,16 @@
             },
             {
               "kind": "field",
+              "name": "#headingOf",
+              "privacy": "private",
+              "type": {
+                "text": "readonly number[]"
+              },
+              "default": "[]",
+              "description": "For each shown row, the index of the group heading it falls under, or -1."
+            },
+            {
+              "kind": "field",
               "name": "#matched",
               "privacy": "private",
               "type": {
@@ -25963,6 +26167,53 @@
               },
               "default": "0",
               "description": "How many rows there are after the search, without the headings."
+            },
+            {
+              "kind": "field",
+              "name": "#typical",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "default": "{ row: 41, group: 41 }",
+              "description": "How tall a row and a group's heading were when last measured, which the\nrows not yet drawn are taken to be, so the scroll's length holds as they\ncome into view."
+            },
+            {
+              "kind": "field",
+              "name": "#skeletons",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLTableRowElement[]"
+              },
+              "default": "[]",
+              "description": "The rows standing in for those still to load, with `more`."
+            },
+            {
+              "kind": "field",
+              "name": "#nearEnd",
+              "privacy": "private",
+              "type": {
+                "text": "IntersectionObserver | undefined"
+              },
+              "description": "Watches for the skeleton rows coming near view."
+            },
+            {
+              "kind": "field",
+              "name": "#asked",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "description": "Whether `more` has fired for these rows."
+            },
+            {
+              "kind": "field",
+              "name": "#headSize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeObserver(() => { this.#scroller.style.setProperty( \"--_gw-table-head\", `${this.#head.getBoundingClientRect().height}px`, ); })",
+              "description": "Keeps the header's height for what's pinned under it."
             },
             {
               "kind": "field",
@@ -25982,6 +26233,19 @@
               "name": "#before",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#gapCell",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#gap",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Between a pinned group heading and the rows in view below it."
             },
             {
               "kind": "field",
@@ -26010,7 +26274,7 @@
               "name": "#windowed",
               "privacy": "private",
               "readonly": true,
-              "default": "new Virtualizer<Window, HTMLTableRowElement>({ count: 0, getScrollElement: () => window, estimateSize: () => 41, overscan: 10, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })",
+              "default": "new Virtualizer<Window, HTMLTableRowElement>({ count: 0, getScrollElement: () => window, estimateSize: (index) => this.#estimate(index), overscan: 10, observeElementRect: observeWindowRect, observeElementOffset: observeWindowOffset, scrollToFn: windowScroll, initialOffset: () => window.scrollY, onChange: () => this.requestUpdate(\"window\"), })",
               "description": "Draws the rows on screen as the page scrolls."
             },
             {
@@ -26018,7 +26282,7 @@
               "name": "#framed",
               "privacy": "private",
               "readonly": true,
-              "default": "new Virtualizer<HTMLDivElement, HTMLTableRowElement>({ count: 0, getScrollElement: () => this.#scroller, estimateSize: () => 41, overscan: 10, observeElementRect, observeElementOffset, scrollToFn: elementScroll, initialOffset: () => this.#scroller.scrollTop, onChange: () => this.requestUpdate(\"window\"), })",
+              "default": "new Virtualizer<HTMLDivElement, HTMLTableRowElement>({ count: 0, getScrollElement: () => this.#scroller, estimateSize: (index) => this.#estimate(index), overscan: 10, observeElementRect, observeElementOffset, scrollToFn: elementScroll, initialOffset: () => this.#scroller.scrollTop, onChange: () => this.requestUpdate(\"window\"), })",
               "description": "Draws the rows in view as a `contained` table's own frame scrolls."
             },
             {
@@ -26037,6 +26301,46 @@
                 "text": "boolean | undefined"
               },
               "description": "Whether the frame's virtualizer is the one mounted, once connected."
+            },
+            {
+              "kind": "method",
+              "name": "#estimate",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "What a row not yet drawn is taken to measure, from those last drawn."
+            },
+            {
+              "kind": "method",
+              "name": "#pinned",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "range",
+                  "type": {
+                    "text": "Range"
+                  }
+                }
+              ],
+              "description": "The rows to draw: those in view, and in a contained table the heading of\nthe group the first of them falls under, so it can stay pinned."
+            },
+            {
+              "kind": "method",
+              "name": "#watchEnd",
+              "privacy": "private",
+              "description": "Watches the skeleton rows, against the frame a contained table scrolls\nin or the window, to fire `more` as they come near. Watching them again\nreports where they are now, so a page too short to fill the view asks\nfor the next at once."
+            },
+            {
+              "kind": "method",
+              "name": "#renderSkeletons",
+              "privacy": "private",
+              "description": "The skeleton rows for the rows still to load, a cell for each column."
             },
             {
               "kind": "method",
@@ -26548,6 +26852,13 @@
           ],
           "events": [
             {
+              "name": "more",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the skeleton rows that `more` adds come near view, once until the `rows` change. Load the next page then."
+            },
+            {
               "name": "change",
               "type": {
                 "text": "Event"
@@ -26674,6 +26985,27 @@
               },
               "description": "What it says when the search matches nothing. Defaults to `No rows match the search`.",
               "name": "no-match-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "There are more rows to load after these: skeleton rows follow the last, and `more` fires as they come into view.",
+              "name": "more"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many skeleton rows stand in for the rows still to load. Defaults to `3`.",
+              "name": "more-rows"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many pixels before the skeleton rows come into view it fires `more`. Defaults to `400`.",
+              "name": "more-margin"
             }
           ],
           "superclass": {
@@ -26683,10 +27015,6 @@
           "tagName": "gw-table",
           "customElement": true,
           "summary": "Rows of data that sort and search, windowed for long lists."
-        },
-        {
-          "kind": "variable",
-          "name": "expanded"
         }
       ],
       "exports": [
@@ -27288,6 +27616,26 @@
             {
               "description": "The tallest the gallery grows before it scrolls. Defaults to `min(24rem, 50vh)`.",
               "name": "--gw-theme-picker-gallery-height"
+            },
+            {
+              "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
+              "name": "--gw-theme-picker-scrollbar-size"
+            },
+            {
+              "description": "Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.",
+              "name": "--gw-theme-picker-scrollbar-radius"
+            },
+            {
+              "description": "Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.",
+              "name": "--gw-theme-picker-scrollbar-thumb"
+            },
+            {
+              "description": "A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.",
+              "name": "--gw-theme-picker-scrollbar-thumb-hovered"
+            },
+            {
+              "description": "Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.",
+              "name": "--gw-theme-picker-scrollbar-track"
             }
           ],
           "cssParts": [
@@ -31231,7 +31579,20 @@
           "kind": "variable",
           "name": "scrollbars",
           "default": "new CSSStyleSheet()",
-          "description": "The page's scrollbars for a shadow root: a small rounded thumb on a clear\ntrack with no arrow buttons, squaring off at the ends of its track. Every\n`gw-` element adopts it; add it to an app's own components' styles to match.\nThe `--gw-scrollbar-*` properties restyle it as they do the page's. It's\nin the components layer, `componentsLayer` in `element.ts`, which imports\nthis module, so the name is written out here."
+          "description": "The scrollbars inside a shadow root, which the page's rules can't reach: a\nrounded thumb on a clear track with no arrow buttons, squaring off at the\nends of its track, as the page's are, but thinner and fainter until it's\nhovered, so a menu's, list's or table's scrollbar keeps out of the way of\nwhat it scrolls. Every `gw-` element adopts it; add it to an app's own\ncomponents' styles to match.\n\nEach element restyles its own through `--gw-<element>-scrollbar-size`,\n`-radius`, `-thumb`, `-thumb-hovered` and `-track`, such as\n`--gw-table-scrollbar-radius: 0` (`scrollbarHooks` maps them). Unset, they\nfall back to `--gw-scrollbar-inner-*` for every element's, then the page's\n`--gw-scrollbar-size`, `--gw-scrollbar-thumb` and `--gw-scrollbar-track`.\nIt's in the components layer, `componentsLayer` in `element.ts`, which\nimports this module, so the name is written out here."
+        },
+        {
+          "kind": "function",
+          "name": "scrollbarHooks",
+          "parameters": [
+            {
+              "name": "tag",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "The sheet that gives an element its own scrollbar hooks,\n`--gw-<element>-scrollbar-*`, named from its tag without the `gw-`, so a\nmenu's scrollbar can differ from a table's. Each is set on the host, where\nan unset hook leaves its scrollbars to the shared ones rather than taking\nthe enclosing element's. `GwElement` adopts it beside `scrollbars`."
         },
         {
           "kind": "function",
@@ -31245,6 +31606,14 @@
           "name": "scrollbars",
           "declaration": {
             "name": "scrollbars",
+            "module": "src/scrollbars.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scrollbarHooks",
+          "declaration": {
+            "name": "scrollbarHooks",
             "module": "src/scrollbars.ts"
           }
         },

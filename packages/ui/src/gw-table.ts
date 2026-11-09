@@ -23,17 +23,20 @@ import {
 } from "@tanstack/table-core";
 import { storeReactivityBindings } from "@tanstack/table-core/store-reactivity-bindings";
 import {
+  defaultRangeExtractor,
   elementScroll,
   observeElementOffset,
   observeElementRect,
   observeWindowOffset,
   observeWindowRect,
+  type Range,
   Virtualizer,
   windowScroll,
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
 import type {} from "./gw-input.js";
+import type {} from "./gw-skeleton.js";
 import { isText, keep, keptAt, textsOf } from "./kept.js";
 import { base, createIcon } from "./styles.js";
 
@@ -144,7 +147,15 @@ type Shown =
  * counting its rows. Pressing a heading folds its rows away. That column
  * doesn't show, since each heading names its value. `toggled-groups` lists
  * the groups, by value, pressed from how they start, and fires `change` too,
- * so the folded groups can be kept with the sort.
+ * so the folded groups can be kept with the sort. In a `contained` table a
+ * group's heading stays pinned under the column headings while its rows
+ * scroll past.
+ *
+ * `more` says there are rows still to load after these, such as older pages
+ * from a server. Skeleton rows stand in for them after the last row, and as
+ * they come within `more-margin` pixels of view the table fires `more`, once,
+ * and is `aria-busy` until its `rows` change: append the next page then, and
+ * take `more` off once there's nothing left to load.
  *
  * @element gw-table
  * @summary Rows of data that sort and search, windowed for long lists.
@@ -166,6 +177,9 @@ type Shown =
  * @attr {string} row-key - The row property that identifies each row.
  * @attr {string} empty-label - What it says with no rows. Defaults to `Nothing to show`.
  * @attr {string} no-match-label - What it says when the search matches nothing. Defaults to `No rows match the search`.
+ * @attr {boolean} more - There are more rows to load after these: skeleton rows follow the last, and `more` fires as they come into view.
+ * @attr {number} more-rows - How many skeleton rows stand in for the rows still to load. Defaults to `3`.
+ * @attr {number} more-margin - How many pixels before the skeleton rows come into view it fires `more`. Defaults to `400`.
  *
  * @slot toolbar - Controls beside the search field, such as a Filters button.
  *
@@ -183,6 +197,8 @@ type Shown =
  * @csspart group-label - A group's name.
  * @csspart group-count - The chip counting a group's rows, a `gw-chip`.
  * @csspart none - What it says with no rows, or none matching the search.
+ * @csspart skeleton-row - Each row standing in for the rows still to load, with `more`.
+ * @csspart skeleton - Each cell's skeleton in those rows, a `gw-skeleton-text`.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
@@ -191,8 +207,14 @@ type Shown =
  * @cssprop --gw-table-search-max-width - The widest the search field grows. Defaults to `24rem`.
  * @cssprop --gw-table-header-height - The column headings' height. Defaults to `2.5rem`.
  * @cssprop --gw-table-sort-icon-size - The sort arrow's size. Defaults to `0.875rem`.
+ * @cssprop --gw-table-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
+ * @cssprop --gw-table-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
+ * @cssprop --gw-table-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
+ * @cssprop --gw-table-scrollbar-thumb-hovered - A thumb's fill under the pointer. Defaults to `--gw-scrollbar-inner-thumb-hovered`.
+ * @cssprop --gw-table-scrollbar-track - Its scrollbars' track. Defaults to `--gw-scrollbar-inner-track`, clear.
  *
  * @fires {Event} change - When the sort, search or folded groups change. Read `sort`, `descending`, `query` and `toggledGroups`.
+ * @fires {Event} more - When the skeleton rows that `more` adds come near view, once until the `rows` change. Load the next page then.
  */
 export class GwTable extends GwElement {
   static override properties = {
@@ -213,6 +235,9 @@ export class GwTable extends GwElement {
     noMatchLabel: { attribute: "no-match-label" },
     columns: { type: "json" },
     rows: { type: "json" },
+    more: { type: "boolean", reflect: true },
+    moreRows: { type: "number", attribute: "more-rows" },
+    moreMargin: { type: "number", attribute: "more-margin" },
   } as const;
 
   static override styles = [
@@ -256,9 +281,44 @@ export class GwTable extends GwElement {
         border-radius: var(--gw-radius-panel);
       }
 
+      /* The header's fill, the pinned group heading's and their borders run
+         on under the scrollbar, as bands in the frame's own background that
+         stay put as it scrolls, so the header keeps both its corners */
       :host([contained]) .scroller {
+        --_head: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem));
+        --_group: var(--_gw-table-group, 0px);
         max-height: var(--gw-table-max-height, 70vh);
         overflow-y: auto;
+        background:
+          linear-gradient(
+              var(--gw-color-border-quiet),
+              var(--gw-color-border-quiet)
+            )
+            0 calc(var(--_head) - var(--gw-border-width)) / 100%
+            var(--gw-border-width) no-repeat,
+          linear-gradient(
+              var(--gw-color-border-normal),
+              var(--gw-color-border-normal)
+            )
+            0 calc(var(--_head) + var(--_group) - var(--gw-border-width)) / 100%
+            min(var(--_group), var(--gw-border-width)) no-repeat,
+          linear-gradient(
+              var(--gw-color-surface-default),
+              var(--gw-color-surface-default)
+            )
+            0 var(--_head) / 100% var(--_group) no-repeat,
+          linear-gradient(
+              var(--gw-color-surface-lower, transparent),
+              var(--gw-color-surface-lower, transparent)
+            )
+            top / 100% var(--_head) no-repeat,
+          var(--gw-color-surface-raised);
+      }
+
+      /* The scrollbar's track starts under the header and pinned group
+         heading, so its thumb never sits over them */
+      :host([contained]) .scroller::-webkit-scrollbar-track:vertical {
+        margin-block-start: calc(var(--_head) + var(--_group));
       }
 
       /* The header stays in view as a contained table scrolls */
@@ -274,9 +334,34 @@ export class GwTable extends GwElement {
           var(--gw-color-surface-raised);
       }
 
+      /* Whatever a cell raises with a z-index stays in its own row, under
+         the header and the pinned group headings */
+      tbody {
+        isolation: isolate;
+        /* Solid, so the rows read against one color rather than the
+           frame's bands, which contrast checkers can't resolve */
+        background: var(--gw-color-surface-raised);
+      }
+
+      tbody tr:not(.group) {
+        isolation: isolate;
+      }
+
+      /* A group's heading stays pinned under the header while its rows
+         scroll past, and the next group's heading takes its place */
+      :host([contained]) tr.group td {
+        position: sticky;
+        top: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem));
+        z-index: 1;
+      }
+
+      /* Separate borders belong to their cells, so a pinned header or group
+         heading takes its border with it; collapsed ones stay put and let
+         the rows show through */
       table {
         width: 100%;
-        border-collapse: collapse;
+        border-spacing: 0;
+        border-collapse: separate;
         font-size: var(--gw-font-size-s);
       }
 
@@ -295,7 +380,7 @@ export class GwTable extends GwElement {
         white-space: normal;
       }
 
-      tbody tr:not(.spacer):hover {
+      tbody tr:not(.spacer, .skeleton):hover {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
@@ -397,6 +482,18 @@ export class GwTable extends GwElement {
         margin-inline-start: auto;
       }
 
+      tr.skeleton gw-skeleton-text {
+        --gw-skeleton-width: 70%;
+      }
+
+      tr.skeleton td.wide gw-skeleton-text {
+        --gw-skeleton-width: 50%;
+      }
+
+      tr.skeleton td.numeric gw-skeleton-text {
+        --gw-skeleton-width: 2.5rem;
+      }
+
       .none {
         padding: var(--gw-space-8) var(--gw-space-4);
         color: var(--gw-color-text-secondary);
@@ -426,6 +523,9 @@ export class GwTable extends GwElement {
   declare noMatchLabel: string;
   declare columns: readonly TableColumn[];
   declare rows: readonly TableRow[];
+  declare more: boolean;
+  declare moreRows: number;
+  declare moreMargin: number;
 
   /** The search field, a `gw-input`, so it looks and sizes as every field does. */
   readonly #search = h("gw-input", {
@@ -464,8 +564,35 @@ export class GwTable extends GwElement {
    */
   #shown: readonly Shown[] = [];
 
+  /** For each shown row, the index of the group heading it falls under, or -1. */
+  #headingOf: readonly number[] = [];
+
   /** How many rows there are after the search, without the headings. */
   #matched = 0;
+
+  /**
+   * How tall a row and a group's heading were when last measured, which the
+   * rows not yet drawn are taken to be, so the scroll's length holds as they
+   * come into view.
+   */
+  #typical = { row: 41, group: 41 };
+
+  /** The rows standing in for those still to load, with `more`. */
+  #skeletons: HTMLTableRowElement[] = [];
+
+  /** Watches for the skeleton rows coming near view. */
+  #nearEnd: IntersectionObserver | undefined;
+
+  /** Whether `more` has fired for these rows. */
+  #asked = false;
+
+  /** Keeps the header's height for what's pinned under it. */
+  readonly #headSize = new ResizeObserver(() => {
+    this.#scroller.style.setProperty(
+      "--_gw-table-head",
+      `${this.#head.getBoundingClientRect().height}px`,
+    );
+  });
 
   /**
    * Each shown row's element, kept while it stands so scrolling moves rows
@@ -479,6 +606,15 @@ export class GwTable extends GwElement {
     "tr",
     { class: "spacer", "aria-hidden": "true" },
     this.#beforeCell,
+  );
+
+  readonly #gapCell = h("td");
+
+  /** Between a pinned group heading and the rows in view below it. */
+  readonly #gap = h(
+    "tr",
+    { class: "spacer", "aria-hidden": "true" },
+    this.#gapCell,
   );
 
   readonly #afterCell = h("td");
@@ -496,7 +632,7 @@ export class GwTable extends GwElement {
   readonly #windowed = new Virtualizer<Window, HTMLTableRowElement>({
     count: 0,
     getScrollElement: () => window,
-    estimateSize: () => 41,
+    estimateSize: (index) => this.#estimate(index),
     overscan: 10,
     observeElementRect: observeWindowRect,
     observeElementOffset: observeWindowOffset,
@@ -509,7 +645,7 @@ export class GwTable extends GwElement {
   readonly #framed = new Virtualizer<HTMLDivElement, HTMLTableRowElement>({
     count: 0,
     getScrollElement: () => this.#scroller,
-    estimateSize: () => 41,
+    estimateSize: (index) => this.#estimate(index),
     overscan: 10,
     observeElementRect,
     observeElementOffset,
@@ -542,16 +678,109 @@ export class GwTable extends GwElement {
     this.noMatchLabel = "No rows match the search";
     this.columns = [];
     this.rows = [];
+    this.more = false;
+    this.moreRows = 3;
+    this.moreMargin = 400;
   }
 
   override connectedCallback() {
     super.connectedCallback();
     this.#mount();
+    this.#headSize.observe(this.#head);
+    this.#watchEnd();
   }
 
   override disconnectedCallback() {
     this.#unmount();
+    this.#headSize.disconnect();
+    this.#nearEnd?.disconnect();
+    this.#nearEnd = undefined;
     super.disconnectedCallback();
+  }
+
+  /** What a row not yet drawn is taken to measure, from those last drawn. */
+  #estimate(index: number) {
+    return this.#shown[index]?.kind === "group"
+      ? this.#typical.group
+      : this.#typical.row;
+  }
+
+  /**
+   * The rows to draw: those in view, and in a contained table the heading of
+   * the group the first of them falls under, so it can stay pinned.
+   */
+  #pinned(range: Range) {
+    const indexes = defaultRangeExtractor(range);
+    const heading = this.#headingOf[range.startIndex] ?? -1;
+
+    if (!this.contained || heading === -1 || indexes.includes(heading)) {
+      return indexes;
+    }
+
+    return [heading, ...indexes];
+  }
+
+  /**
+   * Watches the skeleton rows, against the frame a contained table scrolls
+   * in or the window, to fire `more` as they come near. Watching them again
+   * reports where they are now, so a page too short to fill the view asks
+   * for the next at once.
+   */
+  #watchEnd() {
+    this.#nearEnd?.disconnect();
+    this.#nearEnd = undefined;
+
+    const [first] = this.#skeletons;
+
+    if (!this.isConnected || !this.more || first === undefined) return;
+
+    this.#nearEnd = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+
+        if (!this.more || this.#asked) return;
+
+        this.#asked = true;
+        setAttribute(this.#table, "aria-busy", "true");
+        this.dispatchEvent(
+          new Event("more", { bubbles: true, composed: true }),
+        );
+      },
+      {
+        root: this.contained ? this.#scroller : null,
+        rootMargin: `0px 0px ${Math.max(0, this.moreMargin)}px 0px`,
+      },
+    );
+
+    this.#nearEnd.observe(first);
+  }
+
+  /** The skeleton rows for the rows still to load, a cell for each column. */
+  #renderSkeletons() {
+    const drawn = this.#drawn();
+
+    this.#skeletons = this.more
+      ? Array.from({ length: Math.max(1, this.moreRows || 1) }, () =>
+          h(
+            "tr",
+            { class: "skeleton", part: "skeleton-row", "aria-hidden": "true" },
+            ...drawn.map((column) =>
+              h(
+                "td",
+                {
+                  class: [
+                    column.numeric ? "numeric" : "",
+                    column.wide ? "wide" : "",
+                  ]
+                    .join(" ")
+                    .trim(),
+                },
+                h("gw-skeleton-text", { part: "skeleton" }),
+              ),
+            ),
+          ),
+        )
+      : [];
   }
 
   /** Mounts the virtualizer for how it scrolls, swapping out the other. */
@@ -687,6 +916,14 @@ export class GwTable extends GwElement {
         })),
       ];
     });
+
+    let heading = -1;
+
+    this.#headingOf = this.#shown.map((shown, index) => {
+      if (shown.kind === "group") heading = index;
+
+      return heading;
+    });
   }
 
   #toggleGroup(value: string) {
@@ -811,6 +1048,8 @@ export class GwTable extends GwElement {
       ...virtualizer.options,
       count: this.#shown.length,
       getItemKey: (index) => this.#shown[index]?.key ?? index,
+      // New each time, as the headings it reads change with the rows
+      rangeExtractor: (range) => this.#pinned(range),
       scrollMargin: this.#bodyOffset(),
     });
 
@@ -818,6 +1057,11 @@ export class GwTable extends GwElement {
     const before = items[0]?.start ?? virtualizer.options.scrollMargin;
     const after = items.at(-1)?.end ?? before;
     const drawn = this.#drawn();
+
+    // A pinned group heading can sit well above the rows in view, with the
+    // rows between them left out
+    const [first, second] = items;
+    const gap = first && second ? Math.max(0, second.start - first.end) : 0;
 
     const rows = items.flatMap((item) => {
       const shown = this.#shown[item.index];
@@ -846,10 +1090,20 @@ export class GwTable extends GwElement {
 
     this.#beforeCell.colSpan = drawn.length;
     this.#beforeCell.style.height = `${Math.max(0, before - margin)}px`;
+    this.#gapCell.colSpan = drawn.length;
+    this.#gapCell.style.height = `${gap}px`;
     this.#afterCell.colSpan = drawn.length;
     this.#afterCell.style.height = `${Math.max(0, virtualizer.getTotalSize() - (after - margin))}px`;
 
-    const next = [this.#before, ...rows, this.#after];
+    const [head, ...rest] = rows;
+
+    const next = [
+      this.#before,
+      ...(gap > 0 && head !== undefined ? [head, this.#gap, ...rest] : rows),
+      this.#after,
+      ...this.#skeletons,
+    ];
+
     const wanted = new Set<Element>(next);
 
     // Only the rows coming into view or leaving it are added or taken off:
@@ -877,9 +1131,32 @@ export class GwTable extends GwElement {
     this.#measuring = requestAnimationFrame(() => {
       for (const row of rows) row.style.removeProperty("height");
 
-      for (const row of rows) {
-        if (row.isConnected) virtualizer.measureElement(row);
+      const connected = rows.filter((row) => row.isConnected);
+
+      // The rows not yet drawn are taken to be as tall as these, so the
+      // scroll's length is near right before they come into view
+      for (const kind of ["row", "group"] as const) {
+        const heights = connected
+          .filter(
+            (row) => row.classList.contains("group") === (kind === "group"),
+          )
+          .map((row) => row.getBoundingClientRect().height)
+          .filter((height) => height > 0);
+
+        if (heights.length > 0) {
+          this.#typical[kind] =
+            heights.reduce((sum, height) => sum + height, 0) / heights.length;
+        }
       }
+
+      // A grouped table always has a heading pinned under the header, whose
+      // fill runs on under the scrollbar
+      this.#scroller.style.setProperty(
+        "--_gw-table-group",
+        this.#headingOf[0] === 0 ? `${this.#typical.group}px` : "0px",
+      );
+
+      for (const row of connected) virtualizer.measureElement(row);
     });
 
     virtualizer._willUpdate();
@@ -965,11 +1242,36 @@ export class GwTable extends GwElement {
       this.search === "never" ||
       (this.search !== "always" && this.rows.length < this.searchFrom);
 
-    this.#none.hidden = this.#matched > 0;
+    // Skeleton rows stand in for what's still to load, rather than saying
+    // there's nothing
+    this.#none.hidden = this.#matched > 0 || this.more;
     this.#none.textContent =
       this.rows.length === 0 ? this.emptyLabel : this.noMatchLabel;
 
+    // New skeleton rows with each page, rather than the old ones pushed down
+    // past the rows that took their place, which reads as a layout shift
+    const skeletons = ["more", "moreRows", "columns", "group", "rows"].some(
+      (name) => changed.has(name),
+    );
+
+    if (skeletons) this.#renderSkeletons();
+
+    // New rows, or none left to load, answer what was asked
+    if (changed.has("rows") || changed.has("more")) {
+      this.#asked = false;
+      setAttribute(this.#table, "aria-busy", null);
+    }
+
     this.#renderBody();
+
+    if (
+      skeletons ||
+      changed.has("rows") ||
+      changed.has("contained") ||
+      changed.has("moreMargin")
+    ) {
+      this.#watchEnd();
+    }
   }
 }
 

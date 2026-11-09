@@ -17,6 +17,7 @@ import {
   withViewTransition,
 } from "@timmo001/groundwork-ui";
 import { Predicate } from "effect";
+import { fillSampleTables } from "./table-samples.ts";
 
 const tones = ["neutral", "accent", "info", "success", "warning", "danger", "important"] as const;
 
@@ -73,7 +74,8 @@ const shownValue = (event: Event, source: HTMLElement) => {
  * Demos are plain markup, so the frame wires up what would need script: a
  * button with `data-opens="id"` opens that dialog, one with `data-toggles="id"`
  * opens or closes that banner, one with `data-toast`
- * shows a toast in the frame's `gw-toaster`, and the last `change`, `select`
+ * shows a toast in the frame's `gw-toaster`, a `gw-table` with `data-sample`
+ * gets sample rows (`table-samples.ts`), and the last `change`, `select`
  * or `close` event is shown in the toolbar.
  */
 export class GwDemoFrame extends GwElement {
@@ -277,6 +279,10 @@ export class GwDemoFrame extends GwElement {
   readonly #event = h("span", { class: "event", "aria-live": "polite" });
 
   protected override create(root: ShadowRoot) {
+    fillSampleTables(this, (_table, page) => {
+      this.event = `more: page ${page} loaded`;
+    });
+
     this.#select.options = tokens.themes.map((theme) => ({
       value: theme.id,
       label: theme.name,

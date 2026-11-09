@@ -53,6 +53,7 @@ export interface GwEventMap {
     close: Event;
   };
   "gw-table": {
+    more: Event;
     change: Event;
   };
   "gw-theme-gallery": {
