@@ -66,7 +66,7 @@ export default defineMobileConfig({ origins: ["https://service.example"] });
 | `scanQr` | The shell's scanner | Rejects; scan in the page with `scanPairingLink` |
 | `setShortcuts` | The launcher's long-press menu and the share sheet | Answers 0; the manifest's `shortcuts` give the menu |
 | `pinShortcut` | Asks the launcher to pin one | Answers false |
-| `disableShortcuts` | Removes them, greying out pinned ones | Does nothing |
+| `disableShortcuts` | Removes them, graying out pinned ones | Does nothing |
 | `saveFile` | Saves a file the page made to Downloads | The browser's download |
 | `call` | The app's own Kotlin handlers | Rejects |
 
@@ -121,7 +121,7 @@ await mobile.disableShortcuts(["office"], "Office PC was removed");
 
 - **`setShortcuts`** replaces the dynamic shortcuts, ranked in order. Most launchers show the first 4 on a long press, and the launcher caps the whole list, often at 15; it answers how many it took.
 - **`pinShortcut`** asks the launcher to put one on the home screen, and answers false where it can't. A pinned shortcut lasts until the person removes it, so keep its `id` stable.
-- **`disableShortcuts`** removes the shortcuts with those ids. Pinned ones stay, greyed out, showing the message when tapped, until `setShortcuts` or `pinShortcut` publishes the same id again.
+- **`disableShortcuts`** removes the shortcuts with those ids. Pinned ones stay, grayed out, showing the message when tapped, until `setShortcuts` or `pinShortcut` publishes the same id again.
 - **`icon`** is an SVG path on a 24 unit grid, such as a Material Design Icon's, drawn in `gw_shortcut_foreground` on `gw_shortcut_background`. Without one, the shortcut shows the app's icon. Override either color as the notification icon's are.
 - **Sharing shortcuts.** One with `share: true` shows in the share sheet's direct row, and a share sent to it arrives with its id as `shortcutId`. Android only offers the share sheet shortcuts the launcher can show too, so list sharing shortcuts after the ones meant for the long-press menu. The activity needs a `share-target` with the shell's category, in `res/xml/shortcuts.xml`, named by an `android.app.shortcuts` meta-data entry on the activity:
 

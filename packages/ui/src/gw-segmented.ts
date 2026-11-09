@@ -23,7 +23,7 @@ export interface Segment {
  * Picks one of a few options, as a row of native radio buttons, so arrow
  * keys move between them and a form submits the choice. Fires `change`.
  *
- * Options can carry icons, as Home Assistant's toggles do. `labels` decides
+ * Options can carry icons. `labels` decides
  * whether their text shows: `show` (the default), `hide` (icons only, with
  * the text as a tooltip and accessible name) or `auto`, which shows the text
  * on wide screens and only the icons below `labels-below`. An option with

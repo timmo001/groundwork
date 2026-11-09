@@ -161,7 +161,7 @@ export interface Mobile {
    */
   readonly pinShortcut: (shortcut: Shortcut) => Promise<boolean>;
   /**
-   * Removes the shortcuts with these ids. Pinned ones stay, greyed out,
+   * Removes the shortcuts with these ids. Pinned ones stay, grayed out,
    * showing `message` when tapped. Does nothing outside the shell.
    */
   readonly disableShortcuts: (

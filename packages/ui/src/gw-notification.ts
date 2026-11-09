@@ -18,7 +18,7 @@ const closeIcon =
  * `gw-notification-center` until it's dealt with. It has an icon, a heading,
  * a line of text, when it happened and up to two actions. Its close button
  * dismisses it: it fires `dismiss`, then folds away and removes itself,
- * unless the event is cancelled.
+ * unless the event is canceled.
  *
  * @element gw-notification
  * @summary One notification card, dismissed with its close button.
@@ -170,7 +170,7 @@ export class GwNotification extends GwElement {
     this.dismissLabel = "Dismiss";
   }
 
-  /** Fires `dismiss`, then folds away and removes itself unless that's cancelled. */
+  /** Fires `dismiss`, then folds away and removes itself unless that's canceled. */
   dismiss() {
     const event = new Event("dismiss", {
       bubbles: true,

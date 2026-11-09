@@ -53,7 +53,7 @@ The defaults:
   AI and page feedback off.
 - GitHub `branch` set to `main` and `dir` to `docs`, plus the header repository
   link.
-- Generated share cards using `src/assets/logo.svg`, and an organisation logo at
+- Generated share cards using `src/assets/logo.svg`, and an organization logo at
   `/logo.png` (see [Brand images](#brand-images)).
 
 ### Components

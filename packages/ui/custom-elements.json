@@ -16792,7 +16792,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Something new the person needs to decide or know, kept in a\n`gw-notification-center` until it's dealt with. It has an icon, a heading,\na line of text, when it happened and up to two actions. Its close button\ndismisses it: it fires `dismiss`, then folds away and removes itself,\nunless the event is cancelled.",
+          "description": "Something new the person needs to decide or know, kept in a\n`gw-notification-center` until it's dealt with. It has an icon, a heading,\na line of text, when it happened and up to two actions. Its close button\ndismisses it: it fires `dismiss`, then folds away and removes itself,\nunless the event is canceled.",
           "name": "GwNotification",
           "cssProperties": [
             {
@@ -16946,7 +16946,7 @@
             {
               "kind": "method",
               "name": "dismiss",
-              "description": "Fires `dismiss`, then folds away and removes itself unless that's cancelled."
+              "description": "Fires `dismiss`, then folds away and removes itself unless that's canceled."
             },
             {
               "kind": "method",
@@ -20458,7 +20458,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons, as Home Assistant's toggles do. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.",
+          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.",
           "name": "GwSegmented",
           "cssProperties": [
             {
@@ -21054,7 +21054,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below `sheet-below`, 600px wide by default, the list is a\nbottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
+          "description": "A labeled select whose list opens under it. Long lists get a search field,\nfocused as the list opens, and only the options in view are rendered. Move\nwith the arrow keys and pick with Enter. Below `sheet-below`, 600px wide by\ndefault, the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
           "name": "GwSelect",
           "cssProperties": [
             {

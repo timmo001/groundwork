@@ -43,7 +43,7 @@ for (const route of routes) {
   const hasDemos = (await page.locator("gw-demo-frame").count()) > 0;
 
   for (const mode of modes) {
-    // The site's own colour scheme follows the mode too
+    // The site's own color scheme follows the mode too
     await page.emulateMedia({ colorScheme: mode === "light" ? "light" : "dark", reducedMotion: "reduce" });
 
     for (const theme of hasDemos ? themes : ["site"]) {

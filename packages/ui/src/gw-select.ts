@@ -25,11 +25,10 @@ const chevronIcon =
   "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z";
 
 /**
- * A labeled select whose list opens under it, after Home Assistant's
- * pickers. Long lists get a search field, focused as the list opens, and
- * only the options in view are rendered. Move with the arrow keys and pick
- * with Enter. Below `sheet-below`, 600px wide by default, the list is a
- * bottom sheet.
+ * A labeled select whose list opens under it. Long lists get a search field,
+ * focused as the list opens, and only the options in view are rendered. Move
+ * with the arrow keys and pick with Enter. Below `sheet-below`, 600px wide by
+ * default, the list is a bottom sheet.
  *
  * Pass `options`, or write `<option>` children (in `<optgroup>`s for
  * groups, with `data-icon`, `data-swatch` and `data-description`), which it
@@ -133,7 +132,7 @@ export class GwSelect extends LightElement {
 
   readonly #icon = createIcon("");
 
-  // The trigger is already labelled by the real label, so this copy is hidden
+  // The trigger is already labeled by the real label, so this copy is hidden
   // from assistive technology
   readonly #inline = h("span", {
     class: "gw-select-inline-label",

@@ -225,7 +225,7 @@ const shadows = (style: Style, mode: Mode) => {
  * theme beside its density, not only on `:root`.
  */
 const spacing = {
-  // Home Assistant's scale: 4px steps, space-1 to space-20, plus a half step
+  // 4px steps, space-1 to space-20, plus a half step
   "space-0-5": "calc(0.125rem * var(--gw-density))",
   ...Object.fromEntries(
     Array.from({ length: 20 }, (_, index) => [
@@ -255,7 +255,6 @@ const foundations = {
   "radius-l": "12px",
   "radius-xl": "16px",
   "radius-pill": "999px",
-  // Home Assistant's animation durations
   "motion-instant": "75ms",
   "motion-fast": "150ms",
   "motion-normal": "250ms",

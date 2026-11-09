@@ -173,13 +173,13 @@ export const mobileRequests = {
   localNetwork: LocalNetworkState,
   /** Finds mDNS services of a type, such as `_http._tcp`. */
   discoverServices: Schema.Array(DiscoveredService),
-  /** Scans a QR code with the camera: its text, or `null` when cancelled. */
+  /** Scans a QR code with the camera: its text, or `null` when canceled. */
   scanQr: Schema.NullOr(Schema.String),
   /** Replaces the dynamic shortcuts: how many the launcher took. */
   setShortcuts: Schema.Number,
   /** Asks the launcher to pin a shortcut: false where it can't. */
   pinShortcut: Schema.Boolean,
-  /** Removes shortcuts, greying out pinned ones. */
+  /** Removes shortcuts, graying out pinned ones. */
   disableShortcuts: Schema.Boolean,
   /** Saves a file the page made to Downloads, from `{ name, type, data }` in base64. */
   saveFile: Schema.Boolean,
