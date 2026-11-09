@@ -1,3 +1,9 @@
+/**
+ * `docsConfig`: a Blume config with the shared defaults every timmo001 docs
+ * site starts from, each one replaceable by the site's own option.
+ *
+ * @module
+ */
 import type { BlumeConfig } from "blume";
 import { cloudflare } from "blume/deploy";
 

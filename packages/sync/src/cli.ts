@@ -1,4 +1,10 @@
 #!/usr/bin/env bun
+/**
+ * The sync CLI: lists registry items, shows where each app's copies stand,
+ * syncs them and adds items to an app with a `sync.json`.
+ *
+ * @module
+ */
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, Path } from "effect";
 import { Argument, Command, Flag } from "effect/cli";

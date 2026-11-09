@@ -1,4 +1,11 @@
 #!/usr/bin/env bun
+/**
+ * The tokens CLI for this repository: `gen` writes every generated target
+ * and theme page (`--check` fails when one is stale), and `contrast` fails
+ * when a core theme misses a contrast target. Apps use `bin.ts` instead.
+ *
+ * @module
+ */
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import { Console, Effect, FileSystem, Path, Schema } from "effect";
 import { Command, Flag } from "effect/cli";

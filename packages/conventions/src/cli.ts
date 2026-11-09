@@ -1,4 +1,10 @@
 #!/usr/bin/env bun
+/**
+ * The conventions CLI: generates and checks the label manifest and each
+ * repository's labels from the data in `conventions/`.
+ *
+ * @module
+ */
 import { NodeRuntime, NodeServices } from "@effect/platform-node";
 import {
   Config,

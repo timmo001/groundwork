@@ -1,3 +1,9 @@
+/**
+ * `writeBrandImages`: share cards, social previews and logo PNGs from a
+ * site's square SVG logo, so each site's images match without a design tool.
+ *
+ * @module
+ */
 import { mkdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
