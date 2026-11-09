@@ -57,12 +57,18 @@ const pick = (page: Page, theme: string, mode: (typeof modes)[number]) =>
   );
 
 const audit = async (page: Page) => {
-  // Fades and skeleton shimmers would read as low contrast mid-animation
+  // Fades and skeleton shimmers would read as low contrast mid-animation.
+  // Scroll-driven ones, such as the scrollbars' square ends, follow a
+  // scroller rather than time, so they never finish
   await page.evaluate(() =>
     Promise.all(
       document
         .getAnimations()
-        .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+        .filter(
+          (animation) =>
+            animation.timeline === document.timeline &&
+            animation.effect?.getTiming().iterations !== Infinity,
+        )
         .map((animation) => animation.finished.catch(() => undefined)),
     ),
   );
