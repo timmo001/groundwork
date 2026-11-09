@@ -50,7 +50,7 @@
     "@oxlint/plugins": "1.92.0",
     "@timmo001/oxlint-rules": "0.6.4",
     "@types/bun": "1.4.4",
-    "blume": "2.2.6",
+    "blume": "2.2.7",
     "oxlint": "1.92.0",
     "oxlint-tsgolint": "7.0.2006",
     "prettier": "3.9.10",
