@@ -4,6 +4,11 @@ The groundwork for designing and building apps, sites, CLIs, terminal UIs,
 Omarchy panels and agents: tokens and themes, repository conventions, the docs
 site and `@timmo001/docs-kit`. The READMEs document usage and development.
 
+It's a starting point each app builds on in its own way, so keep it
+customizable and expandable: a change adds a choice with today's behavior as
+its default, never one locked for every app. Follow
+`skills/groundwork-changes/SKILL.md` for every change.
+
 ## Repository
 
 - It's public. Nothing personal goes in: no home paths, machine or host names,

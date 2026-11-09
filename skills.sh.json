@@ -3,9 +3,10 @@
   "groupings": [
     {
       "title": "Use",
-      "description": "Set up repositories and docs sites on Groundwork, and apply its conventions.",
+      "description": "Set up repositories and docs sites on Groundwork, apply its conventions, and change it without locking apps in.",
       "skills": [
         "groundwork-setup",
+        "groundwork-changes",
         "groundwork-themes",
         "groundwork-conventions",
         "docs-kit"

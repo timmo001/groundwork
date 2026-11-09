@@ -27,4 +27,4 @@ Load the skill a step needs when you reach it, where it's available:
 | 7. Agent surface | the `cli-tool` template's README |
 | 9. Theme | `groundwork-themes` |
 
-When a step turns out to be missing from the page, or a repository does it differently for a good reason, change the page in Groundwork rather than only the repository, so the next one gets it too.
+When a step turns out to be missing from the page, or a repository does it differently for a good reason, change the page in Groundwork rather than only the repository, so the next one gets it too, following `groundwork-changes`.
