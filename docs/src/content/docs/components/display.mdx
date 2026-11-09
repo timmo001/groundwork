@@ -296,6 +296,7 @@ Code or a diff in a read-only view, which scrolls up to `--gw-code-max-height` (
 | `storage-key` | Keeps whether someone turned wrapping on or off in `localStorage` under this key |
 | `find-shortcut` | Ctrl+F anywhere on the page finds in it while it's shown, for a viewer that fills the page |
 | `label` | The view's accessible name, such as the file's name |
+| `size` | The toolbar buttons' size, `xs` to `xl` as a button's (`small`). `--gw-code-tools-scale` sets any size in between |
 
 It fires `change` when someone turns wrapping on or off. To fill the page, set `--gw-code-height` and `--gw-code-max-height: none`. In a fold, draw it with the expansion panel's `draw`, so the view isn't built until someone opens it.
 

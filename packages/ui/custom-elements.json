@@ -6312,6 +6312,10 @@
             {
               "description": "A fixed height, such as to fill the page with `--gw-code-max-height: none`. Defaults to `auto`.",
               "name": "--gw-code-height"
+            },
+            {
+              "description": "Scales the toolbar buttons to any size, around 1 for medium. `size` sets it.",
+              "name": "--gw-code-tools-scale"
             }
           ],
           "cssParts": [
@@ -6332,7 +6336,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ content: {}, diff: { type: \"boolean\", reflect: true }, language: {}, label: {}, wrap: { type: \"boolean\", reflect: true }, lineNumbers: { type: \"boolean\", attribute: \"line-numbers\" }, findShortcut: { type: \"boolean\", attribute: \"find-shortcut\" }, storageKey: { attribute: \"storage-key\" }, }",
+              "default": "{ content: {}, diff: { type: \"boolean\", reflect: true }, language: {}, label: {}, wrap: { type: \"boolean\", reflect: true }, lineNumbers: { type: \"boolean\", attribute: \"line-numbers\" }, findShortcut: { type: \"boolean\", attribute: \"find-shortcut\" }, storageKey: { attribute: \"storage-key\" }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6345,7 +6349,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; min-width: 0; height: var(--gw-code-height, auto); overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } .tools { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: var(--gw-space-1); padding: var(--gw-space-1) var(--gw-space-2); background: var(--gw-color-surface-default); border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet); } .code { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; } `, ]",
+              "default": "[ base, controlSizes(\"code-tools\"), css` :host { display: flex; flex-direction: column; min-width: 0; height: var(--gw-code-height, auto); overflow: hidden; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-quiet); border-radius: var(--gw-radius-control); } .tools { display: flex; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: var(--gw-space-1); padding: var(--gw-space-1) var(--gw-space-2); background: var(--gw-color-surface-default); border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet); } /* The buttons take their size from the toolbar's, so an app sets it with size or --gw-code-tools-scale rather than reaching inside */ .tools gw-button { --gw-button-scale: var(--gw-code-tools-scale, 0.8); } :host([size=\"medium\"]) { --gw-code-tools-scale: 1; } .code { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -6414,6 +6418,14 @@
                 "text": "string"
               },
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"small\""
             },
             {
               "kind": "field",
@@ -6904,6 +6916,13 @@
               },
               "description": "Keeps whether someone turned wrapping on or off in `localStorage` under this key.",
               "name": "storage-key"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The toolbar buttons' size, as `gw-button`'s. Defaults to `small`.",
+              "name": "size"
             }
           ],
           "superclass": {

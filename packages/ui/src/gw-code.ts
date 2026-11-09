@@ -30,7 +30,7 @@ import { tags } from "@lezer/highlight";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
 import { getStorage } from "./storage.js";
-import { base } from "./styles.js";
+import { base, controlSizes } from "./styles.js";
 
 // MDI's wrap, magnify, content-copy and check
 const wrapIcon =
@@ -251,6 +251,7 @@ const searchPhrases = EditorState.phrases.of({
  * @attr {boolean} line-numbers - Numbers the lines.
  * @attr {boolean} find-shortcut - Ctrl+F anywhere on the page finds in it while it's shown, rather than in the page.
  * @attr {string} storage-key - Keeps whether someone turned wrapping on or off in `localStorage` under this key.
+ * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The toolbar buttons' size, as `gw-button`'s. Defaults to `small`.
  *
  * @fires change - When someone turns wrapping on or off. Read `wrap`.
  *
@@ -259,6 +260,7 @@ const searchPhrases = EditorState.phrases.of({
  *
  * @cssprop --gw-code-max-height - How tall it grows before it scrolls. Defaults to `32rem`.
  * @cssprop --gw-code-height - A fixed height, such as to fill the page with `--gw-code-max-height: none`. Defaults to `auto`.
+ * @cssprop --gw-code-tools-scale - Scales the toolbar buttons to any size, around 1 for medium. `size` sets it.
  */
 export class GwCode extends GwElement {
   static override properties = {
@@ -270,10 +272,12 @@ export class GwCode extends GwElement {
     lineNumbers: { type: "boolean", attribute: "line-numbers" },
     findShortcut: { type: "boolean", attribute: "find-shortcut" },
     storageKey: { attribute: "storage-key" },
+    size: { reflect: true },
   } as const;
 
   static override styles = [
     base,
+    controlSizes("code-tools"),
     css`
       :host {
         display: flex;
@@ -297,6 +301,16 @@ export class GwCode extends GwElement {
         border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet);
       }
 
+      /* The buttons take their size from the toolbar's, so an app sets it
+         with size or --gw-code-tools-scale rather than reaching inside */
+      .tools gw-button {
+        --gw-button-scale: var(--gw-code-tools-scale, 0.8);
+      }
+
+      :host([size="medium"]) {
+        --gw-code-tools-scale: 1;
+      }
+
       .code {
         display: flex;
         flex: 1 1 auto;
@@ -314,11 +328,11 @@ export class GwCode extends GwElement {
   declare lineNumbers: boolean;
   declare findShortcut: boolean;
   declare storageKey: string;
+  declare size: string;
 
   readonly #wrapButton = h(
     "gw-button",
     {
-      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
@@ -331,7 +345,6 @@ export class GwCode extends GwElement {
   readonly #findButton = h(
     "gw-button",
     {
-      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
@@ -344,7 +357,6 @@ export class GwCode extends GwElement {
   readonly #copyButton = h(
     "gw-button",
     {
-      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
@@ -385,6 +397,7 @@ export class GwCode extends GwElement {
     this.lineNumbers = false;
     this.findShortcut = false;
     this.storageKey = "";
+    this.size = "small";
   }
 
   override connectedCallback() {
