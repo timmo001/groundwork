@@ -38,6 +38,7 @@ import type {} from "./gw-chip.js";
 import type {} from "./gw-input.js";
 import type {} from "./gw-skeleton.js";
 import { isText, keep, keptAt, textsOf } from "./kept.js";
+import { scrollbarValues } from "./scrollbars.js";
 import { base, createIcon } from "./styles.js";
 
 /** A value a cell holds, which sorting and search read. */
@@ -199,6 +200,7 @@ type Shown =
  * @csspart none - What it says with no rows, or none matching the search.
  * @csspart skeleton-row - Each row standing in for the rows still to load, with `more`.
  * @csspart skeleton - Each cell's skeleton in those rows, a `gw-skeleton-text`.
+ * @csspart scrollbar-thumb - A `contained` table's scrollbar thumb, drawn over the rows so the header and group headings run its full width.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
@@ -281,44 +283,64 @@ export class GwTable extends GwElement {
         border-radius: var(--gw-radius-panel);
       }
 
-      /* The header's fill, the pinned group heading's and their borders run
-         on under the scrollbar, as bands in the frame's own background that
-         stay put as it scrolls, so the header keeps both its corners */
       :host([contained]) .scroller {
-        --_head: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem));
-        --_group: var(--_gw-table-group, 0px);
         max-height: var(--gw-table-max-height, 70vh);
         overflow-y: auto;
-        background:
-          linear-gradient(
-              var(--gw-color-border-quiet),
-              var(--gw-color-border-quiet)
-            )
-            0 calc(var(--_head) - var(--gw-border-width)) / 100%
-            var(--gw-border-width) no-repeat,
-          linear-gradient(
-              var(--gw-color-border-normal),
-              var(--gw-color-border-normal)
-            )
-            0 calc(var(--_head) + var(--_group) - var(--gw-border-width)) / 100%
-            min(var(--_group), var(--gw-border-width)) no-repeat,
-          linear-gradient(
-              var(--gw-color-surface-default),
-              var(--gw-color-surface-default)
-            )
-            0 var(--_head) / 100% var(--_group) no-repeat,
-          linear-gradient(
-              var(--gw-color-surface-lower, transparent),
-              var(--gw-color-surface-lower, transparent)
-            )
-            top / 100% var(--_head) no-repeat,
-          var(--gw-color-surface-raised);
       }
 
-      /* The scrollbar's track starts under the header and pinned group
-         heading, so its thumb never sits over them */
-      :host([contained]) .scroller::-webkit-scrollbar-track:vertical {
-        margin-block-start: calc(var(--_head) + var(--_group));
+      /* A contained table draws its own scrollbar thumb over the rows, so
+         the header and group headings run its whole width rather than
+         stopping at a gutter. Its track starts under them, and it takes the
+         same --gw-table-scrollbar-* hooks as the native one. Browsers
+         without WebKit scrollbar styling keep their native thin one */
+      .frame {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      :host([contained]) .scroller::-webkit-scrollbar:vertical {
+        width: 0;
+      }
+
+      .thumb {
+        position: absolute;
+        inset-inline-end: 2px;
+        top: 0;
+        z-index: 2;
+        width: ${scrollbarValues.size};
+        touch-action: none;
+        background: ${scrollbarValues.thumb};
+        border-radius: ${scrollbarValues.radius};
+        transition: background-color var(--gw-motion-normal)
+          var(--gw-motion-easing);
+      }
+
+      .thumb:hover,
+      .thumb.dragging {
+        background: ${scrollbarValues.thumbHovered};
+      }
+
+      .thumb[hidden] {
+        display: none;
+      }
+
+      @supports not selector(::-webkit-scrollbar) {
+        .thumb {
+          display: none;
+        }
+      }
+
+      @media (forced-colors: active) {
+        .thumb {
+          background: GrayText;
+        }
+
+        .thumb:hover,
+        .thumb.dragging {
+          background: CanvasText;
+        }
       }
 
       /* The header stays in view as a contained table scrolls */
@@ -338,8 +360,8 @@ export class GwTable extends GwElement {
          the header and the pinned group headings */
       tbody {
         isolation: isolate;
-        /* Solid, so the rows read against one color rather than the
-           frame's bands, which contrast checkers can't resolve */
+        /* Solid, so the rows read against one color, which contrast
+           checkers can resolve */
         background: var(--gw-color-surface-raised);
       }
 
@@ -586,13 +608,102 @@ export class GwTable extends GwElement {
   /** Whether `more` has fired for these rows. */
   #asked = false;
 
-  /** Keeps the header's height for what's pinned under it. */
-  readonly #headSize = new ResizeObserver(() => {
+  /** A contained table's scrollbar thumb, drawn over the rows. */
+  readonly #thumb: HTMLDivElement = h("div", {
+    class: "thumb",
+    part: "scrollbar-thumb",
+    "aria-hidden": "true",
+    hidden: true,
+  });
+
+  readonly #frame: HTMLDivElement = h(
+    "div",
+    { class: "frame" },
+    this.#scroller,
+    this.#thumb,
+  );
+
+  /** How far a pixel of thumb drag scrolls the frame, as last placed. */
+  #thumbRatio = 1;
+
+  /**
+   * Keeps the header's height for what's pinned under it, and the thumb in
+   * step with the frame's and the table's size.
+   */
+  readonly #sizes = new ResizeObserver(() => {
     this.#scroller.style.setProperty(
       "--_gw-table-head",
       `${this.#head.getBoundingClientRect().height}px`,
     );
+    this.#placeThumb();
   });
+
+  /**
+   * Sizes the thumb to the share of the rows in view and moves it with the
+   * scroll, along a track that starts under the header and, when grouped,
+   * the pinned group heading.
+   */
+  #placeThumb() {
+    const scroller = this.#scroller;
+    const scrollable = scroller.scrollHeight - scroller.clientHeight;
+
+    if (!this.contained || scrollable < 1) {
+      this.#thumb.hidden = true;
+
+      return;
+    }
+
+    const inset = 2;
+
+    const start =
+      this.#head.getBoundingClientRect().height +
+      (this.#headingOf[0] === 0 ? this.#typical.group : 0);
+
+    const track = scroller.clientHeight - start - inset * 2;
+
+    const size = Math.max(
+      24,
+      (track * scroller.clientHeight) / scroller.scrollHeight,
+    );
+
+    this.#thumbRatio = scrollable / Math.max(1, track - size);
+    this.#thumb.hidden = track <= size;
+    this.#thumb.style.height = `${size}px`;
+    this.#thumb.style.top = `${
+      scroller.offsetTop +
+      scroller.clientTop +
+      start +
+      inset +
+      (scroller.scrollTop / scrollable) * (track - size)
+    }px`;
+  }
+
+  /** Scrolls the frame as the thumb is dragged. */
+  #dragThumb(event: PointerEvent) {
+    event.preventDefault();
+
+    const thumb = this.#thumb;
+    const from = event.clientY;
+    const top = this.#scroller.scrollTop;
+    const ratio = this.#thumbRatio;
+
+    const move = (moved: PointerEvent) => {
+      this.#scroller.scrollTop = top + (moved.clientY - from) * ratio;
+    };
+
+    const end = () => {
+      thumb.classList.remove("dragging");
+      thumb.removeEventListener("pointermove", move);
+      thumb.removeEventListener("pointerup", end);
+      thumb.removeEventListener("pointercancel", end);
+    };
+
+    thumb.setPointerCapture(event.pointerId);
+    thumb.classList.add("dragging");
+    thumb.addEventListener("pointermove", move);
+    thumb.addEventListener("pointerup", end);
+    thumb.addEventListener("pointercancel", end);
+  }
 
   /**
    * Each shown row's element, kept while it stands so scrolling moves rows
@@ -686,13 +797,15 @@ export class GwTable extends GwElement {
   override connectedCallback() {
     super.connectedCallback();
     this.#mount();
-    this.#headSize.observe(this.#head);
+    this.#sizes.observe(this.#head);
+    this.#sizes.observe(this.#scroller);
+    this.#sizes.observe(this.#table);
     this.#watchEnd();
   }
 
   override disconnectedCallback() {
     this.#unmount();
-    this.#headSize.disconnect();
+    this.#sizes.disconnect();
     this.#nearEnd?.disconnect();
     this.#nearEnd = undefined;
     super.disconnectedCallback();
@@ -1149,14 +1262,9 @@ export class GwTable extends GwElement {
         }
       }
 
-      // A grouped table always has a heading pinned under the header, whose
-      // fill runs on under the scrollbar
-      this.#scroller.style.setProperty(
-        "--_gw-table-group",
-        this.#headingOf[0] === 0 ? `${this.#typical.group}px` : "0px",
-      );
-
       for (const row of connected) virtualizer.measureElement(row);
+
+      this.#placeThumb();
     });
 
     virtualizer._willUpdate();
@@ -1194,7 +1302,13 @@ export class GwTable extends GwElement {
       this.query = this.#search.value;
       this.#change({ query: this.query });
     });
-    root.append(this.#toolbar, this.#scroller);
+    this.#scroller.addEventListener("scroll", () => this.#placeThumb(), {
+      passive: true,
+    });
+    this.#thumb.addEventListener("pointerdown", (event) =>
+      this.#dragThumb(event),
+    );
+    root.append(this.#toolbar, this.#frame);
   }
 
   protected override update(changed: ReadonlySet<string>) {

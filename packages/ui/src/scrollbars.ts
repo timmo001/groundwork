@@ -40,6 +40,17 @@ const thumb = (name: string, strength: number) =>
     `var(--gw-scrollbar-thumb, color-mix(in oklab, var(--gw-color-text-secondary, currentColor) ${strength}%, transparent))`,
   );
 
+/**
+ * The scrollbar's resolved values as CSS, for an element that draws its own
+ * thumb, such as a contained `gw-table`, so it takes the same hooks.
+ */
+export const scrollbarValues = {
+  size,
+  radius,
+  thumb: thumb("thumb", 25),
+  thumbHovered: thumb("thumb-hovered", 60),
+} as const;
+
 const scrollbarParts = [
   "size",
   "radius",

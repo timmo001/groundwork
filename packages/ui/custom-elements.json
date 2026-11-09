@@ -25894,6 +25894,10 @@
             {
               "description": "Each cell's skeleton in those rows, a `gw-skeleton-text`.",
               "name": "skeleton"
+            },
+            {
+              "description": "A `contained` table's scrollbar thumb, drawn over the rows so the header and group headings run its full width.",
+              "name": "scrollbar-thumb"
             }
           ],
           "slots": [
@@ -25923,7 +25927,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } /* The search is a gw-input, a little smaller than a form's fields to sit in a toolbar */ .search { --gw-field-scale: var(--gw-table-search-scale, 0.9); flex: 1 1 var(--gw-table-search-width, 14rem); max-width: var(--gw-table-search-max-width, 24rem); } .search[hidden] { display: none; } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } /* The header's fill, the pinned group heading's and their borders run on under the scrollbar, as bands in the frame's own background that stay put as it scrolls, so the header keeps both its corners */ :host([contained]) .scroller { --_head: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem)); --_group: var(--_gw-table-group, 0px); max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; background: linear-gradient( var(--gw-color-border-quiet), var(--gw-color-border-quiet) ) 0 calc(var(--_head) - var(--gw-border-width)) / 100% var(--gw-border-width) no-repeat, linear-gradient( var(--gw-color-border-normal), var(--gw-color-border-normal) ) 0 calc(var(--_head) + var(--_group) - var(--gw-border-width)) / 100% min(var(--_group), var(--gw-border-width)) no-repeat, linear-gradient( var(--gw-color-surface-default), var(--gw-color-surface-default) ) 0 var(--_head) / 100% var(--_group) no-repeat, linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ) top / 100% var(--_head) no-repeat, var(--gw-color-surface-raised); } /* The scrollbar's track starts under the header and pinned group heading, so its thumb never sits over them */ :host([contained]) .scroller::-webkit-scrollbar-track:vertical { margin-block-start: calc(var(--_head) + var(--_group)); } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } /* Whatever a cell raises with a z-index stays in its own row, under the header and the pinned group headings */ tbody { isolation: isolate; /* Solid, so the rows read against one color rather than the frame's bands, which contrast checkers can't resolve */ background: var(--gw-color-surface-raised); } tbody tr:not(.group) { isolation: isolate; } /* A group's heading stays pinned under the header while its rows scroll past, and the next group's heading takes its place */ :host([contained]) tr.group td { position: sticky; top: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem)); z-index: 1; } /* Separate borders belong to their cells, so a pinned header or group heading takes its border with it; collapsed ones stay put and let the rows show through */ table { width: 100%; border-spacing: 0; border-collapse: separate; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer, .skeleton):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: var(--gw-table-header-height, 2.5rem); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem); } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-table-count-scale, 0.8); margin-inline-start: auto; } tr.skeleton gw-skeleton-text { --gw-skeleton-width: 70%; } tr.skeleton td.wide gw-skeleton-text { --gw-skeleton-width: 50%; } tr.skeleton td.numeric gw-skeleton-text { --gw-skeleton-width: 2.5rem; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; gap: var(--gw-space-3); min-width: 0; } .toolbar { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); align-items: center; } .toolbar[hidden] { display: none; } /* The search is a gw-input, a little smaller than a form's fields to sit in a toolbar */ .search { --gw-field-scale: var(--gw-table-search-scale, 0.9); flex: 1 1 var(--gw-table-search-width, 14rem); max-width: var(--gw-table-search-max-width, 24rem); } .search[hidden] { display: none; } .scroller { overflow-x: auto; overscroll-behavior-x: contain; background: var(--gw-color-surface-raised); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); } :host([contained]) .scroller { max-height: var(--gw-table-max-height, 70vh); overflow-y: auto; } /* A contained table draws its own scrollbar thumb over the rows, so the header and group headings run its whole width rather than stopping at a gutter. Its track starts under them, and it takes the same --gw-table-scrollbar-* hooks as the native one. Browsers without WebKit scrollbar styling keep their native thin one */ .frame { position: relative; display: flex; flex-direction: column; min-width: 0; } :host([contained]) .scroller::-webkit-scrollbar:vertical { width: 0; } .thumb { position: absolute; inset-inline-end: 2px; top: 0; z-index: 2; width: ${scrollbarValues.size}; touch-action: none; background: ${scrollbarValues.thumb}; border-radius: ${scrollbarValues.radius}; transition: background-color var(--gw-motion-normal) var(--gw-motion-easing); } .thumb:hover, .thumb.dragging { background: ${scrollbarValues.thumbHovered}; } .thumb[hidden] { display: none; } @supports not selector(::-webkit-scrollbar) { .thumb { display: none; } } @media (forced-colors: active) { .thumb { background: GrayText; } .thumb:hover, .thumb.dragging { background: CanvasText; } } /* The header stays in view as a contained table scrolls */ :host([contained]) thead th { position: sticky; top: 0; z-index: 1; background: linear-gradient( var(--gw-color-surface-lower, transparent), var(--gw-color-surface-lower, transparent) ), var(--gw-color-surface-raised); } /* Whatever a cell raises with a z-index stays in its own row, under the header and the pinned group headings */ tbody { isolation: isolate; /* Solid, so the rows read against one color, which contrast checkers can resolve */ background: var(--gw-color-surface-raised); } tbody tr:not(.group) { isolation: isolate; } /* A group's heading stays pinned under the header while its rows scroll past, and the next group's heading takes its place */ :host([contained]) tr.group td { position: sticky; top: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem)); z-index: 1; } /* Separate borders belong to their cells, so a pinned header or group heading takes its border with it; collapsed ones stay put and let the rows show through */ table { width: 100%; border-spacing: 0; border-collapse: separate; font-size: var(--gw-font-size-s); } th, td { padding: var(--gw-space-2) var(--gw-space-3); text-align: start; vertical-align: middle; white-space: nowrap; border-block-end: var(--gw-border-width) solid var(--gw-color-border-quiet); } td.wide { width: 100%; white-space: normal; } tbody tr:not(.spacer, .skeleton):hover { background: var(--gw-color-fill-neutral-hovered); } tr.spacer td { padding: 0; border: 0; } th { height: var(--gw-table-header-height, 2.5rem); font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); background: var(--gw-color-surface-lower, transparent); } th button { display: inline-flex; gap: var(--gw-space-1); align-items: center; padding: 0; font: inherit; color: inherit; cursor: pointer; background: none; border: 0; --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem); } th button:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } th[aria-sort] button { color: var(--gw-color-text-primary); } .numeric { font-variant-numeric: tabular-nums; text-align: end; } th.numeric button { flex-direction: row-reverse; } /* A group's heading sits on the page's own surface, darker than the rows, so the groups read as sections */ tr.group td { padding: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); background: var(--gw-color-surface-default); border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } tbody tr.group:hover { background: none; } .group-toggle { display: flex; gap: var(--gw-space-2); align-items: center; width: 100%; padding: var(--gw-space-3); font: inherit; color: inherit; text-align: start; cursor: pointer; background: none; border: 0; --gw-icon-size: 1.35em; } .group-toggle:hover { background: var(--gw-color-fill-neutral-hovered); } .group-toggle:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(-1 * var(--gw-focus-width)); } .group-toggle .icon { color: var(--gw-color-accent); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } .group-toggle[aria-expanded=\"true\"] .icon { rotate: 90deg; } .group-toggle gw-chip { --gw-chip-scale: var(--gw-table-count-scale, 0.8); margin-inline-start: auto; } tr.skeleton gw-skeleton-text { --gw-skeleton-width: 70%; } tr.skeleton td.wide gw-skeleton-text { --gw-skeleton-width: 50%; } tr.skeleton td.numeric gw-skeleton-text { --gw-skeleton-width: 2.5rem; } .none { padding: var(--gw-space-8) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .none[hidden] { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -26209,11 +26213,60 @@
             },
             {
               "kind": "field",
-              "name": "#headSize",
+              "name": "#thumb",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true,
+              "description": "A contained table's scrollbar thumb, drawn over the rows."
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#thumbRatio",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "1",
+              "description": "How far a pixel of thumb drag scrolls the frame, as last placed."
+            },
+            {
+              "kind": "field",
+              "name": "#sizes",
               "privacy": "private",
               "readonly": true,
-              "default": "new ResizeObserver(() => { this.#scroller.style.setProperty( \"--_gw-table-head\", `${this.#head.getBoundingClientRect().height}px`, ); })",
-              "description": "Keeps the header's height for what's pinned under it."
+              "default": "new ResizeObserver(() => { this.#scroller.style.setProperty( \"--_gw-table-head\", `${this.#head.getBoundingClientRect().height}px`, ); this.#placeThumb(); })",
+              "description": "Keeps the header's height for what's pinned under it, and the thumb in\nstep with the frame's and the table's size."
+            },
+            {
+              "kind": "method",
+              "name": "#placeThumb",
+              "privacy": "private",
+              "description": "Sizes the thumb to the share of the rows in view and moves it with the\nscroll, along a track that starts under the header and, when grouped,\nthe pinned group heading."
+            },
+            {
+              "kind": "method",
+              "name": "#dragThumb",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "description": "Scrolls the frame as the thumb is dragged."
             },
             {
               "kind": "field",
@@ -31582,6 +31635,23 @@
           "description": "The scrollbars inside a shadow root, which the page's rules can't reach: a\nrounded thumb on a clear track with no arrow buttons, squaring off at the\nends of its track, as the page's are, but thinner and fainter until it's\nhovered, so a menu's, list's or table's scrollbar keeps out of the way of\nwhat it scrolls. Every `gw-` element adopts it; add it to an app's own\ncomponents' styles to match.\n\nEach element restyles its own through `--gw-<element>-scrollbar-size`,\n`-radius`, `-thumb`, `-thumb-hovered` and `-track`, such as\n`--gw-table-scrollbar-radius: 0` (`scrollbarHooks` maps them). Unset, they\nfall back to `--gw-scrollbar-inner-*` for every element's, then the page's\n`--gw-scrollbar-size`, `--gw-scrollbar-thumb` and `--gw-scrollbar-track`.\nIt's in the components layer, `componentsLayer` in `element.ts`, which\nimports this module, so the name is written out here."
         },
         {
+          "kind": "variable",
+          "name": "size"
+        },
+        {
+          "kind": "variable",
+          "name": "radius"
+        },
+        {
+          "kind": "variable",
+          "name": "scrollbarValues",
+          "type": {
+            "text": "{\n  size,\n  radius,\n  thumb: thumb(\"thumb\", 25),\n  thumbHovered: thumb(\"thumb-hovered\", 60),\n}"
+          },
+          "default": "{ size, radius, thumb: thumb(\"thumb\", 25), thumbHovered: thumb(\"thumb-hovered\", 60), }",
+          "description": "The scrollbar's resolved values as CSS, for an element that draws its own\nthumb, such as a contained `gw-table`, so it takes the same hooks."
+        },
+        {
           "kind": "function",
           "name": "scrollbarHooks",
           "parameters": [
@@ -31606,6 +31676,14 @@
           "name": "scrollbars",
           "declaration": {
             "name": "scrollbars",
+            "module": "src/scrollbars.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scrollbarValues",
+          "declaration": {
+            "name": "scrollbarValues",
             "module": "src/scrollbars.ts"
           }
         },
