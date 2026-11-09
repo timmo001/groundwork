@@ -15,14 +15,11 @@ const gap = 8;
 const closeIcon =
   "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z";
 
-/** Below this width the popover is a bottom sheet, as Home Assistant's adaptive dialogs are. */
-const sheetBelow = 600;
-
 /**
  * A confirmation, rename or small form that opens next to the button that
- * asked for it, rather than as a dialog in the middle of the screen. On
- * narrow screens it's a bottom sheet. Opened without a button, such as after
- * a save, it sits in the middle like a dialog.
+ * asked for it, rather than as a dialog in the middle of the screen. Below
+ * `sheet-below`, 600px wide by default, it's a bottom sheet. Opened without a
+ * button, such as after a save, it sits in the middle like a dialog.
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
  * outside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a
@@ -34,6 +31,7 @@ const sheetBelow = 600;
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
+ * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it by its button. Defaults to `600`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
  * @attr {string} keep-label - The button that goes back to editing. Defaults to `Keep editing`.
@@ -70,6 +68,7 @@ export class GwPopover extends GwElement {
   static override properties = {
     heading: {},
     confirm: { type: "boolean" },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
     closeLabel: { attribute: "close-label" },
     discardQuestion: { attribute: "discard-question" },
     keepLabel: { attribute: "keep-label" },
@@ -224,6 +223,8 @@ export class GwPopover extends GwElement {
 
   declare heading: string;
   declare confirm: boolean;
+  /** The viewport width in pixels below which it's a bottom sheet. */
+  declare sheetBelow: number;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
   declare discardQuestion: string;
@@ -283,6 +284,7 @@ export class GwPopover extends GwElement {
     super();
     this.heading = "";
     this.confirm = false;
+    this.sheetBelow = 600;
     this.closeLabel = "Close";
     this.discardQuestion = "Discard your changes?";
     this.keepLabel = "Keep editing";
@@ -330,7 +332,7 @@ export class GwPopover extends GwElement {
   };
 
   #placementFor(anchor: Element | undefined) {
-    if (window.innerWidth < sheetBelow) return "sheet";
+    if (window.innerWidth < this.sheetBelow) return "sheet";
 
     return anchor === undefined ? "center" : "below";
   }

@@ -9,15 +9,13 @@ import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
 import { base } from "./styles.js";
 
-/** Below this width the menu is a bottom sheet. */
-const sheetBelow = 600;
-
 /**
  * A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a
- * modal near the top of the page, or a bottom sheet on phones. Picking one
- * closes the menu and fires `pick` with its value. Esc or a click outside
- * closes it. It won't open over another dialog, so only one overlay shows at
- * a time. Set `shortcut="none"` to open it only with `show()`.
+ * modal near the top of the page, or a bottom sheet below `sheet-below`,
+ * 600px wide by default. Picking one closes the menu and fires `pick` with
+ * its value. Esc or a click outside closes it. It won't open over another
+ * dialog, so only one overlay shows at a time. Set `shortcut="none"` to open
+ * it only with `show()`.
  *
  * @element gw-command-menu
  * @summary A searchable list of commands on Cmd+K or Ctrl+K.
@@ -26,16 +24,25 @@ const sheetBelow = 600;
  * @attr {string} value - The current command, such as the page you're on. It's marked, and selected and scrolled into view each time the menu opens.
  * @attr {string} label - The accessible name. Defaults to `Commands`.
  * @attr {string} placeholder - The search placeholder. Defaults to `Search commands`.
- * @attr {string} shortcut - The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.
+ * @attr {string} no-match-label - What it says when the search matches nothing, for an app in another language. Defaults to `No matches`.
+ * @attr {string} shortcut - `mod+` and the key that opens it with Cmd or Ctrl, such as `mod+k` or `mod+p`, or `none`. Defaults to `mod+k`.
+ * @attr {string} move-hint - The footer's hint after the arrow keys. Defaults to `to move`.
+ * @attr {string} pick-hint - The hint after Enter. Defaults to `to pick`.
+ * @attr {string} close-hint - The hint after Esc. Defaults to `to close`.
+ * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it a modal. Defaults to `600`.
  * @attr {boolean} open - Whether it shows.
  *
  * @csspart dialog - The menu's surface.
  * @csspart list - The `gw-option-list` of commands.
  * @csspart footer - The row of key hints.
+ * @csspart hint - Each key hint.
+ * @csspart key - Each key in a hint.
  *
  * @cssprop --gw-command-menu-top - How far down the page it opens. Defaults to `12vh`.
  * @cssprop --gw-command-menu-width - The widest it grows. Defaults to `36rem`.
+ * @cssprop --gw-command-menu-height - The tallest it grows. Defaults to `70vh`.
  * @cssprop --gw-command-menu-list-height - The tallest the list grows. Defaults to `min(24rem, 56vh)`.
+ * @cssprop --gw-command-menu-sheet-list-height - The tallest the list grows as a bottom sheet. Defaults to `60vh`.
  * @cssprop --gw-command-menu-background - The surface. Defaults to `--gw-color-surface-overlay`.
  * @cssprop --gw-command-menu-border-color - The border. Defaults to `--gw-color-border-loud`.
  * @cssprop --gw-command-menu-radius - The corners. Defaults to `--gw-radius-panel`.
@@ -50,7 +57,12 @@ export class GwCommandMenu extends GwElement {
     value: {},
     label: {},
     placeholder: {},
+    noMatchLabel: { attribute: "no-match-label" },
     shortcut: {},
+    moveHint: { attribute: "move-hint" },
+    pickHint: { attribute: "pick-hint" },
+    closeHint: { attribute: "close-hint" },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
     open: { type: "boolean", reflect: true },
   } as const;
 
@@ -63,7 +75,7 @@ export class GwCommandMenu extends GwElement {
           var(--gw-command-menu-width, 36rem),
           calc(100vw - 2 * var(--gw-space-3))
         );
-        max-height: 70vh;
+        max-height: var(--gw-command-menu-height, 70vh);
         padding: 0;
         margin-block: 0;
         overflow: hidden;
@@ -130,7 +142,7 @@ export class GwCommandMenu extends GwElement {
         border-end-end-radius: 0;
         scale: 1;
         translate: 0 100%;
-        --gw-option-list-height: 60vh;
+        --gw-option-list-height: var(--gw-command-menu-sheet-list-height, 60vh);
       }
 
       dialog[data-placement="sheet"][open] {
@@ -178,11 +190,23 @@ export class GwCommandMenu extends GwElement {
   declare value: string;
   declare label: string;
   declare placeholder: string;
-  /** `mod+k` (the default) opens it on Cmd+K or Ctrl+K; `none` turns that off. */
+  declare noMatchLabel: string;
+  /** `mod+` and a key, such as `mod+k` (the default), opens it on Cmd or Ctrl and that key; `none` turns that off. */
   declare shortcut: string;
+  declare moveHint: string;
+  declare pickHint: string;
+  declare closeHint: string;
+  /** The viewport width in pixels below which it's a bottom sheet. */
+  declare sheetBelow: number;
   declare open: boolean;
 
   readonly #list = h("gw-option-list", { search: true, part: "list" });
+
+  readonly #moveHint = h("span");
+
+  readonly #pickHint = h("span");
+
+  readonly #closeHint = h("span");
 
   readonly #dialog: HTMLDialogElement = h(
     "dialog",
@@ -191,9 +215,29 @@ export class GwCommandMenu extends GwElement {
     h(
       "footer",
       { part: "footer", "aria-hidden": "true" },
-      h("span", {}, h("kbd", {}, "↑"), " ", h("kbd", {}, "↓"), " to move"),
-      h("span", {}, h("kbd", {}, "Enter"), " to pick"),
-      h("span", {}, h("kbd", {}, "Esc"), " to close"),
+      h(
+        "span",
+        { part: "hint" },
+        h("kbd", { part: "key" }, "↑"),
+        " ",
+        h("kbd", { part: "key" }, "↓"),
+        " ",
+        this.#moveHint,
+      ),
+      h(
+        "span",
+        { part: "hint" },
+        h("kbd", { part: "key" }, "Enter"),
+        " ",
+        this.#pickHint,
+      ),
+      h(
+        "span",
+        { part: "hint" },
+        h("kbd", { part: "key" }, "Esc"),
+        " ",
+        this.#closeHint,
+      ),
     ),
   );
 
@@ -203,7 +247,12 @@ export class GwCommandMenu extends GwElement {
     this.value = "";
     this.label = "Commands";
     this.placeholder = "Search commands";
+    this.noMatchLabel = "No matches";
     this.shortcut = "mod+k";
+    this.moveHint = "to move";
+    this.pickHint = "to pick";
+    this.closeHint = "to close";
+    this.sheetBelow = 600;
     this.open = false;
   }
 
@@ -216,10 +265,12 @@ export class GwCommandMenu extends GwElement {
   }
 
   readonly #onShortcut = (event: KeyboardEvent) => {
+    const key = /^mod\+(.+)$/i.exec(this.shortcut.trim())?.[1]?.toLowerCase();
+
     if (
-      this.shortcut === "none" ||
+      key === undefined ||
       event.defaultPrevented ||
-      event.key.toLowerCase() !== "k" ||
+      event.key.toLowerCase() !== key ||
       !(event.metaKey || event.ctrlKey) ||
       event.altKey ||
       event.shiftKey
@@ -294,11 +345,15 @@ export class GwCommandMenu extends GwElement {
     list.value = this.value;
     list.label = this.label;
     list.placeholder = this.placeholder;
+    list.noMatchLabel = this.noMatchLabel;
+    this.#moveHint.textContent = this.moveHint;
+    this.#pickHint.textContent = this.pickHint;
+    this.#closeHint.textContent = this.closeHint;
     dialog.setAttribute("aria-label", this.label);
 
     if (this.open && !dialog.open) {
       dialog.dataset.placement =
-        window.innerWidth < sheetBelow ? "sheet" : "center";
+        window.innerWidth < this.sheetBelow ? "sheet" : "center";
       dialog.showModal();
       list.reset();
       document.dispatchEvent(new Event("gw-dialog-open"));

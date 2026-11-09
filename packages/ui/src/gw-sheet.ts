@@ -18,13 +18,13 @@ const chevrons = {
 type Side = keyof typeof chevrons;
 
 /** Below this width, `side="auto"` slides up from the bottom. */
-const narrow = "(width < 40rem)";
+const bottomBelow = "40rem";
 
 /**
  * A panel of filters, settings or details that slides in from an edge of the
  * screen over the page, rather than taking a place in its layout. With
  * `side="auto"` it comes from the start edge, full height, and from the
- * bottom on narrow screens.
+ * bottom below `bottom-below`, 40rem wide by default.
  *
  * It's on the Popover API, in the top layer, and closes on Esc, a click
  * outside or its close button, whose chevron points the way it leaves. Open
@@ -36,7 +36,8 @@ const narrow = "(width < 40rem)";
  * @summary A panel that slides in from an edge of the screen.
  *
  * @attr {string} heading - The heading beside the close button.
- * @attr {"auto"|"start"|"end"|"bottom"} side - The edge it slides in from. `auto` is the start edge, or the bottom on narrow screens. Defaults to `auto`.
+ * @attr {"auto"|"start"|"end"|"bottom"} side - The edge it slides in from. `auto` is the start edge, or the bottom below `bottom-below`. Defaults to `auto`.
+ * @attr {string} bottom-below - The viewport width, as a CSS length, below which `side="auto"` slides up from the bottom. Defaults to `40rem`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  *
  * @slot - The content, which scrolls.
@@ -63,6 +64,7 @@ export class GwSheet extends GwElement {
   static override properties = {
     heading: {},
     side: { reflect: true },
+    bottomBelow: { attribute: "bottom-below" },
     closeLabel: { attribute: "close-label" },
   } as const;
 
@@ -210,6 +212,8 @@ export class GwSheet extends GwElement {
 
   declare heading: string;
   declare side: "auto" | Side;
+  /** The viewport width, as a CSS length, below which `side="auto"` slides up from the bottom. */
+  declare bottomBelow: string;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
 
@@ -245,7 +249,7 @@ export class GwSheet extends GwElement {
     h("div", { class: "body", part: "body" }, h("slot")),
   );
 
-  readonly #narrow = window.matchMedia(narrow);
+  #narrow = window.matchMedia(`(width < ${bottomBelow})`);
 
   // Where focus was before it opened, to go back to when it closes
   #returnFocus: HTMLElement | undefined;
@@ -254,6 +258,7 @@ export class GwSheet extends GwElement {
     super();
     this.heading = "";
     this.side = "auto";
+    this.bottomBelow = bottomBelow;
     this.closeLabel = "Close";
   }
 
@@ -321,7 +326,17 @@ export class GwSheet extends GwElement {
     root.append(this.#surface);
   }
 
-  protected override update() {
+  protected override update(changed: ReadonlySet<string>) {
+    if (changed.has("bottomBelow")) {
+      const { open } = this;
+
+      if (open) this.#narrow.removeEventListener("change", this.#place);
+
+      this.#narrow = window.matchMedia(`(width < ${this.bottomBelow})`);
+
+      if (open) this.#narrow.addEventListener("change", this.#place);
+    }
+
     this.#heading.textContent = this.heading;
     setAttribute(
       this.#surface,

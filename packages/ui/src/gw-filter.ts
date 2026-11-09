@@ -28,7 +28,7 @@ const shownIcon =
 const clearIcon =
   "M21 8H3V6H21V8M13.81 16H10V18H13.09C13.21 17.28 13.46 16.61 13.81 16M18 11H6V13H18V11M21.12 15.46L19 17.59L16.88 15.46L15.46 16.88L17.59 19L15.46 21.12L16.88 22.54L19 20.41L21.12 22.54L22.54 21.12L20.41 19L22.54 16.88L21.12 15.46Z";
 
-/** From this many options, `search="auto"` adds a search field. */
+/** From this many options, `search="auto"` adds a search field by default. */
 const searchFrom = 8;
 
 /**
@@ -50,9 +50,11 @@ const searchFrom = 8;
  * @attr {string[]} value - The ticked options' values, as JSON. Empty shows everything.
  * @attr {string[]} default-value - What clearing it goes back to, as JSON. Defaults to everything.
  * @attr {boolean} expanded - Whether the options show. Defaults to `true`.
- * @attr {"auto"|"always"|"never"} search - Whether the options have a search field; `auto` adds one from 8 options. Defaults to `auto`.
+ * @attr {"auto"|"always"|"never"} search - Whether the options have a search field; `auto` adds one from `search-from` options. Defaults to `auto`.
+ * @attr {number} search-from - How many options `search="auto"` adds a search field from. Defaults to `8`.
  * @attr {string} clear-label - The clear button's name, for an app in another language. Defaults to `Clear`.
  * @attr {string} search-label - The search field's name. Defaults to `Search`.
+ * @attr {string} no-match-label - What it says when the search matches nothing. Defaults to `No matches`.
  *
  * @csspart header - The row with the name and the clear button.
  * @csspart icon - The icon `icon` sets.
@@ -60,9 +62,14 @@ const searchFrom = 8;
  * @csspart clear - The clear button.
  * @csspart search - The search field.
  * @csspart options - The options' list.
+ * @csspart option - Each option's row.
+ * @csspart option-count - An option's count.
+ * @csspart option-description - An option's line under its label.
+ * @csspart none - The no matches line.
  *
  * @cssprop --gw-filter-inset - How far the header and options reach past its edges, such as to a sheet's edge. Defaults to `0rem`.
  * @cssprop --gw-filter-count-scale - Scales the count chip, around 1 for medium. Defaults to `0.8`, small.
+ * @cssprop --gw-filter-options-height - The tallest the options' list grows before it scrolls. Defaults to `18rem`.
  *
  * @fires {Event} change - When the ticked options change. Read `value`.
  * @fires {Event} toggle - When the options open or close. Read `expanded`.
@@ -76,8 +83,10 @@ export class GwFilter extends GwElement {
     defaultValue: { type: "json", attribute: "default-value" },
     expanded: { type: "boolean", reflect: true },
     search: {},
+    searchFrom: { type: "number", attribute: "search-from" },
     clearLabel: { attribute: "clear-label" },
     searchLabel: { attribute: "search-label" },
+    noMatchLabel: { attribute: "no-match-label" },
   } as const;
 
   static override styles = [
@@ -209,7 +218,7 @@ export class GwFilter extends GwElement {
       }
 
       ul {
-        max-height: 18rem;
+        max-height: var(--gw-filter-options-height, 18rem);
         margin: 0;
         padding: 0;
         overflow-y: auto;
@@ -278,8 +287,10 @@ export class GwFilter extends GwElement {
   declare defaultValue: readonly string[];
   declare expanded: boolean;
   declare search: "auto" | "always" | "never";
+  declare searchFrom: number;
   declare clearLabel: string;
   declare searchLabel: string;
+  declare noMatchLabel: string;
 
   #query = "";
 
@@ -335,8 +346,10 @@ export class GwFilter extends GwElement {
     this.defaultValue = [];
     this.expanded = true;
     this.search = "auto";
+    this.searchFrom = searchFrom;
     this.clearLabel = "Clear";
     this.searchLabel = "Search";
+    this.noMatchLabel = "No matches";
   }
 
   /** No values means no filter, so every option counts as ticked. */
@@ -403,7 +416,9 @@ export class GwFilter extends GwElement {
     const ticked = this.value.length || this.options.length;
 
     if (options.length === 0) {
-      this.#list.replaceChildren(h("li", { class: "none" }, "No matches"));
+      this.#list.replaceChildren(
+        h("li", { class: "none", part: "none" }, this.noMatchLabel),
+      );
 
       return;
     }
@@ -427,13 +442,21 @@ export class GwFilter extends GwElement {
           {},
           h(
             "label",
-            { title: option.label },
+            { title: option.label, part: "option" },
             h("span", { class: "name" }, option.label),
             option.count === undefined
               ? h("span")
-              : h("span", { class: "count" }, String(option.count)),
+              : h(
+                  "span",
+                  { class: "count", part: "option-count" },
+                  String(option.count),
+                ),
             input,
-            h("span", { class: "description" }, option.description ?? ""),
+            h(
+              "span",
+              { class: "description", part: "option-description" },
+              option.description ?? "",
+            ),
           ),
         );
       }),
@@ -458,7 +481,7 @@ export class GwFilter extends GwElement {
     this.#body.hidden = !this.expanded;
     this.#search.hidden =
       this.search === "never" ||
-      (this.search !== "always" && this.options.length < searchFrom);
+      (this.search !== "always" && this.options.length < this.searchFrom);
     setAttribute(this.#search, "aria-label", this.searchLabel);
     setAttribute(this.#search, "placeholder", this.searchLabel);
     this.#renderOptions();
