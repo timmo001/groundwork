@@ -85,6 +85,7 @@ let lastList = 0;
  * @attr {string} label - The list's accessible name.
  * @attr {boolean} search - Shows a search field above the list.
  * @attr {string} placeholder - The search placeholder. Defaults to `Search`.
+ * @attr {string} no-match-label - What it says when the search matches nothing, for an app in another language. Defaults to `No matches`.
  *
  * @csspart search - The search field's row.
  * @csspart listbox - The scrolling list.
@@ -106,6 +107,7 @@ export class GwOptionList extends GwElement {
     label: {},
     search: { type: "boolean", reflect: true },
     placeholder: {},
+    noMatchLabel: { attribute: "no-match-label" },
   } as const;
 
   static override styles = [
@@ -283,6 +285,7 @@ export class GwOptionList extends GwElement {
   declare label: string;
   declare search: boolean;
   declare placeholder: string;
+  declare noMatchLabel: string;
 
   readonly #id = `gw-options-${(lastList += 1)}`;
 
@@ -303,11 +306,7 @@ export class GwOptionList extends GwElement {
     this.#spacer,
   );
 
-  readonly #none = h(
-    "div",
-    { class: "none", part: "none", hidden: true },
-    "No matches",
-  );
+  readonly #none = h("div", { class: "none", part: "none", hidden: true });
 
   #query = "";
 
@@ -330,6 +329,7 @@ export class GwOptionList extends GwElement {
     this.label = "";
     this.search = false;
     this.placeholder = "Search";
+    this.noMatchLabel = "No matches";
   }
 
   #isChosen(option: OptionItem) {
@@ -480,6 +480,7 @@ export class GwOptionList extends GwElement {
     this.#listbox.id = listId;
     setAttribute(this.#input, "aria-controls", listId);
     setAttribute(this.#input, "placeholder", this.placeholder);
+    this.#none.textContent = this.noMatchLabel;
     setAttribute(this.#input, "aria-label", this.label || this.placeholder);
     setAttribute(this.#listbox, "aria-label", this.label || null);
     setAttribute(

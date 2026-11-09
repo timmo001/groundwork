@@ -27,6 +27,7 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 | `reveal` | On a password field, a button at the end that shows and hides what's typed |
 | `icon` | SVG path data for an icon inside the field, before the text |
 | `label-hidden` | Keeps the label as the accessible name without showing it |
+| `info-label`, `optional-label`, `reveal-label` | The (i) button's name, what `optional` adds, and the reveal button's name, for an app in another language. Default to "About" and the label, "(optional)", and "Show" or "Hide" and the label |
 
 ### Longer text
 
@@ -89,20 +90,21 @@ A search in a toolbar says what it's for with its icon and placeholder, so `labe
   </gw-select>
 </Demo>
 
-The list opens under the select, growing from it, and is a bottom sheet below 600px wide. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
+The list opens under the select, growing from it, and is a bottom sheet below `sheet-below`, 600px wide by default. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
 
 Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SVG path data), `data-swatch` (a color shown as a dot), `data-description` and `disabled`. Or set `options` to `[{ "value", "label", "description", "icon", "swatch", "group", "keywords", "disabled" }]`. A disabled option still shows and can be reached with the keyboard, so give it a `description` saying why, but it can't be picked. A hidden input carries the value in a form, and it fires `change`.
 
 | Attribute | What it does |
 | --- | --- |
-| `label`, `name`, `value`, `hint`, `info`, `disabled` | As on an input |
+| `label`, `name`, `value`, `hint`, `info`, `info-label`, `disabled` | As on an input |
 | `placeholder` | Shown before anything's picked |
-| `search` | `auto` (from seven options), `always` or `never` |
+| `search`, `search-from` | `auto` (the default), `always` or `never`, and how many options `auto` adds a search field from (`7`) |
 | `options` | The options, instead of `<option>` children |
 | `multiple` | Picks several, kept in `values` |
 | `inline-label` | Shows the label inside the trigger, before the value |
 | `label-hidden` | Hides the label but keeps it for assistive technology |
-| `clear-label` | The button that clears a multiple choice, for an app in another language. Defaults to Clear |
+| `sheet-below` | The viewport width in pixels below which the list is a bottom sheet (`600`). `0` keeps it under the field |
+| `clear-label`, `search-label`, `no-match-label` | The button that clears a multiple choice, the search placeholder, and what the list says when the search matches nothing, for an app in another language. Default to Clear, Search and No matches |
 
 ### Anatomy
 

@@ -43,12 +43,12 @@ export class FieldInfo {
     });
   }
 
-  update(label: string, info: string) {
+  update(label: string, info: string, infoLabel = "") {
     this.#button.hidden = !info;
     setAttribute(
       this.#button,
       "aria-label",
-      label ? `About ${label}` : "About",
+      infoLabel || (label ? `About ${label}` : "About"),
     );
     this.#popover.heading = label;
     this.#text.textContent = info;

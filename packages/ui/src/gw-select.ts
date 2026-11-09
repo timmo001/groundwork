@@ -19,12 +19,6 @@ type DraftOption = { -readonly [Key in keyof OptionItem]: OptionItem[Key] };
 
 const gap = 6;
 
-/** Below this width the list is a bottom sheet. */
-const sheetBelow = 600;
-
-/** From this many options a search field shows by default. */
-const searchFrom = 7;
-
 // MDI's chevron-down
 const chevronIcon =
   "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z";
@@ -33,7 +27,8 @@ const chevronIcon =
  * A labeled select whose list opens under it, after Home Assistant's
  * pickers. Long lists get a search field, focused as the list opens, and
  * only the options in view are rendered. Move with the arrow keys and pick
- * with Enter. Below 600px wide the list is a bottom sheet.
+ * with Enter. Below `sheet-below`, 600px wide by default, the list is a
+ * bottom sheet.
  *
  * Pass `options`, or write `<option>` children (in `<optgroup>`s for
  * groups, with `data-icon`, `data-swatch` and `data-description`), which it
@@ -55,8 +50,13 @@ const chevronIcon =
  * @attr {string[]} values - The chosen options' values with `multiple`, as JSON.
  * @attr {string} hint - One line of help under the field.
  * @attr {string} info - Longer help, opened from an (i) button by the label.
+ * @attr {string} info-label - The (i) button's name, for an app in another language. Defaults to `About` and the label.
  * @attr {string} placeholder - What the trigger shows with nothing chosen. Defaults to `Choose`.
- * @attr {"auto"|"always"|"never"} search - Whether the list has a search field; `auto` adds one from 7 options. Defaults to `auto`.
+ * @attr {"auto"|"always"|"never"} search - Whether the list has a search field; `auto` adds one from `search-from` options. Defaults to `auto`.
+ * @attr {number} search-from - How many options `search="auto"` adds a search field from. Defaults to `7`.
+ * @attr {string} search-label - The search field's placeholder, for an app in another language. Defaults to `Search`.
+ * @attr {string} no-match-label - What the list says when the search matches nothing. Defaults to `No matches`.
+ * @attr {number} sheet-below - The viewport width in pixels below which the list is a bottom sheet; `0` keeps it under the field. Defaults to `600`.
  * @attr {boolean} disabled - Disables the field.
  * @attr {boolean} open - Whether the list shows.
  * @attr {OptionItem[]} options - The options, as JSON.
@@ -82,8 +82,13 @@ export class GwSelect extends LightElement {
     values: { type: "json" },
     hint: {},
     info: {},
+    infoLabel: { attribute: "info-label" },
     placeholder: {},
     search: {},
+    searchFrom: { type: "number", attribute: "search-from" },
+    searchLabel: { attribute: "search-label" },
+    noMatchLabel: { attribute: "no-match-label" },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
     disabled: { type: "boolean" },
     open: { type: "boolean", reflect: true },
     options: { type: "json" },
@@ -101,9 +106,15 @@ export class GwSelect extends LightElement {
   declare hint: string;
   /** Longer help, opened from an (i) button by the label. */
   declare info: string;
+  declare infoLabel: string;
   declare placeholder: string;
-  /** `auto` shows a search field from seven options; `always` or `never` overrides that. */
+  /** `auto` shows a search field from `searchFrom` options; `always` or `never` overrides that. */
   declare search: "auto" | "always" | "never";
+  declare searchFrom: number;
+  declare searchLabel: string;
+  declare noMatchLabel: string;
+  /** The viewport width in pixels below which the list is a bottom sheet. */
+  declare sheetBelow: number;
   declare disabled: boolean;
   declare open: boolean;
   declare options: readonly OptionItem[];
@@ -177,8 +188,13 @@ export class GwSelect extends LightElement {
     this.values = [];
     this.hint = "";
     this.info = "";
+    this.infoLabel = "";
     this.placeholder = "Choose";
     this.search = "auto";
+    this.searchFrom = 7;
+    this.searchLabel = "Search";
+    this.noMatchLabel = "No matches";
+    this.sheetBelow = 600;
     this.disabled = false;
     this.open = false;
     this.options = [];
@@ -193,7 +209,7 @@ export class GwSelect extends LightElement {
     if (this.disabled || this.#popup.matches(":popover-open")) return;
 
     this.#popup.dataset.placement =
-      window.innerWidth < sheetBelow ? "sheet" : "below";
+      window.innerWidth < this.sheetBelow ? "sheet" : "below";
     this.#popup.showPopover();
   }
 
@@ -418,7 +434,7 @@ export class GwSelect extends LightElement {
     const values = Array.isArray(this.values) ? this.values : [];
 
     this.#label.textContent = this.label;
-    this.#info.update(this.label, this.info);
+    this.#info.update(this.label, this.info, this.infoLabel);
     this.#info.heading.classList.toggle(
       "gw-visually-hidden",
       this.labelHidden || this.inlineLabel,
@@ -455,9 +471,11 @@ export class GwSelect extends LightElement {
     list.multiple = this.multiple;
     list.values = values;
     list.label = this.label;
+    list.placeholder = this.searchLabel;
+    list.noMatchLabel = this.noMatchLabel;
     list.search =
       this.search === "always" ||
-      (this.search !== "never" && options.length >= searchFrom);
+      (this.search !== "never" && options.length >= this.searchFrom);
 
     this.#hint.textContent = this.hint;
     this.#hint.hidden = !this.hint;

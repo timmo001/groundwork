@@ -37,14 +37,17 @@ const hideIcon =
  * @attr {number} maxlength - The most characters it takes.
  * @attr {string} hint - One line of help under the field.
  * @attr {string} info - Longer help, opened from an (i) button by the label.
+ * @attr {string} info-label - The (i) button's name, for an app in another language. Defaults to `About` and the label.
  * @attr {string} error - An error under the field, which marks it invalid and is announced.
  * @attr {boolean} required - Requires a value.
  * @attr {boolean} optional - Adds "(optional)" after the label, for the few optional fields in a form that mostly requires them.
+ * @attr {string} optional-label - What `optional` adds after the label, for an app in another language. Defaults to `(optional)`.
  * @attr {boolean} disabled - Disables the field.
  * @attr {boolean} multiline - Uses a `<textarea>` that grows by dragging its corner, for text that runs over lines.
  * @attr {number} rows - The textarea's starting height in lines. Defaults to 3.
  * @attr {boolean} monospace - Sets the text in the monospace font, for paths, commands, tokens and other machine text. It also turns off spellcheck.
  * @attr {boolean} reveal - On a password field, adds a button at the end to show and hide what's typed.
+ * @attr {string} reveal-label - The reveal button's name, for an app in another language; it's a toggle, so one name serves both states. Defaults to `Show` or `Hide` and the label.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
  * @attr {string} icon - SVG path data for an icon inside the field, before the text, such as a magnifier on a search.
  * @attr {boolean} label-hidden - Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.
@@ -67,14 +70,17 @@ export class GwInput extends LightElement {
     maxlength: { type: "number" },
     hint: {},
     info: {},
+    infoLabel: { attribute: "info-label" },
     error: {},
     required: { type: "boolean" },
     optional: { type: "boolean" },
+    optionalLabel: { attribute: "optional-label" },
     disabled: { type: "boolean" },
     multiline: { type: "boolean", reflect: true },
     rows: { type: "number" },
     monospace: { type: "boolean", reflect: true },
     reveal: { type: "boolean" },
+    revealLabel: { attribute: "reveal-label" },
     size: { reflect: true },
     icon: {},
     labelHidden: { type: "boolean", attribute: "label-hidden", reflect: true },
@@ -99,10 +105,12 @@ export class GwInput extends LightElement {
   declare hint: string;
   /** Longer help, opened from an (i) button by the label. */
   declare info: string;
+  declare infoLabel: string;
   declare error: string;
   declare required: boolean;
   /** Adds "(optional)" after the label. */
   declare optional: boolean;
+  declare optionalLabel: string;
   declare disabled: boolean;
   /** Uses a `<textarea>` instead of an `<input>`. */
   declare multiline: boolean;
@@ -112,6 +120,7 @@ export class GwInput extends LightElement {
   declare monospace: boolean;
   /** On a password field, adds a button to show and hide what's typed. */
   declare reveal: boolean;
+  declare revealLabel: string;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
   /** SVG path data for an icon inside the field, before the text. */
   declare icon: string;
@@ -130,11 +139,7 @@ export class GwInput extends LightElement {
 
   readonly #textarea = h("textarea", { id: this.#id });
 
-  readonly #optional = h(
-    "span",
-    { class: "gw-optional", hidden: true },
-    " (optional)",
-  );
+  readonly #optional = h("span", { class: "gw-optional", hidden: true });
 
   readonly #revealIcon = createIcon(showIcon);
 
@@ -179,14 +184,17 @@ export class GwInput extends LightElement {
     this.maxlength = 0;
     this.hint = "";
     this.info = "";
+    this.infoLabel = "";
     this.error = "";
     this.required = false;
     this.optional = false;
+    this.optionalLabel = "(optional)";
     this.disabled = false;
     this.multiline = false;
     this.rows = 3;
     this.monospace = false;
     this.reveal = false;
+    this.revealLabel = "";
     this.size = "medium";
     this.icon = "";
     this.labelHidden = false;
@@ -262,8 +270,9 @@ export class GwInput extends LightElement {
     if (!reveal) this.#revealed = false;
 
     this.#label.replaceChildren(this.label, this.#optional);
+    this.#optional.textContent = ` ${this.optionalLabel}`;
     this.#optional.hidden = !this.optional;
-    this.#info.update(this.label, this.info);
+    this.#info.update(this.label, this.info, this.infoLabel);
     this.#info.heading.classList.toggle("gw-visually-hidden", this.labelHidden);
     setIconPath(this.#icon, this.icon);
     this.#icon.toggleAttribute("hidden", !this.icon);
@@ -294,7 +303,8 @@ export class GwInput extends LightElement {
     setAttribute(
       this.#reveal,
       "aria-label",
-      this.#revealed ? `Hide ${this.label}` : `Show ${this.label}`,
+      this.revealLabel ||
+        (this.#revealed ? `Hide ${this.label}` : `Show ${this.label}`),
     );
     setAttribute(this.#reveal, "aria-pressed", String(this.#revealed));
     setIconPath(this.#revealIcon, this.#revealed ? hideIcon : showIcon);
