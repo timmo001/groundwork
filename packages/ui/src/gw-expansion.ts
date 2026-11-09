@@ -50,6 +50,7 @@ import { base } from "./styles.js";
  * @cssprop --gw-expansion-border-color - The border. Defaults to `--gw-color-border-normal`.
  * @cssprop --gw-expansion-radius - The corners. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-expansion-summary-height - The summary row's least height. Defaults to `3rem`.
+ * @cssprop --gw-expansion-toggle-size - The chevron's circle. Defaults to `2rem`.
  *
  * @fires {Event} toggle - When it opens or closes.
  */
@@ -66,6 +67,7 @@ export class GwExpansion extends GwElement {
     base,
     css`
       :host {
+        position: relative;
         display: block;
         interpolate-size: allow-keywords;
       }
@@ -120,13 +122,11 @@ export class GwExpansion extends GwElement {
         border-end-end-radius: 0;
       }
 
-      /* Hovering or pressing an action leaves the row alone, since it won't
-         toggle */
-      summary:not(:has(.actions:hover)):hover {
+      summary:hover {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
-      summary:not(:has(.actions:active)):active {
+      summary:active {
         background: var(--gw-color-fill-neutral-pressed);
       }
 
@@ -159,32 +159,43 @@ export class GwExpansion extends GwElement {
         display: grid;
         flex: none;
         place-items: center;
-        width: 2rem;
-        height: 2rem;
+        width: var(--gw-expansion-toggle-size, 2rem);
+        height: var(--gw-expansion-toggle-size, 2rem);
         background: var(--gw-color-fill-neutral-resting);
         border-radius: 50%;
         transition: background-color var(--gw-motion-fast)
           var(--gw-motion-easing);
       }
 
-      summary:not(:has(.actions:hover)):hover .toggle {
+      summary:hover .toggle {
         background: var(--gw-color-fill-neutral-pressed);
       }
 
-      summary:not(:has(.actions:active)):active .toggle {
+      summary:active .toggle {
         background: var(--gw-color-fill-neutral-selected);
       }
 
+      /* The actions sit over a gap the summary keeps for them, so they show
+         in its row without being controls inside its button */
       .actions {
+        position: absolute;
+        inset-block-start: var(--gw-border-width);
+        inset-inline-end: calc(
+          var(--gw-border-width) + var(--gw-space-4) +
+            var(--gw-expansion-toggle-size, 2rem) + var(--gw-space-3)
+        );
         display: flex;
         flex-wrap: wrap;
         gap: var(--gw-space-2);
         align-items: center;
-        cursor: auto;
-        user-select: text;
       }
 
-      .actions[hidden] {
+      .actions-space {
+        flex: none;
+      }
+
+      .actions[hidden],
+      .actions-space[hidden] {
         display: none;
       }
 
@@ -241,21 +252,35 @@ export class GwExpansion extends GwElement {
     this.#actionsSlot,
   );
 
+  readonly #actionsSpace = h("span", {
+    class: "actions-space",
+    "aria-hidden": "true",
+    hidden: "",
+  });
+
+  readonly #summary: HTMLElement = h(
+    "summary",
+    { part: "summary" },
+    h("slot", { name: "icon" }),
+    h("span", { class: "text" }, this.#heading, this.#description),
+    this.#actionsSpace,
+    h(
+      "span",
+      { class: "toggle", part: "toggle", "aria-hidden": "true" },
+      h("span", { class: "chevron" }),
+    ),
+  );
+
+  /** Keeps the summary's gap as wide as the actions, and them as tall as it. */
+  readonly #fit = new ResizeObserver(() => {
+    this.#actionsSpace.style.inlineSize = `${this.#actions.offsetWidth}px`;
+    this.#actions.style.blockSize = `${this.#summary.offsetHeight}px`;
+  });
+
   readonly #details: HTMLDetailsElement = h(
     "details",
     { part: "details" },
-    h(
-      "summary",
-      { part: "summary" },
-      h("slot", { name: "icon" }),
-      h("span", { class: "text" }, this.#heading, this.#description),
-      this.#actions,
-      h(
-        "span",
-        { class: "toggle", part: "toggle", "aria-hidden": "true" },
-        h("span", { class: "chevron" }),
-      ),
-    ),
+    this.#summary,
     h(
       "div",
       { class: "content", part: "content" },
@@ -337,37 +362,20 @@ export class GwExpansion extends GwElement {
     );
   }
 
-  /**
-   * A click in the actions that no control of its own takes, such as on the
-   * gap between them or a menu item that isn't a button, would toggle the
-   * summary, so it's cancelled. A click a control does take never reaches
-   * the summary's toggle, so it's left alone.
-   */
-  readonly #onActionsClick = (event: Event) => {
-    const path = event.composedPath();
-    const own = path.slice(0, path.indexOf(this.#actions));
-
-    if (
-      !own.some(
-        (node) =>
-          node instanceof HTMLElement &&
-          node.matches(
-            "a[href], area[href], button, input, select, textarea, label",
-          ),
-      )
-    ) {
-      event.preventDefault();
-    }
-  };
-
   protected override create(root: ShadowRoot) {
     this.#actionsSlot.addEventListener("slotchange", () => {
-      this.#actions.hidden =
+      const none =
         this.#actionsSlot.assignedNodes({ flatten: true }).length === 0;
+
+      this.#actions.hidden = none;
+      this.#actionsSpace.hidden = none;
     });
-    this.#actions.addEventListener("click", this.#onActionsClick);
     this.#details.addEventListener("toggle", this.#onToggle);
-    root.append(this.#details);
+    this.#fit.observe(this.#actions);
+    this.#fit.observe(this.#summary);
+    // Before the details, so the actions come before the content when it's
+    // open, as they do on screen
+    root.append(this.#actions, this.#details);
   }
 
   protected override update(changed: ReadonlySet<string>) {
