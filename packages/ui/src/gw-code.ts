@@ -318,7 +318,7 @@ export class GwCode extends GwElement {
   readonly #wrapButton = h(
     "gw-button",
     {
-      size: "xs",
+      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
@@ -331,7 +331,7 @@ export class GwCode extends GwElement {
   readonly #findButton = h(
     "gw-button",
     {
-      size: "xs",
+      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
@@ -344,7 +344,7 @@ export class GwCode extends GwElement {
   readonly #copyButton = h(
     "gw-button",
     {
-      size: "xs",
+      size: "small",
       variant: "neutral",
       appearance: "plain",
       labels: "auto",
