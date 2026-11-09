@@ -108,6 +108,8 @@ export interface TableOptions {
   readonly searchLabel?: string | undefined;
   readonly empty?: string | undefined;
   readonly filters?: readonly TableFilter[] | undefined;
+  /** The Filters button's text and its sheet's heading, for a report in another language. "Filters" by default. */
+  readonly filtersLabel?: string | undefined;
 }
 
 /** The key a row's described cells travel under, for the page's script. */
@@ -187,7 +189,7 @@ export const table = (options: TableOptions) => {
               appearance="outlined"
               icon="M6,13H18V11H6M3,6V8H21V6M10,18H14V16H10V18Z"
               data-opens="${sheet}"
-              >Filters</gw-button
+              >${options.filtersLabel ?? "Filters"}</gw-button
             >`
       }</gw-table
     >${
@@ -195,7 +197,7 @@ export const table = (options: TableOptions) => {
         ? ""
         : html`<gw-sheet
             id="${sheet}"
-            heading="Filters"
+            heading="${options.filtersLabel ?? "Filters"}"
             style="--gw-filter-inset: var(--gw-space-4)"
             >${filters.map(
               (filter) =>

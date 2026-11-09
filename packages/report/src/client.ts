@@ -35,8 +35,10 @@ const config: ReportConfig = JSON.parse(
 
 const desktop = config.desktop ?? [];
 
+const desktopLabel = config.desktopLabel ?? "Desktop";
+
 const desktopChoices: readonly ThemeChoice[] = desktop.map(
-  ({ id, name, mode }) => ({ id, name, mode, family: "Desktop" }),
+  ({ id, name, mode }) => ({ id, name, mode, family: desktopLabel }),
 );
 
 const page = pageTheme({
@@ -116,11 +118,11 @@ if (picker !== null) {
       // such as `Nord (Omarchy)` or `Ghostty (Ghostty)`
       ...(omarchy === null
         ? []
-        : [{ value: omarchy.id, label: omarchy.name, group: "Desktop" }]),
+        : [{ value: omarchy.id, label: omarchy.name, group: desktopLabel }]),
       ...desktopChoices.map(({ id, name }) => ({
         value: id,
         label: name,
-        group: "Desktop",
+        group: desktopLabel,
       })),
     ];
   };

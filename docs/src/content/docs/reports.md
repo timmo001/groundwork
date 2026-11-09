@@ -47,6 +47,20 @@ Text is escaped. `html` marks a template as markup and `raw` a string. Only the 
 
 `group` groups the rows by a column, and `groupsCollapsed` starts every group folded away, for long lists. `filters` add a Filters button beside the search field, opening a sheet of `gw-filter`s, each matched against values the rows carry under the filter's id.
 
+Every word the table shows can change, for a report in another language: `searchLabel` names the search field, `empty` is the line when nothing matches, and `filtersLabel` is the Filters button's text and its sheet's heading.
+
+```ts
+table({
+  label: "Paquets",
+  columns,
+  rows,
+  searchLabel: "Rechercher",
+  empty: "Aucun paquet",
+  filters,
+  filtersLabel: "Filtres",
+});
+```
+
 ## Themes
 
 The picker offers the report's own theme, then the other [core themes](/themes), then the [optional ones](/themes/optional) by family, then a Desktop group. The Import item is hidden (`no-import` on `gw-theme-picker`), since the desktop's themes come in on their own. A report starts on Glazing until one is picked.
@@ -58,6 +72,25 @@ The picker offers the report's own theme, then the other [core themes](/themes),
 - The terminals' own themes: Ghostty, kitty, Alacritty and foot.
 
 Each is translated onto the roles with `translatePalette` from `@timmo001/groundwork-tokens/translate`, and any that match a built-in theme or the Omarchy one are left out. A desktop theme is solved the first time it's picked, then cached so it's on before the first paint next time. The page remembers the theme picked, and where it was scrolled to, in local storage.
+
+For a report in another language, `lang` sets the page's language, `desktopLabel` names the Desktop group, and `pickerLabels` passes the picker's label attributes on by name:
+
+```ts
+reportPage({
+  title: "Mises à jour",
+  lang: "fr",
+  desktopLabel: "Bureau",
+  pickerLabels: {
+    label: "Thème",
+    "mode-label": "Mode",
+    "mode-labels": JSON.stringify({ auto: "Auto", light: "Clair", dark: "Sombre", darker: "Plus sombre" }),
+    "search-label": "Rechercher",
+    "no-match-label": "Aucun résultat",
+  },
+  assets,
+  body,
+});
+```
 
 ## Building
 

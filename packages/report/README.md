@@ -35,7 +35,8 @@ const html = reportPage({
 - `table` is `gw-table`, sorting, searching, grouping and windowing its
   rows. Cells are described as data (text, links, a second line, badges,
   chips or a breakdown bar), and `filters` add a Filters button and sheet.
-  `groupsCollapsed` starts every group folded away.
+  `groupsCollapsed` starts every group folded away. `searchLabel`, `empty`
+  and `filtersLabel` set its words, for a report in another language.
 - States go on `badge`, with an icon for each tone. Chips are for counts,
   names, dates and links.
 - `reportAssets` bundles the page script and reads the themes' CSS. It
@@ -44,6 +45,8 @@ const html = reportPage({
 - `readReportThemes` reads the desktop's Omarchy theme, and translates the
   other installed Omarchy and terminal themes (Ghostty, kitty, Alacritty,
   foot) into the Desktop group, leaving out any that match a built-in one.
+  `desktopLabel` names that group and `pickerLabels` passes the theme
+  picker's label attributes on, for a report in another language.
 - The page remembers the theme picked and where it was scrolled to, in
   local storage.
 

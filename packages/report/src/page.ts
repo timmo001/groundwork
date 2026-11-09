@@ -27,6 +27,7 @@ export interface ReportConfig {
   readonly defaultTheme: string;
   readonly omarchy: OmarchyCurrentTheme | null;
   readonly desktop: readonly MappedTheme[];
+  readonly desktopLabel: string;
 }
 
 /** The id of the `<script>` holding the `ReportConfig`. */
@@ -73,6 +74,14 @@ export interface ReportPageOptions {
    * Read them with `readReportThemes` from `@timmo001/groundwork-report/desktop`.
    */
   readonly desktop?: readonly MappedTheme[] | undefined;
+  /** The picker's group for the desktop's themes, for a report in another language. Defaults to `Desktop`. */
+  readonly desktopLabel?: string | undefined;
+  /**
+   * The theme picker's words, for a report in another language: its label
+   * attributes by name, such as `{ label: "Thème", "mode-label": "Mode" }`.
+   * Each defaults to the picker's English.
+   */
+  readonly pickerLabels?: Readonly<Record<string, string>> | undefined;
   readonly assets: ReportAssets;
   /** The report's blocks. */
   readonly body: Content;
@@ -92,7 +101,12 @@ export const reportPage = (options: ReportPageOptions) => {
     defaultTheme,
     omarchy: options.omarchy ?? null,
     desktop: options.desktop ?? [],
+    desktopLabel: options.desktopLabel ?? "Desktop",
   };
+
+  const pickerLabels = Object.entries(options.pickerLabels ?? {})
+    .filter(([name]) => /^[a-z-]+$/.test(name))
+    .map(([name, value]) => html` ${raw(name)}="${value}"`);
 
   return html`<!doctype html>
     <html lang="${options.lang ?? "en"}">
@@ -118,7 +132,10 @@ export const reportPage = (options: ReportPageOptions) => {
           <span slot="brand" class="gw-report-brand"
             >${options.brand ?? options.title}</span
           >
-          <gw-theme-picker slot="actions" no-import></gw-theme-picker>
+          <gw-theme-picker
+            slot="actions"
+            no-import${pickerLabels}
+          ></gw-theme-picker>
         </gw-app-bar>
         <gw-page>
           <gw-page-header
