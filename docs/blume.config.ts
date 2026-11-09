@@ -75,7 +75,7 @@ export default defineConfig(
         {
           label: "Desktop",
           root: "/desktop",
-          items: ["/desktop/building"],
+          items: ["/desktop/building", "/desktop/panels"],
         },
         {
           label: "Phones",

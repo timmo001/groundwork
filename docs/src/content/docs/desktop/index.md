@@ -21,7 +21,7 @@ It runs on Linux, macOS and Windows, keeps apps in TypeScript on Bun, and uses e
 
 That keeps an app small and light on memory. The cost is three engines to test against, and WebKitGTK lags the other two. An app that needs one engine everywhere can set `bundleCEF` for its platforms and ship Chromium instead, at the memory cost that comes with it.
 
-Qt Quick, Wails, Slint, Tauri and Electron were compared against it in [#41](https://github.com/timmo001/groundwork/issues/41). Omarchy panels stay on QML, with `Themes.qml` and the [shared panel components](/sync).
+Qt Quick, Wails, Slint, Tauri and Electron were compared against it in [#41](https://github.com/timmo001/groundwork/issues/41). Omarchy panels stay on QML, with `Themes.qml` and the [shared panel components](/desktop/panels).
 
 ## Demo
 
