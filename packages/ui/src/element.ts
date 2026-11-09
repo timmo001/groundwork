@@ -238,12 +238,30 @@ export class GwElement extends HTMLElement {
   /** The element's own class, for its static properties and styles. */
   readonly #own: typeof GwElement;
 
+  /**
+   * Properties set before the element upgraded, such as by a template that
+   * renders it before its module loads. They sit on the instance, where the
+   * subclass's constructor defaults would overwrite them, so they're taken
+   * off here and set through the accessors once it connects.
+   */
+  readonly #early = new Map<string, unknown>();
+
   constructor() {
     super();
 
     const own = new.target;
 
     this.#own = own;
+
+    for (const name of Object.keys(own.properties)) {
+      if (Object.hasOwn(this, name)) {
+        this.#early.set(
+          name,
+          Object.getOwnPropertyDescriptor(this, name)?.value,
+        );
+        Reflect.deleteProperty(this, name);
+      }
+    }
 
     if (own.shadow) {
       const root = this.attachShadow(own.shadowRootOptions);
@@ -276,6 +294,10 @@ export class GwElement extends HTMLElement {
         Reflect.set(this, name, value);
       }
     }
+
+    for (const [name, value] of this.#early) Reflect.set(this, name, value);
+
+    this.#early.clear();
 
     if (this.#created) return;
 
