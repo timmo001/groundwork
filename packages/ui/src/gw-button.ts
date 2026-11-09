@@ -4,6 +4,7 @@
  *
  * @module
  */
+import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
@@ -39,7 +40,8 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and ignores clicks.
  * @attr {string} icon - SVG path data for an icon before the text.
  * @attr {string} swatch - A CSS color, drawn as a small round dot in the icon's place, such as a tag's own color.
- * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not on narrow screens. Defaults to `show`.
+ * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not below `labels-below`. Defaults to `show`.
+ * @attr {string} labels-below - The viewport width, as a CSS length, below which `labels="auto"` hides the text. Defaults to `40rem`.
  * @attr {boolean} toggle - Makes it a toggle button, which assistive technology announces as pressed or not.
  * @attr {boolean} pressed - Whether a toggle button is on. It shows the same tint as a current link.
  *
@@ -49,6 +51,8 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @csspart button - The native button or link, or the pill around a slotted link.
  * @csspart icon - The icon `icon` sets.
  * @csspart swatch - The color dot `swatch` shows.
+ * @csspart text - The text around the default slot.
+ * @csspart ring - The spinning ring while `loading`.
  *
  * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
@@ -68,6 +72,7 @@ export class GwButton extends GwElement {
     icon: {},
     swatch: {},
     labels: { reflect: true },
+    labelsBelow: { attribute: "labels-below" },
     toggle: { type: "boolean", reflect: true },
     pressed: { type: "boolean", reflect: true },
   } as const;
@@ -242,6 +247,22 @@ export class GwButton extends GwElement {
         cursor: not-allowed;
       }
 
+      /* Forced colors drop the fills that mark a pressed toggle or the
+         current page, so those take the system's selection colors, and a
+         disabled button its gray text */
+      @media (forced-colors: active) {
+        :host([toggle][pressed]) .button,
+        .button.current {
+          color: HighlightText;
+          background: Highlight;
+          forced-color-adjust: none;
+        }
+
+        :host([disabled]) .button {
+          color: GrayText;
+        }
+      }
+
       ::slotted([slot="icon"]),
       .icon {
         flex: none;
@@ -326,35 +347,19 @@ export class GwButton extends GwElement {
       }
 
       /* Icon only, to save space: square, with the text kept for assistive
-         technology. auto does this on narrow screens */
-      :host([labels="hide"]) .button.has-icon {
+         technology. auto does this below labels-below */
+      .button.compact.has-icon {
         min-width: calc(2.5rem * var(--gw-scale));
         padding: 0;
       }
 
-      :host([labels="hide"]) .has-icon .text {
+      .compact.has-icon .text {
         position: absolute;
         width: 1px;
         height: 1px;
         overflow: hidden;
         clip-path: inset(50%);
         white-space: nowrap;
-      }
-
-      @media (width < 40rem) {
-        :host([labels="auto"]) .button.has-icon {
-          min-width: calc(2.5rem * var(--gw-scale));
-          padding: 0;
-        }
-
-        :host([labels="auto"]) .has-icon .text {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          overflow: hidden;
-          clip-path: inset(50%);
-          white-space: nowrap;
-        }
       }
     `,
   ];
@@ -373,8 +378,10 @@ export class GwButton extends GwElement {
   declare icon: string;
   /** A CSS color, drawn as a small round dot in the icon's place. */
   declare swatch: string;
-  /** Whether the text shows beside an icon: always, never, or not on narrow screens. */
+  /** Whether the text shows beside an icon: always, never, or not below `labelsBelow`. */
   declare labels: "show" | "hide" | "auto";
+  /** The viewport width, as a CSS length, below which `labels="auto"` hides the text. */
+  declare labelsBelow: string;
   /** Makes it a toggle button, announced as pressed or not. */
   declare toggle: boolean;
   /** Whether a toggle button is on. */
@@ -398,12 +405,18 @@ export class GwButton extends GwElement {
     this.#icon,
     this.#swatch,
     this.#iconSlot,
-    h("span", { class: "ring" }),
+    h("span", { class: "ring", part: "ring" }),
   );
 
-  readonly #text: HTMLSpanElement = h("span", { class: "text" }, h("slot"));
+  readonly #text: HTMLSpanElement = h(
+    "span",
+    { class: "text", part: "text" },
+    h("slot"),
+  );
 
-  readonly #over = h("span", { class: "ring over" });
+  readonly #over = h("span", { class: "ring over", part: "ring" });
+
+  readonly #narrow = new Below(() => this.requestUpdate("labels"));
 
   #control: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement = h(
     "button",
@@ -423,6 +436,7 @@ export class GwButton extends GwElement {
     this.icon = "";
     this.swatch = "";
     this.labels = "show";
+    this.labelsBelow = "40rem";
     this.toggle = false;
     this.pressed = false;
     this.variant = "brand";
@@ -499,6 +513,16 @@ export class GwButton extends GwElement {
     });
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    this.requestUpdate("labels");
+  }
+
+  override disconnectedCallback() {
+    this.#narrow.stop();
+    super.disconnectedCallback();
+  }
+
   protected override create(root: ShadowRoot) {
     this.#control.append(this.#lead, this.#text, this.#over);
     root.append(this.#control);
@@ -529,7 +553,13 @@ export class GwButton extends GwElement {
       this.swatch !== "" ||
       this.querySelector("[slot='icon']") !== null;
 
+    this.#narrow.follow(this.labels === "auto" ? this.labelsBelow : "");
     control.classList.toggle("has-icon", hasIcon);
+    control.classList.toggle(
+      "compact",
+      this.labels === "hide" ||
+        (this.labels === "auto" && this.#narrow.matches),
+    );
     control.classList.toggle(
       "current",
       link !== null &&

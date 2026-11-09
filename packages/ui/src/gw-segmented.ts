@@ -4,6 +4,7 @@
  *
  * @module
  */
+import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, controlSizes, createIcon } from "./styles.js";
 
@@ -25,7 +26,7 @@ export interface Segment {
  * Options can carry icons, as Home Assistant's toggles do. `labels` decides
  * whether their text shows: `show` (the default), `hide` (icons only, with
  * the text as a tooltip and accessible name) or `auto`, which shows the text
- * on wide screens and only the icons on narrow ones. An option with
+ * on wide screens and only the icons below `labels-below`. An option with
  * `disabled` shows but can't be picked.
  *
  * @element gw-segmented
@@ -35,10 +36,14 @@ export interface Segment {
  * @attr {string} name - The form field name. Defaults to a unique name.
  * @attr {string} value - The chosen option's value.
  * @attr {"show"|"hide"|"auto"} labels - Whether option text shows beside icons. Defaults to `show`.
+ * @attr {string} labels-below - The viewport width, as a CSS length, below which `labels="auto"` shows only the icons. Defaults to `40rem`.
  * @attr {Segment[]} options - The options, as JSON.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The size, 40px tall at medium. Defaults to `medium`.
  *
+ * @csspart track - The pill track around the options.
  * @csspart option - Each option.
+ * @csspart option-icon - An option's icon.
+ * @csspart option-label - An option's text.
  * @csspart indicator - The pill that slides to the chosen option.
  *
  * @cssprop --gw-segmented-scale - Scales the control, around 1 for medium.
@@ -52,6 +57,7 @@ export class GwSegmented extends GwElement {
     name: {},
     value: { reflect: true },
     labels: { reflect: true },
+    labelsBelow: { attribute: "labels-below" },
     options: { type: "json" },
     size: { reflect: true },
   } as const;
@@ -109,32 +115,17 @@ export class GwSegmented extends GwElement {
         --gw-icon-size: calc(1.125rem * var(--gw-scale));
       }
 
-      :host([labels="hide"]) label.has-icon {
+      label.compact.has-icon {
         padding-inline: var(--gw-space-2);
       }
 
-      :host([labels="hide"]) label.has-icon .text {
+      label.compact.has-icon .text {
         position: absolute;
         width: 1px;
         height: 1px;
         overflow: hidden;
         clip-path: inset(50%);
         white-space: nowrap;
-      }
-
-      @media (width < 40rem) {
-        :host([labels="auto"]) label.has-icon {
-          padding-inline: var(--gw-space-2);
-        }
-
-        :host([labels="auto"]) label.has-icon .text {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          overflow: hidden;
-          clip-path: inset(50%);
-          white-space: nowrap;
-        }
       }
 
       label:hover {
@@ -205,6 +196,20 @@ export class GwSegmented extends GwElement {
         /* Inset, so the ring sits inside the track rather than on its border */
         outline-offset: calc(var(--gw-focus-width) * -1);
       }
+
+      /* Forced colors drop the pill's background, so the picked option
+         takes the system's selection colors instead */
+      @media (forced-colors: active) {
+        .indicator {
+          background: Highlight;
+          forced-color-adjust: none;
+        }
+
+        label:has(input:checked) {
+          color: HighlightText;
+          forced-color-adjust: none;
+        }
+      }
     `,
   ];
 
@@ -212,6 +217,8 @@ export class GwSegmented extends GwElement {
   declare name: string;
   declare value: string;
   declare labels: "show" | "hide" | "auto";
+  /** The viewport width, as a CSS length, below which `labels="auto"` shows only the icons. */
+  declare labelsBelow: string;
   declare options: readonly Segment[];
   declare size: "xs" | "small" | "medium" | "large" | "xl";
 
@@ -221,6 +228,7 @@ export class GwSegmented extends GwElement {
     this.name = `gw-segmented-${Math.random().toString(36).slice(2)}`;
     this.value = "";
     this.labels = "show";
+    this.labelsBelow = "40rem";
     this.options = [];
     this.size = "medium";
   }
@@ -229,7 +237,14 @@ export class GwSegmented extends GwElement {
 
   readonly #indicator = h("span", { class: "indicator", part: "indicator" });
 
-  readonly #fieldset = h("fieldset", {}, this.#legend, this.#indicator);
+  readonly #fieldset = h(
+    "fieldset",
+    { part: "track" },
+    this.#legend,
+    this.#indicator,
+  );
+
+  readonly #narrow = new Below(() => this.requestUpdate("labels"));
 
   #segments: {
     label: HTMLLabelElement;
@@ -269,11 +284,13 @@ export class GwSegmented extends GwElement {
   override connectedCallback() {
     super.connectedCallback();
     this.#resize.observe(this);
+    this.requestUpdate("labels");
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.#resize.disconnect();
+    this.#narrow.stop();
   }
 
   protected override create(root: ShadowRoot) {
@@ -297,8 +314,8 @@ export class GwSegmented extends GwElement {
           "label",
           { class: option.icon ? "has-icon" : null, part: "option" },
           input,
-          option.icon ? createIcon(option.icon) : null,
-          h("span", { class: "text" }, option.label),
+          option.icon ? createIcon(option.icon, { part: "option-icon" }) : null,
+          h("span", { class: "text", part: "option-label" }, option.label),
         );
 
         return { label, input, option };
@@ -306,7 +323,14 @@ export class GwSegmented extends GwElement {
       this.#fieldset.append(...this.#segments.map(({ label }) => label));
     }
 
+    this.#narrow.follow(this.labels === "auto" ? this.labelsBelow : "");
+
+    const compact =
+      this.labels === "hide" ||
+      (this.labels === "auto" && this.#narrow.matches);
+
     for (const { label, input, option } of this.#segments) {
+      label.classList.toggle("compact", compact);
       input.name = this.name;
       input.checked = option.value === this.value;
       input.disabled = option.disabled === true;

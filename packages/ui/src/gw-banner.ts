@@ -31,6 +31,7 @@ import { base, type Tone } from "./styles.js";
  * @cssprop --gw-tone - The text and icon color, for a tone of your own. `tone` sets it.
  * @cssprop --gw-tone-fill - The background. `tone` sets it.
  * @cssprop --gw-tone-border - The border. `tone` sets it.
+ * @cssprop --gw-banner-height - The bar's least height. Defaults to `2.5rem`.
  */
 export class GwBanner extends GwElement {
   static override properties = {
@@ -67,7 +68,7 @@ export class GwBanner extends GwElement {
         gap: var(--gw-space-1) var(--gw-space-3);
         align-items: center;
         justify-content: center;
-        min-height: 2.5rem;
+        min-height: var(--gw-banner-height, 2.5rem);
         padding: var(--gw-space-1) var(--gw-space-3);
         font-size: var(--gw-font-size-s);
         color: var(--gw-color-text-strong);

@@ -53,6 +53,7 @@ const closeIcon =
  * @csspart actions - The actions' container.
  *
  * @cssprop --gw-app-bar-height - The bar's least height. Defaults to `3.5rem`.
+ * @cssprop --gw-app-bar-menu-size - The nav menu button's size on narrow screens. Defaults to `2.5rem`.
  * @cssprop --gw-app-bar-background - The surface once it floats. Defaults to `--gw-color-surface-default` at 82%.
  * @cssprop --gw-app-bar-border-color - The bottom border once it floats. Defaults to `--gw-color-border-quiet`.
  * @cssprop --gw-app-bar-backdrop - The backdrop filter once it floats. Defaults to `blur(12px) saturate(1.4)`.
@@ -188,8 +189,8 @@ export class GwAppBar extends GwElement {
       .menu {
         display: none;
         place-items: center;
-        width: 2.5rem;
-        height: 2.5rem;
+        width: var(--gw-app-bar-menu-size, 2.5rem);
+        height: var(--gw-app-bar-menu-size, 2.5rem);
         padding: 0;
         color: var(--gw-color-text-strong);
         cursor: pointer;

@@ -29,6 +29,8 @@ import { base } from "./styles.js";
  * @attr {string} move-hint - The footer's hint after the arrow keys. Defaults to `to move`.
  * @attr {string} pick-hint - The hint after Enter. Defaults to `to pick`.
  * @attr {string} close-hint - The hint after Esc. Defaults to `to close`.
+ * @attr {string} pick-key - The name of the key that picks, for a keyboard in another language. Defaults to `Enter`.
+ * @attr {string} close-key - The name of the key that closes. Defaults to `Esc`.
  * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it a modal. Defaults to `600`.
  * @attr {boolean} open - Whether it shows.
  *
@@ -62,6 +64,8 @@ export class GwCommandMenu extends GwElement {
     moveHint: { attribute: "move-hint" },
     pickHint: { attribute: "pick-hint" },
     closeHint: { attribute: "close-hint" },
+    pickKey: { attribute: "pick-key" },
+    closeKey: { attribute: "close-key" },
     sheetBelow: { type: "number", attribute: "sheet-below" },
     open: { type: "boolean", reflect: true },
   } as const;
@@ -196,6 +200,8 @@ export class GwCommandMenu extends GwElement {
   declare moveHint: string;
   declare pickHint: string;
   declare closeHint: string;
+  declare pickKey: string;
+  declare closeKey: string;
   /** The viewport width in pixels below which it's a bottom sheet. */
   declare sheetBelow: number;
   declare open: boolean;
@@ -207,6 +213,10 @@ export class GwCommandMenu extends GwElement {
   readonly #pickHint = h("span");
 
   readonly #closeHint = h("span");
+
+  readonly #pickKey = h("kbd", { part: "key" });
+
+  readonly #closeKey = h("kbd", { part: "key" });
 
   readonly #dialog: HTMLDialogElement = h(
     "dialog",
@@ -224,20 +234,8 @@ export class GwCommandMenu extends GwElement {
         " ",
         this.#moveHint,
       ),
-      h(
-        "span",
-        { part: "hint" },
-        h("kbd", { part: "key" }, "Enter"),
-        " ",
-        this.#pickHint,
-      ),
-      h(
-        "span",
-        { part: "hint" },
-        h("kbd", { part: "key" }, "Esc"),
-        " ",
-        this.#closeHint,
-      ),
+      h("span", { part: "hint" }, this.#pickKey, " ", this.#pickHint),
+      h("span", { part: "hint" }, this.#closeKey, " ", this.#closeHint),
     ),
   );
 
@@ -252,6 +250,8 @@ export class GwCommandMenu extends GwElement {
     this.moveHint = "to move";
     this.pickHint = "to pick";
     this.closeHint = "to close";
+    this.pickKey = "Enter";
+    this.closeKey = "Esc";
     this.sheetBelow = 600;
     this.open = false;
   }
@@ -349,6 +349,8 @@ export class GwCommandMenu extends GwElement {
     this.#moveHint.textContent = this.moveHint;
     this.#pickHint.textContent = this.pickHint;
     this.#closeHint.textContent = this.closeHint;
+    this.#pickKey.textContent = this.pickKey;
+    this.#closeKey.textContent = this.closeKey;
     dialog.setAttribute("aria-label", this.label);
 
     if (this.open && !dialog.open) {

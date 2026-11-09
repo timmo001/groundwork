@@ -34,6 +34,8 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
  * @csspart list - The description list.
  * @csspart label - Each label.
  * @csspart value - Each value.
+ *
+ * @cssprop --gw-facts-label-width - The labels' least width, so the values line up. Defaults to `7rem`.
  */
 export class GwFacts extends GwElement {
   static override properties = {
@@ -51,7 +53,9 @@ export class GwFacts extends GwElement {
 
       dl {
         display: grid;
-        grid-template-columns: minmax(7rem, max-content) 1fr;
+        grid-template-columns:
+          minmax(var(--gw-facts-label-width, 7rem), max-content)
+          1fr;
         gap: var(--gw-space-1) var(--gw-space-3);
         margin: 0;
         font-size: var(--gw-font-size-s);

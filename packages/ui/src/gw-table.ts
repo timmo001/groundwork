@@ -33,6 +33,7 @@ import {
 } from "@tanstack/virtual-core";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
+import type {} from "./gw-input.js";
 import { isText, keep, keptAt, textsOf } from "./kept.js";
 import { base, createIcon } from "./styles.js";
 
@@ -169,18 +170,27 @@ type Shown =
  * @slot toolbar - Controls beside the search field, such as a Filters button.
  *
  * @csspart toolbar - The row with the search field and the `toolbar` slot.
- * @csspart search - The search field's box, with its icon.
+ * @csspart search - The search field, a `gw-input`.
  * @csspart table - The table.
  * @csspart header - Each column's heading cell.
  * @csspart sort - Each sortable column's heading button.
+ * @csspart sort-icon - The arrow on the column it sorts by.
  * @csspart row - Each row.
  * @csspart cell - Each cell.
  * @csspart group - Each group's heading row.
+ * @csspart group-toggle - The button that folds a group.
+ * @csspart group-chevron - The chevron that turns as a group folds.
+ * @csspart group-label - A group's name.
  * @csspart group-count - The chip counting a group's rows, a `gw-chip`.
  * @csspart none - What it says with no rows, or none matching the search.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
+ * @cssprop --gw-table-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
+ * @cssprop --gw-table-search-width - The search field's starting width, before it grows into the toolbar. Defaults to `14rem`.
+ * @cssprop --gw-table-search-max-width - The widest the search field grows. Defaults to `24rem`.
+ * @cssprop --gw-table-header-height - The column headings' height. Defaults to `2.5rem`.
+ * @cssprop --gw-table-sort-icon-size - The sort arrow's size. Defaults to `0.875rem`.
  *
  * @fires {Event} change - When the sort, search or folded groups change. Read `sort`, `descending`, `query` and `toggledGroups`.
  */
@@ -226,41 +236,16 @@ export class GwTable extends GwElement {
         display: none;
       }
 
+      /* The search is a gw-input, a little smaller than a form's fields to
+         sit in a toolbar */
       .search {
-        position: relative;
-        flex: 1 1 14rem;
-        max-width: 24rem;
-        --gw-icon-size: 1.1rem;
+        --gw-field-scale: var(--gw-table-search-scale, 0.9);
+        flex: 1 1 var(--gw-table-search-width, 14rem);
+        max-width: var(--gw-table-search-max-width, 24rem);
       }
 
       .search[hidden] {
         display: none;
-      }
-
-      .search .icon {
-        position: absolute;
-        inset-block: 0;
-        inset-inline-start: var(--gw-space-3);
-        margin-block: auto;
-        color: var(--gw-color-text-secondary);
-        pointer-events: none;
-      }
-
-      .search input {
-        box-sizing: border-box;
-        width: 100%;
-        min-height: 2.25rem;
-        padding: 0 var(--gw-space-3) 0 calc(var(--gw-space-3) * 2 + 1.1rem);
-        font: inherit;
-        color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-lower, transparent);
-        border: var(--gw-border-width) solid var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-control);
-      }
-
-      .search input:focus-visible {
-        outline: var(--gw-focus-width) solid var(--gw-color-focus);
-        outline-offset: var(--gw-focus-offset);
       }
 
       .scroller {
@@ -320,7 +305,7 @@ export class GwTable extends GwElement {
       }
 
       th {
-        height: 2.5rem;
+        height: var(--gw-table-header-height, 2.5rem);
         font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-secondary);
@@ -337,7 +322,7 @@ export class GwTable extends GwElement {
         cursor: pointer;
         background: none;
         border: 0;
-        --gw-icon-size: 0.875rem;
+        --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem);
       }
 
       th button:focus-visible {
@@ -442,14 +427,14 @@ export class GwTable extends GwElement {
   declare columns: readonly TableColumn[];
   declare rows: readonly TableRow[];
 
-  readonly #input = h("input", { type: "search" });
-
-  readonly #search = h(
-    "label",
-    { class: "search", part: "search" },
-    createIcon(searchIcon),
-    this.#input,
-  );
+  /** The search field, a `gw-input`, so it looks and sizes as every field does. */
+  readonly #search = h("gw-input", {
+    type: "search",
+    class: "search",
+    part: "search",
+    "label-hidden": true,
+    icon: searchIcon,
+  });
 
   readonly #toolbar: HTMLDivElement = h(
     "div",
@@ -759,7 +744,11 @@ export class GwTable extends GwElement {
           );
 
           if (sorted)
-            button.append(createIcon(this.descending ? downIcon : upIcon));
+            button.append(
+              createIcon(this.descending ? downIcon : upIcon, {
+                part: "sort-icon",
+              }),
+            );
 
           button.addEventListener("click", () => this.#sortBy(column));
           th.append(button);
@@ -782,10 +771,11 @@ export class GwTable extends GwElement {
       {
         type: "button",
         class: "group-toggle",
+        part: "group-toggle",
         "aria-expanded": String(group.expanded),
       },
-      createIcon(chevronIcon),
-      h("span", {}, group.label),
+      createIcon(chevronIcon, { part: "group-chevron" }),
+      h("span", { part: "group-label" }, group.label),
       count,
     );
 
@@ -923,8 +913,8 @@ export class GwTable extends GwElement {
   }
 
   protected override create(root: ShadowRoot) {
-    this.#input.addEventListener("input", () => {
-      this.query = this.#input.value;
+    this.#search.addEventListener("input", () => {
+      this.query = this.#search.value;
       this.#change({ query: this.query });
     });
     root.append(this.#toolbar, this.#scroller);
@@ -967,10 +957,10 @@ export class GwTable extends GwElement {
 
     setAttribute(this.#table, "aria-label", this.label || null);
 
-    if (this.#input.value !== this.query) this.#input.value = this.query;
+    if (this.#search.value !== this.query) this.#search.value = this.query;
 
-    setAttribute(this.#input, "aria-label", this.searchLabel);
-    setAttribute(this.#input, "placeholder", this.searchLabel);
+    this.#search.label = this.searchLabel;
+    this.#search.placeholder = this.searchLabel;
     this.#search.hidden =
       this.search === "never" ||
       (this.search !== "always" && this.rows.length < this.searchFrom);

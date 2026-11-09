@@ -107,10 +107,18 @@ const moreIcon =
  * @attr {string} no-match-label - What the theme select says when its search matches nothing. Defaults to `No matches`.
  * @attr {ModeOption[]} extra-modes - An app's own modes, as JSON: `value`, `label`, `icon` (SVG path data) and an optional `scheme` of `light` or `dark`. List their values in `modes` to offer them.
  * @attr {string} accept - The file types Import takes, as for an input's `accept`. Defaults to `.json,.toml,application/json`.
+ * @attr {string} icon - SVG path data for the button's icon, and Auto's with `cycle`. Defaults to a palette.
  *
+ * @csspart button - The button that opens the popover, or cycles the modes, a `gw-button`.
+ * @csspart mode - The mode control, a `gw-segmented`.
+ * @csspart theme - The theme select, a `gw-select`.
  * @csspart gallery - The theme gallery, with `gallery`.
  * @csspart controls - The mode, theme and status.
+ * @csspart status - The line under the controls that `status` sets.
  * @csspart actions - Reset and Import, with `inline`.
+ * @csspart reset - The Reset button, a `gw-button`.
+ * @csspart import - The Import button, a `gw-button`.
+ * @csspart menu - The ⋮ menu of Reset and Import, a `gw-menu-button`.
  * @csspart popover - The `gw-popover` the controls move into.
  *
  * @cssprop --gw-theme-picker-gallery-width - The popover's width with `gallery`. Defaults to `34rem`.
@@ -133,6 +141,7 @@ export class GwThemePicker extends GwElement {
     modes: {},
     extraModes: { attribute: "extra-modes", type: "json" },
     accept: {},
+    icon: {},
     scheme: { reflect: true },
     noImport: { attribute: "no-import", type: "boolean", reflect: true },
     noReset: { attribute: "no-reset", type: "boolean", reflect: true },
@@ -252,6 +261,8 @@ export class GwThemePicker extends GwElement {
   declare extraModes: readonly ModeOption[];
   /** The file types Import takes. */
   declare accept: string;
+  /** SVG path data for the button's icon, and Auto's with `cycle`. */
+  declare icon: string;
   /** The one scheme the theme in use covers, or empty for both. */
   declare scheme: "" | "light" | "dark";
   /** Leaves Import out, so only the themes in `themes` are offered. */
@@ -275,18 +286,23 @@ export class GwThemePicker extends GwElement {
     appearance: "plain",
     icon: paletteIcon,
     labels: "hide",
+    part: "button",
   });
 
-  readonly #mode = h("gw-segmented");
+  readonly #mode = h("gw-segmented", { part: "mode" });
 
-  readonly #theme = h("gw-select");
+  readonly #theme = h("gw-select", { part: "theme" });
 
   readonly #gallery = h("gw-theme-gallery", {
     class: "gallery",
     part: "gallery",
   });
 
-  readonly #status = h("p", { class: "status", role: "status" });
+  readonly #status = h("p", {
+    class: "status",
+    part: "status",
+    role: "status",
+  });
 
   readonly #file = h("input", {
     type: "file",
@@ -303,9 +319,13 @@ export class GwThemePicker extends GwElement {
     this.#status,
   );
 
-  readonly #reset = h("gw-button", { variant: "neutral", appearance: "plain" });
+  readonly #reset = h("gw-button", {
+    variant: "neutral",
+    appearance: "plain",
+    part: "reset",
+  });
 
-  readonly #import = h("gw-button", { appearance: "outlined" });
+  readonly #import = h("gw-button", { appearance: "outlined", part: "import" });
 
   readonly #popover = h("gw-popover", { part: "popover" });
 
@@ -315,6 +335,7 @@ export class GwThemePicker extends GwElement {
     icon: moreIcon,
     labels: "hide",
     hidden: true,
+    part: "menu",
   });
 
   readonly #actions = h("div", { class: "actions", part: "actions" });
@@ -331,6 +352,7 @@ export class GwThemePicker extends GwElement {
     this.modes = "auto light dark darker";
     this.extraModes = [];
     this.accept = ".json,.toml,application/json";
+    this.icon = paletteIcon;
     this.scheme = "";
     this.noImport = false;
     this.noReset = false;
@@ -472,11 +494,7 @@ export class GwThemePicker extends GwElement {
     const menu = more && !this.status;
 
     this.#button.icon =
-      this.layout === "cycle"
-        ? this.#button.icon
-        : more
-          ? moreIcon
-          : paletteIcon;
+      this.layout === "cycle" ? this.#button.icon : more ? moreIcon : this.icon;
 
     if (menu && this.#menu.hidden) this.#popover.close();
 
@@ -657,7 +675,7 @@ export class GwThemePicker extends GwElement {
       this.#button.textContent = name;
       this.#button.icon =
         current === undefined || current.value === "auto"
-          ? paletteIcon
+          ? this.icon
           : current.icon;
     } else {
       this.#button.label = this.label;

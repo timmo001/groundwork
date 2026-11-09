@@ -89,6 +89,15 @@ export class GwMeter extends GwElement {
         transition: width var(--gw-motion-slow) var(--gw-motion-easing);
       }
 
+      /* Forced colors drop the fill's background, so it draws in the
+         system's selection color */
+      @media (forced-colors: active) {
+        .fill {
+          background: Highlight;
+          forced-color-adjust: none;
+        }
+      }
+
       .bar {
         min-height: 0;
         height: var(--gw-meter-height, 0.5rem);

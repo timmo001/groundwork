@@ -116,9 +116,12 @@ const grouped = (themes: readonly OptionItem[], other: string) => {
  * @csspart card - Each theme's card.
  * @csspart preview - The picture of an app in the theme.
  * @csspart name - The theme's name under it.
+ * @csspart check - The tick on the chosen theme.
  * @csspart group - Each group's heading.
  *
  * @cssprop --gw-theme-gallery-min - The narrowest a card gets. Defaults to `9rem`.
+ * @cssprop --gw-theme-gallery-preview-height - Each preview's height. Defaults to `5.5rem`.
+ * @cssprop --gw-theme-gallery-check-size - The tick's circle on the chosen theme. Defaults to `1.5rem`.
  *
  * @fires {CustomEvent<{ id: string }>} theme - When a theme is picked.
  */
@@ -213,15 +216,17 @@ export class GwThemeGallery extends GwElement {
         opacity: 0;
       }
 
-      /* A small app in the theme's own colors */
+      /* A small app in the theme's own colors. It's a picture of the theme,
+         so forced colors leave its colors alone */
       .preview {
         display: grid;
         grid-template-columns: 22% 1fr;
         gap: 6px;
-        height: 5.5rem;
+        height: var(--gw-theme-gallery-preview-height, 5.5rem);
         padding: 6px;
         background: var(--p-bg);
         border-radius: calc(var(--gw-radius-panel) - 2px);
+        forced-color-adjust: none;
       }
 
       .rail {
@@ -297,8 +302,8 @@ export class GwThemeGallery extends GwElement {
         inset-inline-end: var(--gw-space-3);
         display: none;
         place-items: center;
-        width: 1.5rem;
-        height: 1.5rem;
+        width: var(--gw-theme-gallery-check-size, 1.5rem);
+        height: var(--gw-theme-gallery-check-size, 1.5rem);
         color: var(--gw-color-on-accent);
         background: var(--gw-color-fill-accent-resting);
         border-radius: 50%;
@@ -432,7 +437,7 @@ export class GwThemeGallery extends GwElement {
       input,
       preview,
       h("span", { class: "name", part: "name" }, theme.label),
-      h("span", { class: "check" }, createIcon(checkIcon)),
+      h("span", { class: "check", part: "check" }, createIcon(checkIcon)),
     );
 
     this.#cards.push({ input, preview, id: theme.value });

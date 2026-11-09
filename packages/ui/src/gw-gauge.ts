@@ -161,6 +161,22 @@ export class GwGauge extends GwElement {
           stroke var(--gw-motion-normal) var(--gw-motion-easing);
       }
 
+      /* Forced colors would draw the track and the arc alike, so the arc
+         takes the system's selection color and the track gray */
+      @media (forced-colors: active) {
+        circle {
+          forced-color-adjust: none;
+        }
+
+        .track {
+          stroke: GrayText;
+        }
+
+        .fill {
+          stroke: Highlight;
+        }
+      }
+
       .reading {
         position: absolute;
         inset: 0;

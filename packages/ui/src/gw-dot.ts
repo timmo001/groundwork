@@ -19,6 +19,7 @@ import { base, type Tone } from "./styles.js";
  * @attr {boolean} pulse - Pulses, for something live.
  *
  * @cssprop --gw-tone - The color, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-dot-size - The dot's size. Defaults to `0.5rem`.
  */
 export class GwDot extends GwElement {
   static override properties = {
@@ -33,10 +34,17 @@ export class GwDot extends GwElement {
       :host {
         display: inline-block;
         flex: none;
-        width: 0.5rem;
-        height: 0.5rem;
+        width: var(--gw-dot-size, 0.5rem);
+        height: var(--gw-dot-size, 0.5rem);
         background: var(--gw-tone, var(--gw-color-text-secondary));
         border-radius: 50%;
+      }
+
+      /* Forced colors drop backgrounds, so the dot draws in the text color */
+      @media (forced-colors: active) {
+        :host {
+          background: CanvasText;
+        }
       }
 
       :host([pulse]) {

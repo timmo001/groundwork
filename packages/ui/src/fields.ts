@@ -37,8 +37,8 @@ export const fieldStyles = css`
   :where(gw-input, gw-select) .gw-info {
     display: inline-grid;
     place-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: var(--gw-field-info-size, 1.5rem);
+    height: var(--gw-field-info-size, 1.5rem);
     padding: 0;
     color: var(--gw-color-text-secondary);
     cursor: pointer;
@@ -65,8 +65,8 @@ export const fieldStyles = css`
   }
 
   :where(gw-input, gw-select) .gw-info > .icon {
-    width: 1rem;
-    height: 1rem;
+    width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3);
+    height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3);
     fill: currentColor;
   }
 
@@ -485,6 +485,41 @@ export const fieldStyles = css`
 
   :where(gw-switch) input:disabled {
     opacity: 0.5;
+  }
+
+  /* Forced colors drop the thumb's and track's fills, so the switch draws
+     in system colors: a text-colored thumb, and a highlighted track on */
+  @media (forced-colors: active) {
+    :where(gw-switch) input {
+      forced-color-adjust: none;
+      background: Canvas;
+      border-color: CanvasText;
+    }
+
+    :where(gw-switch) input::after {
+      background: CanvasText;
+    }
+
+    :where(gw-switch) input:checked {
+      background: Highlight;
+      border-color: Highlight;
+    }
+
+    :where(gw-switch) input:checked::after {
+      background: HighlightText;
+    }
+
+    :where(gw-switch) input:disabled {
+      border-color: GrayText;
+    }
+
+    :where(gw-switch) input:disabled::after {
+      background: GrayText;
+    }
+
+    :where(gw-switch) input:focus-visible {
+      outline-color: Highlight;
+    }
   }
 
   :where(gw-range) {

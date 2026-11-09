@@ -6,6 +6,7 @@
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
+import type {} from "./gw-input.js";
 import { base, createIcon, setIconPath } from "./styles.js";
 
 /** One option of a filter. */
@@ -57,19 +58,29 @@ const searchFrom = 8;
  * @attr {string} no-match-label - What it says when the search matches nothing. Defaults to `No matches`.
  *
  * @csspart header - The row with the name and the clear button.
+ * @csspart toggle - The button that opens and closes the options.
+ * @csspart chevron - The chevron that turns as it opens.
  * @csspart icon - The icon `icon` sets.
+ * @csspart label - The filter's name.
  * @csspart count - The chip counting the options that show, a `gw-chip`.
  * @csspart clear - The clear button.
- * @csspart search - The search field.
+ * @csspart body - The search field and options, under the header.
+ * @csspart search - The search field, a `gw-input`.
  * @csspart options - The options' list.
  * @csspart option - Each option's row.
+ * @csspart option-label - An option's label.
  * @csspart option-count - An option's count.
+ * @csspart checkbox - An option's checkbox.
  * @csspart option-description - An option's line under its label.
  * @csspart none - The no matches line.
  *
  * @cssprop --gw-filter-inset - How far the header and options reach past its edges, such as to a sheet's edge. Defaults to `0rem`.
+ * @cssprop --gw-filter-header-height - The header's least height. Defaults to `2.75rem`.
+ * @cssprop --gw-filter-clear-size - The clear button's size. Defaults to `2.25rem`.
  * @cssprop --gw-filter-count-scale - Scales the count chip, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-filter-options-height - The tallest the options' list grows before it scrolls. Defaults to `18rem`.
+ * @cssprop --gw-filter-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
+ * @cssprop --gw-filter-checkbox-size - Each option's checkbox size. Defaults to `1.1rem`.
  *
  * @fires {Event} change - When the ticked options change. Read `value`.
  * @fires {Event} toggle - When the options open or close. Read `expanded`.
@@ -103,7 +114,7 @@ export class GwFilter extends GwElement {
       .header {
         display: flex;
         align-items: center;
-        min-height: 2.75rem;
+        min-height: var(--gw-filter-header-height, 2.75rem);
         padding-inline: var(--gw-filter-inset, 0rem);
         font-size: var(--gw-font-size-m);
         background: var(--gw-color-surface-default);
@@ -121,7 +132,7 @@ export class GwFilter extends GwElement {
         flex: 1;
         gap: var(--gw-space-2);
         align-items: center;
-        min-height: 2.75rem;
+        min-height: var(--gw-filter-header-height, 2.75rem);
         padding: 0;
         font: inherit;
         font-weight: var(--gw-font-weight-strong);
@@ -167,8 +178,8 @@ export class GwFilter extends GwElement {
       .clear {
         display: grid;
         place-items: center;
-        width: 2.25rem;
-        height: 2.25rem;
+        width: var(--gw-filter-clear-size, 2.25rem);
+        height: var(--gw-filter-clear-size, 2.25rem);
         padding: 0;
         color: var(--gw-color-text-secondary);
         cursor: pointer;
@@ -196,21 +207,9 @@ export class GwFilter extends GwElement {
         display: none;
       }
 
+      /* The search is a gw-input, a little smaller than a form's fields */
       .search {
-        box-sizing: border-box;
-        width: 100%;
-        min-height: 2.25rem;
-        padding: 0 var(--gw-space-3);
-        font: inherit;
-        color: var(--gw-color-text-primary);
-        background: var(--gw-color-surface-lower, transparent);
-        border: var(--gw-border-width) solid var(--gw-color-border-normal);
-        border-radius: var(--gw-radius-control);
-      }
-
-      .search:focus-visible {
-        outline: var(--gw-focus-width) solid var(--gw-color-focus);
-        outline-offset: var(--gw-focus-offset);
+        --gw-field-scale: var(--gw-filter-search-scale, 0.9);
       }
 
       .search[hidden] {
@@ -266,8 +265,8 @@ export class GwFilter extends GwElement {
       }
 
       input[type="checkbox"] {
-        width: 1.1rem;
-        height: 1.1rem;
+        width: var(--gw-filter-checkbox-size, 1.1rem);
+        height: var(--gw-filter-checkbox-size, 1.1rem);
         margin: 0;
         accent-color: var(--gw-color-accent);
       }
@@ -294,11 +293,11 @@ export class GwFilter extends GwElement {
 
   #query = "";
 
-  readonly #chevron = createIcon(chevronIcon);
+  readonly #chevron = createIcon(chevronIcon, { part: "chevron" });
 
   readonly #kind = createIcon("", { part: "icon" });
 
-  readonly #name = h("span");
+  readonly #name = h("span", { part: "label" });
 
   /** How many options show, out of all of them, as a chip. */
   readonly #shown = h("gw-chip", {
@@ -309,7 +308,12 @@ export class GwFilter extends GwElement {
 
   readonly #toggle = h(
     "button",
-    { type: "button", class: "toggle", "aria-controls": "body" },
+    {
+      type: "button",
+      class: "toggle",
+      part: "toggle",
+      "aria-controls": "body",
+    },
     this.#chevron,
     this.#kind,
     this.#name,
@@ -322,17 +326,19 @@ export class GwFilter extends GwElement {
     createIcon(clearIcon),
   );
 
-  readonly #search = h("input", {
+  /** The search field, a `gw-input`, so it looks and sizes as every field does. */
+  readonly #search = h("gw-input", {
     type: "search",
     class: "search",
     part: "search",
+    "label-hidden": true,
   });
 
   readonly #list = h("ul", { part: "options" });
 
   readonly #body = h(
     "div",
-    { class: "body", id: "body" },
+    { class: "body", id: "body", part: "body" },
     this.#search,
     this.#list,
   );
@@ -429,6 +435,7 @@ export class GwFilter extends GwElement {
 
         const input = h("input", {
           type: "checkbox",
+          part: "checkbox",
           disabled: checked && ticked === 1,
         });
 
@@ -443,7 +450,7 @@ export class GwFilter extends GwElement {
           h(
             "label",
             { title: option.label, part: "option" },
-            h("span", { class: "name" }, option.label),
+            h("span", { class: "name", part: "option-label" }, option.label),
             option.count === undefined
               ? h("span")
               : h(
@@ -482,8 +489,8 @@ export class GwFilter extends GwElement {
     this.#search.hidden =
       this.search === "never" ||
       (this.search !== "always" && this.options.length < this.searchFrom);
-    setAttribute(this.#search, "aria-label", this.searchLabel);
-    setAttribute(this.#search, "placeholder", this.searchLabel);
+    this.#search.label = this.searchLabel;
+    this.#search.placeholder = this.searchLabel;
     this.#renderOptions();
   }
 }

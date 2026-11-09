@@ -33,6 +33,7 @@ import { base, controlSizes } from "./styles.js";
  *
  * @cssprop --gw-row-padding - The padding above and below. Defaults to `--gw-space-2`.
  * @cssprop --gw-setting-row-scale - Scales the text and spacing, around 1 for medium.
+ * @cssprop --gw-setting-row-text-width - The width the name and description ask for before the control wraps under them. Defaults to `12rem`.
  */
 export class GwSettingRow extends GwElement {
   static override properties = {
@@ -70,7 +71,7 @@ export class GwSettingRow extends GwElement {
       }
 
       .text {
-        flex: 1 1 12rem;
+        flex: 1 1 var(--gw-setting-row-text-width, 12rem);
         min-width: 0;
       }
 

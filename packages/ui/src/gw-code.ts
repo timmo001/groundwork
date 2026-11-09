@@ -116,7 +116,12 @@ const editorTheme = EditorView.theme({
     color: "var(--gw-color-text-primary)",
     backgroundColor: "var(--gw-color-surface-lower)",
   },
-  "&.cm-focused": { outline: "none" },
+  // The view takes focus like a field, so it shows the focus ring like one,
+  // inside its edge so the frame doesn't clip it
+  "&.cm-focused": {
+    outline: "var(--gw-focus-width) solid var(--gw-color-focus)",
+    outlineOffset: "calc(-1 * var(--gw-focus-width))",
+  },
   ".cm-scroller": {
     overflow: "auto",
     overscrollBehaviorX: "contain",
@@ -193,7 +198,7 @@ const editorTheme = EditorView.theme({
     gap: "var(--gw-space-1)",
   },
   ".cm-textfield, .cm-button": {
-    height: "1.875rem",
+    height: "var(--gw-code-find-height, 1.875rem)",
     margin: "0",
     padding: "0 var(--gw-space-2)",
     font: "inherit",
@@ -203,8 +208,12 @@ const editorTheme = EditorView.theme({
     border: "var(--gw-border-width) solid var(--gw-color-border-normal)",
     borderRadius: "var(--gw-radius-m)",
   },
+  ".cm-textfield:focus-visible, .cm-button:focus-visible, .cm-panel.cm-search input[type=checkbox]:focus-visible, .cm-panel.cm-search [name=close]:focus-visible":
+    {
+      outline: "var(--gw-focus-width) solid var(--gw-color-focus)",
+      outlineOffset: "var(--gw-focus-offset)",
+    },
   ".cm-textfield:focus": {
-    outline: "none",
     borderColor: "var(--gw-color-accent)",
   },
   ".cm-button": { cursor: "pointer" },
@@ -288,6 +297,7 @@ const builtInTools = ["wrap", "find", "copy"] as const;
  * @cssprop --gw-code-max-height - How tall it grows before it scrolls. Defaults to `32rem`.
  * @cssprop --gw-code-height - A fixed height, such as to fill the page with `--gw-code-max-height: none`. Defaults to `auto`.
  * @cssprop --gw-code-tools-scale - Scales the toolbar buttons to any size, around 1 for medium. `size` sets it.
+ * @cssprop --gw-code-find-height - The find panel's field and buttons' height. Defaults to `1.875rem`.
  */
 export class GwCode extends GwElement {
   static override properties = {

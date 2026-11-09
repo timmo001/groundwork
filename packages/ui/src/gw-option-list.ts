@@ -1,7 +1,7 @@
 /**
  * `gw-option-list`: the searchable, windowed list behind the select and the
  * command menu.
- * Docs: https://groundwork.timmo.dev/components/inputs/#select
+ * Docs: https://groundwork.timmo.dev/components/inputs/#option-list
  *
  * @module
  */
@@ -38,7 +38,8 @@ const searchIcon =
 const checkIcon = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
 
 // Every row kind has a fixed height, so the list knows where each row sits
-// without measuring and only renders the ones in view
+// without measuring and only renders the ones in view. An app sets other
+// heights, in pixels, through the --gw-option-list-*-height properties
 const optionHeight = 40;
 const describedHeight = 52;
 const groupHeight = 32;
@@ -88,13 +89,24 @@ let lastList = 0;
  * @attr {string} no-match-label - What it says when the search matches nothing, for an app in another language. Defaults to `No matches`.
  *
  * @csspart search - The search field's row.
+ * @csspart search-icon - The magnifier before the search field.
+ * @csspart search-input - The search field.
  * @csspart listbox - The scrolling list.
  * @csspart option - Each option.
+ * @csspart option-icon - An option's icon.
+ * @csspart swatch - An option's color dot.
+ * @csspart label - An option's label.
  * @csspart group - Each group heading.
  * @csspart description - An option's second line.
+ * @csspart swatches - An option's row of swatches.
+ * @csspart check - The tick on a chosen option.
  * @csspart none - The no matches line.
  *
  * @cssprop --gw-option-list-height - The list's maximum height. Defaults to `20rem`.
+ * @cssprop --gw-option-list-search-height - The search field's height. Defaults to `2.5rem`.
+ * @cssprop --gw-option-list-option-height - Each option's height in pixels, as a number. Defaults to `40`.
+ * @cssprop --gw-option-list-described-height - An option with a description's height in pixels. Defaults to `52`.
+ * @cssprop --gw-option-list-group-height - A group heading's height in pixels. Defaults to `32`.
  *
  * @fires {CustomEvent<{ value: string }>} pick - When an option is picked, with its `value` in `detail`.
  */
@@ -136,7 +148,7 @@ export class GwOptionList extends GwElement {
       input {
         flex: 1;
         min-width: 0;
-        height: 2.5rem;
+        height: var(--gw-option-list-search-height, 2.5rem);
         padding: 0;
         font: inherit;
         font-size: var(--gw-font-size-s);
@@ -216,6 +228,19 @@ export class GwOptionList extends GwElement {
         cursor: not-allowed;
       }
 
+      /* Forced colors drop the active row's background, so it takes an
+         outline in the system's selection color instead */
+      @media (forced-colors: active) {
+        [role="option"][data-active] {
+          outline: var(--gw-focus-width) solid Highlight;
+          outline-offset: calc(var(--gw-focus-width) * -1);
+        }
+
+        [role="option"][aria-disabled="true"] {
+          color: GrayText;
+        }
+      }
+
       [role="option"] > .icon {
         flex: none;
         color: var(--gw-color-text-primary);
@@ -291,6 +316,7 @@ export class GwOptionList extends GwElement {
 
   readonly #input = h("input", {
     type: "search",
+    part: "search-input",
     role: "combobox",
     "aria-autocomplete": "list",
     "aria-expanded": "true",
@@ -320,6 +346,12 @@ export class GwOptionList extends GwElement {
 
   #frame = 0;
 
+  /** The row heights, read from the `--gw-option-list-*-height` properties on each build. */
+  #heights = {
+    option: optionHeight,
+    described: describedHeight,
+    group: groupHeight,
+  };
   constructor() {
     super();
     this.options = [];
@@ -466,7 +498,7 @@ export class GwOptionList extends GwElement {
       h(
         "div",
         { class: "search", part: "search" },
-        createIcon(searchIcon),
+        createIcon(searchIcon, { part: "search-icon" }),
         this.#input,
       ),
       this.#listbox,
@@ -503,6 +535,21 @@ export class GwOptionList extends GwElement {
   #build() {
     const query = this.#query.trim().toLowerCase();
     const options = Array.isArray(this.options) ? this.options : [];
+    const style = getComputedStyle(this);
+
+    const height = (name: string, fallback: number) => {
+      const value = Number.parseFloat(
+        style.getPropertyValue(`--gw-option-list-${name}-height`),
+      );
+
+      return Number.isFinite(value) && value > 0 ? value : fallback;
+    };
+
+    this.#heights = {
+      option: height("option", optionHeight),
+      described: height("described", describedHeight),
+      group: height("group", groupHeight),
+    };
 
     this.#filtered =
       query === ""
@@ -518,13 +565,16 @@ export class GwOptionList extends GwElement {
       if (option.group !== undefined && option.group !== group) {
         rows.push({ kind: "group", label: option.group });
         tops.push(top);
-        top += groupHeight;
+        top += this.#heights.group;
       }
 
       group = option.group;
       rows.push({ kind: "option", option, index });
       tops.push(top);
-      top += option.description === undefined ? optionHeight : describedHeight;
+      top +=
+        option.description === undefined
+          ? this.#heights.option
+          : this.#heights.described;
     }
 
     this.#rows = rows;
@@ -534,11 +584,11 @@ export class GwOptionList extends GwElement {
   }
 
   #heightOf(row: Row) {
-    if (row.kind === "group") return groupHeight;
+    if (row.kind === "group") return this.#heights.group;
 
     return row.option.description === undefined
-      ? optionHeight
-      : describedHeight;
+      ? this.#heights.option
+      : this.#heights.described;
   }
 
   /** Scrolls the active option into view, then renders. */
@@ -628,7 +678,7 @@ export class GwOptionList extends GwElement {
       );
 
       element.style.top = `${top}px`;
-      element.style.height = `${groupHeight}px`;
+      element.style.height = `${this.#heights.group}px`;
 
       return element;
     }
@@ -650,12 +700,14 @@ export class GwOptionList extends GwElement {
         "aria-posinset": index + 1,
         "data-active": index === this.#active,
       },
-      option.icon === undefined ? null : createIcon(option.icon),
+      option.icon === undefined
+        ? null
+        : createIcon(option.icon, { part: "option-icon" }),
       option.swatch === undefined ? null : this.#swatch(option.swatch),
       h(
         "span",
         { class: "text" },
-        h("span", {}, option.label),
+        h("span", { part: "label" }, option.label),
         option.description === undefined
           ? null
           : h(
@@ -668,7 +720,7 @@ export class GwOptionList extends GwElement {
         ? null
         : h(
             "span",
-            { class: "swatches", "aria-hidden": "true" },
+            { class: "swatches", part: "swatches", "aria-hidden": "true" },
             ...option.swatches.map((color) => {
               const swatch = h("span");
 
@@ -677,7 +729,7 @@ export class GwOptionList extends GwElement {
               return swatch;
             }),
           ),
-      selected ? createIcon(checkIcon) : null,
+      selected ? createIcon(checkIcon, { part: "check" }) : null,
     );
 
     if (selected) element.lastElementChild?.classList.add("check");
@@ -689,7 +741,11 @@ export class GwOptionList extends GwElement {
   }
 
   #swatch(color: string) {
-    const swatch = h("span", { class: "swatch", "aria-hidden": "true" });
+    const swatch = h("span", {
+      class: "swatch",
+      part: "swatch",
+      "aria-hidden": "true",
+    });
 
     swatch.style.background = color;
 

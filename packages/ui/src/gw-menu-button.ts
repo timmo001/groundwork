@@ -4,6 +4,7 @@
  *
  * @module
  */
+import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
@@ -75,22 +76,33 @@ const boxEmpty =
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The trigger's size, 24 to 56px tall. Defaults to `medium`.
  * @attr {"accent"|"filled"|"outlined"|"plain"} appearance - How the trigger is drawn: `filled` is a neutral fill with a border, and the others match a neutral `gw-button` of that appearance, so it sits in a row of them. Defaults to `filled`.
  * @attr {boolean} active - Marks the trigger as set, such as a grouping that's on, with an accent border and text.
- * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not on narrow screens. Defaults to `show`.
+ * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not below `labels-below`. Defaults to `show`.
+ * @attr {string} labels-below - The viewport width, as a CSS length, below which `labels="auto"` hides the trigger's text. Defaults to `40rem`.
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.
  *
  * @csspart trigger - The button that opens the menu.
  * @csspart trigger-icon - The trigger's icon.
+ * @csspart trigger-label - The trigger's text.
+ * @csspart chevron - The chevron after the trigger's text.
+ * @csspart ring - The spinning ring while `loading`.
  * @csspart menu - The menu's surface.
  * @csspart items - The scrolling list of items.
  * @csspart actions - The actions pinned under the items.
+ * @csspart empty - What the menu says with no items.
  * @csspart item - Each item and action.
  * @csspart item-icon - An item's icon.
+ * @csspart item-label - An item's label.
  * @csspart item-description - An item's line under its label.
+ * @csspart tick - The tick that marks the picked choice.
+ * @csspart checkbox - A checkbox item's box.
  * @csspart group-heading - A group's heading.
  * @csspart separator - The line before an item with `separator`.
  *
  * @cssprop --gw-menu-button-scale - Scales the trigger, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
+ * @cssprop --gw-menu-button-menu-width - The menu's least width. Defaults to `15rem`.
+ * @cssprop --gw-menu-button-menu-height - The tallest the menu grows before its items scroll. Defaults to `24rem`.
+ * @cssprop --gw-menu-button-item-height - Each item's least height. Defaults to `2.5rem`.
  *
  * @fires {CustomEvent<{ value: string }>} select - When an item or action is chosen, with its `value` in `detail`.
  * @fires {CustomEvent<{ value: string, checked: boolean }>} check - When a checkbox item is toggled, with its `value` and the state it should change to in `detail`.
@@ -107,6 +119,7 @@ export class GwMenuButton extends GwElement {
     appearance: { reflect: true },
     active: { type: "boolean", reflect: true },
     labels: { reflect: true },
+    labelsBelow: { attribute: "labels-below" },
     loading: { type: "boolean", reflect: true },
   } as const;
 
@@ -272,7 +285,7 @@ export class GwMenuButton extends GwElement {
         display: none;
       }
 
-      :host([labels="hide"]) .has-icon .label {
+      .compact.has-icon .label {
         position: absolute;
         width: 1px;
         height: 1px;
@@ -281,19 +294,10 @@ export class GwMenuButton extends GwElement {
         white-space: nowrap;
       }
 
-      @media (width < 40rem) {
-        :host([labels="auto"]) .trigger.has-icon {
-          padding: 0 calc(var(--gw-space-2) * var(--gw-size));
-        }
-
-        :host([labels="auto"]) .has-icon .label {
-          position: absolute;
-          width: 1px;
-          height: 1px;
-          overflow: hidden;
-          clip-path: inset(50%);
-          white-space: nowrap;
-        }
+      /* auto keeps the chevron below labels-below, so it still reads as a
+         menu */
+      :host([labels="auto"]) .trigger.compact.has-icon {
+        padding: 0 calc(var(--gw-space-2) * var(--gw-size));
       }
 
       .chevron {
@@ -323,9 +327,12 @@ export class GwMenuButton extends GwElement {
         position-area: block-end span-inline-end;
         inset: auto;
         box-sizing: border-box;
-        min-width: 15rem;
+        min-width: var(--gw-menu-button-menu-width, 15rem);
         max-width: calc(100vw - 2 * var(--gw-space-2));
-        max-height: min(24rem, calc(100% - 2 * var(--gw-space-2)));
+        max-height: min(
+          var(--gw-menu-button-menu-height, 24rem),
+          calc(100% - 2 * var(--gw-space-2))
+        );
         padding: 0;
         margin: var(--gw-space-1) 0;
         overflow: hidden;
@@ -391,7 +398,7 @@ export class GwMenuButton extends GwElement {
         gap: var(--gw-space-3);
         align-items: center;
         box-sizing: border-box;
-        min-height: 2.5rem;
+        min-height: var(--gw-menu-button-item-height, 2.5rem);
         padding: var(--gw-space-2) var(--gw-space-3);
         font: inherit;
         font-size: var(--gw-font-size-s);
@@ -414,6 +421,15 @@ export class GwMenuButton extends GwElement {
 
       .item:focus-visible {
         box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus);
+      }
+
+      /* Forced colors drop box shadows, so the focused item takes an
+         outline instead */
+      @media (forced-colors: active) {
+        .item:focus-visible {
+          outline: var(--gw-focus-width) solid Highlight;
+          outline-offset: calc(var(--gw-focus-width) * -1);
+        }
       }
 
       .item:disabled {
@@ -505,8 +521,10 @@ export class GwMenuButton extends GwElement {
   declare appearance: "accent" | "filled" | "outlined" | "plain";
   /** Marks the trigger as set, such as a grouping that's on. */
   declare active: boolean;
-  /** Whether the trigger's text shows beside its icon: always, never, or not on narrow screens. */
+  /** Whether the trigger's text shows beside its icon: always, never, or not below `labelsBelow`. */
   declare labels: "show" | "hide" | "auto";
+  /** The viewport width, as a CSS length, below which `labels="auto"` hides the trigger's text. */
+  declare labelsBelow: string;
   /** Shows a spinning ring in the icon's place and disables the trigger. */
   declare loading: boolean;
 
@@ -520,6 +538,7 @@ export class GwMenuButton extends GwElement {
 
   readonly #triggerText: HTMLSpanElement = h("span", {
     class: "label",
+    part: "trigger-label",
     id: "label",
   });
 
@@ -558,7 +577,20 @@ export class GwMenuButton extends GwElement {
     this.appearance = "filled";
     this.active = false;
     this.labels = "show";
+    this.labelsBelow = "40rem";
     this.loading = false;
+  }
+
+  readonly #narrow = new Below(() => this.requestUpdate("labels"));
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.requestUpdate("labels");
+  }
+
+  override disconnectedCallback() {
+    this.#narrow.stop();
+    super.disconnectedCallback();
   }
 
   /** The enabled items then actions, in the order arrow keys move through them. */
@@ -663,7 +695,7 @@ export class GwMenuButton extends GwElement {
       h(
         "span",
         { class: "text" },
-        h("span", {}, item.label),
+        h("span", { part: "item-label" }, item.label),
         item.description
           ? h(
               "span",
@@ -736,7 +768,7 @@ export class GwMenuButton extends GwElement {
   }
 
   #tick() {
-    const icon = createIcon(tick);
+    const icon = createIcon(tick, { part: "tick" });
 
     icon.classList.add("tick");
 
@@ -744,7 +776,9 @@ export class GwMenuButton extends GwElement {
   }
 
   #box(checked: boolean) {
-    const icon = createIcon(checked ? boxChecked : boxEmpty);
+    const icon = createIcon(checked ? boxChecked : boxEmpty, {
+      part: "checkbox",
+    });
 
     icon.classList.add("box");
 
@@ -757,10 +791,10 @@ export class GwMenuButton extends GwElement {
         "span",
         { class: "lead" },
         this.#triggerIcon,
-        h("span", { class: "ring", "aria-hidden": "true" }),
+        h("span", { class: "ring", part: "ring", "aria-hidden": "true" }),
       ),
       this.#triggerText,
-      h("span", { class: "chevron", "aria-hidden": "true" }),
+      h("span", { class: "chevron", part: "chevron", "aria-hidden": "true" }),
     );
     this.#popover.addEventListener("toggle", this.#onToggle);
     this.#popover.addEventListener("keydown", this.#onKeydown);
@@ -772,6 +806,12 @@ export class GwMenuButton extends GwElement {
     setIconPath(this.#triggerIcon, this.icon);
     this.#triggerIcon.toggleAttribute("hidden", !this.icon);
     this.#trigger.classList.toggle("has-icon", this.icon !== "");
+    this.#narrow.follow(this.labels === "auto" ? this.labelsBelow : "");
+    this.#trigger.classList.toggle(
+      "compact",
+      this.labels === "hide" ||
+        (this.labels === "auto" && this.#narrow.matches),
+    );
     this.#heading.textContent = this.heading;
     setAttribute(
       this.#trigger,
@@ -805,7 +845,13 @@ export class GwMenuButton extends GwElement {
 
       this.#items.replaceChildren(
         ...(items.length === 0
-          ? [h("p", { class: "empty", role: "none" }, this.empty)]
+          ? [
+              h(
+                "p",
+                { class: "empty", part: "empty", role: "none" },
+                this.empty,
+              ),
+            ]
           : this.#renderItems(items)),
       );
 

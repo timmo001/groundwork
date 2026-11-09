@@ -24,6 +24,8 @@ import { base, type Tone } from "./styles.js";
  * @attr {number} duration - Milliseconds each toast shows for. Defaults to 5000.
  *
  * @csspart toast - Each toast.
+ *
+ * @cssprop --gw-toaster-width - The widest a toast grows, inside the viewport. Defaults to `22rem`.
  */
 export class GwToaster extends GwElement {
   static override properties = {
@@ -36,7 +38,10 @@ export class GwToaster extends GwElement {
       :host {
         position: fixed;
         inset: auto var(--gw-space-4) var(--gw-space-4) auto;
-        width: min(22rem, calc(100vw - 2 * var(--gw-space-4)));
+        width: min(
+          var(--gw-toaster-width, 22rem),
+          calc(100vw - 2 * var(--gw-space-4))
+        );
         padding: 0;
         margin: 0;
         overflow: visible;
