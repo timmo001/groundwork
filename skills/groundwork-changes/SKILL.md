@@ -28,6 +28,7 @@ The same holds outside the web components: tokens and themes take overrides and 
 - A composite renders the base `gw-` elements, not its own copy of one: a search field is a `gw-input`, a count a `gw-chip`, an inner button a `gw-button`. Expose each as a part, and size it through a `--gw-<element>-…` property that sets the base element's own scale.
 - Import the element's type in its module (`import type {} from "./gw-x.js"`) and the element itself in its `define/` entry, so each piece is defined only when imported. `mise run gen` fails when a `define/` entry misses one, and writes the Built from table on the Components page.
 - Keep each base element usable on its own. When a composite needs a piece no base element covers, make it a base element first if another composite or app could use it.
+- Behavior more than one element shares, such as placing a popup beside its anchor or moving through a list with the keys, goes in an exported helper (`placeBeside`, `listIndex`) rather than a copy in each element, so an app's own element can use it too.
 
 ## 4. Keep it accessible
 
