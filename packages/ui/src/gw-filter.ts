@@ -55,7 +55,14 @@ const searchFrom = 8;
  * @attr {string} search-label - The search field's name. Defaults to `Search`.
  *
  * @csspart header - The row with the name and the clear button.
+ * @csspart icon - The icon `icon` sets.
+ * @csspart count - The chip counting the options that show, a `gw-chip`.
+ * @csspart clear - The clear button.
+ * @csspart search - The search field.
  * @csspart options - The options' list.
+ *
+ * @cssprop --gw-filter-inset - How far the header and options reach past its edges, such as to a sheet's edge. Defaults to `0rem`.
+ * @cssprop --gw-filter-count-scale - Scales the count chip, around 1 for medium. Defaults to `0.8`, small.
  *
  * @fires {Event} change - When the ticked options change. Read `value`.
  * @fires {Event} toggle - When the options open or close. Read `expanded`.
@@ -139,6 +146,7 @@ export class GwFilter extends GwElement {
       }
 
       .shown {
+        --gw-chip-scale: var(--gw-filter-count-scale, 0.8);
         font-weight: var(--gw-font-weight-regular);
         font-variant-numeric: tabular-nums;
       }
@@ -277,14 +285,14 @@ export class GwFilter extends GwElement {
 
   readonly #chevron = createIcon(chevronIcon);
 
-  readonly #kind = createIcon("");
+  readonly #kind = createIcon("", { part: "icon" });
 
   readonly #name = h("span");
 
   /** How many options show, out of all of them, as a chip. */
   readonly #shown = h("gw-chip", {
     class: "shown",
-    size: "small",
+    part: "count",
     icon: shownIcon,
   });
 
@@ -299,11 +307,15 @@ export class GwFilter extends GwElement {
 
   readonly #clear = h(
     "button",
-    { type: "button", class: "clear" },
+    { type: "button", class: "clear", part: "clear" },
     createIcon(clearIcon),
   );
 
-  readonly #search = h("input", { type: "search", class: "search" });
+  readonly #search = h("input", {
+    type: "search",
+    class: "search",
+    part: "search",
+  });
 
   readonly #list = h("ul", { part: "options" });
 

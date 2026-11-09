@@ -84,9 +84,11 @@ interface Drawn<T> {
  * @csspart list - The list.
  * @csspart item - Each item's row.
  * @csspart group - Each group's heading.
+ * @csspart group-count - The chip counting a group's items, a `gw-chip`.
  *
  * @cssprop --gw-list-max-height - How tall a `contained` list grows before it scrolls. Defaults to `70vh`.
  * @cssprop --gw-list-gap - The space after each item. Defaults to `--gw-space-2`.
+ * @cssprop --gw-list-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
  *
  * @fires {Event} change - When a group is folded or opened. Read `toggledGroups`.
  *
@@ -147,6 +149,10 @@ export class GwList<T extends object = object> extends GwElement {
         border: 0;
         border-radius: var(--gw-radius-control);
         --gw-icon-size: 1.35em;
+      }
+
+      .group-toggle gw-chip {
+        --gw-chip-scale: var(--gw-list-count-scale, 0.8);
       }
 
       .group-toggle:hover {
@@ -372,7 +378,7 @@ export class GwList<T extends object = object> extends GwElement {
           { type: "button", class: "group-toggle" },
           createIcon(chevronIcon),
           h("span"),
-          h("gw-chip", { size: "small" }),
+          h("gw-chip", { part: "group-count" }),
         ),
       );
 

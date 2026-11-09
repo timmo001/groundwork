@@ -170,8 +170,10 @@ type Shown =
  * @csspart table - The table.
  * @csspart row - Each row.
  * @csspart group - Each group's heading row.
+ * @csspart group-count - The chip counting a group's rows, a `gw-chip`.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
+ * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
  *
  * @fires {Event} change - When the sort, search or folded groups change. Read `sort`, `descending`, `query` and `toggledGroups`.
  */
@@ -398,6 +400,7 @@ export class GwTable extends GwElement {
       }
 
       .group-toggle gw-chip {
+        --gw-chip-scale: var(--gw-table-count-scale, 0.8);
         margin-inline-start: auto;
       }
 
@@ -757,7 +760,7 @@ export class GwTable extends GwElement {
     group: Extract<Shown, { readonly kind: "group" }>,
     index: number,
   ) {
-    const count = h("gw-chip", { size: "small" }, String(group.count));
+    const count = h("gw-chip", { part: "group-count" }, String(group.count));
 
     const toggle = h(
       "button",
