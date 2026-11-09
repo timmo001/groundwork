@@ -6,6 +6,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { listIndex } from "./keys.js";
 import { base, createIcon } from "./styles.js";
 
 /** One choice in a select or command menu. */
@@ -422,35 +423,34 @@ export class GwOptionList extends GwElement {
   }
 
   readonly #onKeydown = (event: KeyboardEvent) => {
-    switch (event.key) {
-      case "ArrowDown":
-        this.move(1);
-        break;
-      case "ArrowUp":
-        this.move(-1);
-        break;
-      case "PageDown":
-        this.move(pageSize);
-        break;
-      case "PageUp":
-        this.move(-pageSize);
-        break;
-      case "Home":
-        if (this.search && event.target === this.#input) return;
-        this.move(-this.#active);
-        break;
-      case "End":
-        if (this.search && event.target === this.#input) return;
-        this.move(this.#filtered.length - 1 - this.#active);
-        break;
-      case "Enter":
-        this.#pick(this.#filtered[this.#active]);
-        break;
-      default:
-        return;
+    if (event.key === "Enter") {
+      this.#pick(this.#filtered[this.#active]);
+      event.preventDefault();
+
+      return;
     }
 
+    // Home and End move the caret in the search field
+    if (
+      (event.key === "Home" || event.key === "End") &&
+      this.search &&
+      event.target === this.#input
+    ) {
+      return;
+    }
+
+    const next = listIndex(
+      event.key,
+      this.#active,
+      this.#filtered.length,
+      pageSize,
+    );
+
+    if (next === undefined) return;
+
     event.preventDefault();
+    this.#active = next;
+    this.#reveal();
   };
 
   #optionAt(event: Event) {

@@ -7,6 +7,7 @@
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
+import { placeBeside } from "./placement.js";
 import { base } from "./styles.js";
 
 const gap = 8;
@@ -353,29 +354,7 @@ export class GwPopover extends GwElement {
     }
 
     popover.style.maxHeight = "";
-
-    const rect = anchor.getBoundingClientRect();
-    const below = window.innerHeight - rect.bottom - gap;
-    const fitsBelow = below >= popover.offsetHeight || below >= rect.top;
-    const room = fitsBelow ? below - gap : rect.top - 2 * gap;
-
-    if (popover.offsetHeight > room) popover.style.maxHeight = `${room}px`;
-
-    // Lined up with the button's edge on its side of the screen, so the
-    // popover opens toward the space rather than across the content
-    const fromStart = rect.left + rect.width / 2 < window.innerWidth / 2;
-    const preferred = fromStart ? rect.left : rect.right - popover.offsetWidth;
-
-    const left = Math.min(
-      Math.max(gap, preferred),
-      window.innerWidth - popover.offsetWidth - gap,
-    );
-
-    popover.dataset.side = fromStart ? "start" : "end";
-
-    popover.dataset.placement = fitsBelow ? "below" : "above";
-    popover.style.top = `${fitsBelow ? rect.bottom + gap : Math.max(gap, rect.top - gap - popover.offsetHeight)}px`;
-    popover.style.left = `${left}px`;
+    placeBeside(popover, anchor, { align: "space", gap });
   };
 
   readonly #onToggle = (event: ToggleEvent) => {

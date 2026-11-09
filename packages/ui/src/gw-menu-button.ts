@@ -6,6 +6,7 @@
  */
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { listIndex } from "./keys.js";
 import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
 export interface MenuItem {
@@ -633,12 +634,7 @@ export class GwMenuButton extends GwElement {
       (button) => button === this.shadowRoot?.activeElement,
     );
 
-    const next = {
-      ArrowDown: (index + 1) % buttons.length,
-      ArrowUp: (index - 1 + buttons.length) % buttons.length,
-      Home: 0,
-      End: buttons.length - 1,
-    }[event.key];
+    const next = listIndex(event.key, index, buttons.length);
 
     if (next === undefined) return;
 

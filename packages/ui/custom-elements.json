@@ -9607,6 +9607,10 @@
               "name": "toggle"
             },
             {
+              "description": "The chevron in it, which turns as the panel opens.",
+              "name": "chevron"
+            },
+            {
               "description": "The content's wrapper.",
               "name": "content"
             }
@@ -15557,6 +15561,10 @@
             {
               "description": "The row with the label and value.",
               "name": "top"
+            },
+            {
+              "description": "What it measures.",
+              "name": "label"
             },
             {
               "description": "The value as shown.",
@@ -28221,6 +28229,30 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/keys.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/placement.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/below.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/storage.js"
           }
         },
@@ -28645,6 +28677,56 @@
           "declaration": {
             "name": "keep",
             "module": "src/kept.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/keys.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "listIndex",
+          "return": {
+            "type": {
+              "text": "number | undefined"
+            }
+          },
+          "parameters": [
+            {
+              "name": "key",
+              "type": {
+                "text": "string"
+              }
+            },
+            {
+              "name": "index",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "length",
+              "type": {
+                "text": "number"
+              }
+            },
+            {
+              "name": "page",
+              "default": "8"
+            }
+          ],
+          "description": "The index a key moves to from `index` in a list of `length` items: the\narrow keys step one and wrap around, Page Up and Page Down jump `page`\nand stop at the ends, and Home and End go to them. `undefined` for any\nother key, or an empty list, so the caller leaves the event alone."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "listIndex",
+          "declaration": {
+            "name": "listIndex",
+            "module": "src/keys.ts"
           }
         }
       ]
@@ -30513,6 +30595,48 @@
           "declaration": {
             "name": "on",
             "module": "src/on.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/placement.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "placeBeside",
+          "parameters": [
+            {
+              "name": "popup",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "anchor",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "{ align = \"start\", gap = 8, fit }",
+              "default": "{}",
+              "type": {
+                "text": "PlaceOptions"
+              }
+            }
+          ],
+          "description": "Places a `position: fixed` popup, such as one in the top layer, below its\nanchor while it fits there or there's more room below than above, and\nabove it otherwise. It sets the popup's `top` and `left`, and\n`data-placement` (`below` or `above`) and `data-side` (`start` or `end`)\nfor styles that follow the side, such as a transform origin. Call it when\nthe popup opens and again on resize and scroll."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "placeBeside",
+          "declaration": {
+            "name": "placeBeside",
+            "module": "src/placement.ts"
           }
         }
       ]

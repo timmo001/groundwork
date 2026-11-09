@@ -9,6 +9,7 @@ import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
 import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
+import { placeBeside } from "./placement.js";
 import { createIcon, setIconPath } from "./styles.js";
 
 /** @deprecated Use `OptionItem`, which also takes an icon, description and group. */
@@ -280,28 +281,24 @@ export class GwSelect extends LightElement {
     popup.style.width = `${Math.min(width, window.innerWidth - 2 * gap)}px`;
     this.#list.style.removeProperty("--gw-option-list-height");
 
-    const below = window.innerHeight - rect.bottom - gap;
-    const fitsBelow = below >= popup.offsetHeight || below >= rect.top;
-    const room = fitsBelow ? below - gap : rect.top - 2 * gap;
-
     // A window that can't grow past the page, such as an extension's popup,
     // would crop the list, so it scrolls within the room there is
-    if (popup.offsetHeight > room) {
-      const listbox = this.#list.shadowRoot?.querySelector('[role="listbox"]');
+    placeBeside(popup, this.#trigger, {
+      gap,
+      fit: (room) => {
+        const listbox =
+          this.#list.shadowRoot?.querySelector('[role="listbox"]');
 
-      const rest =
-        popup.offsetHeight -
-        (listbox instanceof HTMLElement ? listbox.offsetHeight : 0);
+        const rest =
+          popup.offsetHeight -
+          (listbox instanceof HTMLElement ? listbox.offsetHeight : 0);
 
-      this.#list.style.setProperty(
-        "--gw-option-list-height",
-        `${Math.max(room - rest, 96)}px`,
-      );
-    }
-
-    popup.dataset.placement = fitsBelow ? "below" : "above";
-    popup.style.top = `${fitsBelow ? rect.bottom + gap : Math.max(gap, rect.top - gap - popup.offsetHeight)}px`;
-    popup.style.left = `${Math.min(Math.max(gap, rect.left), window.innerWidth - popup.offsetWidth - gap)}px`;
+        this.#list.style.setProperty(
+          "--gw-option-list-height",
+          `${Math.max(room - rest, 96)}px`,
+        );
+      },
+    });
   };
 
   readonly #onOutside = (event: PointerEvent) => {
