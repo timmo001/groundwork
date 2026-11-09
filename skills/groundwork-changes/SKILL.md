@@ -23,6 +23,21 @@ Make the change, check, commit and release it there as its `AGENTS.md` says, the
 
 The same holds outside the web components: tokens and themes take overrides and an app's own documents, docs-kit takes options with defaults, and TUI and panel pieces take props rather than fixed values.
 
-## 3. Check the change
+## 3. Build from parts
 
-Before committing, read the diff for anything an app could no longer change: a value moved inside a shadow root, an inner control given a fixed size, a new piece without a part, a word without a label, a slot removed. Fix it with a hook rather than leaving it for the app to work around.
+- A composite renders the base `gw-` elements, not its own copy of one: a search field is a `gw-input`, a count a `gw-chip`, an inner button a `gw-button`. Expose each as a part, and size it through a `--gw-<element>-…` property that sets the base element's own scale.
+- Import the element's type in its module (`import type {} from "./gw-x.js"`) and the element itself in its `define/` entry, so each piece is defined only when imported. `mise run gen` fails when a `define/` entry misses one, and writes the Built from table on the Components page.
+- Keep each base element usable on its own. When a composite needs a piece no base element covers, make it a base element first if another composite or app could use it.
+
+## 4. Keep it accessible
+
+- Build on the native control that does the job, so keyboard use, focus and forms come from the browser. A custom list or menu moves with the arrow keys, Home, End and Page Up or Down, picks with Enter and closes with Esc.
+- Every focusable piece gets a `:focus-visible` ring from `--gw-color-focus`, `--gw-focus-width` and `--gw-focus-offset`.
+- Every control has an accessible name, kept when its text or label hides. An icon-only button gets one from a `*-label` attribute.
+- Anything whose state shows only as a fill or tint gets a `@media (forced-colors: active)` rule with system colors (`Highlight`, `HighlightText`, `CanvasText`, `GrayText`), and `forced-color-adjust: none` where the fill itself is the state.
+- Motion goes through the `--gw-motion-*` tokens, so reduced motion stops it.
+- Document each of these on the element's docs page, with an example, and run the docs' axe pass (`bun run test:visual` in `docs/`).
+
+## 5. Check the change
+
+Before committing, read the diff for anything an app could no longer change: a value moved inside a shadow root, an inner control given a fixed size, a new piece without a part, a word without a label, a slot removed, a composite drawing its own copy of a base element, or a state lost in forced colors. Fix it with a hook rather than leaving it for the app to work around. Every new attribute, part and property goes in the element's docstring, so the docs' API reference lists it, and on its docs page with an example.
