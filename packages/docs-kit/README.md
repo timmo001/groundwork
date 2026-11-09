@@ -213,6 +213,10 @@ the site's Blume `logo` config, at its own aspect ratio;
   --home-banner-height: 30rem;
   --home-banner-background: #e4e4e7;
   --home-banner-background-dark: #09090b;
+  --home-banner-title-color: #18181b;
+  --home-banner-title-color-dark: #ffffff;
+  --home-banner-description-color: #3f3f46;
+  --home-banner-description-color-dark: #d4d4d8;
 }
 ```
 

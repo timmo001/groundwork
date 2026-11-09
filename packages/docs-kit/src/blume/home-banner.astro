@@ -40,7 +40,8 @@ const darkSize = data.config.logo?.dimensions?.dark ?? lightSize;
 
 <style>
   /* Set --home-banner-logo-size, --home-banner-height,
-     --home-banner-background or --home-banner-background-dark in the site's
+     --home-banner-background, --home-banner-title-color,
+     --home-banner-description-color, or their -dark versions, in the site's
      theme.css to resize or recolor the banner. */
   .home-banner {
     position: relative;
@@ -85,11 +86,11 @@ const darkSize = data.config.logo?.dimensions?.dark ?? lightSize;
     font-weight: 600;
     line-height: 2.5rem;
     letter-spacing: -0.025em;
-    color: #18181b;
+    color: var(--home-banner-title-color, #18181b);
   }
 
   :global([data-theme="dark"]) .home-banner-title {
-    color: #ffffff;
+    color: var(--home-banner-title-color-dark, #ffffff);
   }
 
   .home-banner-description {
@@ -97,11 +98,11 @@ const darkSize = data.config.logo?.dimensions?.dark ?? lightSize;
     margin-top: 0.75rem;
     font-size: 1.125rem;
     line-height: 1.75rem;
-    color: #3f3f46;
+    color: var(--home-banner-description-color, #3f3f46);
   }
 
   :global([data-theme="dark"]) .home-banner-description {
-    color: #d4d4d8;
+    color: var(--home-banner-description-color-dark, #d4d4d8);
   }
 
   /* The home page's own title is the banner. The layout still prints the
