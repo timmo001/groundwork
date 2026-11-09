@@ -93,10 +93,6 @@ export class GridView {
     this.grid.focus();
   }
 
-  focus(): void {
-    this.grid.focus();
-  }
-
   blur(): void {
     this.grid.blur();
   }

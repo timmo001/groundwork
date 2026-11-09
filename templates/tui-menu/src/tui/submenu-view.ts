@@ -9,11 +9,11 @@ import {
   BoxRenderable,
   TextRenderable,
   t,
-  fg,
 } from "@opentui/core";
 import type { MenuItem } from "../types.js";
 import {
   formatBreadcrumb,
+  formatFilterBar,
   formatHelpBar,
   GLOBAL_HELP,
   MenuList,
@@ -85,7 +85,6 @@ export class SubmenuView {
       padding: 1,
     });
 
-    // Title (dynamic based on submenu depth)
     this.titleText = new TextRenderable(renderer, {
       id: "submenu-title",
       content: t``,
@@ -93,19 +92,18 @@ export class SubmenuView {
     });
     this.root.add(this.titleText);
 
-    // Filter bar: always visible to avoid layout shifts
+    // Always shown, even empty, so the list doesn't jump as a filter starts
     this.filterBar = new TextRenderable(renderer, {
       id: "submenu-filter",
-      content: t`${fg(theme.fgSubtle)("/")}`,
+      content: formatFilterBar(theme, ""),
       marginBottom: 1,
     });
     this.root.add(this.filterBar);
 
-    // Menu list: created fresh on each loadMenu call
+    // Replaced with a new list each time a menu loads
     this.menuList = this.createMenuList([]);
     this.root.add(this.menuList);
 
-    // Help bar
     this.helpBar = new TextRenderable(renderer, {
       id: "submenu-help",
       content: formatHelpBar(theme, HELP),
@@ -115,7 +113,6 @@ export class SubmenuView {
 
     renderer.root.add(this.root);
 
-    // Re-wrap help bar on terminal resize
     renderer.on("resize", () => {
       this.helpBar.content = formatHelpBar(this.theme, HELP);
     });
@@ -152,30 +149,18 @@ export class SubmenuView {
     );
   }
 
-  /** Give keyboard focus to the menu list */
-  focus(): void {
-    this.menuList.focus();
-  }
-
   /** Reset filter state and give keyboard focus to the menu list */
   resetAndFocus(): void {
     this.menuList.resetFilter();
     this.menuList.focus();
   }
 
-  /** Remove keyboard focus from the menu list */
-  blur(): void {
-    this.menuList.blur();
-  }
-
   private handleBack(): void {
     const prev = this.menuStack.pop();
 
     if (prev) {
-      // Go up one submenu level
       this.loadMenu(prev);
     } else {
-      // At the top level: go back to the previous view
       this.callbacks.onBack();
     }
   }
@@ -186,17 +171,10 @@ export class SubmenuView {
     if (!items) return;
 
     this.currentMenuId = menuId;
-
-    // Update title
     this.titleText.content = this.formatTitle();
-
-    // Notify parent of title change for terminal tab title
     this.callbacks.onTitleChange?.(this.getTitleParts());
+    this.filterBar.content = formatFilterBar(this.theme, "");
 
-    // Reset filter bar (new menu = no filter)
-    this.filterBar.content = t`${fg(this.theme.fgSubtle)("/")}`;
-
-    // Recreate the menu list with new items
     this.root.remove(this.menuList);
     this.menuList = this.createMenuList(items);
     this.root.insertBefore(this.menuList, this.helpBar);
@@ -218,20 +196,13 @@ export class SubmenuView {
           this.callbacks.onAction(item);
         }
       },
-      onFilterChange: (filter) => this.updateFilterBar(filter),
+      onFilterChange: (filter) => {
+        this.filterBar.content = formatFilterBar(this.theme, filter);
+      },
       onEscape: () => this.handleBack(),
       onBack: () => this.handleBack(),
       wrapSelection: true,
     });
-  }
-
-  /** Update the filter bar display based on current filter text */
-  private updateFilterBar(filter: string): void {
-    if (filter.length === 0) {
-      this.filterBar.content = t`${fg(this.theme.fgSubtle)("/")}`;
-    } else {
-      this.filterBar.content = t`${fg(this.theme.accent)("/")} ${fg(this.theme.fg)(filter)}`;
-    }
   }
 
   private formatTitle() {
@@ -256,10 +227,5 @@ export class SubmenuView {
     }
 
     return parts;
-  }
-
-  /** Remove the submenu view from the render tree */
-  destroy(): void {
-    this.renderer.root.remove(this.root);
   }
 }

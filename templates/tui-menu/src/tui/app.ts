@@ -87,8 +87,6 @@ export class App {
     this.onThemePick = deps.onThemePick;
     this.appTitle = options.title ?? "TUI menu";
 
-    // --- Create views ---
-
     this.mainMenu = new MainMenu(deps.renderer, deps.theme, {
       onSelect: (item) => this.handleMenuAction(item),
       initialSelectedId: options.executeItemId,
@@ -139,22 +137,20 @@ export class App {
       onChoose: (option) => this.pickMode(option),
     });
 
-    // --- Hide all views initially ---
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
     this.controlsView.setVisible(false);
     this.gridView.setVisible(false);
 
-    // --- Determine initial view ---
     const startView = options.initialView ?? "main";
 
-    // Ensure back navigation works when starting on a non-main view
+    // Back from a view opened at startup goes to the main menu
     if (startView !== "main") {
       this.viewStack.push("main");
     }
 
-    // If an item should be executed immediately (subcommand mode):
-    // always suspend, run with visible output, wait for keypress, then exit.
+    // A subcommand runs its item with visible output, waits for a key, then
+    // exits
     if (options.executeItemId) {
       const item = menuItemsById.get(options.executeItemId);
 
@@ -203,13 +199,11 @@ export class App {
     if (prev) {
       this.showView(prev);
     }
-    // If stack is empty we're at main: stay there
   }
 
   private showView(viewId: ViewId): void {
     log(`Switching to view: ${viewId}`);
 
-    // Hide all
     this.mainMenu.setVisible(false);
     this.submenuView.setVisible(false);
     this.controlsView.setVisible(false);
@@ -217,7 +211,7 @@ export class App {
 
     this.activeView = viewId;
 
-    // Show the target and reset filter state (fresh view entry)
+    // A view always opens fresh, with its filter cleared
     switch (viewId) {
       case "main":
         setTerminalTitle(this.appTitle);
@@ -243,7 +237,6 @@ export class App {
   }
 
   private handleMenuAction(item: MenuItem): void {
-    // If the item has variants, ask which one instead of dispatching directly
     if (item.variants && item.variants.length > 0) {
       log(`Opening variants for item ${item.id}`);
       this.variants.show(
@@ -292,10 +285,8 @@ export class App {
 
       case "submenu": {
         if (this.activeView === "submenu") {
-          // Already in submenu view: navigate deeper
           this.submenuView.pushSubmenu(action.menuId);
         } else {
-          // Open the submenu view at the target menu
           this.submenuView.openSubmenu(action.menuId);
           this.pushView("submenu");
         }
@@ -376,41 +367,5 @@ export class App {
     registerUpdates(await this.itemsRunner.list());
 
     if (this.activeView === "submenu") this.submenuView.refresh();
-  }
-
-  /** Restore keyboard focus to the currently active view */
-  private focusActiveView(): void {
-    switch (this.activeView) {
-      case "main":
-        this.mainMenu.focus();
-        break;
-      case "submenu":
-        this.submenuView.focus();
-        break;
-      case "controls":
-        this.controlsView.focus();
-        break;
-      case "grid":
-        this.gridView.focus();
-        break;
-    }
-  }
-
-  /** Remove keyboard focus from the currently active view */
-  private blurActiveView(): void {
-    switch (this.activeView) {
-      case "main":
-        this.mainMenu.blur();
-        break;
-      case "submenu":
-        this.submenuView.blur();
-        break;
-      case "controls":
-        this.controlsView.blur();
-        break;
-      case "grid":
-        this.gridView.blur();
-        break;
-    }
   }
 }

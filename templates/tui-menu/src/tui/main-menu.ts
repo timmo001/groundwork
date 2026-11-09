@@ -38,7 +38,6 @@ export interface MainMenuOptions {
 
 /** Top-level menu rendered as a {@link MenuList} with type-to-filter */
 export class MainMenu {
-  private renderer: CliRenderer;
   private theme: Theme;
   private root: BoxRenderable;
   private menuList: MenuList<MenuItem>;
@@ -47,7 +46,6 @@ export class MainMenu {
   private callbacks: MainMenuOptions;
 
   constructor(renderer: CliRenderer, theme: Theme, options: MainMenuOptions) {
-    this.renderer = renderer;
     this.theme = theme;
     this.callbacks = options;
 
@@ -73,7 +71,7 @@ export class MainMenu {
       },
     });
 
-    // Filter bar: always visible to avoid layout shifts
+    // Always shown, even empty, so the list doesn't jump as a filter starts
     this.filterBar = new TextRenderable(renderer, {
       id: "main-menu-filter",
       content: formatFilterBar(theme, ""),
@@ -81,7 +79,6 @@ export class MainMenu {
     });
     this.root.add(this.filterBar);
 
-    // Menu list: icons on the left, full-height rows
     const initialIdx = options.initialSelectedId
       ? Math.max(
           0,
@@ -89,6 +86,8 @@ export class MainMenu {
         )
       : 0;
 
+    // No onBack, and Esc does nothing: the main menu has nowhere to go back
+    // to, and Ctrl+C quits
     this.menuList = new MenuList(renderer, {
       id: "main-menu-list",
       items: mainMenuItems,
@@ -96,17 +95,15 @@ export class MainMenu {
       onSelect: (item) => {
         this.callbacks.onSelect(item);
       },
-      onFilterChange: (filter) => this.updateFilterBar(filter),
-      onEscape: () => {
-        // Escape on main menu with empty filter: no-op (quit via Ctrl+c)
+      onFilterChange: (filter) => {
+        this.filterBar.content = formatFilterBar(this.theme, filter);
       },
-      // No onBack: Backspace with empty filter is no-op on main menu
+      onEscape: () => {},
       initialSelectedIndex: initialIdx,
       wrapSelection: true,
     });
     this.root.add(this.menuList);
 
-    // Help bar
     this.helpBar = new TextRenderable(renderer, {
       id: "main-menu-help",
       content: formatHelpBar(theme, HELP),
@@ -116,7 +113,6 @@ export class MainMenu {
 
     renderer.root.add(this.root);
 
-    // Re-wrap help bar on terminal resize
     renderer.on("resize", () => {
       this.helpBar.content = formatHelpBar(this.theme, HELP);
     });
@@ -127,29 +123,9 @@ export class MainMenu {
     this.root.visible = visible;
   }
 
-  /** Give keyboard focus to the menu list */
-  focus(): void {
-    this.menuList.focus();
-  }
-
   /** Reset filter state and give keyboard focus to the menu list */
   resetAndFocus(): void {
     this.menuList.resetFilter();
     this.menuList.focus();
-  }
-
-  /** Remove keyboard focus from the menu list */
-  blur(): void {
-    this.menuList.blur();
-  }
-
-  /** Remove the main menu from the render tree */
-  destroy(): void {
-    this.renderer.root.remove(this.root);
-  }
-
-  /** Update the filter bar display based on current filter text */
-  private updateFilterBar(filter: string): void {
-    this.filterBar.content = formatFilterBar(this.theme, filter);
   }
 }

@@ -4,8 +4,6 @@
  * @module
  */
 
-// --- Menu types ---
-
 /** Identifies a top-level TUI view for navigation */
 export type ViewId = "main" | "submenu" | "controls" | "grid";
 

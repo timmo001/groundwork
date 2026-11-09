@@ -9,7 +9,7 @@
 import { NodeServices } from "@effect/platform-node";
 import { createCliRenderer } from "@opentui/core";
 import { Cause, Config, Effect, Exit, Option } from "effect";
-import { parseFlags, printHelp, resolveSubcommand } from "./flags.js";
+import { isKnownTarget, parseFlags, printHelp } from "./flags.js";
 import { menuItemsById, registerUpdates } from "./menu.js";
 import { createCommandRunner } from "./services/command-runner.js";
 import { createItemsRunner } from "./services/items.js";
@@ -26,23 +26,23 @@ if (flags.help) {
 
 /** The item a subcommand asks to run at startup, if any */
 const startupItem = (): string | undefined => {
-  if (flags.subcommand === undefined) return undefined;
+  const { subcommand } = flags;
 
-  const resolved = resolveSubcommand(flags.subcommand);
+  if (subcommand === undefined) return undefined;
 
-  if (resolved === undefined) {
-    console.error(`Unknown subcommand: ${flags.subcommand}`);
+  if (!isKnownTarget(subcommand)) {
+    console.error(`Unknown subcommand: ${subcommand}`);
     printHelp();
     process.exit(1);
   }
 
-  const type = menuItemsById.get(resolved.itemId)?.action.type;
+  const type = menuItemsById.get(subcommand)?.action.type;
 
   return type === "command" ||
     type === "silent" ||
     type === "notify" ||
     type === "submenu"
-    ? resolved.itemId
+    ? subcommand
     : undefined;
 };
 
@@ -123,7 +123,6 @@ const program = Effect.gen(function* () {
       : saved,
   );
 
-  // Keep alive until the process exits
   return yield* Effect.never;
 });
 
