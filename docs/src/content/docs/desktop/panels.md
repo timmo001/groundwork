@@ -30,11 +30,11 @@ A panel's scrolling body, smooth on the wheel and touchpad. `wheelStep` is the p
 
 ## PanelHeader
 
-The panel's title, with an icon, `meta` and `detail`, and a back button before it when `backText` is set. The back button is an icon, so `backText` is its tooltip, shown for the pointer and the keyboard cursor alike. `trailingControl` puts a control of the panel's own at the end.
+The panel's title, with an icon, `meta` and `detail`, and a back button before it when `backText` is set. The back button is an icon, so `backText` is its tooltip, shown for the pointer and the keyboard cursor alike. `trailingControl` puts a control of the panel's own at the end, and `backIcon` sets the back button's glyph.
 
 ## SectionHeading
 
-A heading between groups, with an optional `icon`, a refresh button with `refreshable`, a collapse chevron with `collapsible` and `expanded`, and a `trailingControl`. The refresh button is an icon, named by its tooltip: `refreshLabel` and `refreshingLabel`, which default to "Refresh" and "Refreshing" and the title.
+A heading between groups, with an optional `icon`, a refresh button with `refreshable`, a collapse chevron with `collapsible` and `expanded`, and a `trailingControl`. The refresh button is an icon, named by its tooltip: `refreshLabel` and `refreshingLabel`, which default to "Refresh" and "Refreshing" and the title. `refreshIcon`, `expandedIcon` and `collapsedIcon` set the glyphs, for a panel on another icon font, and `fillAlpha`, `borderAlpha` and `cursorBorderAlpha` the fill and border over `foreground`.
 
 ```qml
 SectionHeading {
