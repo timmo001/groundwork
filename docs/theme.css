@@ -21,3 +21,9 @@
 gw-demo-frame.demo p {
   margin: 0;
 }
+
+/* A demo follows its own theme and mode, not the page's, so the page's prose
+   colors would read against the wrong surface */
+gw-demo-frame.demo :is(a, dt, strong, b, th) {
+  color: inherit;
+}

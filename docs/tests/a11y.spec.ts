@@ -91,6 +91,9 @@ const audit = async (page: Page) => {
 
 for (const route of routes) {
   test.describe(route, () => {
+    // Three reloads and three axe runs on the longest pages
+    test.describe.configure({ timeout: 120_000 });
+
     for (const theme of themes) {
       test(`${theme.name} passes axe`, async ({ page }) => {
         await page.goto(route);

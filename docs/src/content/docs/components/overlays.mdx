@@ -109,7 +109,9 @@ One filter of a list, such as its state or where it came from, to stack in a `gw
 | `search`, `search-from` | `auto` (the default), `always` or `never`, and how many options `auto` adds a search field from (`8`) |
 | `clear-label`, `search-label`, `no-match-label` | The clear button's and search field's names, and what it says when the search matches nothing, for an app in another language |
 
-It fires `change` when the ticked options change and `toggle` when it opens or closes; read `value` and `expanded`. In a sheet, set `--gw-filter-inset` to the sheet's padding, so each filter's dividers run edge to edge. `--gw-filter-options-height` sets how tall the options grow before they scroll (`18rem`), and each option is the `option` part, with `option-count` and `option-description` inside it.
+It fires `change` when the ticked options change and `toggle` when it opens or closes; read `value` and `expanded`. In a sheet, set `--gw-filter-inset` to the sheet's padding, so each filter's dividers run edge to edge. `--gw-filter-options-height` sets how tall the options grow before they scroll (`18rem`), and each option is the `option` part, with `checkbox`, `option-label`, `option-count` and `option-description` inside it.
+
+It's built from base elements: the search field is a [`gw-input`](/components/inputs#input), the `search` part, sized with `--gw-filter-search-scale` (`0.9`), and the count is a `gw-chip`, the `count` part, sized with `--gw-filter-count-scale`. `--gw-filter-header-height` (`2.75rem`), `--gw-filter-clear-size` (`2.25rem`) and `--gw-filter-checkbox-size` (`1.1rem`) size the header, its clear button and each checkbox.
 
 ## Dialog
 
@@ -145,9 +147,16 @@ In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that sho
 | `label`, `placeholder`, `no-match-label` | The menu's name, the search field's placeholder, and what it says when the search matches nothing |
 | `shortcut` | `mod+` and the key that opens it with Cmd or Ctrl: `mod+k` (the default), another such as `mod+p`, or `none` to open it only with `show()` |
 | `move-hint`, `pick-hint`, `close-hint` | The footer's words after ↑ ↓, Enter and Esc, for an app in another language. Default to "to move", "to pick" and "to close" |
+| `pick-key`, `close-key` | The names the footer gives the keys that pick and close, for a keyboard in another language. Default to `Enter` and `Esc` |
 | `sheet-below` | The viewport width in pixels below which it's a bottom sheet (`600`). `0` keeps it a modal |
 
-`--gw-command-menu-height` caps its height (`70vh`) and `--gw-command-menu-sheet-list-height` the list's as a bottom sheet (`60vh`). Each key hint is the `hint` part, with its keys the `key` part.
+`--gw-command-menu-height` caps its height (`70vh`) and `--gw-command-menu-sheet-list-height` the list's as a bottom sheet (`60vh`). The list is a [`gw-option-list`](/components/inputs#option-list), the `list` part, so its row heights and parts work here too. Each key hint is the `hint` part, with its keys the `key` part.
+
+## API reference
+
+Every attribute, slot, part, CSS property and event, from each element's docs.
+
+<ElementApi tags={["gw-popover", "gw-sheet", "gw-filter", "gw-dialog", "gw-command-menu"]} />
 
 ## References
 

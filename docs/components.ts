@@ -9,6 +9,7 @@ import { defineComponents } from "blume";
 import AppTones from "./components/app-tones.astro";
 import Demo from "./components/demo.astro";
 import DemoApp from "./components/demo-app.astro";
+import ElementApi from "./components/element-api.astro";
 import Embed from "./components/embed.astro";
 import FontSpecimen from "./components/font-specimen.astro";
 import HeaderSearch from "./components/header-search.astro";
@@ -32,6 +33,7 @@ export default defineComponents({
     AppTones,
     Demo,
     DemoApp,
+    ElementApi,
     Embed,
     FontSpecimen,
     HomeSample,

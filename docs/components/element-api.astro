@@ -1,0 +1,140 @@
+---
+/**
+ * `<ElementApi>`: each element's whole API (attributes, slots, parts, CSS
+ * properties and events) from the ui package's Custom Elements Manifest, so
+ * the reference on a page always matches the class docstrings.
+ */
+import manifest from "@timmo001/groundwork-ui/custom-elements.json";
+
+interface Props {
+  tags: string[];
+}
+
+interface Entry {
+  name: string;
+  description?: string;
+  type?: { text: string };
+}
+
+interface Declaration {
+  tagName?: string;
+  summary?: string;
+  attributes?: Entry[] | null;
+  slots?: Entry[] | null;
+  cssParts?: Entry[] | null;
+  cssProperties?: Entry[] | null;
+  events?: Entry[] | null;
+}
+
+const declarations: Declaration[] = manifest.modules.flatMap(
+  (module) => (module.declarations ?? []) as Declaration[],
+);
+
+const elements = Astro.props.tags.map((tag) => {
+  const declaration = declarations.find(({ tagName }) => tagName === tag);
+
+  if (declaration === undefined) throw new Error(`Unknown element: ${tag}`);
+
+  return declaration;
+});
+
+/** Splits a docstring line on backticks, so code reads as code. */
+const pieces = (text = "") =>
+  text.split("`").map((piece, index) => ({ piece, code: index % 2 === 1 }));
+
+const sections = (element: Declaration) =>
+  [
+    { title: "Attributes", entries: element.attributes, typed: true },
+    { title: "Slots", entries: element.slots, typed: false },
+    { title: "Parts", entries: element.cssParts, typed: false },
+    { title: "CSS properties", entries: element.cssProperties, typed: false },
+    { title: "Events", entries: element.events, typed: true },
+  ].flatMap(({ title, entries, typed }) =>
+    entries === undefined || entries === null || entries.length === 0
+      ? []
+      : [{ title, entries, typed }],
+  );
+---
+
+{
+  elements.map((element) => (
+    <details class="api">
+      <summary>
+        <code>{element.tagName}</code>
+        <span class="summary">{element.summary}</span>
+      </summary>
+      {sections(element).map(({ title, entries, typed }) => (
+        <>
+          <h4>{title}</h4>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                {typed && <th scope="col">Type</th>}
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {entries.map((entry) => (
+                <tr>
+                  <td>
+                    <code>{entry.name === "" ? "(default)" : entry.name}</code>
+                  </td>
+                  {typed && <td>{entry.type && <code>{entry.type.text}</code>}</td>}
+                  <td>
+                    {pieces(entry.description).map(({ piece, code }) =>
+                      code ? <code>{piece}</code> : piece,
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      ))}
+    </details>
+  ))
+}
+
+<style>
+  .api {
+    margin-block: 0.75rem;
+    border: 1px solid var(--gw-color-border-quiet);
+    border-radius: var(--gw-radius-m);
+  }
+
+  .api > summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+    align-items: baseline;
+    padding: 0.625rem 0.875rem;
+    cursor: pointer;
+  }
+
+  .api[open] > summary {
+    border-block-end: 1px solid var(--gw-color-border-quiet);
+  }
+
+  .summary {
+    font-size: 0.875rem;
+    color: var(--gw-color-text-secondary);
+  }
+
+  .api > h4,
+  .api > table {
+    margin-inline: 0.875rem;
+  }
+
+  .api > table {
+    width: calc(100% - 1.75rem);
+  }
+
+  .api > table td:first-child {
+    white-space: nowrap;
+  }
+
+  .api > table:last-child {
+    margin-block-end: 0.875rem;
+  }
+</style>

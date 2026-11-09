@@ -134,6 +134,8 @@ A slim bar across the top of the app, above its content rather than over it, for
 | `open` | Shows it |
 | `urgent` | Announces it at once, for a lost connection |
 
+`--gw-banner-height` sets the bar's least height (`2.5rem`), and `--gw-tone`, `--gw-tone-fill` and `--gw-tone-border` color it with a tone of the app's own.
+
 <Demo id="banner-anatomy" layout="stack">
   <gw-anatomy scale="1">
     <gw-banner tone="warning" open>
@@ -204,4 +206,10 @@ A toast is the last resort, for something brief that nothing on screen can show,
   <gw-toaster duration="4000"></gw-toaster>
 </Demo>
 
-Put one `gw-toaster` on the page and call `show(message, tone)`. Toasts stack in the bottom corner on the end side, away from the controls people reach for, and in the top layer, so they show above dialogs. Each is announced politely, fades out after `duration` milliseconds and takes no input. Never use one for routine success.
+Put one `gw-toaster` on the page and call `show(message, tone)`. Toasts stack in the bottom corner on the end side, away from the controls people reach for, and in the top layer, so they show above dialogs. Each is announced politely, fades out after `duration` milliseconds and takes no input. Never use one for routine success. `--gw-toaster-width` sets the widest a toast grows (`22rem`), always inside the viewport, and each toast is the `toast` part.
+
+## API reference
+
+Every attribute, slot, part, CSS property and event, from each element's docs.
+
+<ElementApi tags={["gw-skeleton", "gw-skeleton-text", "gw-skeleton-lines", "gw-skeleton-icon", "gw-fade-in", "gw-spinner", "gw-empty-state", "gw-banner", "gw-notification", "gw-notification-center", "gw-toaster"]} />

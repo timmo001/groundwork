@@ -162,6 +162,35 @@ A `disabled` option shows why it can't be picked in its description, and keyboar
 
 A `swatch` on an option draws a dot of that color before its label, such as a tag's or a language's color.
 
+## Option list
+
+<Demo id="option-list" layout="stack">
+  <gw-option-list label="Time zone" search style="--gw-option-list-height: 14rem; max-width: 24rem" value="europe-london" options='[{"value":"europe-london","label":"London","description":"UTC+0","group":"Europe"},{"value":"europe-paris","label":"Paris","description":"UTC+1","group":"Europe"},{"value":"europe-helsinki","label":"Helsinki","description":"UTC+2","group":"Europe"},{"value":"america-new-york","label":"New York","description":"UTC−5","group":"Americas"},{"value":"america-chicago","label":"Chicago","description":"UTC−6","group":"Americas"},{"value":"america-los-angeles","label":"Los Angeles","description":"UTC−8","group":"Americas"},{"value":"asia-tokyo","label":"Tokyo","description":"UTC+9","group":"Asia"}]'></gw-option-list>
+</Demo>
+
+The searchable, windowed list inside the select and the [command menu](/components/overlays#command-menu), on its own for a list that picks in place, such as a side panel of time zones, or inside a popover or panel of an app's own. Type in its search field to filter by label, description, group or `keywords`; move with the arrow keys, Home, End and Page Up or Down; and pick with Enter or a click. It fires `pick` with the option's value and leaves what happens next to the page, so set `value` (or `values` with `multiple`) back once the pick takes. Call `reset()` each time it's shown, to clear the search and select the current option. Only the rows in view are rendered.
+
+| Attribute | What it does |
+| --- | --- |
+| `options` | The options, as for the select |
+| `value` | The selected option, ticked and selected first |
+| `multiple`, `values` | Ticks every value in `values`, as JSON, and announces the list as multi-select |
+| `label` | The list's accessible name |
+| `search` | Shows a search field above the list |
+| `placeholder`, `no-match-label` | The search placeholder and what it says when the search matches nothing, for an app in another language. Default to Search and No matches |
+
+Rows have fixed heights, so the list knows where each sits without measuring. `--gw-option-list-option-height`, `--gw-option-list-described-height` and `--gw-option-list-group-height` set them in pixels, as plain numbers (`40`, `52` and `32`). `--gw-option-list-height` caps the list (`20rem`) and `--gw-option-list-search-height` sets the search row (`2.5rem`). Each option is the `option` part, with `option-icon`, `swatch`, `label`, `description`, `swatches` and `check` inside it. In forced colors the active row takes an outline in the system's highlight color.
+
+```ts
+import "@timmo001/groundwork-ui/define/gw-option-list.ts";
+
+const list = document.querySelector("gw-option-list")!;
+
+list.addEventListener("pick", (event) => {
+  list.value = event.detail.value;
+});
+```
+
 ## Checkbox and switch
 
 <Demo id="checkbox">
@@ -170,7 +199,7 @@ A `swatch` on an option draws a dot of that color before its label, such as a ta
   <gw-switch label="Unavailable" disabled></gw-switch>
 </Demo>
 
-`gw-switch` is the same native checkbox drawn as a switch, with `role="switch"` so it's announced as one. Both take `label`, `name`, `value`, `checked`, `disabled` and `hint`. `label-hidden` keeps the label for assistive technology but hides it, for a control whose name is already beside it, as in a setting row.
+`gw-switch` is the same native checkbox drawn as a switch, with `role="switch"` so it's announced as one. Both take `label`, `name`, `value`, `checked`, `disabled` and `hint`. `label-hidden` keeps the label for assistive technology but hides it, for a control whose name is already beside it, as in a setting row. `--gw-switch-width` and `--gw-switch-height` size the switch (`2.5rem` by `1.5rem`). In forced colors it draws in system colors, with the track highlighted while it's on.
 
 ## Range
 
@@ -196,4 +225,41 @@ A labeled native slider. While it's held, a bubble above the thumb shows the val
   </div>
 </Demo>
 
-A setting's name and description on one side and its control on the other. A wide control drops under the text when there isn't room, and rows after the first get a line above them.
+A setting's name and description on one side and its control on the other. A wide control drops under the text when there isn't room, and rows after the first get a line above them. `--gw-setting-row-text-width` is the width the text asks for before the control wraps under it (`12rem`), and `--gw-row-padding` the padding above and below.
+
+## Restyling the fields
+
+The fields render in light DOM, so they have classes rather than parts, and their rules are in the `groundwork.components` layer with zero specificity. A page's own rule on any of these wins, with no `!important`:
+
+| Class | What it is |
+| --- | --- |
+| `.gw-field-heading` | The row with the label, `optional` and the (i) button |
+| `.gw-optional` | What `optional` adds after the label |
+| `.gw-info` | The (i) button that opens `info` |
+| `input`, `textarea` | The native control, which draws the field's box |
+| `.gw-input-control` | Around an input, its icon and the reveal button |
+| `.gw-reveal` | The button that shows and hides a password |
+| `.gw-hint`, `.gw-error` | The line of help and the error under a field |
+| `.gw-select-trigger`, `.gw-select-value`, `.gw-select-inline-label` | The select's button, its value and an `inline-label` |
+| `.gw-select-popup`, `.gw-select-clear` | The select's list popover and its Clear button |
+| `.gw-range-row`, `.gw-range-control`, `.gw-range-bubble`, `.gw-range-readout` | The slider's row, the slider with its bubble, the bubble while it's held and the `readout` |
+
+```css
+/* Square fields, with the hint in the accent */
+gw-input input,
+gw-select .gw-select-trigger {
+  border-radius: var(--gw-radius-s);
+}
+
+gw-input .gw-hint {
+  color: var(--gw-color-accent);
+}
+```
+
+`--gw-field-scale` sizes a field, around 1 for medium, as `size` does, and `--gw-field-info-size` the (i) button (`1.5rem`).
+
+## API reference
+
+Every attribute, slot, part, CSS property and event, from each element's docs.
+
+<ElementApi tags={["gw-input", "gw-select", "gw-option-list", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />

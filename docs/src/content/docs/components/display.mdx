@@ -82,7 +82,7 @@ An `href` link lives in the card's shadow root, so it isn't in the page's HTML a
 
 A heading that glides its content open and shut, on a native `<details>`, so find-in-page and the keyboard work as usual. `open` reflects its state, and it fires `toggle`. Slot an icon in `icon`, and buttons in `actions` to keep them in the summary row, where pressing them doesn't open or close it.
 
-Give it a `storage-key` to keep whether it's open in this browser once someone opens or shuts it; until then, `open` sets how it starts.
+Give it a `storage-key` to keep whether it's open in this browser once someone opens or shuts it; until then, `open` sets how it starts. `--gw-expansion-summary-height` sets the summary row's least height (`3rem`) and `--gw-expansion-toggle-size` the chevron's circle (`2rem`).
 
 When the content costs something to build, such as a long list or a diff, set `draw` instead of slotting it. It's called with a container the first time the panel opens, a frame later, so the panel opens at once with skeleton lines and the content follows. A new `draw` draws again while it's open, and waits while it's shut. The container sits in the light DOM, so the page's own styles reach what's drawn.
 
@@ -117,7 +117,7 @@ A chip's `icon` takes SVG path data for an icon before its text, and `swatch` ta
   </gw-anatomy>
 </Demo>
 
-A dot on its own needs a `label`, such as "Online"; beside text that says the same, leave it out. `pulse` makes it breathe while something is live.
+A dot on its own needs a `label`, such as "Online"; beside text that says the same, leave it out. `pulse` makes it breathe while something is live. `--gw-dot-size` sizes it (`0.5rem`). In forced colors, which drop its fill, it draws in the text color, so its tone's meaning has to be in its `label` or the text beside it.
 
 ## Badge
 
@@ -163,10 +163,10 @@ It's announced politely as a status, or at once with `urgent` for an error that 
 
 Label and value pairs as a description list. Set `items` to `[{ "label", "value" }]`.
 
-When a value needs markup, such as chips or code, put `<dt>` and `<dd>` pairs inside instead. They join the same grid:
+When a value needs markup, such as chips or code, put `<dt>` and `<dd>` pairs inside instead. They join the same grid. `--gw-facts-label-width` is the labels' least width (`7rem`), so values line up across lists:
 
 <Demo id="facts-slotted" layout="stack">
-  <gw-facts>
+  <gw-facts style="--gw-facts-label-width: 5rem">
     <dt>UUID</dt>
     <dd><code>9ef69bc3-62f8-4d86-952d-5f498bbddf0f</code></dd>
     <dt>Groups</dt>
@@ -190,7 +190,7 @@ A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it tur
   <gw-meter label="Swap" display="-" caption="Not reported"></gw-meter>
 </Demo>
 
-`caption` adds a quiet line under the bar. With `inverted`, lower is worse: at or below `high` it turns warning, and at or below `critical` danger, for a battery. Leave `value` unset (or `NaN` from a property) for an unknown reading, shown as `-` with an empty bar, which screen readers hear as `unknown-label` (Unknown). Set the bar's height with `--gw-meter-height`.
+`caption` adds a quiet line under the bar. With `inverted`, lower is worse: at or below `high` it turns warning, and at or below `critical` danger, for a battery. Leave `value` unset (or `NaN` from a property) for an unknown reading, shown as `-` with an empty bar, which screen readers hear as `unknown-label` (Unknown). Set the bar's height with `--gw-meter-height`. In forced colors the fill takes the system's highlight color.
 
 ## Gauge
 
@@ -201,7 +201,7 @@ A bar for a value in a range, with `min` (0) and `max` (100). Past `high` it tur
   <gw-gauge label="Battery" value="12" inverted warning="25" danger="15"></gw-gauge>
 </Demo>
 
-A reading on a dial. The arc fills to `value` between `min` and `max` and glides when it changes. It turns warning at `warning` (75) and danger at `danger` (90); `inverted` makes lower readings worse, for a battery. `display` replaces the number, `unit` (`%`) sits under it, and `caption` goes under the label. Set its size with `--gw-gauge-size`.
+A reading on a dial. The arc fills to `value` between `min` and `max` and glides when it changes. It turns warning at `warning` (75) and danger at `danger` (90); `inverted` makes lower readings worse, for a battery. `display` replaces the number, `unit` (`%`) sits under it, and `caption` goes under the label. Set its size with `--gw-gauge-size`. In forced colors the arc takes the system's highlight color on a gray track.
 
 ## Table
 
@@ -231,7 +231,9 @@ Grouped by state:
   <gw-table label="Issues" group="state" sort="seen" descending row-key="id" columns='[{"id":"title","header":"Issue","wide":true},{"id":"state","header":"State"},{"id":"host","header":"Host"},{"id":"seen","header":"Seen","numeric":true}]' rows='[{"id":"a","title":"waybar crashed on a monitor hotplug","state":"Regressed","host":"desktop","seen":14},{"id":"b","title":"pipewire lost its sink after suspend","state":"New","host":"laptop","seen":3},{"id":"c","title":"upkeep-worker.service failed","state":"New","host":"desktop","seen":1},{"id":"d","title":"Out of memory in the docs build","state":"Ongoing","host":"server","seen":27},{"id":"e","title":"ghostty crashed opening a tab","state":"Ongoing","host":"desktop","seen":6}]'></gw-table>
 </Demo>
 
-Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort, search or folded groups change; read `sort`, `descending`, `query` and `toggledGroups`, such as to keep them in the URL. To keep them in this browser, give it a `storage-key` instead. Style its pieces through the `toolbar`, `search`, `header`, `sort`, `row`, `cell`, `group` and `none` parts.
+Set `columns` and `rows` as properties in code, and a column can take functions: `value` reads what sorting and search use, `cell` draws the cell as any node, such as a link or a chip, and `groupLabel` names a group from its value. A `toolbar` slot sits beside the search field, for a Filters button that opens a sheet of `gw-filter`s. It fires `change` when the sort, search or folded groups change; read `sort`, `descending`, `query` and `toggledGroups`, such as to keep them in the URL. To keep them in this browser, give it a `storage-key` instead.
+
+The search field is a [`gw-input`](/components/inputs#input), the `search` part, so it looks and behaves as every field does; `--gw-table-search-scale` sizes it (`0.9`), and `--gw-table-search-width` and `--gw-table-search-max-width` set how wide it starts and grows (`14rem` and `24rem`). The group counts are `gw-chip`s, the `group-count` part, sized with `--gw-table-count-scale`. Style the rest through the `toolbar`, `header`, `sort`, `sort-icon`, `row`, `cell`, `group`, `group-toggle`, `group-chevron`, `group-label` and `none` parts, with `--gw-table-header-height` (`2.5rem`) and `--gw-table-sort-icon-size` (`0.875rem`) for the header row.
 
 ```ts
 table.columns = [
@@ -311,7 +313,13 @@ import { javascript } from "@codemirror/lang-javascript";
 code.extensions = [javascript()];
 ```
 
-The toolbar's buttons are the `wrap`, `find` and `copy` parts, and `--gw-code-selection` colors selected text.
+The toolbar's buttons are `gw-button`s, the `wrap`, `find` and `copy` parts, and `--gw-code-selection` colors selected text. `--gw-code-find-height` sets the find panel's field and buttons (`1.875rem`). The view shows a focus ring inside its frame when it has focus.
+
+## API reference
+
+Every attribute, slot, part, CSS property and event, from each element's docs.
+
+<ElementApi tags={["gw-card", "gw-expansion", "gw-chip", "gw-dot", "gw-badge", "gw-alert", "gw-facts", "gw-meter", "gw-gauge", "gw-table", "gw-list", "gw-markdown", "gw-code"]} />
 
 ## References
 
