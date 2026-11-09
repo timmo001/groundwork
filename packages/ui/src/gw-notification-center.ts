@@ -31,12 +31,17 @@ const emptyIcon =
  * @attr {string} empty-text - The line under it. Defaults to `New notifications show up here.`
  *
  * @slot - The `gw-notification` cards.
+ * @slot actions - Buttons of the app's own in the header, before Clear all, such as Mark all read.
+ * @slot empty - What shows once nothing's left, in place of the empty state.
  *
- * @csspart header - The row with the heading and Clear all.
+ * @csspart header - The row with the heading, actions and Clear all.
  * @csspart heading - The heading.
+ * @csspart clear - The Clear all button, a `gw-button`.
  * @csspart list - The list of cards.
+ * @csspart empty - The empty state, a `gw-empty-state`.
  *
  * @cssprop --gw-notification-center-gap - The space between the cards. Defaults to `--gw-space-2`.
+ * @cssprop --gw-notification-center-clear-scale - Scales Clear all, around 1 for medium. Defaults to `0.8`, small.
  *
  * @fires {Event} clear - When Clear all is pressed.
  */
@@ -63,7 +68,12 @@ export class GwNotificationCenter extends GwElement {
         margin-block-end: var(--gw-space-2);
       }
 
+      .clear {
+        --gw-button-scale: var(--gw-notification-center-clear-scale, 0.8);
+      }
+
       h2 {
+        flex: 1;
         margin: 0;
         font-size: var(--gw-font-size-m);
         font-weight: var(--gw-font-weight-strong);
@@ -79,8 +89,9 @@ export class GwNotificationCenter extends GwElement {
         display: none;
       }
 
-      gw-empty-state::part(empty) {
-        padding-block: var(--gw-space-6);
+      /* Through its property, so ::part(empty) can still change it */
+      gw-empty-state {
+        --gw-empty-state-padding: var(--gw-space-6) var(--gw-space-3);
       }
     `,
   ];
@@ -93,7 +104,8 @@ export class GwNotificationCenter extends GwElement {
   readonly #heading = h("h2", { part: "heading" });
 
   readonly #clear = h("gw-button", {
-    size: "small",
+    class: "clear",
+    part: "clear",
     variant: "neutral",
     appearance: "plain",
   });
@@ -106,9 +118,16 @@ export class GwNotificationCenter extends GwElement {
 
   readonly #emptyText = h("p");
 
-  readonly #empty = h("gw-empty-state", { icon: emptyIcon }, this.#emptyText);
+  readonly #empty = h(
+    "gw-empty-state",
+    { icon: emptyIcon, part: "empty" },
+    this.#emptyText,
+  );
 
-  readonly #body = h("div", {}, this.#list, this.#empty);
+  // An app's own empty view replaces the default through the slot
+  readonly #emptySlot = h("slot", { name: "empty" }, this.#empty);
+
+  readonly #body = h("div", {}, this.#list, this.#emptySlot);
 
   #observer: MutationObserver | undefined;
 
@@ -144,7 +163,7 @@ export class GwNotificationCenter extends GwElement {
     const empty = this.querySelector("gw-notification") === null;
 
     this.#list.hidden = empty;
-    this.#empty.hidden = !empty;
+    this.#emptySlot.hidden = !empty;
     this.#clear.hidden = empty;
 
     for (const item of this.querySelectorAll("gw-notification")) {
@@ -159,7 +178,13 @@ export class GwNotificationCenter extends GwElement {
       this.clear();
     });
     root.append(
-      h("header", { part: "header" }, this.#heading, this.#clear),
+      h(
+        "header",
+        { part: "header" },
+        this.#heading,
+        h("slot", { name: "actions" }),
+        this.#clear,
+      ),
       this.#body,
     );
   }

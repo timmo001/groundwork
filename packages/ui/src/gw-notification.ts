@@ -34,8 +34,15 @@ const closeIcon =
  * @slot actions - Up to two buttons.
  *
  * @csspart card - The card.
+ * @csspart icon - The icon.
+ * @csspart body - The heading, text, time and actions.
+ * @csspart heading - The heading.
+ * @csspart time - When it happened.
+ * @csspart actions - The actions row.
+ * @csspart dismiss - The dismiss button, a `gw-button`.
  *
  * @cssprop --gw-tone - The icon's color, for a tone of your own. `tone` sets it.
+ * @cssprop --gw-notification-dismiss-scale - Scales the dismiss button, around 1 for medium. Defaults to `0.6`, xs.
  *
  * @fires {Event} dismiss - When the close button is pressed. Cancel it to keep the card.
  */
@@ -121,6 +128,7 @@ export class GwNotification extends GwElement {
       }
 
       .close {
+        --gw-button-scale: var(--gw-notification-dismiss-scale, 0.6);
         margin: calc(var(--gw-space-1) * -1);
       }
     `,
@@ -133,19 +141,19 @@ export class GwNotification extends GwElement {
   declare unread: boolean;
   declare dismissLabel: string;
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
-  readonly #heading = h("strong");
+  readonly #heading = h("strong", { part: "heading" });
 
-  readonly #time = h("time");
+  readonly #time = h("time", { part: "time" });
 
   readonly #close = h(
     "gw-button",
     {
       class: "close",
+      part: "dismiss",
       variant: "neutral",
       appearance: "plain",
-      size: "xs",
       labels: "hide",
       icon: closeIcon,
     },
@@ -199,11 +207,15 @@ export class GwNotification extends GwElement {
         this.#icon,
         h(
           "div",
-          { class: "body" },
+          { class: "body", part: "body" },
           this.#heading,
           h("slot"),
           this.#time,
-          h("div", { class: "actions" }, h("slot", { name: "actions" })),
+          h(
+            "div",
+            { class: "actions", part: "actions" },
+            h("slot", { name: "actions" }),
+          ),
         ),
         this.#close,
       ),

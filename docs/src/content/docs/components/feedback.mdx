@@ -98,7 +98,7 @@ For an action in progress, never for content loading. It's announced by its `lab
   </gw-empty-state>
 </Demo>
 
-What a list or page shows when it's empty or there's nothing to do. Say so in one line, the same as a CLI does.
+What a list or page shows when it's empty or there's nothing to do. Say so in one line, the same as a CLI does. An `icon` slot takes an illustration of the app's own in place of the icon, and `--gw-empty-state-icon-size` and `--gw-empty-state-padding` size it.
 
 <Demo id="empty-state-anatomy" layout="stack">
   <gw-anatomy scale="1">
@@ -172,6 +172,8 @@ Each `gw-notification` has a heading, a line of text, when it happened and up to
 | `time`    | When it happened, as the app words it  |
 | `unread`  | Marks it as new                        |
 | `dismiss-label` | The close button's name, for an app in another language. Defaults to Dismiss |
+
+The center's header takes buttons of the app's own in its `actions` slot, before Clear all, such as Mark all read, and its `empty` slot replaces the empty state with the app's own. `--gw-notification-dismiss-scale` and `--gw-notification-center-clear-scale` size the dismiss and Clear all buttons, and each piece of a card is a part: `icon`, `heading`, `body`, `time`, `actions` and `dismiss`.
 
 <Demo id="notification-anatomy" layout="stack">
   <gw-anatomy scale="1">

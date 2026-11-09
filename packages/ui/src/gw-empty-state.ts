@@ -18,9 +18,15 @@ import { base, createIcon, setIconPath } from "./styles.js";
  * @attr {string} heading - The heading.
  *
  * @slot - A line of text.
+ * @slot icon - An icon or illustration in place of `icon`.
  * @slot actions - An action, such as adding the first item.
  *
  * @csspart empty - The block.
+ * @csspart icon - The icon `icon` sets.
+ * @csspart heading - The heading.
+ *
+ * @cssprop --gw-empty-state-icon-size - The icon's size. Defaults to `2.5rem`.
+ * @cssprop --gw-empty-state-padding - The space around it. Defaults to `--gw-space-12` above and below, `--gw-space-3` at the sides.
  */
 export class GwEmptyState extends GwElement {
   static override properties = {
@@ -41,10 +47,13 @@ export class GwEmptyState extends GwElement {
         gap: var(--gw-space-1);
         align-items: center;
         justify-content: center;
-        padding: var(--gw-space-12) var(--gw-space-3);
+        padding: var(
+          --gw-empty-state-padding,
+          var(--gw-space-12) var(--gw-space-3)
+        );
         color: var(--gw-color-text-secondary);
         text-align: center;
-        --gw-icon-size: 2.5rem;
+        --gw-icon-size: var(--gw-empty-state-icon-size, 2.5rem);
       }
 
       h2 {
@@ -67,9 +76,9 @@ export class GwEmptyState extends GwElement {
   declare icon: string;
   declare heading: string;
 
-  readonly #icon = createIcon("");
+  readonly #icon = createIcon("", { part: "icon" });
 
-  readonly #heading = h("h2");
+  readonly #heading = h("h2", { part: "heading" });
 
   constructor() {
     super();
@@ -82,7 +91,7 @@ export class GwEmptyState extends GwElement {
       h(
         "div",
         { class: "empty", part: "empty" },
-        this.#icon,
+        h("slot", { name: "icon" }, this.#icon),
         this.#heading,
         h("slot"),
         h("slot", { name: "actions" }),
