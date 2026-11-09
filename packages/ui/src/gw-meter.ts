@@ -31,6 +31,7 @@ import { base, type Tone } from "./styles.js";
  * @attr {string} unknown-label - What screen readers hear with no value, for an app in another language. Defaults to `Unknown`.
  *
  * @csspart top - The row with the label and value.
+ * @csspart label - What it measures.
  * @csspart value - The value as shown.
  * @csspart track - The bar's track.
  * @csspart fill - The filled part of the bar.
@@ -135,7 +136,7 @@ export class GwMeter extends GwElement {
 
   readonly #top = h("div", { class: "top", part: "top" });
 
-  readonly #label = h("span");
+  readonly #label = h("span", { class: "label", part: "label" });
 
   readonly #labelSkeleton = h("gw-skeleton-text", {
     style: "--gw-skeleton-width: 6rem",

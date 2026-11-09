@@ -44,6 +44,7 @@ import { base } from "./styles.js";
  * @csspart description - The line under the heading.
  * @csspart actions - The actions' wrapper.
  * @csspart toggle - The chevron's circle at the end of the summary row.
+ * @csspart chevron - The chevron in it, which turns as the panel opens.
  * @csspart content - The content's wrapper.
  *
  * @cssprop --gw-expansion-background - The surface. Defaults to `--gw-color-surface-raised`.
@@ -267,7 +268,7 @@ export class GwExpansion extends GwElement {
     h(
       "span",
       { class: "toggle", part: "toggle", "aria-hidden": "true" },
-      h("span", { class: "chevron" }),
+      h("span", { class: "chevron", part: "chevron" }),
     ),
   );
 
