@@ -33,8 +33,8 @@ Panel {
       { key: "action:restart", kind: "action", section: "actions", action: "restart", icon: "󰜉", primaryText: "Restart the system", secondaryText: "" },
       { key: "action:apply", kind: "action", section: "items", action: "apply", icon: "󰚰", primaryText: "Apply all pending", secondaryText: "" }
     ]
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i]
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
       result.push({ key: "item:" + item.id, kind: "item", section: "items", value: item, primaryText: item.name, secondaryText: item.description })
     }
     return result
@@ -52,7 +52,7 @@ Panel {
       applyItem(entry.value.id)
       lastAction = "Applied " + entry.value.name
     } else if (entry.action === "apply") {
-      var count = pendingCount
+      const count = pendingCount
       applyItem("")
       lastAction = count > 0 ? "Applied " + count + (count === 1 ? " item" : " items") : "Nothing to apply"
     } else if (entry.action === "restart") {
