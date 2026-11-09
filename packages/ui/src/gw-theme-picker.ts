@@ -102,6 +102,9 @@ const moreIcon =
  * @attr {string} reset-label - The Reset button. Defaults to `Reset`.
  * @attr {string} import-label - The Import button. Defaults to `Import`.
  * @attr {string} import-file-label - Import in the ⋮ menu. Defaults to `Import a theme file`.
+ * @attr {string} other-label - The gallery's heading over themes with no family, after a family. Defaults to `Other`.
+ * @attr {string} search-label - The theme select's search placeholder. Defaults to `Search`.
+ * @attr {string} no-match-label - What the theme select says when its search matches nothing. Defaults to `No matches`.
  * @attr {ModeOption[]} extra-modes - An app's own modes, as JSON: `value`, `label`, `icon` (SVG path data) and an optional `scheme` of `light` or `dark`. List their values in `modes` to offer them.
  * @attr {string} accept - The file types Import takes, as for an input's `accept`. Defaults to `.json,.toml,application/json`.
  *
@@ -139,6 +142,9 @@ export class GwThemePicker extends GwElement {
     resetLabel: { attribute: "reset-label" },
     importLabel: { attribute: "import-label" },
     importFileLabel: { attribute: "import-file-label" },
+    otherLabel: { attribute: "other-label" },
+    searchLabel: { attribute: "search-label" },
+    noMatchLabel: { attribute: "no-match-label" },
   } as const;
 
   static override styles = [
@@ -260,6 +266,9 @@ export class GwThemePicker extends GwElement {
   declare resetLabel: string;
   declare importLabel: string;
   declare importFileLabel: string;
+  declare otherLabel: string;
+  declare searchLabel: string;
+  declare noMatchLabel: string;
 
   readonly #button = h("gw-button", {
     variant: "neutral",
@@ -332,6 +341,9 @@ export class GwThemePicker extends GwElement {
     this.resetLabel = "Reset";
     this.importLabel = "Import";
     this.importFileLabel = "Import a theme file";
+    this.otherLabel = "Other";
+    this.searchLabel = "Search";
+    this.noMatchLabel = "No matches";
   }
 
   /** The modes on offer, in the order `modes` gives them, with their names. */
@@ -672,8 +684,11 @@ export class GwThemePicker extends GwElement {
     this.#mode.value = this.mode;
     this.#theme.options = Array.isArray(this.themes) ? this.themes : [];
     this.#theme.value = this.theme;
+    this.#theme.searchLabel = this.searchLabel;
+    this.#theme.noMatchLabel = this.noMatchLabel;
     this.#theme.hidden = this.gallery || this.#theme.options.length < 2;
     this.#gallery.hidden = !this.gallery;
+    this.#gallery.otherLabel = this.otherLabel;
     this.#gallery.themes = Array.isArray(this.themes) ? this.themes : [];
     this.#gallery.theme = this.theme;
     // Auto leaves it to follow the page, or the themed container around it

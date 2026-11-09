@@ -661,6 +661,10 @@
                   "type": {
                     "text": "string"
                   }
+                },
+                {
+                  "name": "infoLabel",
+                  "default": "\"\""
                 }
               ]
             }
@@ -1613,6 +1617,10 @@
             {
               "description": "The nav links' container, the menu panel on narrow screens.",
               "name": "nav"
+            },
+            {
+              "description": "The button that opens the nav menu on narrow screens.",
+              "name": "menu"
             },
             {
               "description": "The actions' container.",
@@ -7174,7 +7182,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet on phones. Picking one\ncloses the menu and fires `pick` with its value. Esc or a click outside\ncloses it. It won't open over another dialog, so only one overlay shows at\na time. Set `shortcut=\"none\"` to open it only with `show()`.",
+          "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet below `sheet-below`,\n600px wide by default. Picking one closes the menu and fires `pick` with\nits value. Esc or a click outside closes it. It won't open over another\ndialog, so only one overlay shows at a time. Set `shortcut=\"none\"` to open\nit only with `show()`.",
           "name": "GwCommandMenu",
           "cssProperties": [
             {
@@ -7186,8 +7194,16 @@
               "name": "--gw-command-menu-width"
             },
             {
+              "description": "The tallest it grows. Defaults to `70vh`.",
+              "name": "--gw-command-menu-height"
+            },
+            {
               "description": "The tallest the list grows. Defaults to `min(24rem, 56vh)`.",
               "name": "--gw-command-menu-list-height"
+            },
+            {
+              "description": "The tallest the list grows as a bottom sheet. Defaults to `60vh`.",
+              "name": "--gw-command-menu-sheet-list-height"
             },
             {
               "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
@@ -7222,6 +7238,14 @@
             {
               "description": "The row of key hints.",
               "name": "footer"
+            },
+            {
+              "description": "Each key hint.",
+              "name": "hint"
+            },
+            {
+              "description": "Each key in a hint.",
+              "name": "key"
             }
           ],
           "members": [
@@ -7232,7 +7256,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ options: { type: \"json\" }, value: {}, label: {}, placeholder: {}, shortcut: {}, open: { type: \"boolean\", reflect: true }, }",
+              "default": "{ options: { type: \"json\" }, value: {}, label: {}, placeholder: {}, noMatchLabel: { attribute: \"no-match-label\" }, shortcut: {}, moveHint: { attribute: \"move-hint\" }, pickHint: { attribute: \"pick-hint\" }, closeHint: { attribute: \"close-hint\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, open: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -7245,7 +7269,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` dialog { top: var(--gw-command-menu-top, 12vh); width: min( var(--gw-command-menu-width, 36rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: 70vh; padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-command-menu-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-command-menu-border-color, var(--gw-color-border-loud)); border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel)); box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l)); --gw-option-list-height: var( --gw-command-menu-list-height, min(24rem, 56vh) ); } dialog::backdrop { background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%)); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: 60vh; } dialog[data-placement=\"sheet\"][open] { opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
+              "default": "[ base, css` dialog { top: var(--gw-command-menu-top, 12vh); width: min( var(--gw-command-menu-width, 36rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: var(--gw-command-menu-height, 70vh); padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-command-menu-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-command-menu-border-color, var(--gw-color-border-loud)); border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel)); box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l)); --gw-option-list-height: var( --gw-command-menu-list-height, min(24rem, 56vh) ); } dialog::backdrop { background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%)); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-command-menu-sheet-list-height, 60vh); } dialog[data-placement=\"sheet\"][open] { opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -7286,12 +7310,53 @@
             },
             {
               "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No matches\""
+            },
+            {
+              "kind": "field",
               "name": "shortcut",
               "type": {
                 "text": "string"
               },
-              "description": "`mod+k` (the default) opens it on Cmd+K or Ctrl+K; `none` turns that off.",
+              "description": "`mod+` and a key, such as `mod+k` (the default), opens it on Cmd or Ctrl and that key; `none` turns that off.",
               "default": "\"mod+k\""
+            },
+            {
+              "kind": "field",
+              "name": "moveHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"to move\""
+            },
+            {
+              "kind": "field",
+              "name": "pickHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"to pick\""
+            },
+            {
+              "kind": "field",
+              "name": "closeHint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"to close\""
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which it's a bottom sheet.",
+              "default": "600"
             },
             {
               "kind": "field",
@@ -7304,6 +7369,24 @@
             {
               "kind": "field",
               "name": "#list",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#moveHint",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#pickHint",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#closeHint",
               "privacy": "private",
               "readonly": true
             },
@@ -7696,8 +7779,43 @@
               "type": {
                 "text": "string"
               },
-              "description": "The key that opens it with Cmd or Ctrl, such as `mod+k`, or `none`. Defaults to `mod+k`.",
+              "description": "What it says when the search matches nothing, for an app in another language. Defaults to `No matches`.",
+              "name": "no-match-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "`mod+` and the key that opens it with Cmd or Ctrl, such as `mod+k` or `mod+p`, or `none`. Defaults to `mod+k`.",
               "name": "shortcut"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The footer's hint after the arrow keys. Defaults to `to move`.",
+              "name": "move-hint"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The hint after Enter. Defaults to `to pick`.",
+              "name": "pick-hint"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The hint after Esc. Defaults to `to close`.",
+              "name": "close-hint"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which it's a bottom sheet; `0` keeps it a modal. Defaults to `600`.",
+              "name": "sheet-below"
             },
             {
               "type": {
@@ -9328,6 +9446,10 @@
               "name": "actions"
             },
             {
+              "description": "The chevron's circle at the end of the summary row.",
+              "name": "toggle"
+            },
+            {
               "description": "The content's wrapper.",
               "name": "content"
             }
@@ -10806,6 +10928,10 @@
             {
               "description": "Scales the count chip, around 1 for medium. Defaults to `0.8`, small.",
               "name": "--gw-filter-count-scale"
+            },
+            {
+              "description": "The tallest the options' list grows before it scrolls. Defaults to `18rem`.",
+              "name": "--gw-filter-options-height"
             }
           ],
           "cssParts": [
@@ -10832,6 +10958,22 @@
             {
               "description": "The options' list.",
               "name": "options"
+            },
+            {
+              "description": "Each option's row.",
+              "name": "option"
+            },
+            {
+              "description": "An option's count.",
+              "name": "option-count"
+            },
+            {
+              "description": "An option's line under its label.",
+              "name": "option-description"
+            },
+            {
+              "description": "The no matches line.",
+              "name": "none"
             }
           ],
           "members": [
@@ -10842,7 +10984,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, icon: {}, options: { type: \"json\" }, value: { type: \"json\" }, defaultValue: { type: \"json\", attribute: \"default-value\" }, expanded: { type: \"boolean\", reflect: true }, search: {}, clearLabel: { attribute: \"clear-label\" }, searchLabel: { attribute: \"search-label\" }, }",
+              "default": "{ label: {}, icon: {}, options: { type: \"json\" }, value: { type: \"json\" }, defaultValue: { type: \"json\", attribute: \"default-value\" }, expanded: { type: \"boolean\", reflect: true }, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, clearLabel: { attribute: \"clear-label\" }, searchLabel: { attribute: \"search-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10855,7 +10997,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } /* The heading row sits on the page's own surface, darker than the sheet, so each filter reads as a section */ .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); font-size: var(--gw-font-size-m); background: var(--gw-color-surface-default); border-block-start: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { --gw-chip-scale: var(--gw-filter-count-scale, 0.8); font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; } .shown[hidden] { display: none; } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: 18rem; margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, css` :host { display: flex; flex-direction: column; margin-inline: calc(-1 * var(--gw-filter-inset, 0rem)); } /* The heading row sits on the page's own surface, darker than the sheet, so each filter reads as a section */ .header { display: flex; align-items: center; min-height: 2.75rem; padding-inline: var(--gw-filter-inset, 0rem); font-size: var(--gw-font-size-m); background: var(--gw-color-surface-default); border-block-start: var(--gw-border-width) solid var(--gw-color-border-normal); } :host([expanded]) .header { border-block-end: var(--gw-border-width) solid var(--gw-color-border-normal); } .toggle { display: flex; flex: 1; gap: var(--gw-space-2); align-items: center; min-height: 2.75rem; padding: 0; font: inherit; font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); text-align: start; cursor: pointer; background: none; border: 0; } .toggle:focus-visible, .clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .chevron { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :host([expanded]) .chevron { rotate: 90deg; } .kind { color: var(--gw-color-accent); } .kind[hidden] { display: none; } .shown { --gw-chip-scale: var(--gw-filter-count-scale, 0.8); font-weight: var(--gw-font-weight-regular); font-variant-numeric: tabular-nums; } .shown[hidden] { display: none; } .clear { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); } .clear:hover { background: var(--gw-color-fill-neutral-hovered); } .clear[hidden] { display: none; } .body { display: flex; flex-direction: column; gap: var(--gw-space-2); padding: var(--gw-space-2) var(--gw-filter-inset, 0rem); } .body[hidden] { display: none; } .search { box-sizing: border-box; width: 100%; min-height: 2.25rem; padding: 0 var(--gw-space-3); font: inherit; color: var(--gw-color-text-primary); background: var(--gw-color-surface-lower, transparent); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } .search:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } .search[hidden] { display: none; } ul { max-height: var(--gw-filter-options-height, 18rem); margin: 0; padding: 0; overflow-y: auto; list-style: none; } label { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--gw-space-1) var(--gw-space-2); align-items: center; padding: var(--gw-space-1-5, 0.375rem) var(--gw-space-1); cursor: pointer; border-radius: var(--gw-radius-control); } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { cursor: default; } .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { grid-column: 1 / -1; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .description:empty { display: none; } .count { font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); } input[type=\"checkbox\"] { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--gw-color-accent); } .none { padding: var(--gw-space-2) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10919,6 +11061,14 @@
             },
             {
               "kind": "field",
+              "name": "searchFrom",
+              "type": {
+                "text": "number"
+              },
+              "default": "8"
+            },
+            {
+              "kind": "field",
               "name": "clearLabel",
               "type": {
                 "text": "string"
@@ -10932,6 +11082,14 @@
                 "text": "string"
               },
               "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No matches\""
             },
             {
               "kind": "field",
@@ -11441,8 +11599,15 @@
               "type": {
                 "text": "\"auto\"|\"always\"|\"never\""
               },
-              "description": "Whether the options have a search field; `auto` adds one from 8 options. Defaults to `auto`.",
+              "description": "Whether the options have a search field; `auto` adds one from `search-from` options. Defaults to `auto`.",
               "name": "search"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many options `search=\"auto\"` adds a search field from. Defaults to `8`.",
+              "name": "search-from"
             },
             {
               "type": {
@@ -11457,6 +11622,13 @@
               },
               "description": "The search field's name. Defaults to `Search`.",
               "name": "search-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says when the search matches nothing. Defaults to `No matches`.",
+              "name": "no-match-label"
             }
           ],
           "superclass": {
@@ -12215,7 +12387,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, maxlength: { type: \"number\" }, hint: {}, info: {}, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, size: { reflect: true }, icon: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\", reflect: true }, }",
+              "default": "{ label: {}, name: {}, type: {}, value: {}, placeholder: {}, autocomplete: {}, inputmode: {}, min: {}, max: {}, step: {}, maxlength: { type: \"number\" }, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, error: {}, required: { type: \"boolean\" }, optional: { type: \"boolean\" }, optionalLabel: { attribute: \"optional-label\" }, disabled: { type: \"boolean\" }, multiline: { type: \"boolean\", reflect: true }, rows: { type: \"number\" }, monospace: { type: \"boolean\", reflect: true }, reveal: { type: \"boolean\" }, revealLabel: { attribute: \"reveal-label\" }, size: { reflect: true }, icon: {}, labelHidden: { type: \"boolean\", attribute: \"label-hidden\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -12333,6 +12505,14 @@
             },
             {
               "kind": "field",
+              "name": "infoLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
               "name": "error",
               "type": {
                 "text": "string"
@@ -12355,6 +12535,14 @@
               },
               "description": "Adds \"(optional)\" after the label.",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "optionalLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"(optional)\""
             },
             {
               "kind": "field",
@@ -12399,6 +12587,14 @@
               },
               "description": "On a password field, adds a button to show and hide what's typed.",
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "revealLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
             },
             {
               "kind": "field",
@@ -12942,6 +13138,13 @@
               "type": {
                 "text": "string"
               },
+              "description": "The (i) button's name, for an app in another language. Defaults to `About` and the label.",
+              "name": "info-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
               "description": "An error under the field, which marks it invalid and is announced.",
               "name": "error"
             },
@@ -12958,6 +13161,13 @@
               },
               "description": "Adds \"(optional)\" after the label, for the few optional fields in a form that mostly requires them.",
               "name": "optional"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What `optional` adds after the label, for an app in another language. Defaults to `(optional)`.",
+              "name": "optional-label"
             },
             {
               "type": {
@@ -12993,6 +13203,13 @@
               },
               "description": "On a password field, adds a button at the end to show and hide what's typed.",
               "name": "reveal"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The reveal button's name, for an app in another language; it's a toggle, so one name serves both states. Defaults to `Show` or `Hide` and the label.",
+              "name": "reveal-label"
             },
             {
               "type": {
@@ -13074,6 +13291,10 @@
             {
               "description": "The chip counting a group's items, a `gw-chip`.",
               "name": "group-count"
+            },
+            {
+              "description": "What it says with no items.",
+              "name": "none"
             }
           ],
           "slots": [
@@ -15075,7 +15296,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, high: { type: \"number\" }, critical: { type: \"number\" }, inverted: { type: \"boolean\" }, display: {}, caption: {}, tone: { reflect: true }, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ label: {}, value: { type: \"number\" }, min: { type: \"number\" }, max: { type: \"number\" }, high: { type: \"number\" }, critical: { type: \"number\" }, inverted: { type: \"boolean\" }, display: {}, caption: {}, tone: { reflect: true }, loading: { type: \"boolean\", reflect: true }, unknownLabel: { attribute: \"unknown-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -15181,6 +15402,14 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "unknownLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Unknown\""
             },
             {
               "kind": "field",
@@ -15671,6 +15900,13 @@
               },
               "description": "Pulses the track and shows a skeleton for the value.",
               "name": "loading"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What screen readers hear with no value, for an app in another language. Defaults to `Unknown`.",
+              "name": "unknown-label"
             }
           ],
           "superclass": {
@@ -16862,7 +17098,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ options: { type: \"json\" }, value: {}, multiple: { type: \"boolean\" }, values: { type: \"json\" }, label: {}, search: { type: \"boolean\", reflect: true }, placeholder: {}, }",
+              "default": "{ options: { type: \"json\" }, value: {}, multiple: { type: \"boolean\" }, values: { type: \"json\" }, label: {}, search: { type: \"boolean\", reflect: true }, placeholder: {}, noMatchLabel: { attribute: \"no-match-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -16936,6 +17172,14 @@
                 "text": "string"
               },
               "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No matches\""
             },
             {
               "kind": "field",
@@ -17545,6 +17789,13 @@
               },
               "description": "The search placeholder. Defaults to `Search`.",
               "name": "placeholder"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says when the search matches nothing, for an app in another language. Defaults to `No matches`.",
+              "name": "no-match-label"
             }
           ],
           "superclass": {
@@ -17591,6 +17842,10 @@
           ],
           "cssParts": [
             {
+              "description": "The `start` slot's wrapper.",
+              "name": "start"
+            },
+            {
               "description": "The icon tile.",
               "name": "tile"
             },
@@ -17599,12 +17854,20 @@
               "name": "icon"
             },
             {
+              "description": "The title and the line under it.",
+              "name": "titles"
+            },
+            {
               "description": "The title.",
               "name": "heading"
             },
             {
               "description": "The line under the title.",
               "name": "description"
+            },
+            {
+              "description": "The `actions` slot's wrapper.",
+              "name": "actions"
             }
           ],
           "slots": [
@@ -18095,7 +18358,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. On\nnarrow screens it's a bottom sheet. Opened without a button, such as after\na save, it sits in the middle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a\nclick on one with a `value` closes it with that value, and fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
+          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. Below\n`sheet-below`, 600px wide by default, it's a bottom sheet. Opened without a\nbutton, such as after a save, it sits in the middle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a\nclick on one with a `value` closes it with that value, and fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
           "name": "GwPopover",
           "cssProperties": [
             {
@@ -18199,7 +18462,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, confirm: { type: \"boolean\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
+              "default": "{ heading: {}, confirm: { type: \"boolean\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -18233,6 +18496,15 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which it's a bottom sheet.",
+              "default": "600"
             },
             {
               "kind": "field",
@@ -18729,6 +19001,13 @@
               },
               "description": "Makes it an `alertdialog`, for a question that needs an answer.",
               "name": "confirm"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which it's a bottom sheet; `0` keeps it by its button. Defaults to `600`.",
+              "name": "sheet-below"
             },
             {
               "type": {
@@ -20387,7 +20666,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below 600px wide the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
+          "description": "A labeled select whose list opens under it, after Home Assistant's\npickers. Long lists get a search field, focused as the list opens, and\nonly the options in view are rendered. Move with the arrow keys and pick\nwith Enter. Below `sheet-below`, 600px wide by default, the list is a\nbottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
           "name": "GwSelect",
           "cssProperties": [
             {
@@ -20419,7 +20698,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, placeholder: {}, search: {}, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, clearLabel: { attribute: \"clear-label\" }, }",
+              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, clearLabel: { attribute: \"clear-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -20484,6 +20763,14 @@
             },
             {
               "kind": "field",
+              "name": "infoLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
               "name": "placeholder",
               "type": {
                 "text": "string"
@@ -20496,8 +20783,41 @@
               "type": {
                 "text": "\"auto\" | \"always\" | \"never\""
               },
-              "description": "`auto` shows a search field from seven options; `always` or `never` overrides that.",
+              "description": "`auto` shows a search field from `searchFrom` options; `always` or `never` overrides that.",
               "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "searchFrom",
+              "type": {
+                "text": "number"
+              },
+              "default": "7"
+            },
+            {
+              "kind": "field",
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No matches\""
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the list is a bottom sheet.",
+              "default": "600"
             },
             {
               "kind": "field",
@@ -21085,6 +21405,13 @@
               "type": {
                 "text": "string"
               },
+              "description": "The (i) button's name, for an app in another language. Defaults to `About` and the label.",
+              "name": "info-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
               "description": "What the trigger shows with nothing chosen. Defaults to `Choose`.",
               "name": "placeholder"
             },
@@ -21092,8 +21419,36 @@
               "type": {
                 "text": "\"auto\"|\"always\"|\"never\""
               },
-              "description": "Whether the list has a search field; `auto` adds one from 7 options. Defaults to `auto`.",
+              "description": "Whether the list has a search field; `auto` adds one from `search-from` options. Defaults to `auto`.",
               "name": "search"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many options `search=\"auto\"` adds a search field from. Defaults to `7`.",
+              "name": "search-from"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The search field's placeholder, for an app in another language. Defaults to `Search`.",
+              "name": "search-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the list says when the search matches nothing. Defaults to `No matches`.",
+              "name": "no-match-label"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the list is a bottom sheet; `0` keeps it under the field. Defaults to `600`.",
+              "name": "sheet-below"
             },
             {
               "type": {
@@ -21710,7 +22065,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes from the start edge, full height, and from the\nbottom on narrow screens.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. Open\nit with `show()`, or `toggle()` from the button that opens it. Its content\nscrolls under a header with the heading and an `actions` slot, such as a\nClear button.",
+          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes from the start edge, full height, and from the\nbottom below `bottom-below`, 40rem wide by default.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. Open\nit with `show()`, or `toggle()` from the button that opens it. Its content\nscrolls under a header with the heading and an `actions` slot, such as a\nClear button.",
           "name": "GwSheet",
           "cssProperties": [
             {
@@ -21786,7 +22141,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, side: { reflect: true }, closeLabel: { attribute: \"close-label\" }, }",
+              "default": "{ heading: {}, side: { reflect: true }, bottomBelow: { attribute: \"bottom-below\" }, closeLabel: { attribute: \"close-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21823,6 +22178,15 @@
             },
             {
               "kind": "field",
+              "name": "bottomBelow",
+              "type": {
+                "text": "string"
+              },
+              "description": "The viewport width, as a CSS length, below which `side=\"auto\"` slides up from the bottom.",
+              "default": "\"40rem\""
+            },
+            {
+              "kind": "field",
               "name": "closeLabel",
               "type": {
                 "text": "string"
@@ -21854,8 +22218,7 @@
             {
               "kind": "field",
               "name": "#narrow",
-              "privacy": "private",
-              "readonly": true
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -21931,7 +22294,7 @@
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "_changed",
+                  "name": "changed",
                   "type": {
                     "text": "ReadonlySet<string>"
                   }
@@ -22252,8 +22615,15 @@
               "type": {
                 "text": "\"auto\"|\"start\"|\"end\"|\"bottom\""
               },
-              "description": "The edge it slides in from. `auto` is the start edge, or the bottom on narrow screens. Defaults to `auto`.",
+              "description": "The edge it slides in from. `auto` is the start edge, or the bottom below `bottom-below`. Defaults to `auto`.",
               "name": "side"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The viewport width, as a CSS length, below which `side=\"auto\"` slides up from the bottom. Defaults to `40rem`.",
+              "name": "bottom-below"
             },
             {
               "type": {
@@ -24310,12 +24680,32 @@
           ],
           "cssParts": [
             {
+              "description": "The row with the search field and the `toolbar` slot.",
+              "name": "toolbar"
+            },
+            {
+              "description": "The search field's box, with its icon.",
+              "name": "search"
+            },
+            {
               "description": "The table.",
               "name": "table"
             },
             {
+              "description": "Each column's heading cell.",
+              "name": "header"
+            },
+            {
+              "description": "Each sortable column's heading button.",
+              "name": "sort"
+            },
+            {
               "description": "Each row.",
               "name": "row"
+            },
+            {
+              "description": "Each cell.",
+              "name": "cell"
             },
             {
               "description": "Each group's heading row.",
@@ -24324,6 +24714,10 @@
             {
               "description": "The chip counting a group's rows, a `gw-chip`.",
               "name": "group-count"
+            },
+            {
+              "description": "What it says with no rows, or none matching the search.",
+              "name": "none"
             }
           ],
           "slots": [
@@ -24340,7 +24734,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, search: {}, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
+              "default": "{ label: {}, sort: { reflect: true }, descending: { type: \"boolean\", reflect: true }, query: {}, group: { reflect: true }, groupsCollapsed: { type: \"boolean\", attribute: \"groups-collapsed\" }, toggledGroups: { type: \"json\", attribute: \"toggled-groups\" }, contained: { type: \"boolean\", reflect: true }, storageKey: { attribute: \"storage-key\" }, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, rowKey: { attribute: \"row-key\" }, emptyLabel: { attribute: \"empty-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, columns: { type: \"json\" }, rows: { type: \"json\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24438,6 +24832,14 @@
                 "text": "\"auto\" | \"always\" | \"never\""
               },
               "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "searchFrom",
+              "type": {
+                "text": "number"
+              },
+              "default": "8"
             },
             {
               "kind": "field",
@@ -25234,8 +25636,15 @@
               "type": {
                 "text": "\"auto\"|\"always\"|\"never\""
               },
-              "description": "Whether it has a search field; `auto` adds one from 8 rows. Defaults to `auto`.",
+              "description": "Whether it has a search field; `auto` adds one from `search-from` rows. Defaults to `auto`.",
               "name": "search"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How many rows `search=\"auto\"` adds a search field from. Defaults to `8`.",
+              "name": "search-from"
             },
             {
               "type": {
@@ -25296,7 +25705,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Picks a theme from a grid of cards, each a small picture of an app in that\ntheme's colors: a rail, a panel and the status tones. For a settings page,\nor inside `gw-theme-picker` with `gallery`.\n\nThemes with a `group` sit together under its name, so a family's light and\ndark variants line up. Themes with none gather where the first of them\ncomes: with no heading when that's first, and under \"Other\" after a family. Previews draw in\n`mode`, or the mode of the page or themed container it sits in, from the\ntheme CSS already on the page, including a custom theme `pageTheme`\nimported. Call `refresh()` after that CSS changes.\n\nIt's a `<fieldset>` of native radio buttons, so arrow keys move the choice.\nIt fires `theme`.",
+          "description": "Picks a theme from a grid of cards, each a small picture of an app in that\ntheme's colors: a rail, a panel and the status tones. For a settings page,\nor inside `gw-theme-picker` with `gallery`.\n\nThemes with a `group` sit together under its name, so a family's light and\ndark variants line up. Themes with none gather where the first of them\ncomes: with no heading when that's first, and under `other-label` after a\nfamily. Previews draw in `mode`, or the mode of the page or themed\ncontainer it sits in, from the theme CSS already on the page, including a\ncustom theme `pageTheme` imported. Call `refresh()` after that CSS changes.\n\nIt's a `<fieldset>` of native radio buttons, so arrow keys move the choice.\nIt fires `theme`.",
           "name": "GwThemeGallery",
           "cssProperties": [
             {
@@ -25330,7 +25739,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, theme: { reflect: true }, themes: { type: \"json\" }, mode: { reflect: true }, }",
+              "default": "{ label: {}, theme: { reflect: true }, themes: { type: \"json\" }, mode: { reflect: true }, otherLabel: { attribute: \"other-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -25380,6 +25789,14 @@
                 "text": "string"
               },
               "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "otherLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Other\""
             },
             {
               "kind": "field",
@@ -25813,6 +26230,13 @@
               },
               "description": "The mode the previews show. Defaults to the mode it sits in.",
               "name": "mode"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The heading over themes with no group after a family, for an app in another language. Defaults to `Other`.",
+              "name": "other-label"
             }
           ],
           "superclass": {
@@ -25879,7 +26303,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, extraModes: { attribute: \"extra-modes\", type: \"json\" }, accept: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, noReset: { attribute: \"no-reset\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, }",
+              "default": "{ mode: { reflect: true }, theme: { reflect: true }, themes: { type: \"json\" }, gallery: { type: \"boolean\", reflect: true }, status: {}, label: {}, layout: { reflect: true }, modes: {}, extraModes: { attribute: \"extra-modes\", type: \"json\" }, accept: {}, scheme: { reflect: true }, noImport: { attribute: \"no-import\", type: \"boolean\", reflect: true }, noReset: { attribute: \"no-reset\", type: \"boolean\", reflect: true }, modeLabel: { attribute: \"mode-label\" }, modeLabels: { attribute: \"mode-labels\", type: \"json\" }, unavailableHint: { attribute: \"unavailable-hint\" }, resetLabel: { attribute: \"reset-label\" }, importLabel: { attribute: \"import-label\" }, importFileLabel: { attribute: \"import-file-label\" }, otherLabel: { attribute: \"other-label\" }, searchLabel: { attribute: \"search-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -26058,6 +26482,30 @@
                 "text": "string"
               },
               "default": "\"Import a theme file\""
+            },
+            {
+              "kind": "field",
+              "name": "otherLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Other\""
+            },
+            {
+              "kind": "field",
+              "name": "searchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Search\""
+            },
+            {
+              "kind": "field",
+              "name": "noMatchLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"No matches\""
             },
             {
               "kind": "field",
@@ -26722,6 +27170,27 @@
               },
               "description": "Import in the ⋮ menu. Defaults to `Import a theme file`.",
               "name": "import-file-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The gallery's heading over themes with no family, after a family. Defaults to `Other`.",
+              "name": "other-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The theme select's search placeholder. Defaults to `Search`.",
+              "name": "search-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the theme select says when its search matches nothing. Defaults to `No matches`.",
+              "name": "no-match-label"
             },
             {
               "type": {

@@ -11,8 +11,6 @@ import { base, createIcon } from "./styles.js";
 // MDI's check
 const checkIcon = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
 
-const other = "Other";
-
 /** The roles a preview is drawn from, by the variable each one sets. */
 const roles = {
   "--p-bg": "--gw-color-surface-lower",
@@ -74,9 +72,9 @@ const closestWith = (start: Element, attribute: string) => {
 /**
  * Themes in groups, in the order they come. Themes with no group gather where
  * the first of them came: with no heading when that's first, and under
- * "Other" after a named group.
+ * `other` after a named group.
  */
-const grouped = (themes: readonly OptionItem[]) => {
+const grouped = (themes: readonly OptionItem[], other: string) => {
   const groups = new Map<string, OptionItem[]>();
 
   for (const theme of themes) {
@@ -98,10 +96,10 @@ const grouped = (themes: readonly OptionItem[]) => {
  *
  * Themes with a `group` sit together under its name, so a family's light and
  * dark variants line up. Themes with none gather where the first of them
- * comes: with no heading when that's first, and under "Other" after a family. Previews draw in
- * `mode`, or the mode of the page or themed container it sits in, from the
- * theme CSS already on the page, including a custom theme `pageTheme`
- * imported. Call `refresh()` after that CSS changes.
+ * comes: with no heading when that's first, and under `other-label` after a
+ * family. Previews draw in `mode`, or the mode of the page or themed
+ * container it sits in, from the theme CSS already on the page, including a
+ * custom theme `pageTheme` imported. Call `refresh()` after that CSS changes.
  *
  * It's a `<fieldset>` of native radio buttons, so arrow keys move the choice.
  * It fires `theme`.
@@ -113,6 +111,7 @@ const grouped = (themes: readonly OptionItem[]) => {
  * @attr {string} theme - The chosen theme, by id.
  * @attr {OptionItem[]} themes - The themes, as JSON: `value` is the id, `label` the name, and `group` the family.
  * @attr {"auto"|"light"|"dark"|"darker"} mode - The mode the previews show. Defaults to the mode it sits in.
+ * @attr {string} other-label - The heading over themes with no group after a family, for an app in another language. Defaults to `Other`.
  *
  * @csspart card - Each theme's card.
  * @csspart preview - The picture of an app in the theme.
@@ -129,6 +128,7 @@ export class GwThemeGallery extends GwElement {
     theme: { reflect: true },
     themes: { type: "json" },
     mode: { reflect: true },
+    otherLabel: { attribute: "other-label" },
   } as const;
 
   static override styles = [
@@ -315,6 +315,7 @@ export class GwThemeGallery extends GwElement {
   declare theme: string;
   declare themes: readonly OptionItem[];
   declare mode: string;
+  declare otherLabel: string;
 
   readonly #legend = h("legend");
 
@@ -345,6 +346,7 @@ export class GwThemeGallery extends GwElement {
     this.theme = "";
     this.themes = [];
     this.mode = "";
+    this.otherLabel = "Other";
   }
 
   /** `mode`, or the mode of the page or themed container around it. */
@@ -445,13 +447,13 @@ export class GwThemeGallery extends GwElement {
   protected override update(changed: ReadonlySet<string>) {
     this.#legend.textContent = this.label;
 
-    if (changed.has("themes")) {
+    if (changed.has("themes") || changed.has("otherLabel")) {
       const themes = Array.isArray(this.themes) ? this.themes : [];
 
       this.#cards = [];
       this.#fieldset.replaceChildren(
         this.#legend,
-        ...grouped(themes).map(([name, members]) =>
+        ...grouped(themes, this.otherLabel).map(([name, members]) =>
           h(
             "div",
             { class: "group" },
