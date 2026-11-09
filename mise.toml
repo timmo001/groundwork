@@ -35,14 +35,22 @@ ANDROID_API = "android-37.2"
 description = "Install dependencies"
 run = "bun install --frozen-lockfile"
 
+[tasks."desktop:prepare"]
+description = "Fetch the desktop template's Electrobun devkit, whose types its lint and type-check read"
+depends = ["install"]
+dir = "templates/desktop-app"
+run = "bunx electrobun prepare"
+
 [tasks.lint]
 description = "Lint every package, template and the docs site with the shared Oxlint rules"
-depends = ["install"]
+# The desktop template's own lint and typecheck run electrobun prepare too;
+# preparing once first keeps the two parallel runs from both downloading it
+depends = ["install", "desktop:prepare"]
 run = "bun run --filter './packages/*' --filter './templates/*' --filter './docs' lint"
 
 [tasks.typecheck]
 description = "Type-check every package"
-depends = ["install"]
+depends = ["install", "desktop:prepare"]
 run = "bun run --filter './packages/*' --filter './templates/*' typecheck"
 
 [tasks.format]
