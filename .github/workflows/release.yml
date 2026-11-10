@@ -38,7 +38,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -50,7 +50,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -65,7 +65,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -81,7 +81,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -96,7 +96,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -111,7 +111,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -128,7 +128,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
@@ -143,7 +143,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: timmo001/workflows/.github/workflows/publish-jsr-package.yml@f39552735dd1e0766144bfd674cd5d11af1676c9 # 20261108.2
+    uses: timmo001/workflows/.github/workflows/publish-jsr-package.yml@ec70016a91999259142a156104978174490a0831 # 20261110.0
     with:
       bun-version: ${{ needs.tools.outputs.bun }}
       package-path: packages/docs-kit
