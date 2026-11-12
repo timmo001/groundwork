@@ -1,6 +1,6 @@
 ---
 name: groundwork-release
-description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui, @timmo001/groundwork-report, @timmo001/groundwork-pwa, @timmo001/groundwork-mobile and @timmo001/docs-kit, for Upkeep to roll out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
+description: Version, check and publish a groundwork release of @timmo001/groundwork-tokens, @timmo001/groundwork-ui, @timmo001/groundwork-tui, @timmo001/groundwork-report, @timmo001/groundwork-pwa, @timmo001/groundwork-mobile, @timmo001/groundwork-desktop and @timmo001/docs-kit, for Upkeep to roll out to consumers. Use when bumping versions, cutting, preparing or publishing a groundwork release, running its pre-release drift checks, checking what a release published on npm and JSR, or debugging the Release workflow.
 license: Apache-2.0
 compatibility: Requires mise, Bun, npm and the GitHub CLI from the groundwork repository root.
 ---
@@ -9,13 +9,14 @@ compatibility: Requires mise, Bun, npm and the GitHub CLI from the groundwork re
 
 One version covers `@timmo001/groundwork-tokens`, `@timmo001/groundwork-ui`,
 `@timmo001/groundwork-tui`, `@timmo001/groundwork-report`,
-`@timmo001/groundwork-pwa`, `@timmo001/groundwork-mobile` and
-`@timmo001/docs-kit`, and the release tag is that version with no `v` prefix.
-Publishing a GitHub release runs `.github/workflows/release.yml`: tokens and ui
-go to npm, then tui and pwa once tokens is there, mobile once pwa is, and
-report and docs-kit once tokens and ui are there, since they pin them;
-docs-kit also goes to JSR. Every package but docs-kit is npm only; JSR rejects
-the global tag-map augmentation in ui and tokens.
+`@timmo001/groundwork-pwa`, `@timmo001/groundwork-mobile`,
+`@timmo001/groundwork-desktop` and `@timmo001/docs-kit`, and the release tag
+is that version with no `v` prefix. Publishing a GitHub release runs
+`.github/workflows/release.yml`: tokens and ui go to npm, then tui and pwa
+once tokens is there, mobile once pwa is, and report, desktop and docs-kit once
+tokens and ui are there, since they pin them; docs-kit also goes to JSR. Every
+package but docs-kit is npm only; JSR rejects the global tag-map augmentation
+in ui and tokens.
 
 A package new to npm needs its first publish set up before the release that
 adds it, with the `npm-jsr-first-publish` skill: the release's npm job can't
@@ -60,6 +61,8 @@ Set the same version in:
   dependency, pinned exactly
 - `packages/mobile/package.json`, and its `@timmo001/groundwork-pwa` and
   `@timmo001/groundwork-tokens` dependencies, pinned exactly
+- `packages/desktop/package.json`, and its `@timmo001/groundwork-tokens` and
+  `@timmo001/groundwork-ui` dependencies, pinned exactly
 - `packages/docs-kit/package.json` and `packages/docs-kit/jsr.json`
 - docs-kit's `@timmo001/groundwork-tokens` and `@timmo001/groundwork-ui`
   dependencies in `packages/docs-kit/package.json`, pinned exactly
@@ -68,7 +71,7 @@ Run `bun install` to refresh `bun.lock`, then `mise run check` again and the
 publish dry runs:
 
 ```sh
-npm pack --dry-run          # in each of packages/tokens, ui, tui, report, pwa, mobile and docs-kit
+npm pack --dry-run          # in each of packages/tokens, ui, tui, report, pwa, mobile, desktop and docs-kit
 bunx jsr@0.14.3 publish --dry-run --allow-dirty   # in packages/docs-kit
 ```
 
@@ -83,7 +86,7 @@ Check the packed file lists: ui must ship `custom-elements.json`.
    since the last tag and follow the `writing-style` skill and earlier releases:
    a line on anything new about the release itself, then one bullet per
    package, prefixed `**tokens**:`, `**ui**:`, `**tui**:`, `**report**:`,
-   `**pwa**:`, `**mobile**:` or `**docs-kit**:`,
+   `**pwa**:`, `**mobile**:`, `**desktop**:` or `**docs-kit**:`,
    saying what changed for someone using it. A package with nothing new gets
    "released at the same version, with no changes". Leave out repository-only
    work such as skills, CI and demos. Save them to the release's scratch
@@ -95,9 +98,9 @@ Check the packed file lists: ui must ship `custom-elements.json`.
    gh release create <version> --target <sha> --notes-file <notes.md>
    ```
 
-4. Watch that release's Release workflow run. All eight publish jobs must pass:
-   npm tokens, npm ui, npm tui, npm report, npm pwa, npm mobile, npm docs-kit
-   and JSR docs-kit.
+4. Watch that release's Release workflow run. All nine publish jobs must pass:
+   npm tokens, npm ui, npm tui, npm report, npm pwa, npm mobile, npm desktop,
+   npm docs-kit and JSR docs-kit.
 
 ## 5. Verify publication
 
@@ -111,12 +114,13 @@ npm view @timmo001/groundwork-tui@<version> version
 npm view @timmo001/groundwork-report@<version> version
 npm view @timmo001/groundwork-pwa@<version> version
 npm view @timmo001/groundwork-mobile@<version> version
+npm view @timmo001/groundwork-desktop@<version> version
 npm view @timmo001/docs-kit@<version> version
 curl -fsS https://jsr.io/@timmo001/docs-kit/meta.json   # lists <version>
 ```
 
 Retry after a short wait while one is missing. Don't report the release done,
-or start the rollout, until all eight serve it.
+or start the rollout, until all nine serve it.
 
 ## 6. Roll out
 
