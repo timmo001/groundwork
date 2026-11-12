@@ -753,7 +753,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select) .gw-info { display: inline-grid; place-items: center; width: var(--gw-field-info-size, 1.5rem); height: var(--gw-field-info-size, 1.5rem); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) .gw-info[hidden] { display: none; } :where(gw-input, gw-select) .gw-info > .icon { width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-select-sheet-height, 60vh); } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-select-backdrop, rgb(0 0 0 / 40%)); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: var(--gw-select-clear-height, 2.5rem); padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :where(input, textarea, .gw-select-trigger):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: var(--gw-checkbox-size, 1.125rem); height: var(--gw-checkbox-size, 1.125rem); margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: var(--gw-switch-width, 2.5rem); height: var(--gw-switch-height, 1.5rem); margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: calc( var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem) ) 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } /* Forced colors drop the thumb's and track's fills, so the switch draws in system colors: a text-colored thumb, and a highlighted track on */ @media (forced-colors: active) { :where(gw-switch) input { forced-color-adjust: none; background: Canvas; border-color: CanvasText; } :where(gw-switch) input::after { background: CanvasText; } :where(gw-switch) input:checked { background: Highlight; border-color: Highlight; } :where(gw-switch) input:checked::after { background: HighlightText; } :where(gw-switch) input:disabled { border-color: GrayText; } :where(gw-switch) input:disabled::after { background: GrayText; } :where(gw-switch) input:focus-visible { outline-color: Highlight; } } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
+          "default": "css` :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select, gw-date-picker) .gw-info { display: inline-grid; place-items: center; width: var(--gw-field-info-size, 1.5rem); height: var(--gw-field-info-size, 1.5rem); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select, gw-date-picker) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select, gw-date-picker) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) .gw-info[hidden] { display: none; } :where(gw-input, gw-select, gw-date-picker) .gw-info > .icon { width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select, gw-date-picker)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select, gw-date-picker)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select, gw-date-picker)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select, gw-date-picker)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-select-sheet-height, 60vh); } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-select-backdrop, rgb(0 0 0 / 40%)); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: var(--gw-select-clear-height, 2.5rem); padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } /* The date picker's trigger reads like the select's: a calendar icon, the day, and a chevron that turns over while the calendar is open */ :where(gw-date-picker) .gw-date-picker-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); font-variant-numeric: tabular-nums; text-align: start; cursor: pointer; } :where(gw-date-picker) .gw-date-picker-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } :where(gw-date-picker[inline-label]) { display: inline-flex; } :where(gw-date-picker[inline-label]) .gw-date-picker-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } :where(gw-date-picker) .gw-date-picker-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-inline-label[hidden] { display: none; } :where(gw-date-picker) .gw-date-picker-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); color: var(--gw-color-text-secondary); fill: currentColor; } :where(gw-date-picker) .gw-date-picker-trigger > .icon:last-child { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-date-picker[open]) .gw-date-picker-trigger > .icon:last-child { rotate: 180deg; } :where(gw-date-picker) .gw-date-picker-trigger > .icon[hidden] { display: none; } /* The calendar opens under the trigger, growing from it */ :where(gw-date-picker) .gw-date-picker-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: var(--gw-space-3); margin: 0; overflow: auto; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 0; scale: 1 0.96; } } /* Shortcuts sit in a wrapping row under the calendar */ :where(gw-date-picker) .gw-date-picker-presets:not([hidden]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); padding-top: var(--gw-space-2); margin-top: var(--gw-space-2); border-top: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :where( input, textarea, .gw-select-trigger, .gw-date-picker-trigger ):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select, gw-date-picker) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: var(--gw-checkbox-size, 1.125rem); height: var(--gw-checkbox-size, 1.125rem); margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: var(--gw-switch-width, 2.5rem); height: var(--gw-switch-height, 1.5rem); margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: calc( var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem) ) 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } /* Forced colors drop the thumb's and track's fills, so the switch draws in system colors: a text-colored thumb, and a highlighted track on */ @media (forced-colors: active) { :where(gw-switch) input { forced-color-adjust: none; background: Canvas; border-color: CanvasText; } :where(gw-switch) input::after { background: CanvasText; } :where(gw-switch) input:checked { background: Highlight; border-color: Highlight; } :where(gw-switch) input:checked::after { background: HighlightText; } :where(gw-switch) input:disabled { border-color: GrayText; } :where(gw-switch) input:disabled::after { background: GrayText; } :where(gw-switch) input:focus-visible { outline-color: Highlight; } } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -4041,6 +4041,877 @@
           "declaration": {
             "name": "GwButton",
             "module": "src/gw-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-calendar.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "toDayString",
+          "parameters": [
+            {
+              "name": "date",
+              "type": {
+                "text": "Date"
+              }
+            }
+          ],
+          "description": "A local date as `YYYY-MM-DD`."
+        },
+        {
+          "kind": "function",
+          "name": "parseDay",
+          "parameters": [
+            {
+              "name": "text",
+              "type": {
+                "text": "string"
+              }
+            }
+          ],
+          "description": "A `YYYY-MM-DD` string as a local date at midnight, or `undefined` when it isn't one."
+        },
+        {
+          "kind": "class",
+          "description": "A month of days, to pick one from, with the month's name above and buttons\nto the months either side. Move with the arrow keys, Home and End to the\nweek's ends, Page Up and Page Down by a month (with Shift by a year), and\npick with Enter, Space or a click. It fires `change` when a day is picked,\nand `month` when the month shown moves.\n\n`marked` days stand out with a dot, such as the days that have recordings,\nand `unmarked` dims or disables the rest. Days before `min` or after `max`\ncan't be picked.",
+          "name": "GwCalendar",
+          "cssProperties": [
+            {
+              "description": "Each day's width and height. Defaults to `2.5rem`, smaller on a phone so seven fit across.",
+              "name": "--gw-calendar-day-size"
+            },
+            {
+              "description": "The marked days' dot color. Defaults to `--gw-color-accent`.",
+              "name": "--gw-calendar-mark"
+            },
+            {
+              "description": "How faded `unmarked=\"dim\"` days are. Defaults to `0.45`.",
+              "name": "--gw-calendar-dim-opacity"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The row with the month's name and buttons.",
+              "name": "header"
+            },
+            {
+              "description": "The month's name.",
+              "name": "title"
+            },
+            {
+              "description": "The previous month button, a `gw-button`.",
+              "name": "previous"
+            },
+            {
+              "description": "The next month button, a `gw-button`.",
+              "name": "next"
+            },
+            {
+              "description": "The table of days.",
+              "name": "grid"
+            },
+            {
+              "description": "Each weekday's heading.",
+              "name": "weekday"
+            },
+            {
+              "description": "Each day's button, also `today`, `selected`, `marked`, `unmarked` and `outside` (in the months either side) where they apply.",
+              "name": "day"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Controls of the app's own in the header, between the month's name and the buttons, such as a Today button.",
+              "name": "header-actions"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ value: {}, month: {}, min: {}, max: {}, marked: { type: \"json\" }, unmarked: { reflect: true }, label: {}, locale: {}, firstDay: { type: \"number\", attribute: \"first-day\" }, previousLabel: { attribute: \"previous-label\" }, nextLabel: { attribute: \"next-label\" }, markedLabel: { attribute: \"marked-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` /* On a narrow phone the days shrink so seven fit across, with room for a popup's padding */ :host { --gw-calendar-cell: var( --gw-calendar-day-size, min(2.5rem, calc((100vw - 3rem) / 7)) ); display: inline-flex; flex-direction: column; gap: var(--gw-space-2); font-size: var(--gw-font-size-s); } .header { display: flex; gap: var(--gw-space-1); align-items: center; } .title { flex: 1; min-width: 0; padding-inline-start: var(--gw-space-2); margin: 0; font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } table { border-spacing: 0; border-collapse: collapse; } th { width: var(--gw-calendar-cell); height: calc(var(--gw-calendar-cell) * 0.75); padding: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); text-align: center; } td { padding: 0; text-align: center; } .day { position: relative; display: inline-grid; place-items: center; width: var(--gw-calendar-cell); height: var(--gw-calendar-cell); padding: 0; font: inherit; font-variant-numeric: tabular-nums; color: var(--gw-color-text-strong); cursor: pointer; background: none; border: var(--gw-border-width) solid transparent; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } .day:hover:not([aria-disabled=\"true\"]) { background: var(--gw-color-fill-neutral-hovered); } .day:focus-visible { outline-offset: calc(var(--gw-focus-width) * -1); } .day[data-outside] { color: var(--gw-color-text-secondary); } .day[data-today] { font-weight: var(--gw-font-weight-strong); border-color: var(--gw-color-border-loud); } .day[data-marked]::after { position: absolute; inset-block-end: calc(var(--gw-calendar-cell) * 0.12); inset-inline-start: 50%; width: 0.3125rem; height: 0.3125rem; content: \"\"; background: var(--gw-calendar-mark, var(--gw-color-accent)); border-radius: 50%; translate: -50% 0; } .day[data-dim] { opacity: var(--gw-calendar-dim-opacity, 0.45); } .day[aria-disabled=\"true\"] { color: var(--gw-color-text-disabled); cursor: not-allowed; } .day[aria-disabled=\"true\"][data-marked]::after { background: var(--gw-color-text-disabled); } .day[data-selected] { color: var(--gw-color-on-accent); background: var(--gw-color-fill-accent-resting); opacity: 1; } .day[data-selected]:hover { background: var(--gw-color-fill-accent-hovered); } .day[data-selected][data-marked]::after { background: currentColor; } /* Forced colors drop the fills, so the picked day takes the system's selection colors and the dot and today's ring draw in text colors */ @media (forced-colors: active) { .day { forced-color-adjust: none; color: CanvasText; background: Canvas; } .day[data-today] { border-color: CanvasText; } .day[data-marked]::after { background: CanvasText; } .day[aria-disabled=\"true\"], .day[data-outside] { color: GrayText; } .day[aria-disabled=\"true\"][data-marked]::after { background: GrayText; } .day[data-selected], .day[data-selected]:hover { color: HighlightText; background: Highlight; } .day[data-selected][data-marked]::after { background: HighlightText; } .day:focus-visible { outline-color: Highlight; } } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "month",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "marked",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "unmarked",
+              "type": {
+                "text": "\"normal\" | \"dim\" | \"disabled\""
+              },
+              "default": "\"normal\""
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Calendar\""
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "firstDay",
+              "type": {
+                "text": "number | undefined"
+              },
+              "description": "The first day of the week, 0 for Sunday; `undefined` for the locale's.",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Previous month\""
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Next month\""
+            },
+            {
+              "kind": "field",
+              "name": "markedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"marked\""
+            },
+            {
+              "kind": "field",
+              "name": "#title",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#previous",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#next",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#head",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#body",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#grid",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#focus",
+              "privacy": "private",
+              "type": {
+                "text": "Date | undefined"
+              },
+              "description": "The day keyboard focus sits on, in the month shown."
+            },
+            {
+              "kind": "field",
+              "name": "#focusButton",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLButtonElement | undefined"
+              },
+              "description": "The day button that takes keyboard focus, the only one in the tab order."
+            },
+            {
+              "kind": "method",
+              "name": "focus",
+              "parameters": [
+                {
+                  "name": "options",
+                  "optional": true,
+                  "type": {
+                    "text": "FocusOptions"
+                  }
+                }
+              ],
+              "description": "Moves keyboard focus to the picked day, or the nearest one that can be picked."
+            },
+            {
+              "kind": "field",
+              "name": "#locale",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#shown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#shownFocus",
+              "privacy": "private",
+              "description": "The focused day if it's in the month shown, else the value's, today's or the month's first."
+            },
+            {
+              "kind": "method",
+              "name": "#clamp",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isMarked",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#isDisabled",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#showMonth",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                },
+                {
+                  "name": "notify",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Shows the month `date` is in, firing `month` when it moved and `notify` is set."
+            },
+            {
+              "kind": "method",
+              "name": "#moveFocus",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#pick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "date",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#dayAt",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "Event"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onKeydown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#rtl",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#render",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "month",
+              "type": {
+                "text": "CustomEvent<{ month: string }>"
+              },
+              "description": "When the month shown moves, with it as `YYYY-MM` in `detail`, also in `month`."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a day is picked, with it in `value`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The picked day, as `YYYY-MM-DD`.",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The month shown, as `YYYY-MM`. Defaults to the value's month, or this month.",
+              "name": "month"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The first day that can be picked, as `YYYY-MM-DD`.",
+              "name": "min"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The last day that can be picked, as `YYYY-MM-DD`.",
+              "name": "max"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "Days that stand out, as a JSON array of `YYYY-MM-DD`.",
+              "name": "marked"
+            },
+            {
+              "type": {
+                "text": "\"normal\"|\"dim\"|\"disabled\""
+              },
+              "description": "How days not in `marked` show once any are: as usual, dimmed, or dimmed and unpickable. Defaults to `normal`.",
+              "name": "unmarked"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The calendar's accessible name. Defaults to `Calendar`.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The language for month and weekday names. Defaults to the page's `lang`, then the browser's.",
+              "name": "locale"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The first day of the week, 0 for Sunday to 6 for Saturday. Defaults to the locale's.",
+              "name": "first-day"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The previous month button's name, for an app in another language. Defaults to `Previous month`.",
+              "name": "previous-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The next month button's name, for an app in another language. Defaults to `Next month`.",
+              "name": "next-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Added to a marked day's name for assistive technology. Defaults to `marked`.",
+              "name": "marked-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-calendar",
+          "customElement": true,
+          "summary": "A month of days to pick one from."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "toDayString",
+          "declaration": {
+            "name": "toDayString",
+            "module": "src/gw-calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "parseDay",
+          "declaration": {
+            "name": "parseDay",
+            "module": "src/gw-calendar.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GwCalendar",
+          "declaration": {
+            "name": "GwCalendar",
+            "module": "src/gw-calendar.ts"
           }
         }
       ]
@@ -7990,6 +8861,1026 @@
           "declaration": {
             "name": "GwCommandMenu",
             "module": "src/gw-command-menu.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-date-picker.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "defaultDatePresets",
+          "type": {
+            "text": "readonly DatePreset[]"
+          },
+          "default": "[ { label: \"Yesterday\", days: -1 }, { label: \"Today\", days: 0 }, { label: \"Tomorrow\", days: 1 }, ]",
+          "description": "The presets `presets=\"default\"` shows: Yesterday, Today and Tomorrow."
+        },
+        {
+          "kind": "function",
+          "name": "presetDay",
+          "parameters": [
+            {
+              "name": "preset",
+              "type": {
+                "text": "DatePreset"
+              }
+            },
+            {
+              "name": "today",
+              "default": "new Date()"
+            }
+          ],
+          "description": "The day a preset picks, as `YYYY-MM-DD`, from `today`."
+        },
+        {
+          "kind": "class",
+          "description": "A labeled field that shows the chosen day, such as \"Wed, 11 Nov 2026\", and\nopens a `gw-calendar` under it to pick another. The calendar takes focus as\nit opens; picking a day or pressing Esc closes it and returns focus to the\nfield. Arrow Down or Up on the field opens it too.\n\nThe value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and\nit fires `change` when it changes. `min` and `max` bound the days that can\nbe picked, `marked` makes days stand out, and `unmarked` dims or disables\nthe rest. It fires `month` as the calendar moves between months, so a\npage can load that month's `marked` days.",
+          "name": "GwDatePicker",
+          "cssProperties": [
+            {
+              "description": "Scales the field, around 1 for medium.",
+              "name": "--gw-field-scale"
+            },
+            {
+              "description": "Scales its height with the theme's density. The theme sets it.",
+              "name": "--gw-control-scale"
+            },
+            {
+              "description": "The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.",
+              "name": "--gw-field-info-size"
+            },
+            {
+              "description": "Each day's width and height in the calendar. Defaults to `2.5rem`.",
+              "name": "--gw-calendar-day-size"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, name: {}, value: {}, min: {}, max: {}, marked: { type: \"json\" }, unmarked: {}, month: {}, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, format: { type: \"json\" }, locale: {}, firstDay: { type: \"number\", attribute: \"first-day\" }, previousLabel: { attribute: \"previous-label\" }, nextLabel: { attribute: \"next-label\" }, markedLabel: { attribute: \"marked-label\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, iconHidden: { type: \"boolean\", attribute: \"icon-hidden\" }, presets: { type: \"boolean\" }, presetOptions: { type: \"json\", attribute: \"preset-options\" }, presetsLabel: { attribute: \"presets-label\" }, size: { reflect: true }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "name",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "min",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "max",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "marked",
+              "type": {
+                "text": "readonly string[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "unmarked",
+              "type": {
+                "text": "\"normal\" | \"dim\" | \"disabled\""
+              },
+              "default": "\"normal\""
+            },
+            {
+              "kind": "field",
+              "name": "month",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "hint",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "info",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "infoLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "placeholder",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Choose a day\""
+            },
+            {
+              "kind": "field",
+              "name": "format",
+              "type": {
+                "text": "Intl.DateTimeFormatOptions"
+              },
+              "description": "How the trigger writes the day, as `Intl.DateTimeFormat` options.",
+              "default": "{ weekday: \"short\", day: \"numeric\", month: \"short\", year: \"numeric\", }"
+            },
+            {
+              "kind": "field",
+              "name": "locale",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "firstDay",
+              "type": {
+                "text": "number | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "previousLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Previous month\""
+            },
+            {
+              "kind": "field",
+              "name": "nextLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Next month\""
+            },
+            {
+              "kind": "field",
+              "name": "markedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"marked\""
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "open",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "labelHidden",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "inlineLabel",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "iconHidden",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "presets",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "presetOptions",
+              "type": {
+                "text": "readonly DatePreset[]"
+              },
+              "description": "The shortcuts `presets` shows, Yesterday, Today and Tomorrow by default.",
+              "default": "[ { label: \"Yesterday\", days: -1 }, { label: \"Today\", days: 0 }, { label: \"Tomorrow\", days: 1 }, ]"
+            },
+            {
+              "kind": "field",
+              "name": "presetsLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Shortcuts\""
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
+            },
+            {
+              "kind": "field",
+              "name": "#id",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#label",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#info",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new FieldInfo(this.#label)"
+            },
+            {
+              "kind": "field",
+              "name": "#icon",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#inline",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#text",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#trigger",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#input",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#hint",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#calendar",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#presets",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#popup",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "show",
+              "description": "Opens the calendar on the chosen day's month, such as from a keyboard shortcut."
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "field",
+              "name": "#position",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onOutside",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onToggle",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#stopListening",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "HTMLElement"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#locale",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#formatted",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "Date"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#pick",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#pickable",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "day",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Whether `day` can be picked: inside `min` and `max`, and not an unpickable unmarked day."
+            },
+            {
+              "kind": "method",
+              "name": "#renderPresets",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "false",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "month",
+              "type": {
+                "text": "CustomEvent<{ month: string }>"
+              },
+              "description": "When the calendar moves to another month, with it as `YYYY-MM` in `detail`, also in `month`."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When a day is picked, with it in `value`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The field's label.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The form field name.",
+              "name": "name"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The chosen day, as `YYYY-MM-DD`.",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The first day that can be picked, as `YYYY-MM-DD`.",
+              "name": "min"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The last day that can be picked, as `YYYY-MM-DD`.",
+              "name": "max"
+            },
+            {
+              "type": {
+                "text": "string[]"
+              },
+              "description": "Days that stand out in the calendar, as a JSON array of `YYYY-MM-DD`.",
+              "name": "marked"
+            },
+            {
+              "type": {
+                "text": "\"normal\"|\"dim\"|\"disabled\""
+              },
+              "description": "How days not in `marked` show once any are: as usual, dimmed, or dimmed and unpickable. Defaults to `normal`.",
+              "name": "unmarked"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The month the calendar shows, as `YYYY-MM`. Follows the value as it changes.",
+              "name": "month"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "One line of help under the field.",
+              "name": "hint"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Longer help, opened from an (i) button by the label.",
+              "name": "info"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The (i) button's name, for an app in another language. Defaults to `About` and the label.",
+              "name": "info-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the trigger shows with no day chosen. Defaults to `Choose a day`.",
+              "name": "placeholder"
+            },
+            {
+              "type": {
+                "text": "object"
+              },
+              "description": "How the trigger writes the day, as JSON `Intl.DateTimeFormat` options. Defaults to the weekday, day, short month and year.",
+              "name": "format"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The language for the day and the calendar's names. Defaults to the page's `lang`, then the browser's.",
+              "name": "locale"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The calendar's first day of the week, 0 for Sunday to 6 for Saturday. Defaults to the locale's.",
+              "name": "first-day"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The calendar's previous month button's name, for an app in another language. Defaults to `Previous month`.",
+              "name": "previous-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The calendar's next month button's name, for an app in another language. Defaults to `Next month`.",
+              "name": "next-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Added to a marked day's name for assistive technology. Defaults to `marked`.",
+              "name": "marked-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disables the field.",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the calendar shows.",
+              "name": "open"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hides the label but keeps it for assistive technology.",
+              "name": "label-hidden"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows the label inside the trigger, before the day, for toolbars and filters.",
+              "name": "inline-label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Hides the calendar icon before the day.",
+              "name": "icon-hidden"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows shortcut buttons under the calendar, such as Today.",
+              "name": "presets"
+            },
+            {
+              "type": {
+                "text": "DatePreset[]"
+              },
+              "description": "The shortcuts, as a JSON array of `{ label, days?, weeks?, months?, value? }`, relative to today (negative for the past) or a fixed `value`. Defaults to Yesterday, Today and Tomorrow. Ones outside `min` and `max`, or on a disabled unmarked day, are disabled.",
+              "name": "preset-options"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The shortcut group's name for assistive technology. Defaults to `Shortcuts`.",
+              "name": "presets-label"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The field's size, 40px tall at medium. Defaults to `medium`.",
+              "name": "size"
+            }
+          ],
+          "superclass": {
+            "name": "LightElement",
+            "module": "/src/fields.js"
+          },
+          "tagName": "gw-date-picker",
+          "customElement": true,
+          "summary": "A field that opens a calendar to pick a day."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defaultDatePresets",
+          "declaration": {
+            "name": "defaultDatePresets",
+            "module": "src/gw-date-picker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "presetDay",
+          "declaration": {
+            "name": "presetDay",
+            "module": "src/gw-date-picker.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GwDatePicker",
+          "declaration": {
+            "name": "GwDatePicker",
+            "module": "src/gw-date-picker.ts"
           }
         }
       ]
@@ -29276,6 +31167,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-calendar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-card.js"
           }
         },
@@ -29309,6 +31208,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-command-menu.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-date-picker.js"
           }
         },
         {
@@ -31924,6 +33831,12 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/define/gw-calendar.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/define/gw-card.ts",
       "declarations": [],
       "exports": []
@@ -31949,6 +33862,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-command-menu.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-date-picker.ts",
       "declarations": [],
       "exports": []
     },

@@ -1,6 +1,7 @@
 /**
  * What the form fields share: the light DOM base and the styles for labels,
- * hints, errors and the select's trigger and list.
+ * hints, errors, the select's trigger and list and the date picker's trigger
+ * and popup.
  *
  * @module
  */
@@ -13,7 +14,7 @@ import { GwElement, css } from "./element.js";
  * whichever document or shadow root they sit in.
  */
 export const fieldStyles = css`
-  :where(gw-input, gw-select, gw-switch, gw-checkbox) {
+  :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) {
     display: flex;
     flex-direction: column;
     gap: var(--gw-space-2);
@@ -21,20 +22,20 @@ export const fieldStyles = css`
     color: var(--gw-color-text-primary);
   }
 
-  :where(gw-input, gw-select) .gw-field-heading {
+  :where(gw-input, gw-select, gw-date-picker) .gw-field-heading {
     display: flex;
     gap: var(--gw-space-1);
     align-items: center;
   }
 
-  :where(gw-input, gw-select) .gw-field-heading > label {
+  :where(gw-input, gw-select, gw-date-picker) .gw-field-heading > label {
     font-size: var(--gw-font-size-s);
     font-weight: var(--gw-font-weight-strong);
     color: var(--gw-color-text-strong);
   }
 
   /* The (i) button by the label that opens a field's longer help */
-  :where(gw-input, gw-select) .gw-info {
+  :where(gw-input, gw-select, gw-date-picker) .gw-info {
     display: inline-grid;
     place-items: center;
     width: var(--gw-field-info-size, 1.5rem);
@@ -50,21 +51,21 @@ export const fieldStyles = css`
       background-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
-  :where(gw-input, gw-select) .gw-info:hover {
+  :where(gw-input, gw-select, gw-date-picker) .gw-info:hover {
     color: var(--gw-color-text-strong);
     background: var(--gw-color-fill-neutral-hovered);
   }
 
-  :where(gw-input, gw-select) .gw-info:focus-visible {
+  :where(gw-input, gw-select, gw-date-picker) .gw-info:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
   }
 
-  :where(gw-input, gw-select) .gw-info[hidden] {
+  :where(gw-input, gw-select, gw-date-picker) .gw-info[hidden] {
     display: none;
   }
 
-  :where(gw-input, gw-select) .gw-info > .icon {
+  :where(gw-input, gw-select, gw-date-picker) .gw-info > .icon {
     width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3);
     height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3);
     fill: currentColor;
@@ -72,23 +73,24 @@ export const fieldStyles = css`
 
   /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and
      the control's height follows the theme's density too */
-  :where(gw-input, gw-select)[size="xs"] {
+  :where(gw-input, gw-select, gw-date-picker)[size="xs"] {
     --gw-field-scale: 0.6;
   }
 
-  :where(gw-input, gw-select)[size="small"] {
+  :where(gw-input, gw-select, gw-date-picker)[size="small"] {
     --gw-field-scale: 0.8;
   }
 
-  :where(gw-input, gw-select)[size="large"] {
+  :where(gw-input, gw-select, gw-date-picker)[size="large"] {
     --gw-field-scale: 1.2;
   }
 
-  :where(gw-input, gw-select)[size="xl"] {
+  :where(gw-input, gw-select, gw-date-picker)[size="xl"] {
     --gw-field-scale: 1.4;
   }
 
-  :where(gw-input, gw-select) :where(input, textarea, .gw-select-trigger) {
+  :where(gw-input, gw-select, gw-date-picker)
+    :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger) {
     --gw-field-size: var(--gw-field-scale, 1);
     --gw-icon-size: calc(
       1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1)
@@ -380,37 +382,159 @@ export const fieldStyles = css`
     display: none;
   }
 
+  /* The date picker's trigger reads like the select's: a calendar icon, the
+     day, and a chevron that turns over while the calendar is open */
+  :where(gw-date-picker) .gw-date-picker-trigger {
+    display: flex;
+    gap: calc(var(--gw-space-2) * var(--gw-field-size));
+    align-items: center;
+    padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size));
+    font-variant-numeric: tabular-nums;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-value {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(gw-date-picker[inline-label]) {
+    display: inline-flex;
+  }
+
+  :where(gw-date-picker[inline-label]) .gw-date-picker-trigger {
+    width: auto;
+    padding-inline: calc(var(--gw-space-4) * var(--gw-field-size))
+      calc(var(--gw-space-3) * var(--gw-field-size));
+    border-radius: var(--gw-radius-pill);
+  }
+
+  :where(gw-date-picker) .gw-date-picker-inline-label {
+    flex: none;
+    color: var(--gw-color-text-secondary);
+  }
+
+  :where(gw-date-picker) .gw-date-picker-inline-label[hidden] {
+    display: none;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-value[data-placeholder] {
+    color: var(--gw-color-text-secondary);
+  }
+
+  :where(gw-date-picker) .gw-date-picker-trigger > .icon {
+    flex: none;
+    width: var(--gw-icon-size, 1.25rem);
+    height: var(--gw-icon-size, 1.25rem);
+    color: var(--gw-color-text-secondary);
+    fill: currentColor;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-trigger > .icon:last-child {
+    transition: rotate var(--gw-motion-normal) var(--gw-motion-easing);
+  }
+
+  :where(gw-date-picker[open]) .gw-date-picker-trigger > .icon:last-child {
+    rotate: 180deg;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-trigger > .icon[hidden] {
+    display: none;
+  }
+
+  /* The calendar opens under the trigger, growing from it */
+  :where(gw-date-picker) .gw-date-picker-popup {
+    position: fixed;
+    inset: unset;
+    box-sizing: border-box;
+    max-width: calc(100vw - 12px);
+    padding: var(--gw-space-3);
+    margin: 0;
+    overflow: auto;
+    color: var(--gw-color-text-primary);
+    background: var(--gw-color-surface-overlay);
+    border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal);
+    border-radius: var(--gw-radius-panel);
+    box-shadow: var(--gw-shadow-l);
+    opacity: 0;
+    scale: 1 0.96;
+    transform-origin: top;
+    transition:
+      opacity var(--gw-motion-fast) var(--gw-motion-easing),
+      scale var(--gw-motion-normal) var(--gw-motion-easing),
+      display var(--gw-motion-normal) allow-discrete,
+      overlay var(--gw-motion-normal) allow-discrete;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-popup[data-placement="above"] {
+    transform-origin: bottom;
+  }
+
+  :where(gw-date-picker) .gw-date-picker-popup:popover-open {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @starting-style {
+    :where(gw-date-picker) .gw-date-picker-popup:popover-open {
+      opacity: 0;
+      scale: 1 0.96;
+    }
+  }
+
+  /* Shortcuts sit in a wrapping row under the calendar */
+  :where(gw-date-picker) .gw-date-picker-presets:not([hidden]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gw-space-1);
+    padding-top: var(--gw-space-2);
+    margin-top: var(--gw-space-2);
+    border-top: max(var(--gw-border-width), 1px) solid
+      var(--gw-color-border-quiet);
+  }
+
   :where(gw-input) .gw-input-control:focus-within > .icon {
     color: var(--gw-color-text-strong);
   }
 
-  :where(gw-input, gw-select)
-    :where(input, textarea, .gw-select-trigger):hover {
+  :where(gw-input, gw-select, gw-date-picker)
+    :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger):hover {
     border-color: var(--gw-color-border-loud);
   }
 
-  :where(gw-input, gw-select, gw-switch, gw-checkbox)
-    :where(input, textarea, .gw-select-trigger):focus-visible {
+  :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox)
+    :where(
+      input,
+      textarea,
+      .gw-select-trigger,
+      .gw-date-picker-trigger
+    ):focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
   }
 
-  :where(gw-input, gw-select) [aria-invalid="true"] {
+  :where(gw-input, gw-select, gw-date-picker) [aria-invalid="true"] {
     border-color: var(--gw-color-border-danger);
   }
 
-  :where(gw-input, gw-select, gw-switch, gw-checkbox) :disabled {
+  :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox)
+    :disabled {
     color: var(--gw-color-text-disabled);
     cursor: not-allowed;
   }
 
-  :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-hint {
+  :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-hint {
     margin: 0;
     font-size: var(--gw-font-size-xs);
     color: var(--gw-color-text-secondary);
   }
 
-  :where(gw-input, gw-select, gw-switch, gw-checkbox) .gw-error {
+  :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox)
+    .gw-error {
     margin: 0;
     font-size: var(--gw-font-size-xs);
     color: var(--gw-color-danger);
@@ -424,7 +548,8 @@ export const fieldStyles = css`
     cursor: pointer;
   }
 
-  :where(gw-input, gw-switch, gw-checkbox, gw-select) .gw-visually-hidden {
+  :where(gw-input, gw-switch, gw-checkbox, gw-select, gw-date-picker)
+    .gw-visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;

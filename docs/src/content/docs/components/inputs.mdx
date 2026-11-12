@@ -162,6 +162,93 @@ A `disabled` option shows why it can't be picked in its description, and keyboar
 
 A `swatch` on an option draws a dot of that color before its label, such as a tag's or a language's color.
 
+## Date picker
+
+<Demo id="date-picker" layout="stack">
+  <gw-date-picker label="Day" name="day" value="2026-11-11" max="2026-11-20" hint="Recordings end on the 20th"></gw-date-picker>
+  <gw-date-picker label="Due" placeholder="No due date"></gw-date-picker>
+</Demo>
+
+A field that shows the chosen day and opens a calendar under it to pick another. The calendar takes focus as it opens; move with the arrow keys, Home and End to the week's ends and Page Up or Down by a month (with Shift by a year), and pick with Enter, Space or a click. Picking or Esc closes it and returns focus to the field, and Arrow Down on the field opens it. The value is a `YYYY-MM-DD` day, carried in a form by a hidden input, and it fires `change` when a day is picked.
+
+| Attribute | What it does |
+| --- | --- |
+| `label`, `name`, `value`, `hint`, `info`, `info-label`, `disabled` | As on an input, with `value` as `YYYY-MM-DD` |
+| `min`, `max` | The first and last days that can be picked, as `YYYY-MM-DD` |
+| `marked`, `unmarked` | Days that stand out with a dot, as a JSON array, and how the rest show once any are: `normal` (the default), `dim`, or `disabled` to dim them and stop them being picked |
+| `month` | The month the calendar shows, as `YYYY-MM`. It follows `value` |
+| `placeholder` | Shown with no day chosen. Defaults to Choose a day |
+| `format` | How the field writes the day, as JSON `Intl.DateTimeFormat` options. Defaults to the weekday, day, short month and year, "Wed, 11 Nov 2026" in British English |
+| `locale`, `first-day` | The language for names, defaulting to the page's `lang`, and the week's first day, `0` for Sunday, defaulting to the locale's |
+| `inline-label`, `label-hidden`, `icon-hidden` | Puts the label inside the field, hides it but keeps it for assistive technology, or hides the calendar icon |
+| `size` | `xs` to `xl`, as on a select |
+| `previous-label`, `next-label`, `marked-label` | The month buttons' names and what a marked day's name adds, for an app in another language. Default to Previous month, Next month and marked |
+| `presets`, `preset-options`, `presets-label` | Shows shortcut buttons under the calendar, which ones as a JSON array, and the group's name. Defaults to Yesterday, Today and Tomorrow, and Shortcuts |
+
+### Shortcuts
+
+`presets` adds buttons under the calendar that pick a day in one click. Set `preset-options` to choose them: each has a `label` and moves from today by `days`, `weeks` or `months`, negative for the past, or picks a fixed `value`. A shortcut whose day is outside `min` and `max`, or on an unmarked day with `unmarked="disabled"`, is disabled.
+
+<Demo id="date-picker-presets">
+  <gw-date-picker label="Day" presets></gw-date-picker>
+  <gw-date-picker label="Due" presets preset-options='[{"label":"Today","days":0},{"label":"In 3 days","days":3},{"label":"Next week","weeks":1},{"label":"Next month","months":1}]'></gw-date-picker>
+  <gw-date-picker label="From" presets preset-options='[{"label":"Today","days":0},{"label":"Last week","weeks":-1},{"label":"Last 30 days","days":-30},{"label":"Last year","months":-12}]'></gw-date-picker>
+</Demo>
+
+### Marked days
+
+When only some days have something on them, such as recordings or bookings, set `marked` to them. Each month's days often come from a server, so listen for `month`, which fires with the new `YYYY-MM` in `detail` as the calendar moves, and set `marked` once they load. It fires when someone moves the month, not when the page sets `month` or `value`. With `unmarked="disabled"`, any day not marked is dimmed and can't be picked; keyboard focus still reaches it, so its date is read.
+
+<Demo id="date-picker-marked">
+  <gw-date-picker label="Day" inline-label value="2026-11-11" max="2026-11-12" unmarked="disabled" marked='["2026-11-02","2026-11-03","2026-11-05","2026-11-09","2026-11-10","2026-11-11","2026-11-12"]'></gw-date-picker>
+  <gw-date-picker label="Day" inline-label value="2026-11-11" unmarked="dim" marked='["2026-11-02","2026-11-05","2026-11-11"]'></gw-date-picker>
+</Demo>
+
+```ts
+import { on } from "@timmo001/groundwork-ui";
+
+const picker = document.querySelector("gw-date-picker")!;
+
+const loadDays = async (month: string) => {
+  const response = await fetch(`/api/days?month=${month}`);
+  const days: { date: string }[] = await response.json();
+
+  picker.marked = days.map((day) => day.date);
+};
+
+on(picker, "month", (event) => loadDays(event.detail.month));
+on(picker, "change", () => {
+  location.hash = picker.value;
+});
+void loadDays(picker.month);
+```
+
+### In a toolbar
+
+With `inline-label` it's a pill that fits its content, the same height as the buttons and selects beside it.
+
+<Demo id="date-picker-toolbar">
+  <gw-row>
+    <gw-button label="Previous day" icon="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" labels="hide" variant="neutral" appearance="outlined">Previous day</gw-button>
+    <gw-date-picker label="Day" inline-label value="2026-11-11"></gw-date-picker>
+    <gw-button label="Next day" icon="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" labels="hide" variant="neutral" appearance="outlined">Next day</gw-button>
+    <gw-select label="Channel" inline-label value="1">
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </gw-select>
+  </gw-row>
+</Demo>
+
+## Calendar
+
+<Demo id="calendar">
+  <gw-calendar label="Day" value="2026-11-11" min="2026-10-15" marked='["2026-11-03","2026-11-11","2026-11-19"]'></gw-calendar>
+</Demo>
+
+The month of days inside the date picker, on its own for a calendar that picks in place, such as a side panel. It takes the date picker's `value`, `month`, `min`, `max`, `marked`, `unmarked`, `locale`, `first-day` and `*-label` attributes, with `label` as its accessible name, and fires `change` and `month` the same way. `focus()` moves keyboard focus to the chosen day. A `header-actions` slot puts controls of the app's own between the month's name and the buttons, such as a Today button.
+
+Each day is the `day` part, also named `today`, `selected`, `marked`, `unmarked` and `outside` (in the months either side) where they apply, so `gw-calendar::part(day marked)` styles the marked days. The header is `header`, with `title`, `previous` and `next`, the table `grid` and each weekday heading `weekday`. `--gw-calendar-day-size` sizes each day (`2.5rem`, smaller on a phone so seven fit), `--gw-calendar-mark` colors the marked days' dot (the accent) and `--gw-calendar-dim-opacity` fades dimmed days (`0.45`). In forced colors the chosen day takes the system's highlight colors.
+
 ## Option list
 
 <Demo id="option-list" layout="stack">
@@ -242,6 +329,8 @@ The fields render in light DOM, so they have classes rather than parts, and thei
 | `.gw-hint`, `.gw-error` | The line of help and the error under a field |
 | `.gw-select-trigger`, `.gw-select-value`, `.gw-select-inline-label` | The select's button, its value and an `inline-label` |
 | `.gw-select-popup`, `.gw-select-clear` | The select's list popover and its Clear button |
+| `.gw-date-picker-trigger`, `.gw-date-picker-value`, `.gw-date-picker-inline-label` | The date picker's button, its day and an `inline-label` |
+| `.gw-date-picker-popup`, `.gw-date-picker-calendar` | The date picker's popover and the `gw-calendar` in it |
 | `.gw-range-row`, `.gw-range-control`, `.gw-range-bubble`, `.gw-range-readout` | The slider's row, the slider with its bubble, the bubble while it's held and the `readout` |
 
 ```css
@@ -262,4 +351,4 @@ gw-input .gw-hint {
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-input", "gw-select", "gw-option-list", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />
+<ElementApi tags={["gw-input", "gw-select", "gw-date-picker", "gw-calendar", "gw-option-list", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />

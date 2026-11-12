@@ -43,6 +43,8 @@ export * from "./gw-banner.js";
 
 export * from "./gw-button.js";
 
+export * from "./gw-calendar.js";
+
 export * from "./gw-card.js";
 
 export * from "./gw-checkbox.js";
@@ -52,6 +54,8 @@ export * from "./gw-chip.js";
 export * from "./gw-code.js";
 
 export * from "./gw-command-menu.js";
+
+export * from "./gw-date-picker.js";
 
 export * from "./gw-dialog.js";
 

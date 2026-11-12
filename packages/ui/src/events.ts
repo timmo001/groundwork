@@ -5,11 +5,19 @@ export interface GwEventMap {
   "gw-app-bar": {
     toggle: Event;
   };
+  "gw-calendar": {
+    month: CustomEvent<{ month: string }>;
+    change: Event;
+  };
   "gw-code": {
     change: Event;
   };
   "gw-command-menu": {
     pick: CustomEvent<{ value: string }>;
+  };
+  "gw-date-picker": {
+    month: CustomEvent<{ month: string }>;
+    change: Event;
   };
   "gw-dialog": {
     close: Event;
