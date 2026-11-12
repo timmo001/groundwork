@@ -40,4 +40,25 @@ describe("isExternal", () => {
     expect(isExternal("javascript:alert(1)", config)).toBe(false);
     expect(isExternal("no scheme", config)).toBe(false);
   });
+
+  test("keeps pages from the app's own origins in the window", () => {
+    const own = resolveConfig({ ownOrigins: ["http://127.0.0.1:7380"] });
+
+    expect(isExternal("http://127.0.0.1:7380/cameras?a=1", own)).toBe(false);
+    expect(isExternal("http://127.0.0.1:1984/", own)).toBe(true);
+    expect(isExternal("https://example.com", own)).toBe(true);
+  });
+});
+
+describe("runInTray and startAtLogin", () => {
+  test("are off without the tray", () => {
+    const config = resolveConfig({
+      tray: false,
+      runInTray: true,
+      startAtLogin: true,
+    });
+
+    expect(config.runInTray).toBe(false);
+    expect(config.startAtLogin).toBe(false);
+  });
 });

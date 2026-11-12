@@ -2,7 +2,8 @@
  * The main process half of `@timmo001/groundwork-desktop`: opens an app's
  * window with the browser defaults its `desktop.config` leaves on, such as
  * the tray, remembered size and zoom, one instance only, external links in
- * the system browser and the requests the view part makes.
+ * the system browser and the requests the view part makes. With `runInTray`
+ * the app keeps running in the tray once the window closes.
  *
  * It takes the app's own Electrobun, so the app keeps its pinned release:
  *
@@ -24,9 +25,12 @@ import {
   type DesktopConfig,
   type ResolvedDesktopConfig,
 } from "./config.ts";
+import { hiddenVariable, loginItem } from "./login.ts";
 import type { DesktopRequests, Notice, OmarchyThemeMessage } from "./rpc.ts";
 
 export * from "./config.ts";
+
+export { hiddenVariable } from "./login.ts";
 
 export type * from "./rpc.ts";
 
@@ -55,7 +59,7 @@ interface MainView {
 
 interface MainWindow {
   readonly webview: MainView;
-  on(name: "resize" | "move", handler: () => void): void;
+  on(name: "resize" | "move" | "close", handler: () => void): void;
   getFrame(): Frame;
   show(): void;
   activate(): void;
@@ -70,13 +74,24 @@ interface MainRPC {
   };
 }
 
+/**
+ * An item in the tray's menu: a divider, or a label with the action
+ * `onTrayAction` hears. `enabled: false` greys it out, such as for a status
+ * line, and `checked` ticks it.
+ */
+export type TrayItem =
+  | { readonly type: "divider" }
+  | {
+      readonly type: "normal";
+      readonly label: string;
+      readonly action?: string;
+      readonly enabled?: boolean;
+      readonly checked?: boolean;
+    };
+
 interface MainTray {
   readonly id: number;
-  setMenu(
-    menu: Array<
-      { type: "divider" } | { type: "normal"; label: string; action: string }
-    >,
-  ): void;
+  setMenu(menu: TrayItem[]): void;
 }
 
 /** The parts of Electrobun's main process this uses, with the app's RPC type. */
@@ -87,6 +102,7 @@ export interface ElectrobunMain<RPC extends MainRPC> {
     frame: { x?: number; y?: number; width: number; height: number };
     rpc: RPC;
     spellCheck: boolean;
+    preload: string | null;
   }) => MainWindow;
   readonly Tray: new (options: {
     title?: string;
@@ -125,7 +141,10 @@ export interface ElectrobunMain<RPC extends MainRPC> {
 /** What `openDesktopWindow` opens. */
 export interface DesktopWindowOptions<RPC extends MainRPC> {
   readonly title: string;
-  /** The view, such as `views://mainview/index.html`. */
+  /**
+   * The page, such as `views://mainview/index.html`, or one from an origin in
+   * the config's `ownOrigins`.
+   */
   readonly url: string;
   /** The first size and place, before one is remembered. */
   readonly frame: {
@@ -145,15 +164,35 @@ export interface DesktopWindowOptions<RPC extends MainRPC> {
    * Type `requests` as here, so the window takes the RPC's own type.
    */
   readonly createRPC: (requests: DesktopRequests) => RPC;
+  /**
+   * JavaScript run in every page before the page's own, such as a built
+   * script that calls `connectDesktop`, for a page served from elsewhere.
+   * The script's text, not its address: Linux takes no `views://` address.
+   */
+  readonly preload?: string;
+  /**
+   * Runs once this copy is the only one, before the window first opens, such
+   * as to start the server the page comes from.
+   */
+  readonly ready?: () => Promise<void>;
+  /** The app's own tray items, between the show item and the rest. */
+  readonly trayItems?: readonly TrayItem[];
+  /** Called with the action of each of the app's own tray items picked. */
+  readonly onTrayAction?: (action: string) => void;
 }
 
-/** The open window, and a way to show a notice in it. */
+/** The app's window and tray, and a way to show a notice in the window. */
 export interface DesktopWindow<RPC extends MainRPC> {
-  readonly window: MainWindow;
+  /** The window open now; with `runInTray`, none while it's closed. */
+  readonly window: MainWindow | undefined;
   readonly rpc: RPC;
   readonly config: ResolvedDesktopConfig;
   /** A system notification when the config turns them on, otherwise in the app. */
   readonly notify: (notice: Notice) => void;
+  /** Opens the window, or brings it to the front. */
+  readonly show: () => void;
+  /** Replaces the app's own tray items, such as a status line that changed. */
+  readonly setTrayItems: (items: readonly TrayItem[]) => void;
 }
 
 interface SavedState {
@@ -317,18 +356,13 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
     config.windowState || config.zoomKeys ? await readState(statePath) : {};
 
   let window: MainWindow | undefined;
-
-  const bringForward = () => {
-    window?.unminimize();
-    window?.show();
-    window?.activate();
-  };
+  // Set once the window can open; a second copy asking before then just waits
+  let show = () => {};
 
   if (
     config.singleInstance &&
-    !(await claimInstance(
-      join(Utils.paths.userData, "instance.sock"),
-      bringForward,
+    !(await claimInstance(join(Utils.paths.userData, "instance.sock"), () =>
+      show(),
     ))
   ) {
     Utils.quit(0);
@@ -349,8 +383,11 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
     saveTimer = setTimeout(() => {
       const next: SavedState = {};
 
-      if (config.windowState && window !== undefined)
+      if (config.windowState && window !== undefined) {
         next.frame = window.getFrame();
+        // A window opened again from the tray opens where this one was
+        state.frame = next.frame;
+      }
 
       if (config.zoomKeys) next.zoom = zoom;
       void Bun.write(statePath, JSON.stringify(next));
@@ -418,63 +455,86 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
 
   const rpc = options.createRPC(desktopRequests);
 
-  await followSystemScheme();
-  window = new electrobun.BrowserWindow({
-    title: options.title,
-    url: options.url,
-    frame: (config.windowState ? state.frame : undefined) ?? options.frame,
-    rpc,
-    spellCheck: config.spellcheck,
-  });
-
-  const opened = window;
-  const applyZoom = () => opened.webview.setPageZoom(baseZoom * zoom);
-
-  const id = opened.webview.id;
-
-  applyZoom();
-  electrobun.events.on(`dom-ready-${id}`, applyZoom);
-
-  if (config.windowState) {
-    opened.on("resize", save);
-    opened.on("move", save);
-  }
-
-  if (config.externalLinks) {
-    const openOutside = (event: WebviewEvent) => {
-      const url = detailUrl(event);
-
-      if (url !== undefined && isExternal(url, config)) Utils.openExternal(url);
-    };
-
-    // Only the app's own views load in the window; links out go to the browser
-    opened.webview.setNavigationRules(["^*", "views://*"]);
-    electrobun.events.on(`will-navigate-${id}`, openOutside);
-    electrobun.events.on(`new-window-open-${id}`, openOutside);
-  }
-
   const notify = (notice: Notice) => {
     if (!desktopRequests.notify(notice)) rpc.send.notice(notice);
   };
 
-  if (config.downloads) {
-    electrobun.events.on(`download-completed-${id}`, ({ data }) => {
-      const path =
-        data.detail instanceof Object ? data.detail.path : data.detail;
-
-      const heading = config.labels.downloadFinished;
-
-      notify(
-        path === undefined || path === ""
-          ? { heading, tone: "success" }
-          : { heading, body: path, tone: "success" },
-      );
+  // The rules and listeners go on each window's webview, since a window
+  // opened again from the tray has a new one
+  const openWindow = () => {
+    const opened = new electrobun.BrowserWindow({
+      title: options.title,
+      url: options.url,
+      frame: (config.windowState ? state.frame : undefined) ?? options.frame,
+      rpc,
+      spellCheck: config.spellcheck,
+      preload: options.preload ?? null,
     });
-  }
+
+    const applyZoom = () => opened.webview.setPageZoom(baseZoom * zoom);
+    const id = opened.webview.id;
+
+    window = opened;
+    applyZoom();
+    electrobun.events.on(`dom-ready-${id}`, applyZoom);
+    opened.on("close", () => {
+      if (window === opened) window = undefined;
+    });
+
+    if (config.windowState) {
+      opened.on("resize", save);
+      opened.on("move", save);
+    }
+
+    if (config.externalLinks) {
+      const openOutside = (event: WebviewEvent) => {
+        const url = detailUrl(event);
+
+        if (url !== undefined && isExternal(url, config))
+          Utils.openExternal(url);
+      };
+
+      // Only the app's own pages load in the window; links out go to the browser
+      opened.webview.setNavigationRules([
+        "^*",
+        "views://*",
+        ...config.ownOrigins.map((origin) => `${new URL(origin).origin}/*`),
+      ]);
+      electrobun.events.on(`will-navigate-${id}`, openOutside);
+      electrobun.events.on(`new-window-open-${id}`, openOutside);
+    }
+
+    if (config.downloads) {
+      electrobun.events.on(`download-completed-${id}`, ({ data }) => {
+        const path =
+          data.detail instanceof Object ? data.detail.path : data.detail;
+
+        const heading = config.labels.downloadFinished;
+
+        notify(
+          path === undefined || path === ""
+            ? { heading, tone: "success" }
+            : { heading, body: path, tone: "success" },
+        );
+      });
+    }
+  };
+
+  show = () => {
+    if (window === undefined) return openWindow();
+    window.unminimize();
+    window.show();
+    window.activate();
+  };
+
+  await options.ready?.();
+  await followSystemScheme();
+
+  if (!(config.runInTray && process.env[hiddenVariable] === "1")) openWindow();
 
   if (config.deepLinks) {
     electrobun.events.on("open-url", ({ data }) => {
-      bringForward();
+      show();
       rpc.send.deepLink({ url: data.url });
     });
   }
@@ -482,6 +542,8 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
   if (config.omarchyTheme) {
     watchOmarchyTheme((theme) => rpc.send.omarchyTheme({ theme }));
   }
+
+  let setTrayItems = (_items: readonly TrayItem[]) => {};
 
   if (config.tray !== false) {
     const tray = new electrobun.Tray({
@@ -492,20 +554,60 @@ export const openDesktopWindow = async <RPC extends MainRPC>(
       height: 22,
     });
 
-    tray.setMenu([
-      {
-        type: "normal",
-        label: config.labels.show ?? `Show ${options.title}`,
-        action: "show",
-      },
-      { type: "divider" },
-      { type: "normal", label: config.labels.quit, action: "quit" },
-    ]);
+    const login = config.startAtLogin ? await loginItem() : undefined;
+    let atLogin = (await login?.enabled()) ?? false;
+    let appItems = options.trayItems ?? [];
+
+    const setMenu = () =>
+      tray.setMenu([
+        {
+          type: "normal",
+          label: config.labels.show ?? `Show ${options.title}`,
+          action: "show",
+        },
+        ...(appItems.length > 0
+          ? [{ type: "divider" } as const, ...appItems]
+          : []),
+        { type: "divider" },
+        ...(login === undefined
+          ? []
+          : [
+              {
+                type: "normal",
+                label: config.labels.startAtLogin,
+                action: "start-at-login",
+                checked: atLogin,
+              } as const,
+            ]),
+        { type: "normal", label: config.labels.quit, action: "quit" },
+      ]);
+
+    setTrayItems = (items) => {
+      appItems = items;
+      setMenu();
+    };
+
+    setMenu();
     electrobun.events.on(`tray-clicked-${tray.id}`, ({ data }) => {
       if (data.action === "quit") Utils.quit(0);
-      else bringForward();
+      else if (data.action === "show" || data.action === "") show();
+      else if (data.action === "start-at-login" && login !== undefined) {
+        void login.set(!atLogin).then(async () => {
+          atLogin = await login.enabled();
+          setMenu();
+        });
+      } else options.onTrayAction?.(data.action);
     });
   }
 
-  return { window: opened, rpc, config, notify };
+  return {
+    get window() {
+      return window;
+    },
+    rpc,
+    config,
+    notify,
+    show: () => show(),
+    setTrayItems: (items) => setTrayItems(items),
+  };
 };

@@ -45,6 +45,8 @@ export interface DesktopLabels {
   readonly show?: string;
   /** The tray's quit item. Defaults to `Quit`. */
   readonly quit?: string;
+  /** The tray's start at login item. Defaults to `Start at login`. */
+  readonly startAtLogin?: string;
   /** The notice when a download finishes. Defaults to `Download finished`. */
   readonly downloadFinished?: string;
 }
@@ -95,6 +97,25 @@ export interface DesktopConfig {
    * theme is picked.
    */
   readonly omarchyTheme?: boolean;
+  /**
+   * Origins the app's own pages come from besides its views, such as a server
+   * it runs on this machine (`http://127.0.0.1:7380`). Their pages load in
+   * the window, not the system browser. None by default.
+   */
+  readonly ownOrigins?: readonly string[];
+  /**
+   * Closing the window leaves the app running in the tray, and the tray's
+   * show item opens it again. Needs the tray, and
+   * `runtime.exitOnLastWindowClosed: false` in `electrobun.config.ts`. Off by
+   * default.
+   */
+  readonly runInTray?: boolean;
+  /**
+   * A start at login item in the tray, which starts the app in the tray when
+   * `runInTray` is on. Linux only for now, through an XDG autostart entry; the
+   * item is left out elsewhere. Off by default.
+   */
+  readonly startAtLogin?: boolean;
   /** The text the defaults show. English by default. */
   readonly labels?: DesktopLabels;
 }
@@ -119,6 +140,9 @@ export interface ResolvedDesktopConfig {
   readonly spellcheck: boolean;
   readonly deepLinks: boolean;
   readonly omarchyTheme: boolean;
+  readonly ownOrigins: readonly string[];
+  readonly runInTray: boolean;
+  readonly startAtLogin: boolean;
   readonly labels: ResolvedDesktopLabels;
 }
 
@@ -159,6 +183,10 @@ export const resolveConfig = (
     spellcheck: config.spellcheck ?? true,
     deepLinks: config.deepLinks ?? true,
     omarchyTheme: config.omarchyTheme ?? true,
+    ownOrigins: config.ownOrigins ?? [],
+    // Both live in the tray, so neither works without it
+    runInTray: tray !== false && (config.runInTray ?? false),
+    startAtLogin: tray !== false && (config.startAtLogin ?? false),
     labels: {
       notifications: "Notifications",
       find: "Find in page",
@@ -173,10 +201,31 @@ export const resolveConfig = (
       copyLink: "Copy link",
       openLink: "Open link in browser",
       quit: "Quit",
+      startAtLogin: "Start at login",
       downloadFinished: "Download finished",
       ...config.labels,
     },
   };
+};
+
+/** The origin of a URL, such as `http://127.0.0.1:7380`, if it has one. */
+const originOf = (url: string): string | undefined => {
+  const origin = URL.parse(url)?.origin;
+
+  return origin === undefined || origin === "null" ? undefined : origin;
+};
+
+/** Whether a URL is one of the app's own pages from `ownOrigins`. */
+export const isOwnOrigin = (
+  url: string,
+  config: ResolvedDesktopConfig,
+): boolean => {
+  const origin = originOf(url);
+
+  return (
+    origin !== undefined &&
+    config.ownOrigins.some((own) => originOf(own) === origin)
+  );
 };
 
 /** Whether a URL may open in the system browser under this config. */
@@ -184,6 +233,7 @@ export const isExternal = (
   url: string,
   config: ResolvedDesktopConfig,
 ): boolean => {
+  if (isOwnOrigin(url, config)) return false;
   const scheme = /^([a-z][a-z0-9+.-]*):/i.exec(url)?.[1]?.toLowerCase();
 
   return (

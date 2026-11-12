@@ -61,6 +61,9 @@ export default defineDesktopConfig({ tray: false });
 | `spellcheck` | On | The system spell checker in text fields |
 | `deepLinks` | On | Passes the app's deep links (`urlSchemes`) to the view |
 | `omarchyTheme` | On | Passes the desktop's Omarchy theme to the view, and every switch |
+| `ownOrigins` | None | Origins besides the views whose pages load in the window, such as `["http://127.0.0.1:7380"]` for a server the app runs |
+| `runInTray` | Off | Closing the window leaves the app running in the tray. Needs the tray |
+| `startAtLogin` | Off | A "Start at login" item in the tray, Linux only for now. Needs the tray |
 | `labels` | English | The text the find bar, right-click menu, tray, notices region and download notice show, such as `{ quit: "Beenden" }`. The tray's show item defaults to "Show" and the window's title |
 
 Notices in the app sit in the bottom end corner, the find bar in the top end corner, and neither moves the page. The window's size, place and zoom are kept in `desktop-state.json` in the app's data folder.
@@ -130,6 +133,53 @@ const { platform } = await desktop.request.systemInfo();
 `desktop.request` also has the desktop requests, such as `openExternal`, `clipboardRead` and `clipboardWrite`. `desktop.notify` shows a notice, as a system notification when the config turns them on. `desktop.config` and `desktop.dev` say what's on and whether it's a dev build.
 
 The demo's "This machine" card uses each of these: it asks the main process what it runs on, copies the details, sends a notice and opens these docs in the browser.
+
+## Running in the tray
+
+An app that keeps working with its window closed, such as one that runs a server, sets `runInTray`. Closing the window then leaves the app in the tray, and the tray's show item, or opening the app again, opens a new window where the last one was. Electrobun quits once its last window closes, so turn that off in `electrobun.config.ts` too:
+
+```ts
+runtime: { exitOnLastWindowClosed: false },
+```
+
+`startAtLogin` adds a "Start at login" item to the tray. On Linux it writes an XDG autostart entry, `~/.config/autostart/<identifier>.desktop`, that runs the app's launcher with `GROUNDWORK_DESKTOP_HIDDEN=1`, so it starts in the tray rather than opening its window. It only shows in built apps, since a dev build has no launcher to start.
+
+`openDesktopWindow` takes more for an app like this:
+
+| Option | Does |
+| --- | --- |
+| `ready` | Runs once this copy is the only one, before the window first opens, such as to start the server |
+| `trayItems` | The app's own tray items, between the show item and the rest, such as a status line with `enabled: false` |
+| `onTrayAction` | Hears the action of each of the app's own tray items |
+| `preload` | Script text run in every page before its own, for pages from an `ownOrigins` server rather than the views |
+
+What it returns has `show()` to open the window, and `setTrayItems()` to replace the app's tray items, such as when its status changes. `window` is the window open now, or `undefined` while it's closed.
+
+A page from a server doesn't load the views' scripts, so the preload connects it instead. Build a script as one of the views that waits for the page, then imports the view half and calls `connectDesktop`. Importing it later lets a page with its own copy of `@timmo001/groundwork-ui` define the elements first:
+
+```ts
+// src/preload/index.ts
+import type { DesktopSchema } from "@timmo001/groundwork-desktop/view";
+import { Electroview } from "electrobun/view";
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const { connectDesktop } = await import("@timmo001/groundwork-desktop/view");
+
+  await connectDesktop((messages) => {
+    const rpc = Electroview.defineRPC<DesktopSchema>({ maxRequestTime: 10_000, handlers: { messages } });
+
+    new Electroview({ rpc });
+
+    return rpc;
+  });
+});
+```
+
+Pass the built script's text, since Linux doesn't take a `views://` address for a preload:
+
+```ts
+const preload = await Bun.file(join(import.meta.dir, "..", "views", "preload", "index.js")).text();
+```
 
 ## Theme and mode
 
