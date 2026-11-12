@@ -219,7 +219,7 @@
           "name": "confirmLeave",
           "return": {
             "type": {
-              "text": "Promise<boolean>"
+              "text": "boolean | Promise<boolean>"
             }
           },
           "parameters": [
@@ -231,7 +231,7 @@
               }
             }
           ],
-          "description": "Whether the app may move to another page: at once while nothing is\nunsaved, otherwise once someone chooses to leave, which puts every\nchanged form back as it was saved. It asks in a `gw-dialog` when one is\ndefined, or the browser's own confirm when not. Asked again while it's\nasking, it waits on the same answer rather than asking twice."
+          "description": "Whether the app may move to another page: at once while nothing is\nunsaved, otherwise once someone chooses to leave, which puts every\nchanged form back as it was saved. It answers `true` straight away while\nnothing is unsaved, so a router goes on without holding the page. It asks\nin a `gw-dialog` when one is defined, or the browser's own confirm when\nnot. Asked again while it's asking, it waits on the same answer rather\nthan asking twice."
         }
       ],
       "exports": [

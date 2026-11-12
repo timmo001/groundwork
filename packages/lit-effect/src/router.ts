@@ -367,9 +367,6 @@ export const makeRouter = <const R extends AnyRoutes>(
     return parse(new URL(location.href));
   };
 
-  /** Whether the next pop is one `beforeLeave` already agreed to. */
-  let agreed = false;
-
   /** The link within the app a click lands on, if any. */
   const appLink = (event: MouseEvent) => {
     if (
@@ -403,25 +400,37 @@ export const makeRouter = <const R extends AnyRoutes>(
   const currentLocation = Atom.readable((get) => {
     const update = () => get.setSelf(read());
 
+    const arrive = () => {
+      update();
+      restoreScroll();
+    };
+
     const onPopState = () => {
       const left =
         shown !== "" && new URL(shown).pathname !== location.pathname;
 
-      // A pop can't be cancelled, so the page showing is put back on top
-      // while `beforeLeave` asks, and going back to it once more leaves
-      if (left && !agreed && options.beforeLeave !== undefined) {
-        history.pushState(null, "", shown);
-        leaving(() => {
-          agreed = true;
-          history.back();
-        });
+      const allowed = left ? (options.beforeLeave?.() ?? true) : true;
+
+      if (allowed === true) {
+        arrive();
 
         return;
       }
 
-      agreed = false;
-      update();
-      restoreScroll();
+      // A pop can't be cancelled, so the page showing is put back while
+      // `beforeLeave` asks, and swapped for where the pop went if it leaves
+      const target = location.href;
+
+      history.pushState(null, "", shown);
+
+      if (allowed === false) return;
+
+      void allowed.then((leave) => {
+        if (!leave) return;
+
+        history.replaceState(null, "", target);
+        arrive();
+      });
     };
 
     const onClick = (event: MouseEvent) => {

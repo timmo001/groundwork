@@ -204,12 +204,16 @@ let asking: Promise<boolean> | undefined;
 /**
  * Whether the app may move to another page: at once while nothing is
  * unsaved, otherwise once someone chooses to leave, which puts every
- * changed form back as it was saved. It asks in a `gw-dialog` when one is
- * defined, or the browser's own confirm when not. Asked again while it's
- * asking, it waits on the same answer rather than asking twice.
+ * changed form back as it was saved. It answers `true` straight away while
+ * nothing is unsaved, so a router goes on without holding the page. It asks
+ * in a `gw-dialog` when one is defined, or the browser's own confirm when
+ * not. Asked again while it's asking, it waits on the same answer rather
+ * than asking twice.
  */
-export const confirmLeave = (labels: LeaveLabels = {}): Promise<boolean> => {
-  if (!hasUnsavedChanges()) return Promise.resolve(true);
+export const confirmLeave = (
+  labels: LeaveLabels = {},
+): boolean | Promise<boolean> => {
+  if (!hasUnsavedChanges()) return true;
 
   asking ??= ask(labels).then((leave) => {
     asking = undefined;
