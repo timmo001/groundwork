@@ -41,6 +41,7 @@ import "./gw-select.js";
 import "./gw-setting-row.js";
 import "./gw-sheet.js";
 import "./gw-skeleton.js";
+import "./gw-sortable.js";
 import "./gw-spinner.js";
 import "./gw-table.js";
 import "./gw-theme-gallery.js";

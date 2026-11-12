@@ -278,6 +278,34 @@ list.addEventListener("pick", (event) => {
 });
 ```
 
+## Sortable list
+
+<Demo id="sortable" layout="stack">
+  <gw-sortable label="Camera order" style="max-width: 24rem" items='[{"value":"front","label":"Front","description":"Recorder, channel 1"},{"value":"garden","label":"Garden","description":"Reolink hub"},{"value":"door","label":"Front door","description":"Reolink camera"},{"value":"printer","label":"3D printer","description":"Bambu Lab printer"}]'></gw-sortable>
+</Demo>
+
+A list someone puts in order, such as the cameras on a dashboard or the columns of a table. Each item has a handle: drag it with a mouse, pen or finger, and the other items make way as it passes. Or focus a handle and move its item with the arrow keys, Home and End; each move is announced, as "Garden, 1 of 4". It fires `change` once an item lands somewhere new, with `items` in the new order, so save that.
+
+| Attribute | What it does |
+| --- | --- |
+| `items` | The items in order, as JSON: each a `value` and `label`, with an optional `description` and `icon` |
+| `label` | The list's accessible name |
+| `disabled` | Stops the items moving |
+| `handle-icon` | SVG path data for the handles' icon, a grip by default |
+| `handle-label`, `moved-label`, `empty-label` | Each handle's name (`Move {label}`), what's announced after a move by key (`{label}, {position} of {count}`) and what it says with no items (`Nothing to sort`), for an app in another language |
+
+Content of the page's own, such as a chip or a button, goes at the end of an item in the slot named `end-` and its value. Each item is the `item` part, also named `dragging` while it's dragged, with `handle` (a `gw-button`), `item-icon`, `label` and `description` inside it. `--gw-sortable-gap` spaces the items (`--gw-space-2`), `--gw-sortable-item-background` and `--gw-sortable-item-radius` style them, `--gw-sortable-handle-scale` sizes the handles (`0.8`) and `--gw-sortable-dragging-shadow` lifts the one being dragged. In forced colors the dragged item takes an outline in the system's highlight color.
+
+```ts
+import "@timmo001/groundwork-ui/define/gw-sortable.ts";
+
+const list = document.querySelector("gw-sortable")!;
+
+list.addEventListener("change", () => {
+  save(list.items.map((item) => item.value));
+});
+```
+
 ## Checkbox and switch
 
 <Demo id="checkbox">
@@ -351,4 +379,4 @@ gw-input .gw-hint {
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-input", "gw-select", "gw-date-picker", "gw-calendar", "gw-option-list", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />
+<ElementApi tags={["gw-input", "gw-select", "gw-date-picker", "gw-calendar", "gw-option-list", "gw-sortable", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />

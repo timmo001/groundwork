@@ -60,6 +60,9 @@ export interface GwEventMap {
   "gw-sheet": {
     close: Event;
   };
+  "gw-sortable": {
+    change: Event;
+  };
   "gw-table": {
     more: Event;
     change: Event;

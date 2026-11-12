@@ -20,7 +20,7 @@ Every demo on these pages has a theme and mode picker. Pick one and the componen
 | Group | Components |
 | --- | --- |
 | [Actions](/components/actions) | Button, menu button, segmented control, theme picker, theme gallery |
-| [Inputs](/components/inputs) | Input, select, option list, checkbox, switch, range, setting row |
+| [Inputs](/components/inputs) | Input, select, option list, sortable list, checkbox, switch, range, setting row |
 | [Display](/components/display) | Card, expansion panel, chip, dot, badge, alert, facts, meter, gauge, table, list, markdown, code |
 | [Feedback](/components/feedback) | Loading, fade in, spinner, empty state, banner, notifications, toast |
 | [Overlays](/components/overlays) | Popover, sheet, filter, dialog, menus, command menu |
@@ -96,6 +96,7 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 | `gw-select` | `gw-option-list`, `gw-popover` |
 | `gw-setting-row` | `gw-skeleton`, `gw-skeleton-text` |
 | `gw-sheet` | `gw-button` |
+| `gw-sortable` | `gw-button` |
 | `gw-table` | `gw-chip`, `gw-input`, `gw-skeleton-text` |
 | `gw-theme-picker` | `gw-button`, `gw-menu-button`, `gw-popover`, `gw-segmented`, `gw-select`, `gw-theme-gallery` |
 
@@ -227,7 +228,7 @@ const off = on(menu, "pick", (event) => open(event.detail.value));
 | `gw-dialog`, `gw-popover`, `gw-sheet` | `close` |
 | `gw-select`, `gw-segmented` | `change` |
 | `gw-filter` | `change`, `toggle` |
-| `gw-table`, `gw-list` | `change` |
+| `gw-table`, `gw-list`, `gw-sortable` | `change` |
 | `gw-expansion` | `toggle` |
 | `gw-notification` | `dismiss` |
 | `gw-notification-center` | `clear` |

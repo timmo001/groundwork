@@ -27247,6 +27247,714 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-sortable.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A list someone puts in order. Each item has a handle: drag it with a\nmouse, pen or finger, or focus it and move the item with the arrow keys,\nHome and End. The other items make way as it passes, and each move by key\nis announced. It fires `change` once an item lands somewhere new, with\n`items` in the new order.\n\nItems take a label, and optionally a description and an icon. Content of\nthe page's own, such as a chip or a button, goes at the end of an item in\nthe slot named `end-` and its value.",
+          "name": "GwSortable",
+          "cssProperties": [
+            {
+              "description": "The space between items. Defaults to `--gw-space-2`.",
+              "name": "--gw-sortable-gap"
+            },
+            {
+              "description": "An item's background. Defaults to `--gw-color-surface-raised`.",
+              "name": "--gw-sortable-item-background"
+            },
+            {
+              "description": "An item's corners. Defaults to `--gw-radius-control`.",
+              "name": "--gw-sortable-item-radius"
+            },
+            {
+              "description": "Scales the handles, around 1 for medium. Defaults to `0.8`, small.",
+              "name": "--gw-sortable-handle-scale"
+            },
+            {
+              "description": "The shadow under the item being dragged. Defaults to `--gw-shadow-m`.",
+              "name": "--gw-sortable-dragging-shadow"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The list.",
+              "name": "list"
+            },
+            {
+              "description": "Each item's row, also named `dragging` while it's dragged.",
+              "name": "item"
+            },
+            {
+              "description": "Each item's handle, a `gw-button`.",
+              "name": "handle"
+            },
+            {
+              "description": "An item's icon.",
+              "name": "item-icon"
+            },
+            {
+              "description": "An item's label.",
+              "name": "label"
+            },
+            {
+              "description": "An item's second line.",
+              "name": "description"
+            },
+            {
+              "description": "What it says with no items.",
+              "name": "none"
+            }
+          ],
+          "slots": [
+            {
+              "description": "Content of the page's own at the end of the item with that value.",
+              "name": "end-{value}"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, items: { type: \"json\" }, disabled: { type: \"boolean\", reflect: true }, handleIcon: { attribute: \"handle-icon\" }, handleLabel: { attribute: \"handle-label\" }, movedLabel: { attribute: \"moved-label\" }, emptyLabel: { attribute: \"empty-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: block; } ol { position: relative; display: flex; flex-direction: column; gap: var(--gw-sortable-gap, var(--gw-space-2)); padding: 0; margin: 0; list-style: none; } li { position: relative; display: flex; gap: var(--gw-space-3); align-items: center; padding: var(--gw-space-1) var(--gw-space-3) var(--gw-space-1) var(--gw-space-1); font-size: var(--gw-font-size-s); color: var(--gw-color-text-strong); background: var( --gw-sortable-item-background, var(--gw-color-surface-raised) ); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-sortable-item-radius, var(--gw-radius-control)); } /* Making way for the item being dragged, from where it was */ li.settling { transition: translate var(--gw-motion-normal) var(--gw-motion-easing); } li.dragging { z-index: 1; box-shadow: var(--gw-sortable-dragging-shadow, var(--gw-shadow-m)); } .handle { --gw-button-scale: var(--gw-sortable-handle-scale, 0.8); cursor: grab; touch-action: none; } li.dragging .handle { cursor: grabbing; } :host([disabled]) .handle { cursor: not-allowed; } li > .icon { color: var(--gw-color-text-primary); } .text { display: flex; flex: 1; flex-direction: column; min-width: 0; } .text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } .none { padding: var(--gw-space-6) var(--gw-space-4); color: var(--gw-color-text-secondary); text-align: center; } .status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* Forced colors drop the shadow, so the dragged item takes an outline in the system's selection color instead */ @media (forced-colors: active) { li.dragging { outline: var(--gw-focus-width) solid Highlight; } } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "items",
+              "type": {
+                "text": "readonly SortableItem[]"
+              },
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "handleIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"M9,3H11V5H9V3M13,3H15V5H13V3M9,7H11V9H9V7M13,7H15V9H13V7M9,11H11V13H9V11M13,11H15V13H13V11M9,15H11V17H9V15M13,15H15V17H13V15M9,19H11V21H9V19M13,19H15V21H13V19Z\""
+            },
+            {
+              "kind": "field",
+              "name": "handleLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Move {label}\""
+            },
+            {
+              "kind": "field",
+              "name": "movedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"{label}, {position} of {count}\""
+            },
+            {
+              "kind": "field",
+              "name": "emptyLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Nothing to sort\""
+            },
+            {
+              "kind": "field",
+              "name": "#list",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#none",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#status",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#rows",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, Row>()",
+              "description": "Each item's row, by value, kept across updates so focus stays put."
+            },
+            {
+              "kind": "field",
+              "name": "#drag",
+              "privacy": "private",
+              "type": {
+                "text": "Drag | undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#shown",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "readonly SortableItem[]"
+                }
+              },
+              "description": "The items with a value, the first of each, as the list shows them."
+            },
+            {
+              "kind": "method",
+              "name": "#rowFor",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "item",
+                  "type": {
+                    "text": "SortableItem"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#order",
+              "privacy": "private",
+              "description": "The values in the order the rows stand in now."
+            },
+            {
+              "kind": "method",
+              "name": "#commit",
+              "privacy": "private",
+              "description": "Puts the items in the rows' order, firing `change` if it moved."
+            },
+            {
+              "kind": "method",
+              "name": "#place",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "row",
+                  "type": {
+                    "text": "HTMLLIElement"
+                  }
+                },
+                {
+                  "name": "index",
+                  "type": {
+                    "text": "number"
+                  }
+                }
+              ],
+              "description": "Moves a row to `index`, sliding the rows it passes from where they\nwere, so they make way rather than jump."
+            },
+            {
+              "kind": "method",
+              "name": "#key",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "KeyboardEvent"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#grab",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "#follow",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "event",
+                  "type": {
+                    "text": "PointerEvent"
+                  }
+                }
+              ],
+              "description": "Keeps the dragged row under the pointer, moving it past the rows it crosses."
+            },
+            {
+              "kind": "method",
+              "name": "#drop",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When an item moves somewhere new. Read `items`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The list's accessible name.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "SortableItem[]"
+              },
+              "description": "The items, in order, as JSON.",
+              "name": "items"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Stops the items moving.",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for the handles' icon. Defaults to a grip.",
+              "name": "handle-icon"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Each handle's name, with `{label}` for its item's. Defaults to `Move {label}`.",
+              "name": "handle-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What's announced after a move by key, with `{label}`, `{position}` and `{count}`. Defaults to `{label}, {position} of {count}`.",
+              "name": "moved-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says with no items. Defaults to `Nothing to sort`.",
+              "name": "empty-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-sortable",
+          "customElement": true,
+          "summary": "A list put in order by dragging, or with the arrow keys."
+        },
+        {
+          "kind": "variable",
+          "name": "handle"
+        },
+        {
+          "kind": "variable",
+          "name": "row"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwSortable",
+          "declaration": {
+            "name": "GwSortable",
+            "module": "src/gw-sortable.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-spinner.ts",
       "declarations": [
         {
@@ -31431,6 +32139,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-sortable.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-spinner.js"
           }
         },
@@ -34024,6 +34740,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-skeleton.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-sortable.ts",
       "declarations": [],
       "exports": []
     },

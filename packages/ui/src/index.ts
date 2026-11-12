@@ -109,6 +109,8 @@ export * from "./gw-sheet.js";
 
 export * from "./gw-skeleton.js";
 
+export * from "./gw-sortable.js";
+
 export * from "./gw-spinner.js";
 
 export * from "./gw-table.js";

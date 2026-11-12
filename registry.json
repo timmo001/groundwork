@@ -300,6 +300,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-sortable",
+      "kind": "element",
+      "description": "A list put in order by dragging each item's handle, or with the arrow keys",
+      "files": ["packages/ui/src/gw-sortable.ts"],
+      "needs": ["ui-base", "gw-button"]
+    },
+    {
       "name": "gw-spinner",
       "kind": "element",
       "description": "A spinning ring while something loads",
