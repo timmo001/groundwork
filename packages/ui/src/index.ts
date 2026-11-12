@@ -33,6 +33,8 @@ export * from "./below.js";
 
 export * from "./storage.js";
 
+export * from "./dirty.js";
+
 export * from "./gw-alert.js";
 
 export * from "./gw-app-bar.js";

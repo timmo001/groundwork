@@ -115,6 +115,14 @@ How someone has set a view up to read it: the sort, the search, folded sections,
 - A component with a `storage-key` keeps its own view state, so the page never has to. Code that keeps something of its own reads and writes through the same `getStorage()`.
 - It goes in the URL only when a link should carry it, such as a search someone would share.
 
+### Unsaved changes
+
+A form that saves with a button, such as a settings page, holds edits until it's saved.
+
+- Save is disabled until something changes, and again once it's saved.
+- Leaving with unsaved changes asks first: a link to another page, back or forward, and closing or reloading the tab. Leaving puts the form back as it was saved.
+- `DirtyState` and `confirmLeave` in groundwork-ui do both, and the router's `beforeLeave` holds the page while it asks. A dialog or popover that holds edits asks in place instead, through its own `dirty`.
+
 ### Folds
 
 Expansion panels, and the groups in a table or list.

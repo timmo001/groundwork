@@ -65,6 +65,12 @@ export interface RouterOptions {
   readonly scrollKey?: string;
   /** A new address for an old one, so old links and bookmarks still land. */
   readonly redirect?: (url: URL) => string | undefined;
+  /**
+   * Asked before moving to another page, by a link, `navigate`, back or
+   * forward; `false` stays. Such as groundwork-ui's `confirmLeave`, which
+   * asks while a form has unsaved changes.
+   */
+  readonly beforeLeave?: () => boolean | Promise<boolean>;
 }
 
 const segments = (path: string) =>
@@ -290,18 +296,22 @@ export const makeRouter = <const R extends AnyRoutes>(
     });
   };
 
-  /**
-   * Goes to a URL within the app without reloading. A new path scrolls to
-   * the top; changing only the search keeps the scroll position.
-   */
-  const navigate = (
-    url: string,
-    navigation: { readonly replace?: boolean } = {},
-  ) => {
-    const next = new URL(url, location.href);
+  /** The address of the page showing, which a held back or forward returns to; set once the location is first read. */
+  let shown = "";
 
-    if (next.href === location.href) return;
+  /** Runs `go` once `beforeLeave` agrees, at once when nothing asks. */
+  const leaving = (go: () => void) => {
+    const allowed = options.beforeLeave?.() ?? true;
 
+    if (allowed === true) go();
+    else if (allowed !== false) {
+      void allowed.then((leave) => {
+        if (leave) go();
+      });
+    }
+  };
+
+  const go = (next: URL, navigation: { readonly replace?: boolean }) => {
     const samePath = next.pathname === location.pathname;
 
     rememberScroll();
@@ -315,6 +325,23 @@ export const makeRouter = <const R extends AnyRoutes>(
     if (!samePath) window.scrollTo(0, 0);
 
     window.dispatchEvent(new Event(navigationEvent));
+  };
+
+  /**
+   * Goes to a URL within the app without reloading. A new path scrolls to
+   * the top; changing only the search keeps the scroll position. Moving to
+   * another page asks `beforeLeave` first.
+   */
+  const navigate = (
+    url: string,
+    navigation: { readonly replace?: boolean } = {},
+  ) => {
+    const next = new URL(url, location.href);
+
+    if (next.href === location.href) return;
+
+    if (next.pathname === location.pathname) go(next, navigation);
+    else leaving(() => go(next, navigation));
   };
 
   /** Scrolls a section to the top of the page once the page is tall enough. */
@@ -335,8 +362,13 @@ export const makeRouter = <const R extends AnyRoutes>(
 
     if (target !== undefined) history.replaceState(null, "", target);
 
+    shown = location.href;
+
     return parse(new URL(location.href));
   };
+
+  /** Whether the next pop is one `beforeLeave` already agreed to. */
+  let agreed = false;
 
   /** The link within the app a click lands on, if any. */
   const appLink = (event: MouseEvent) => {
@@ -372,6 +404,22 @@ export const makeRouter = <const R extends AnyRoutes>(
     const update = () => get.setSelf(read());
 
     const onPopState = () => {
+      const left =
+        shown !== "" && new URL(shown).pathname !== location.pathname;
+
+      // A pop can't be cancelled, so the page showing is put back on top
+      // while `beforeLeave` asks, and going back to it once more leaves
+      if (left && !agreed && options.beforeLeave !== undefined) {
+        history.pushState(null, "", shown);
+        leaving(() => {
+          agreed = true;
+          history.back();
+        });
+
+        return;
+      }
+
+      agreed = false;
       update();
       restoreScroll();
     };

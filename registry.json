@@ -87,6 +87,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "ui-dirty",
+      "kind": "element",
+      "description": "DirtyState and confirmLeave, which follow a form's unsaved changes and ask before leaving with them",
+      "files": ["packages/ui/src/dirty.ts"],
+      "needs": ["ui-base", "gw-button", "gw-dialog"]
+    },
+    {
       "name": "gw-layout",
       "kind": "element",
       "description": "gw-page, gw-stack, gw-row and gw-grid",

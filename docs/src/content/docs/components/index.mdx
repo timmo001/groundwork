@@ -109,6 +109,19 @@ The behavior the composites share is exported on its own too, for an app's own e
 - `listIndex(key, index, length, page?)` gives the index a list key moves to: the arrow keys step and wrap, Page Up and Down jump eight and stop at the ends, Home and End go to them. `gw-option-list` and `gw-menu-button` move with it.
 - `placeBeside(popup, anchor, { align, gap, fit })` puts a fixed popup under the control that opened it, or over it when there's more room there, lined up with its start edge or, with `align: "space"`, the edge on the roomier side of the window. It sets `data-placement` and `data-side` for styles that follow the side. `gw-popover` and `gw-select` open with it.
 - `Below` follows whether the window is narrower than a CSS length, as the `*-below` attributes do.
+- `DirtyState` follows whether a form's values differ from what was last saved: `start(value)` when it loads, `update(value)` on each edit, `markClean()` after a save, and `subscribe(listener)` to enable Save only while something changed. While any one is dirty, closing or reloading the tab asks first, and `confirmLeave()` asks in a `gw-dialog` before the app moves to another page, putting the forms back as they were saved if someone leaves. Its `discard` option is how a form puts itself back. `hasUnsavedChanges()` reads the whole page, and `gw-unsaved-changes` fires on `window` each time that changes.
+
+```ts
+import { DirtyState, confirmLeave } from "@timmo001/groundwork-ui";
+
+const dirty = new DirtyState<Settings>({ discard: () => show(saved) });
+
+dirty.start(saved);
+form.addEventListener("input", () => dirty.update(read()));
+dirty.subscribe((changed) => (save.disabled = !changed));
+
+const router = makeRouter(routes, { beforeLeave: () => confirmLeave() });
+```
 
 ```ts
 import { listIndex, placeBeside } from "@timmo001/groundwork-ui";

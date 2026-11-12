@@ -68,6 +68,209 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/dirty.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "unsavedChangesEvent",
+          "type": {
+            "text": "string"
+          },
+          "default": "\"gw-unsaved-changes\"",
+          "description": "Fired on `window` each time the page gains or loses unsaved changes."
+        },
+        {
+          "kind": "function",
+          "name": "hasUnsavedChanges",
+          "description": "Whether any `DirtyState` on the page has unsaved changes."
+        },
+        {
+          "kind": "class",
+          "description": "Whether one form's values differ from what was last saved. `start` sets\nthe saved values, `update` passes the values as they are now, and\n`markClean` takes them as saved after a save. The first `update` before\nany `start` sets the saved values too.",
+          "name": "DirtyState",
+          "members": [
+            {
+              "kind": "field",
+              "name": "#saved",
+              "privacy": "private",
+              "type": {
+                "text": "{ readonly value: T } | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#current",
+              "privacy": "private",
+              "type": {
+                "text": "{ readonly value: T } | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dirty",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#compare",
+              "privacy": "private",
+              "type": {
+                "text": "(a: T, b: T) => boolean"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#discard",
+              "privacy": "private",
+              "type": {
+                "text": "(() => void) | undefined"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#listeners",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<(dirty: boolean) => void>()"
+            },
+            {
+              "kind": "field",
+              "name": "dirty",
+              "description": "Whether the values differ from what was last saved.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "start",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Takes `value` as saved, such as when the form loads."
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "parameters": [
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "T"
+                  }
+                }
+              ],
+              "description": "Passes the values as they are now."
+            },
+            {
+              "kind": "method",
+              "name": "markClean",
+              "description": "Takes the values as they are now as saved, after a save."
+            },
+            {
+              "kind": "method",
+              "name": "discardChanges",
+              "description": "Puts the values back as they were saved, through the `discard` option."
+            },
+            {
+              "kind": "method",
+              "name": "subscribe",
+              "parameters": [
+                {
+                  "name": "listener",
+                  "type": {
+                    "text": "(dirty: boolean) => void"
+                  }
+                }
+              ],
+              "description": "Calls `listener` each time it gains or loses changes. Returns the unsubscribe."
+            },
+            {
+              "kind": "method",
+              "name": "dispose",
+              "description": "Stops counting towards the page's unsaved changes, such as when its form is removed."
+            },
+            {
+              "kind": "method",
+              "name": "#set",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "dirty",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "kind": "function",
+          "name": "confirmLeave",
+          "return": {
+            "type": {
+              "text": "Promise<boolean>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "labels",
+              "default": "{}",
+              "type": {
+                "text": "LeaveLabels"
+              }
+            }
+          ],
+          "description": "Whether the app may move to another page: at once while nothing is\nunsaved, otherwise once someone chooses to leave, which puts every\nchanged form back as it was saved. It asks in a `gw-dialog` when one is\ndefined, or the browser's own confirm when not. Asked again while it's\nasking, it waits on the same answer rather than asking twice."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "unsavedChangesEvent",
+          "declaration": {
+            "name": "unsavedChangesEvent",
+            "module": "src/dirty.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "hasUnsavedChanges",
+          "declaration": {
+            "name": "hasUnsavedChanges",
+            "module": "src/dirty.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "DirtyState",
+          "declaration": {
+            "name": "DirtyState",
+            "module": "src/dirty.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "confirmLeave",
+          "declaration": {
+            "name": "confirmLeave",
+            "module": "src/dirty.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/dismiss.ts",
       "declarations": [
         {
@@ -31828,6 +32031,14 @@
           "declaration": {
             "name": "*",
             "module": "src/storage.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/dirty.js"
           }
         },
         {

@@ -42,6 +42,8 @@ router.href("issue", { params: { id: "42" }, search: { q: "fan" } });
 
 Routes' params and search are Schema codecs, so links are built from typed values and URLs decode back to them. A search param that doesn't decode is dropped rather than losing the page. `currentLocation` is an atom: links within the app navigate without a reload, back and forward follow it, and scroll positions are restored. `updateSearch` changes some search params and keeps the rest, which suits filters and sorting kept in the URL.
 
+`beforeLeave` is asked before the app moves to another page, by a link, `navigate`, back or forward, and returning `false`, or a promise of it, stays. Pass groundwork-ui's `confirmLeave` to ask while a form has unsaved changes. A back or forward can't be cancelled, so the router puts the page back while it asks, and goes on once the answer is to leave. Changing only the search is never held.
+
 ## Storage
 
 ```ts
