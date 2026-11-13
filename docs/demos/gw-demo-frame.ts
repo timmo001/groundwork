@@ -11,6 +11,7 @@ import {
   GwDialog,
   GwElement,
   GwPopover,
+  GwSegmented,
   GwSheet,
   css,
   h,
@@ -241,6 +242,25 @@ export class GwDemoFrame extends GwElement {
         this.event = `${type}: ${shownValue(event, source) || "(empty)"}`;
       });
     }
+
+    // A segmented control's Custom option opens its popover beside it each
+    // time it's picked, as an app's would
+    this.addEventListener("pick", (event) => {
+      const source = event.target;
+
+      if (
+        !(source instanceof GwSegmented) ||
+        !(event instanceof CustomEvent) ||
+        event.detail?.value !== "custom" ||
+        !source.dataset.custom
+      ) {
+        return;
+      }
+
+      const popover = this.querySelector(`#${source.dataset.custom}`);
+
+      if (popover instanceof GwPopover) popover.show(source.optionFor("custom"));
+    });
   }
 
   private get modes() {

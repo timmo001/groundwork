@@ -29,6 +29,11 @@ export interface Segment {
  * on wide screens and only the icons below `labels-below`. An option with
  * `disabled` shows but can't be picked.
  *
+ * `pick` fires on every pick, the chosen option included, so an option such
+ * as a Custom one can open a popover each time it's clicked. Open it beside
+ * the option with `optionFor(value)`, which also takes the focus back when it
+ * closes.
+ *
  * @element gw-segmented
  * @summary Picks one of a few options, as a row of radio buttons.
  *
@@ -50,6 +55,7 @@ export interface Segment {
  * @cssprop --gw-control-scale - Scales its height and icons with the theme's density. The theme sets it.
  *
  * @fires {Event} change - When the chosen option changes.
+ * @fires {CustomEvent<{ value: string }>} pick - When an option is clicked or picked with the keyboard, the chosen one included, after any `change`, with its `value` in `detail`.
  */
 export class GwSegmented extends GwElement {
   static override properties = {
@@ -254,9 +260,41 @@ export class GwSegmented extends GwElement {
 
   readonly #resize = new ResizeObserver(() => this.#place(false));
 
-  #pick(value: string) {
+  #choose(value: string) {
+    if (value === this.value) return;
+
     this.value = value;
     this.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+  }
+
+  // A click comes before the radio's own change, so it chooses first, and
+  // `pick` sees the new value
+  #pick(value: string) {
+    this.#choose(value);
+    this.dispatchEvent(
+      new CustomEvent("pick", {
+        detail: { value },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  }
+
+  /**
+   * The radio for an option, to open a popover beside it: it covers the
+   * option, and the focus can go back to it.
+   */
+  optionFor(value: string): HTMLElement | undefined {
+    return this.#segments.find(({ option }) => option.value === value)?.input;
+  }
+
+  /** Moves keyboard focus to the chosen option, or the first that can be picked. */
+  override focus(options?: FocusOptions) {
+    const target =
+      this.#segments.find(({ input }) => input.checked) ??
+      this.#segments.find(({ input }) => !input.disabled);
+
+    target?.input.focus(options);
   }
 
   /** Puts the pill under the picked option, sliding there unless it's the first placing. */
@@ -308,7 +346,8 @@ export class GwSegmented extends GwElement {
       this.#segments = options.map((option) => {
         const input = h("input", { type: "radio", value: option.value });
 
-        input.addEventListener("change", () => this.#pick(option.value));
+        input.addEventListener("change", () => this.#choose(option.value));
+        input.addEventListener("click", () => this.#pick(option.value));
 
         const label = h(
           "label",

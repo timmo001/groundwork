@@ -53,6 +53,7 @@ export interface GwEventMap {
   };
   "gw-segmented": {
     change: Event;
+    pick: CustomEvent<{ value: string }>;
   };
   "gw-select": {
     change: Event;

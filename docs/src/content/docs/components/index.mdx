@@ -239,7 +239,8 @@ const off = on(menu, "pick", (event) => open(event.detail.value));
 | `gw-command-menu`, `gw-option-list` | `pick`, with `detail.value` |
 | `gw-menu-button` | `select`, with `detail.value`; `check`, with `detail.value` and `detail.checked` |
 | `gw-dialog`, `gw-popover`, `gw-sheet` | `close` |
-| `gw-select`, `gw-segmented` | `change` |
+| `gw-select` | `change` |
+| `gw-segmented` | `change`; `pick`, with `detail.value`, on every pick, the chosen option included |
 | `gw-filter` | `change`, `toggle` |
 | `gw-table`, `gw-list`, `gw-sortable` | `change` |
 | `gw-expansion` | `toggle` |
