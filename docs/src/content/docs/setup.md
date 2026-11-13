@@ -51,6 +51,13 @@ An app with a phone side starts from the [`android-app` template](/phones/androi
 - Pick the app ID under `dev.timmo`, a deep link scheme, and bundled or hosted for its page.
 - Make the release key, store it in 1Password and the repository's Actions secrets, add the R2 secrets, and fill in `fdroid/`, as [Releases](/phones/android#releases) describes. There's no Play listing.
 
+### Desktop app
+
+An app with a desktop side starts from the [`desktop-app` template](/desktop/building) in its own package:
+
+- Ask the owner which webview it uses, the system's or bundled Chromium, with the trade-offs from [Choosing the webview](/desktop#choosing-the-webview). An app that plays H.264 or H.265 video stays on the system webview, since the bundled Chromium can't play it. Set `bundleCEF` for each platform to match.
+- Pick the app ID under `dev.timmo`.
+
 ## 3. Agent files
 
 - `AGENTS.md`, saying what the repository is, its stack, how to run its checks and how changes roll out. Write it by hand and keep it short.

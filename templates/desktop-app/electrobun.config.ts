@@ -1,6 +1,7 @@
 /**
  * How Hutch builds the app: a Bun main process that opens the window, and one
- * view running the demo app. Every platform uses its own webview, not CEF.
+ * view running the demo app. Every platform uses its own webview, not CEF;
+ * an app picks its own, as the Desktop docs' Choosing the webview sets out.
  */
 import type { ElectrobunConfig } from "electrobun";
 
