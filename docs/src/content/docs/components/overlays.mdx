@@ -38,7 +38,7 @@ Keep a popover to one or two fields. A longer form is a view of its own, not a p
 | `close-label` | The close button's name, for an app in another language. A dialog takes it too |
 | `sheet-below` | The viewport width in pixels below which it's a bottom sheet (`600`). `0` keeps it by its button at any width |
 
-It's on the Popover API, in the top layer, so a scrolling parent never clips it. It has a close button in its corner, like a dialog, and the footer holds only the real actions, never a Cancel or Later that does what the close button does. Focus starts on the close button, so Enter never confirms by accident, and goes back to the button afterward. It follows the button as the page scrolls, and it's a bottom sheet below `sheet-below`. Esc and a click outside close it the same way a [dialog](#closing) closes.
+It's on the Popover API, in the top layer, so a scrolling parent never clips it. It has a close button in its corner, like a dialog, and the footer holds only the real actions, never a Cancel or Later that does what the close button does. Focus starts on the close button, so Enter never confirms by accident, and goes back to the button afterward. A popover opened to fill in a field, such as a custom value, puts `autofocus` on the field and focus starts there instead. It follows the button as the page scrolls, and it's a bottom sheet below `sheet-below`. Esc and a click outside close it the same way a [dialog](#closing) closes.
 
 ## Closing
 

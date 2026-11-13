@@ -23,7 +23,9 @@ const closeIcon =
  * button, such as after a save, it sits in the middle like a dialog.
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
- * outside. Open it with `show(anchor)`. Put buttons in the `actions` slot: a
+ * outside. Open it with `show(anchor)`. It focuses the close button, or the
+ * first element in its content with `autofocus`, such as a field it's opened
+ * to fill in. Put buttons in the `actions` slot: a
  * click on one with a `value` closes it with that value, and fires `close`.
  * `confirm` makes it an `alertdialog`, for a question that needs an answer.
  *
@@ -369,8 +371,15 @@ export class GwPopover extends GwElement {
       window.addEventListener("scroll", this.#position, true);
       document.addEventListener("pointerdown", this.#onPointerdown, true);
 
-      // The close button takes focus, so Enter never confirms by accident
-      this.#closeButton.focus();
+      // An element marked `autofocus` in the content takes focus, such as
+      // the field it's open to fill in; otherwise the close button does, so
+      // Enter never confirms by accident
+      const autofocus = this.querySelector("[autofocus]");
+
+      (autofocus instanceof HTMLElement
+        ? autofocus
+        : this.#closeButton
+      ).focus();
 
       return;
     }
