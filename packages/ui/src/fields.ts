@@ -214,6 +214,49 @@ export const fieldStyles = css`
     );
   }
 
+  /* A suffix sits inside the end of the field, before any reveal button, with
+     the text kept clear of it */
+  :where(gw-input) .gw-input-suffix {
+    position: absolute;
+    inset-inline-end: calc(var(--gw-space-3) * var(--gw-field-scale, 1));
+    font-size: calc(var(--gw-font-size-s) * var(--gw-field-scale, 1));
+    color: var(--gw-color-text-secondary);
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  :where(gw-input) .gw-input-suffix[hidden] {
+    display: none;
+  }
+
+  :where(gw-input)
+    .gw-input-control:has(> .gw-reveal:not([hidden]))
+    > .gw-input-suffix {
+    inset-inline-end: calc(
+      (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1)
+    );
+  }
+
+  :where(gw-input)
+    .gw-input-control:has(> .gw-input-suffix:not([hidden]))
+    > input {
+    padding-inline-end: calc(
+      (var(--gw-space-3) + var(--gw-space-2)) * var(--gw-field-scale, 1) +
+        var(--gw-input-suffix-width, 1ch)
+    );
+  }
+
+  :where(gw-input)
+    .gw-input-control:has(> .gw-input-suffix:not([hidden])):has(
+      > .gw-reveal:not([hidden])
+    )
+    > input {
+    padding-inline-end: calc(
+      (var(--gw-space-1) + 2rem + var(--gw-space-1) + var(--gw-space-2)) *
+        var(--gw-field-scale, 1) + var(--gw-input-suffix-width, 1ch)
+    );
+  }
+
   /* The trigger shows the chosen option, with its icon, and a chevron with
      room around it that turns over while the list is open */
   :where(gw-select) .gw-select-trigger {

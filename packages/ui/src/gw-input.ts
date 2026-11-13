@@ -19,7 +19,8 @@ const hideIcon =
 /**
  * A labeled native `<input>`, or a `<textarea>` with `multiline`, with an
  * optional hint and error. Enter submits its form when the form's submit
- * button is a `gw-button`, as it would with a native one.
+ * button is a `gw-button`, as it would with a native one. `focus()` moves
+ * focus to the field, so `autofocus` on it works in a `gw-popover`.
  *
  * @element gw-input
  * @summary A labeled text field in light DOM, so forms and autofill see it.
@@ -50,6 +51,7 @@ const hideIcon =
  * @attr {string} reveal-label - The reveal button's name, for an app in another language; it's a toggle, so one name serves both states. Defaults to `Show` or `Hide` and the label.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
  * @attr {string} icon - SVG path data for an icon inside the field, before the text, such as a magnifier on a search.
+ * @attr {string} suffix - Text inside the end of the field, after what's typed, such as a unit (`×`, `px`, `ms`). It's read after the field's name.
  * @attr {boolean} label-hidden - Keeps the label as the field's accessible name but doesn't show it, for a field in a toolbar whose icon and placeholder say what it's for.
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
@@ -84,6 +86,7 @@ export class GwInput extends LightElement {
     revealLabel: { attribute: "reveal-label" },
     size: { reflect: true },
     icon: {},
+    suffix: {},
     labelHidden: { type: "boolean", attribute: "label-hidden", reflect: true },
   } as const;
 
@@ -125,6 +128,8 @@ export class GwInput extends LightElement {
   declare size: "xs" | "small" | "medium" | "large" | "xl";
   /** SVG path data for an icon inside the field, before the text. */
   declare icon: string;
+  /** Text inside the end of the field, after what's typed, such as a unit. */
+  declare suffix: string;
   /** Keeps the label as the accessible name without showing it. */
   declare labelHidden: boolean;
 
@@ -143,6 +148,20 @@ export class GwInput extends LightElement {
   readonly #optional = h("span", { class: "gw-optional", hidden: true });
 
   readonly #revealIcon = createIcon(showIcon);
+
+  readonly #suffix = h("span", {
+    class: "gw-input-suffix",
+    id: `${this.#id}-suffix`,
+    hidden: true,
+  });
+
+  // The text keeps clear of the suffix however wide it is
+  readonly #suffixSize = new ResizeObserver(() => {
+    this.#suffix.parentElement?.style.setProperty(
+      "--gw-input-suffix-width",
+      `${this.#suffix.offsetWidth}px`,
+    );
+  });
 
   readonly #reveal = h(
     "button",
@@ -198,7 +217,13 @@ export class GwInput extends LightElement {
     this.revealLabel = "";
     this.size = "medium";
     this.icon = "";
+    this.suffix = "";
     this.labelHidden = false;
+  }
+
+  /** Moves keyboard focus to the field. */
+  override focus(options?: FocusOptions) {
+    this.#control.focus(options);
   }
 
   protected override create(root: HTMLElement) {
@@ -243,11 +268,13 @@ export class GwInput extends LightElement {
         { class: "gw-input-control" },
         this.#icon,
         this.#control,
+        this.#suffix,
         this.#reveal,
       ),
       this.#hint,
       this.#error,
     );
+    this.#suffixSize.observe(this.#suffix);
   }
 
   protected override update() {
@@ -258,7 +285,10 @@ export class GwInput extends LightElement {
     // see just the one
     if (!control.isConnected && other.isConnected) other.replaceWith(control);
 
+    const suffix = this.multiline ? "" : this.suffix;
+
     const described = [
+      suffix ? this.#suffix.id : "",
       this.hint ? this.#hint.id : "",
       this.error ? this.#error.id : "",
     ]
@@ -277,6 +307,8 @@ export class GwInput extends LightElement {
     this.#info.heading.classList.toggle("gw-visually-hidden", this.labelHidden);
     setIconPath(this.#icon, this.icon);
     this.#icon.toggleAttribute("hidden", !this.icon);
+    this.#suffix.textContent = suffix;
+    this.#suffix.hidden = !suffix;
     this.#input.type = reveal && this.#revealed ? "text" : this.type;
     this.#textarea.rows = this.rows;
     setAttribute(control, "name", this.name || null);

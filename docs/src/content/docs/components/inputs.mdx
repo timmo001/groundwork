@@ -26,6 +26,7 @@ These render in light DOM, so password managers, `<label for>` and forms work as
 | `monospace` | The monospace font, with spellcheck off, for paths, commands and tokens |
 | `reveal` | On a password field, a button at the end that shows and hides what's typed |
 | `icon` | SVG path data for an icon inside the field, before the text |
+| `suffix` | Text inside the end of the field, after what's typed, such as a unit (`×`, `px`, `ms`). It's read after the field's name |
 | `label-hidden` | Keeps the label as the accessible name without showing it |
 | `info-label`, `optional-label`, `reveal-label` | The (i) button's name, what `optional` adds, and the reveal button's name, for an app in another language. Default to "About" and the label, "(optional)", and "Show" or "Hide" and the label |
 
@@ -57,6 +58,15 @@ A search in a toolbar says what it's for with its icon and placeholder, so `labe
 
 <Demo id="input-toolbar">
   <gw-input label="Search issues" label-hidden type="search" placeholder="Search titles" icon="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></gw-input>
+</Demo>
+
+### With a unit
+
+`suffix` puts a unit inside the end of the field, kept clear of what's typed.
+
+<Demo id="input-suffix" layout="stack">
+  <gw-input label="Playback speed" type="number" inputmode="decimal" min="0.1" max="32" step="0.1" value="1.5" suffix="×"></gw-input>
+  <gw-input label="Timeout" type="number" value="250" suffix="ms"></gw-input>
 </Demo>
 
 ### Anatomy
@@ -352,7 +362,8 @@ The fields render in light DOM, so they have classes rather than parts, and thei
 | `.gw-optional` | What `optional` adds after the label |
 | `.gw-info` | The (i) button that opens `info` |
 | `input`, `textarea` | The native control, which draws the field's box |
-| `.gw-input-control` | Around an input, its icon and the reveal button |
+| `.gw-input-control` | Around an input, its icon, suffix and the reveal button |
+| `.gw-input-suffix` | The `suffix` inside the end of the field |
 | `.gw-reveal` | The button that shows and hides a password |
 | `.gw-hint`, `.gw-error` | The line of help and the error under a field |
 | `.gw-select-trigger`, `.gw-select-value`, `.gw-select-inline-label` | The select's button, its value and an `inline-label` |
