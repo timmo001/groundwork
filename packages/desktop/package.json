@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-desktop",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "description": "Groundwork's desktop defaults for Electrobun apps: the tray, find, zoom, the right-click menu, one instance, the system's mode and scale, and running in the tray",
   "license": "Apache-2.0",
   "type": "module",
@@ -33,8 +33,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-tokens": "0.27.0",
-    "@timmo001/groundwork-ui": "0.27.0",
+    "@timmo001/groundwork-tokens": "0.28.0",
+    "@timmo001/groundwork-ui": "0.28.0",
     "effect": "4.1.4"
   },
   "devDependencies": {
