@@ -38744,7 +38744,20 @@
               }
             }
           ],
-          "description": "Runs a DOM change inside a View Transition where the browser supports one\nand motion isn't reduced, otherwise runs it straight away, after Home\nAssistant's `withViewTransition()`. Use it for changes to the whole view,\nsuch as switching theme or mode; component state uses CSS transitions.\n\nThe change may return a promise, such as a Lit element's\n`updateComplete`, so the new view is captured once it has rendered. Keep\nit quick: the page is frozen until it settles."
+          "description": "Runs a DOM change inside a View Transition where the browser supports one,\nmotion isn't reduced and the page can be seen, otherwise runs it straight\naway, after Home Assistant's `withViewTransition()`. Use it for changes to\nthe whole view, such as switching theme or mode, or moving an element with\na `view-transition-name` to a new place; component state uses CSS\ntransitions.\n\nThe change may return a promise, such as a Lit element's\n`updateComplete`, so the new view is captured once it has rendered. Keep\nit quick: the page is frozen until it settles."
+        },
+        {
+          "kind": "function",
+          "name": "transitionName",
+          "parameters": [
+            {
+              "name": "parts",
+              "type": {
+                "text": "Array<string>"
+              }
+            }
+          ],
+          "description": "A `view-transition-name` from an app's own ids, such as\n`transitionName(\"camera\", id)` for `camera-front-door`. Anything a CSS\nname can't hold becomes a hyphen, so each element keeps a valid name of\nits own."
         }
       ],
       "exports": [
@@ -38793,6 +38806,14 @@
           "name": "withViewTransition",
           "declaration": {
             "name": "withViewTransition",
+            "module": "src/motion.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "transitionName",
+          "declaration": {
+            "name": "transitionName",
             "module": "src/motion.ts"
           }
         }

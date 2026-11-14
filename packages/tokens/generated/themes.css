@@ -106,9 +106,14 @@
     --gw-motion-normal: 250ms;
     --gw-motion-slow: 350ms;
     --gw-motion-easing: cubic-bezier(0.2, 0, 0, 1);
+    --gw-motion-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+    --gw-motion-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
     --gw-motion-delay: 500ms;
     --gw-focus-width: 2px;
     --gw-focus-offset: 2px;
+    --gw-target-min: 1.5rem;
+    --gw-safe-inline: max(1.5rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+    --gw-safe-bottom: max(var(--gw-space-2), env(safe-area-inset-bottom, 0px));
     --gw-content-width: 90rem;
     --gw-content-width-narrow: 44rem;
     --gw-content-width-wide: 120rem;
@@ -120,6 +125,12 @@
       --gw-motion-fast: 1ms;
       --gw-motion-normal: 1ms;
       --gw-motion-slow: 1ms;
+    }
+  }
+
+  @media (any-pointer: coarse) {
+    :root {
+      --gw-target-min: 2.75rem;
     }
   }
 
