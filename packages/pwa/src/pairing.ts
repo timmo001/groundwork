@@ -18,6 +18,13 @@ export const pairingRoutes = {
 export const pairingParam = "pair";
 
 /**
+ * Where a link carries its code: the query, `?pair=`, which every client
+ * reads, or the fragment, `#pair=`, which the browser never sends, so it
+ * stays out of the service's request logs and `Referer` headers.
+ */
+export type PairingPlace = "query" | "fragment";
+
+/**
  * A pairing link: the service's base URL with the code, such as
  * `https://bridge.local:9170/?pair=4f9c…`. It works once, and the service
  * forgets it after `expires`, a few minutes after it was made.
@@ -28,6 +35,19 @@ export const PairingLink = Schema.Struct({
 });
 
 export interface PairingLink extends Schema.Schema.Type<typeof PairingLink> {}
+
+/**
+ * A one-time code as the service's own pairing page shows it, however the
+ * service makes one: the code, its link for the QR code and Copy, and when
+ * it stops working, as an ISO date. `gw-pairing` takes it as it is.
+ */
+export const PairingCode = Schema.Struct({
+  code: Schema.String,
+  link: Schema.String,
+  expires: Schema.String,
+});
+
+export interface PairingCode extends Schema.Schema.Type<typeof PairingCode> {}
 
 /** What the app sends to trade the code: the code and who it is. */
 export const PairingRequest = Schema.Struct({
@@ -52,27 +72,93 @@ export const Pairing = Schema.Struct({
 
 export interface Pairing extends Schema.Schema.Type<typeof Pairing> {}
 
-/** The link for a service and a code, for the text and the QR code. */
-export const pairingUrl = ({ service, code }: PairingLink): string => {
+/**
+ * The link for a service and a code, for the text and the QR code. The code
+ * goes in the query unless `place` is `fragment`.
+ */
+export const pairingUrl = (
+  { service, code }: PairingLink,
+  place: PairingPlace = "query",
+): string => {
   const url = new URL(service);
 
-  url.searchParams.set(pairingParam, code);
+  if (place === "fragment") {
+    const fragment = new URLSearchParams(url.hash.slice(1));
+
+    fragment.set(pairingParam, code);
+    url.hash = fragment.toString();
+  } else {
+    url.searchParams.set(pairingParam, code);
+  }
 
   return url.href;
 };
 
-/** Reads a pairing link, or `undefined` when the text isn't one. */
+/**
+ * Reads a pairing link with its code in the query or the fragment, or
+ * `undefined` when the text isn't one.
+ */
 export const parsePairingLink = (text: string): PairingLink | undefined => {
   if (!URL.canParse(text)) return undefined;
 
   const url = new URL(text);
-  const code = url.searchParams.get(pairingParam);
+  const query = url.searchParams.get(pairingParam);
+
+  if (query !== null && query !== "") {
+    url.searchParams.delete(pairingParam);
+
+    return { service: url.href, code: query };
+  }
+
+  const fragment = new URLSearchParams(url.hash.slice(1));
+  const code = fragment.get(pairingParam);
 
   if (code === null || code === "") return undefined;
 
-  url.searchParams.delete(pairingParam);
+  fragment.delete(pairingParam);
+  url.hash = fragment.toString();
 
   return { service: url.href, code };
+};
+
+/**
+ * A typed code as the service compares it: uppercase, without the spaces
+ * and dashes it was shown or typed with, so `4f9c-82kd` reads as `4F9C82KD`.
+ */
+export const normalizePairingCode = (text: string): string =>
+  text.replaceAll(/[\s\u2010-\u2015\u2212-]/gu, "").toUpperCase();
+
+/**
+ * Reads what someone typed or pasted into one code field: a whole pairing
+ * link, which keeps its own service and code, or a bare code, which pairs
+ * with `service`, such as the address the app already knows. `undefined`
+ * when it's neither, such as a link without a code.
+ */
+export const parsePairingInput = (
+  text: string,
+  service: string,
+): PairingLink | undefined => {
+  const trimmed = text.trim();
+  const link = parsePairingLink(trimmed);
+
+  if (link !== undefined) return link;
+
+  const code = normalizePairingCode(trimmed);
+
+  return /^[\dA-Z]+$/u.test(code) ? { service, code } : undefined;
+};
+
+/**
+ * Reads a pairing link from the page's own address, as when the app opens
+ * from a scanned QR code, and takes the code out of the address so it isn't
+ * left in history or a bookmark.
+ */
+export const takePairingLink = (): PairingLink | undefined => {
+  const link = parsePairingLink(location.href);
+
+  if (link !== undefined) history.replaceState(history.state, "", link.service);
+
+  return link;
 };
 
 const decodePairing = Schema.decodeUnknownOption(Pairing);

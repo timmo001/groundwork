@@ -21,8 +21,8 @@ export default definePwaConfig({ name: "My app" });
   starts, and showing pushes as notifications.
 - `./push` is the push contract: the subscription a client posts to a
   service, and the payload a service sends back.
-- `./pairing` is the pairing contract: the link a service shows as a QR code
-  and the helpers that read it.
+- `./pairing` is the pairing contract: the link a service shows as a QR code,
+  the code it makes, and the helpers that read a link or a typed code.
 
 The docs are at
 [groundwork.timmo.dev/phones/pwa](https://groundwork.timmo.dev/phones/pwa),
