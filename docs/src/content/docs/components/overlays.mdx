@@ -79,6 +79,19 @@ scrim.show();
 popup.showPopover();
 ```
 
+## Full screen
+
+While an element is full screen, Chromium makes everything outside it inert, and that includes overlays in the top layer: a popover or sheet appended to `document.body` shows over the full-screen player, but nothing in it can be pressed or scrolled, and a press lands on the player beneath. The Fullscreen standard doesn't ask for this, and changing it is still open ([whatwg/html#10811](https://github.com/whatwg/html/issues/10811), [whatwg/fullscreen#197](https://github.com/whatwg/fullscreen/issues/197)). A modal [dialog](#dialog) is the one exception, since it takes over from the full-screen element while it's open.
+
+So put the overlays a full-screen element opens inside it, such as a player's sheets and popovers inside the player. Groundwork doesn't move them for you: moving an element closes its popover, runs its callbacks again and changes the styles it inherits. Shown outside the full-screen element, an overlay warns once in the console instead. An app that must keep one elsewhere can move it into `document.fullscreenElement` itself on `fullscreenchange`, while it's closed.
+
+```html
+<div class="player">
+  <video></video>
+  <gw-sheet id="settings" heading="Settings">…</gw-sheet>
+</div>
+```
+
 ## Bottom sheets on phones
 
 Every overlay that opens over the page adapts to the screen by itself: anchored to its button or in the middle on a larger screen, and a bottom sheet on a narrow or short one. That covers the [popover](#popover), [dialog](#dialog), [command menu](#command-menu), the [menu button's](/components/actions#menu-button) menu, and the [select's](/components/inputs#select) list and [date picker's](/components/inputs#date-picker) calendar. A [sheet](#sheet) with `side="auto"` comes up from the bottom by the same rule. An app never chooses it per overlay.
