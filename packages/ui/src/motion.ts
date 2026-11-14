@@ -67,10 +67,12 @@ export const animateHeight = (element: HTMLElement, before: number) => {
 };
 
 /**
- * Runs a DOM change inside a View Transition where the browser supports one
- * and motion isn't reduced, otherwise runs it straight away, after Home
- * Assistant's `withViewTransition()`. Use it for changes to the whole view,
- * such as switching theme or mode; component state uses CSS transitions.
+ * Runs a DOM change inside a View Transition where the browser supports one,
+ * motion isn't reduced and the page can be seen, otherwise runs it straight
+ * away, after Home Assistant's `withViewTransition()`. Use it for changes to
+ * the whole view, such as switching theme or mode, or moving an element with
+ * a `view-transition-name` to a new place; component state uses CSS
+ * transitions.
  *
  * The change may return a promise, such as a Lit element's
  * `updateComplete`, so the new view is captured once it has rendered. Keep
@@ -81,7 +83,11 @@ export const withViewTransition = (
 ): Promise<void> => {
   const reduced = reducedMotion();
 
-  if (document.startViewTransition === undefined || reduced) {
+  if (
+    document.startViewTransition === undefined ||
+    reduced ||
+    document.hidden
+  ) {
     return Promise.resolve(change());
   }
 
@@ -102,4 +108,16 @@ export const withViewTransition = (
   } catch {
     return changed ? Promise.resolve() : Promise.resolve(change());
   }
+};
+
+/**
+ * A `view-transition-name` from an app's own ids, such as
+ * `transitionName("camera", id)` for `camera-front-door`. Anything a CSS
+ * name can't hold becomes a hyphen, so each element keeps a valid name of
+ * its own.
+ */
+export const transitionName = (...parts: Array<string>) => {
+  const name = parts.join("-").replace(/[^a-zA-Z0-9_-]/g, "-");
+
+  return /^[a-zA-Z_]/.test(name) ? name : `vt-${name}`;
 };

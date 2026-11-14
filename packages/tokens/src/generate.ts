@@ -260,11 +260,21 @@ const foundations = {
   "motion-normal": "250ms",
   "motion-slow": "350ms",
   "motion-easing": "cubic-bezier(0.2, 0, 0, 1)",
+  // Arriving slows into place, and leaving speeds away
+  "motion-easing-enter": "cubic-bezier(0.05, 0.7, 0.1, 1)",
+  "motion-easing-exit": "cubic-bezier(0.3, 0, 0.8, 0.15)",
   // How long a loading placeholder waits before it fades in, so a quick load
   // never flashes one
   "motion-delay": "500ms",
   "focus-width": "2px",
   "focus-offset": "2px",
+  // The least hit area of a control: 24px for a mouse, and 44px wherever a
+  // finger can point, set below
+  "target-min": "1.5rem",
+  // Clear of a phone's rounded corners, its camera cutout and the home bar
+  "safe-inline":
+    "max(1.5rem, env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px))",
+  "safe-bottom": "max(var(--gw-space-2), env(safe-area-inset-bottom, 0px))",
   // The page widths: gw-page and gw-app-bar's size picks one
   "content-width": "90rem",
   "content-width-narrow": "44rem",
@@ -621,6 +631,7 @@ export const css = (themes: readonly ResolvedTheme[], note = header) =>
       [
         `:root {\n${declarations(foundations)}\n}`,
         `@media (prefers-reduced-motion: reduce) {\n  :root {\n    --gw-motion-instant: 1ms;\n    --gw-motion-fast: 1ms;\n    --gw-motion-normal: 1ms;\n    --gw-motion-slow: 1ms;\n  }\n}`,
+        `@media (any-pointer: coarse) {\n  :root {\n    --gw-target-min: 2.75rem;\n  }\n}`,
         scrollbarCss(":root, :root *"),
         scrollbarEdgesReset,
         preUpgradeCss,
