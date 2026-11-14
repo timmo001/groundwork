@@ -14,6 +14,7 @@ import "./gw-checkbox.js";
 import "./gw-chip.js";
 import "./gw-code.js";
 import "./gw-command-menu.js";
+import "./gw-control-group.js";
 import "./gw-date-picker.js";
 import "./gw-dialog.js";
 import "./gw-dot.js";

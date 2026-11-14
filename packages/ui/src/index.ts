@@ -57,6 +57,8 @@ export * from "./gw-code.js";
 
 export * from "./gw-command-menu.js";
 
+export * from "./gw-control-group.js";
+
 export * from "./gw-date-picker.js";
 
 export * from "./gw-dialog.js";

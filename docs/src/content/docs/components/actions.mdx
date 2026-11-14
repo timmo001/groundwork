@@ -1,6 +1,6 @@
 ---
 title: Actions
-description: Buttons, menu buttons and segmented controls, on native buttons and radio inputs.
+description: Buttons, menu buttons, segmented controls and control groups, on native buttons and radio inputs.
 ---
 
 ## Button
@@ -270,6 +270,34 @@ Options can carry an icon as path data. `labels="auto"` shows the text on wide s
   <gw-segmented label="Mode, icons only" labels="hide" value="light" options='[{"value":"light","label":"Light","icon":"M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,6.65C6.9,7.16 6.36,7.78 5.94,8.5C5.5,9.24 5.25,10 5.11,10.79L3.34,7M3.36,17L5.12,13.23C5.26,14 5.53,14.78 5.95,15.5C6.37,16.24 6.91,16.86 7.5,17.37L3.36,17M20.65,7L18.88,10.79C18.74,10 18.47,9.23 18.05,8.5C17.63,7.78 17.1,7.15 16.5,6.64L20.65,7M20.64,17L16.5,17.36C17.09,16.85 17.62,16.22 18.04,15.5C18.46,14.77 18.73,14 18.87,13.21L20.64,17M12,22L9.59,18.56C10.33,18.83 11.14,19 12,19C12.82,19 13.63,18.83 14.37,18.56L12,22Z"},{"value":"dark","label":"Dark","icon":"M2 12A10 10 0 0 0 15 21.54A10 10 0 0 1 15 2.46A10 10 0 0 0 2 12Z"},{"value":"darker","label":"Darker","icon":"M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z"}]'></gw-segmented>
 </Demo>
 
+## Control group
+
+<Demo id="control-group">
+  <gw-control-group label="Day">
+    <gw-button variant="neutral" appearance="plain" labels="hide" icon="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z">Previous day</gw-button>
+    <gw-date-picker label="Day" label-hidden value="2026-11-14"></gw-date-picker>
+    <gw-button variant="neutral" appearance="plain" labels="hide" icon="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z">Next day</gw-button>
+  </gw-control-group>
+  <gw-control-group label="Zoom">
+    <gw-segmented label="Zoom" labels="hide" value="fit" options='[{"value":"fit","label":"Fit","icon":"M14,14H19V16H16V19H14V14M5,14H10V19H8V16H5V14M8,5H10V10H5V8H8V5M19,8V10H14V5H16V8H19Z"},{"value":"fill","label":"Fill","icon":"M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z"}]'></gw-segmented>
+    <gw-button variant="neutral" appearance="plain" labels="hide" icon="M19,13H5V11H19V13Z">Zoom out</gw-button>
+    <gw-button variant="neutral" appearance="plain">100%</gw-button>
+    <gw-button variant="neutral" appearance="plain" labels="hide" icon="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z">Zoom in</gw-button>
+  </gw-control-group>
+</Demo>
+
+Controls that work together on one pill, such as a day between its arrows or a picture's fit or fill beside its zoom steps. The track has the same surface and border as a segmented control's, and each control on it is a section, parted from the one before by a quiet line.
+
+The controls draw with no fill or outline of their own. A hovered or pressed one fills its whole section, square where it meets the next and rounded only at the pill's two ends, so it never floats inside the pill. Buttons and menu buttons keep their text color, a toggle that's on keeps its tint, and focus rings sit inside the section.
+
+| Attribute | Values |
+| --- | --- |
+| `label` | Names the group for assistive technology, such as `Zoom` |
+
+It takes `gw-button`, `gw-menu-button`, `gw-segmented`, `gw-select` and `gw-date-picker`. A segmented control loses its own track to the group's, and with `labels="hide"` its options are square, so the picked one is a circle. A select or date picker needs `label-hidden` or `inline-label`, since a label above it would sit inside the pill. A hidden control leaves no line or gap behind, and the next one shown takes the rounded end.
+
+Like the fields, it's light DOM: its styles are adopted into the document or shadow root it sits in, in the components layer, so a page's own CSS wins. Set `--gw-control-group-background`, `--gw-control-group-border-color` and `--gw-control-group-radius` for the track, `--gw-control-group-hovered` and `--gw-control-group-pressed` for a section's fill, and `--gw-control-group-separator` for the lines. Set that last one on a single control, such as to `transparent`, to change only the line before it.
+
 ## Theme picker
 
 <Demo id="theme-picker">
@@ -384,10 +412,10 @@ It's a `<fieldset>` of native radio buttons, so arrow keys move the choice. Set 
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-button", "gw-menu-button", "gw-segmented", "gw-theme-picker", "gw-theme-gallery"]} />
+<ElementApi tags={["gw-button", "gw-menu-button", "gw-segmented", "gw-control-group", "gw-theme-picker", "gw-theme-gallery"]} />
 
 ## References
 
 - Home Assistant: [Button](https://contributors.home-assistant.io/design/components/button/), [Dropdown](https://contributors.home-assistant.io/design/components/dropdown/) · Code: [button](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-button.ts), [dropdown](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-dropdown.ts), [toggle group](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-button-toggle-group.ts)
-- Web Awesome: [Button](https://webawesome.com/docs/components/button), [Dropdown](https://webawesome.com/docs/components/dropdown), [Radio group](https://webawesome.com/docs/components/radio-group) · Code: [button](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/button), [dropdown](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/dropdown), [radio group](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/radio-group)
-- Primer: [Button](https://primer.style/product/components/button/), [Action menu](https://primer.style/product/components/action-menu/), [Segmented control](https://primer.style/product/components/segmented-control/) · Code: [Button](https://github.com/primer/react/tree/main/packages/react/src/Button), [ActionMenu](https://github.com/primer/react/tree/main/packages/react/src/ActionMenu), [SegmentedControl](https://github.com/primer/react/tree/main/packages/react/src/SegmentedControl)
+- Web Awesome: [Button](https://webawesome.com/docs/components/button), [Dropdown](https://webawesome.com/docs/components/dropdown), [Radio group](https://webawesome.com/docs/components/radio-group), [Button group](https://webawesome.com/docs/components/button-group) · Code: [button](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/button), [dropdown](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/dropdown), [radio group](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/radio-group), [button group](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/button-group)
+- Primer: [Button](https://primer.style/product/components/button/), [Action menu](https://primer.style/product/components/action-menu/), [Segmented control](https://primer.style/product/components/segmented-control/), [Button group](https://primer.style/product/components/button-group/) · Code: [Button](https://github.com/primer/react/tree/main/packages/react/src/Button), [ActionMenu](https://github.com/primer/react/tree/main/packages/react/src/ActionMenu), [SegmentedControl](https://github.com/primer/react/tree/main/packages/react/src/SegmentedControl), [ButtonGroup](https://github.com/primer/react/tree/main/packages/react/src/ButtonGroup)

@@ -800,7 +800,11 @@ export const fieldStyles = css`
   }
 `;
 
-const adoptStyles = (element: Element, sheet: CSSStyleSheet) => {
+/**
+ * Adopts a stylesheet into the document or shadow root an element sits in,
+ * once, so a light DOM element's styles reach it wherever it's placed.
+ */
+export const adoptStyles = (element: Element, sheet: CSSStyleSheet) => {
   const root = element.getRootNode();
 
   if (root instanceof Document || root instanceof ShadowRoot) {
