@@ -173,7 +173,7 @@ const scrolling = (host: string) => `
     overscroll-behavior-x: contain;
     padding: var(--_gw-row-ring);
     margin: calc(-1 * var(--_gw-row-ring));
-    scroll-padding-inline: max(var(--_gw-row-fade), var(--_gw-row-button));
+    scroll-padding-inline: calc(var(--_gw-row-cover) + var(--_gw-row-fade));
   }
 
   ${host} ::slotted(*) {
@@ -220,7 +220,7 @@ const chevrons = {
  * @csspart scroll-end - The button that scrolls toward the end.
  *
  * @cssprop --gw-gap - The gap. Defaults to `--gw-space-2`.
- * @cssprop --gw-row-fade - How far the ends fade while there's more to scroll that way. Defaults to `1.5rem`.
+ * @cssprop --gw-row-fade - How far the children fade out toward an end, beside its scroll button, while there's more to scroll that way. Defaults to `1.5rem`.
  * @cssprop --gw-row-scroll-button-scale - The scroll buttons' size, as `--gw-button-scale`. Defaults to `1.1`, 44px.
  */
 export class GwRow extends GwElement {
@@ -246,6 +246,9 @@ export class GwRow extends GwElement {
         --_gw-row-button: calc(
           2.5rem * var(--_gw-row-button-scale) * var(--gw-control-scale, 1)
         );
+        /* How much of each end the scroll button covers, with nothing
+           showing under it */
+        --_gw-row-cover: var(--_gw-row-button);
         display: flex;
         flex-wrap: wrap;
         gap: var(--gw-gap, var(--gw-space-2));
@@ -266,15 +269,29 @@ export class GwRow extends GwElement {
         ${scrolling(':host([scroll="narrow"])')}
       }
 
+      /* Each button fades in as there's more to scroll its way, and out at
+         the end, over the children fading out beside it */
       .scroll-button {
         --gw-button-scale: var(--_gw-row-button-scale);
         position: absolute;
         z-index: 1;
         inset-block-start: 50%;
         translate: 0 -50%;
-        border-radius: var(--gw-radius-pill);
-        background: var(--gw-color-surface-overlay);
-        box-shadow: var(--gw-shadow-m);
+        opacity: 1;
+        transition:
+          opacity var(--gw-motion-normal) var(--gw-motion-easing),
+          display var(--gw-motion-normal) allow-discrete;
+      }
+
+      .scroll-button[hidden] {
+        display: none;
+        opacity: 0;
+      }
+
+      @starting-style {
+        .scroll-button {
+          opacity: 0;
+        }
       }
 
       .start {
@@ -285,38 +302,47 @@ export class GwRow extends GwElement {
         inset-inline-end: 0;
       }
 
+      :host([no-scroll-buttons]) {
+        --_gw-row-cover: 0px;
+      }
+
       :host([no-scroll-buttons]) .scroll-button {
         display: none;
       }
 
       :host(:state(more-start)) {
+        --_gw-row-cover-start: var(--_gw-row-cover);
         --_gw-row-fade-start: var(--_gw-row-fade);
       }
 
       :host(:state(more-end)) {
+        --_gw-row-cover-end: var(--_gw-row-cover);
         --_gw-row-fade-end: var(--_gw-row-fade);
       }
 
+      /* Clear under a scroll button, then fading in beside it */
       :host(:state(overflowing)) .track {
+        --_gw-row-mask:
+          transparent var(--_gw-row-cover-start, 0px),
+          #000
+            calc(
+              var(--_gw-row-cover-start, 0px) + var(--_gw-row-fade-start, 0px)
+            ),
+          #000
+            calc(
+              100% - var(--_gw-row-cover-end, 0px) - var(
+                  --_gw-row-fade-end,
+                  0px
+                )
+            ),
+          transparent calc(100% - var(--_gw-row-cover-end, 0px));
         cursor: grab;
         user-select: none;
-        mask-image: linear-gradient(
-          to right,
-          transparent,
-          #000 var(--_gw-row-fade-start, 0px),
-          #000 calc(100% - var(--_gw-row-fade-end, 0px)),
-          transparent
-        );
+        mask-image: linear-gradient(to right, var(--_gw-row-mask));
       }
 
       :host(:state(overflowing):dir(rtl)) .track {
-        mask-image: linear-gradient(
-          to left,
-          transparent,
-          #000 var(--_gw-row-fade-start, 0px),
-          #000 calc(100% - var(--_gw-row-fade-end, 0px)),
-          transparent
-        );
+        mask-image: linear-gradient(to left, var(--_gw-row-mask));
       }
 
       /* Nothing under the pointer takes the drag's release as a click */
@@ -382,7 +408,7 @@ export class GwRow extends GwElement {
       class: `scroll-button ${side}`,
       part: `scroll-button scroll-${side}`,
       variant: "neutral",
-      appearance: "outlined",
+      appearance: "filled",
       labels: "hide",
       hidden: true,
     });
