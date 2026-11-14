@@ -55,7 +55,8 @@ export const canSetVolume = (): boolean => {
  * `mode` picks the layout. `inline` puts the button and the slider side by
  * side. `expand` shows the button alone, and the slider slides out beside it
  * on hover or focus. `popover` makes the button open a popover, a bottom
- * sheet on a phone, holding the mute and the slider. `mute` is the button
+ * sheet on a phone, holding the mute and the slider, `live` since the volume
+ * applies as it moves. `mute` is the button
  * alone, for where the page can't set the volume. `auto`, the default, is
  * `mute` where the volume can't be set, such as on iOS (`canSetVolume`),
  * `inline` while it has the room, and otherwise `expand` with a mouse or
@@ -245,7 +246,7 @@ export class GwVolume extends GwElement {
 
   readonly #popover = h(
     "gw-popover",
-    { class: "popover", part: "popover" },
+    { class: "popover", part: "popover", live: "" },
     this.#popoverRow,
   );
 

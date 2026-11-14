@@ -355,7 +355,7 @@ A player's mute button and volume slider as one control, a `gw-button` and a `gw
 
 - `inline`: the button and the slider side by side.
 - `expand`: the button alone, with the slider sliding out beside it on hover or keyboard focus.
-- `popover`: the button opens a popover holding the mute and the slider, a [bottom sheet](/components/overlays#bottom-sheets-on-phones) on a phone. The slider takes focus, so the arrow keys turn it at once.
+- `popover`: the button opens a popover holding the mute and the slider, a [bottom sheet](/components/overlays#bottom-sheets-on-phones) on a phone. The slider takes focus, so the arrow keys turn it at once. The popover is [`live`](/components/overlays#staying-out-of-the-way), since the volume applies as it moves: closing it never asks to discard, and its backdrop dims the page by 15%.
 - `mute`: the button alone, for where the page can't set the volume. iOS and iPadOS leave the volume to the device's own buttons and ignore a media element's `volume`, and `canSetVolume()` checks for that.
 - `auto`, the default: `mute` where the volume can't be set, `inline` while there's room, and otherwise `expand` with a mouse or `popover` with touch.
 
