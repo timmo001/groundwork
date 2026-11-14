@@ -77,10 +77,10 @@
     },
     "packages/desktop": {
       "name": "@timmo001/groundwork-desktop",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.30.0",
-        "@timmo001/groundwork-ui": "0.30.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
+        "@timmo001/groundwork-ui": "0.31.0",
         "effect": "4.1.4",
       },
       "devDependencies": {
@@ -95,10 +95,10 @@
     },
     "packages/docs-kit": {
       "name": "@timmo001/docs-kit",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.30.0",
-        "@timmo001/groundwork-ui": "0.30.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
+        "@timmo001/groundwork-ui": "0.31.0",
         "sharp": "0.35.5",
       },
       "devDependencies": {
@@ -135,10 +135,10 @@
     },
     "packages/mobile": {
       "name": "@timmo001/groundwork-mobile",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
-        "@timmo001/groundwork-pwa": "0.30.0",
-        "@timmo001/groundwork-tokens": "0.30.0",
+        "@timmo001/groundwork-pwa": "0.31.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
         "effect": "4.1.4",
       },
       "devDependencies": {
@@ -153,9 +153,9 @@
     },
     "packages/pwa": {
       "name": "@timmo001/groundwork-pwa",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.30.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
         "effect": "4.1.4",
         "sharp": "0.35.5",
       },
@@ -171,10 +171,10 @@
     },
     "packages/report": {
       "name": "@timmo001/groundwork-report",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
-        "@timmo001/groundwork-tokens": "0.30.0",
-        "@timmo001/groundwork-ui": "0.30.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
+        "@timmo001/groundwork-ui": "0.31.0",
         "effect": "4.1.4",
       },
       "devDependencies": {
@@ -208,7 +208,7 @@
     },
     "packages/tokens": {
       "name": "@timmo001/groundwork-tokens",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "bin": {
         "groundwork-tokens": "./src/bin.ts",
       },
@@ -230,11 +230,11 @@
     },
     "packages/tui": {
       "name": "@timmo001/groundwork-tui",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
         "@effect/platform-node": "4.1.4",
         "@opentui/core": "0.8.4",
-        "@timmo001/groundwork-tokens": "0.30.0",
+        "@timmo001/groundwork-tokens": "0.31.0",
         "effect": "4.1.4",
         "fuse.js": "7.5.0",
       },
@@ -250,7 +250,7 @@
     },
     "packages/ui": {
       "name": "@timmo001/groundwork-ui",
-      "version": "0.30.0",
+      "version": "0.31.0",
       "dependencies": {
         "@codemirror/lang-json": "6.0.2",
         "@codemirror/language": "6.13.1",
