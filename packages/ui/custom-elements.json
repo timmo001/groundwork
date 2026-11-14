@@ -9584,8 +9584,16 @@
               "name": "more"
             },
             {
+              "description": "The More menu's surface, its `menu` part.",
+              "name": "more-menu"
+            },
+            {
               "description": "The tab that opens the rows past the first, a `gw-button`.",
               "name": "expand"
+            },
+            {
+              "description": "The tab's own button, the `gw-button`'s `button` part, such as to make it a finger's size over a picture.",
+              "name": "expand-button"
             }
           ],
           "slots": [
@@ -16307,7 +16315,7 @@
               "privacy": "protected",
               "parameters": [
                 {
-                  "name": "_changed",
+                  "name": "changed",
                   "type": {
                     "text": "ReadonlySet<string>"
                   }
@@ -18778,7 +18786,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A long list of items the page draws itself, such as cards or expansion\npanels. Only the items on screen exist, drawn by TanStack Virtual against\nthe window's scroll, or its own frame with `contained`, so a list of\nthousands stays quick, and items can be any height.\n\nSet `items` and `draw` as properties. `draw(item, target)` draws an item\ninto a container in the light DOM, so the page's own styles and\ncomponents work in it, the first time it scrolls into view and again when\nthe item or `draw` changes. An item scrolled away keeps what was drawn, so\nit comes back as it was left, such as with a panel open. `keyOf` names\neach item, so it keeps its place and its drawing across updates.\n\n`groupOf` gathers the items under a heading for each value it returns, in\nthe order they first appear, with a chip counting each group's items.\nHeadings sit flat on the page's own surface, and pressing one folds its\nitems away. With `storage-key` it keeps which groups someone folded.",
+          "description": "A long list of items the page draws itself, such as cards or expansion\npanels. Only the items on screen exist, drawn by TanStack Virtual against\nthe window's scroll, or its own frame with `contained`, so a list of\nthousands stays quick, and items can be any height.\n\nSet `items` and `draw` as properties. `draw(item, target)` draws an item\ninto a container in the light DOM, so the page's own styles and\ncomponents work in it, the first time it scrolls into view and again when\nthe item or `draw` changes. An item scrolled away keeps what was drawn, so\nit comes back as it was left, such as with a panel open. `keyOf` names\neach item, so it keeps its place and its drawing across updates. Items\nslide to their new places as others arrive, leave or fold away, and a new\none fades in.\n\n`groupOf` gathers the items under a heading for each value it returns, in\nthe order they first appear, with a chip counting each group's items.\nHeadings sit flat on the page's own surface, and pressing one folds its\nitems away. With `storage-key` it keeps which groups someone folded.",
           "name": "GwList",
           "cssProperties": [
             {
@@ -21659,7 +21667,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Where notifications wait until they're dealt with: a list of\n`gw-notification` cards with Clear all, and an empty state once nothing's\nleft. Put it in a page, a panel or a popover from a bell button. Each\ncard folds away when dismissed, and the list closes up smoothly. It fires\n`clear` when Clear all is pressed.",
+          "description": "Where notifications wait until they're dealt with: a list of\n`gw-notification` cards with Clear all, and an empty state once nothing's\nleft. Put it in a page, a panel or a popover from a bell button. Each\ncard opens out as it arrives and folds away when dismissed, so the list\nmakes room and closes up smoothly. It fires\n`clear` when Clear all is pressed.",
           "name": "GwNotificationCenter",
           "cssProperties": [
             {
@@ -21831,6 +21839,20 @@
                   "default": "true"
                 }
               ]
+            },
+            {
+              "kind": "method",
+              "name": "#arrive",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "records",
+                  "type": {
+                    "text": "readonly MutationRecord[]"
+                  }
+                }
+              ],
+              "description": "A new notification opens out at its place, as one that's dismissed folds\naway, so those around it slide to make room rather than jump."
             },
             {
               "kind": "method",
@@ -33691,7 +33713,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change. With `storage-key` it keeps them, and the\nfolded groups, in this browser itself: only what someone changed, so the\npage's attributes still set the rest.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort. In a `contained` table a\ngroup's heading stays pinned under the column headings while its rows\nscroll past.\n\n`more` says there are rows still to load after these, such as older pages\nfrom a server. Skeleton rows stand in for them after the last row, and as\nthey come within `more-margin` pixels of view the table fires `more`, once,\nand is `aria-busy` until its `rows` change: append the next page then, and\ntake `more` off once there's nothing left to load.",
+          "description": "Rows of data in a table that sorts by a header press and searches every\ncolumn, built on TanStack Table. Only the rows on screen are drawn, by\nTanStack Virtual against the window's scroll, so a table of thousands\nstays quick; rows can be any height. With `contained` it scrolls inside\nits own frame instead, up to `--gw-table-max-height`, with its header kept\nin view, and draws only the rows in that frame.\n\nGive it `columns` and `rows`, as JSON attributes for plain data or as\nproperties. Each column says how to read a row's value, which sorting and\nsearch use, and, set as a property, can draw its cell as any node, such as\na link or a `gw-chip`. `row-key` names the row property\nthat identifies it, so a row keeps its place across updates. Rows slide\nto their new places as they're sorted, searched, folded or new ones\narrive, and a new row fades in; give new data a `row-key` so each row is\nfollowed rather than its position. The sort and\nsearch are the table's own, set from their attributes to start with; it\nfires `change` when they change. With `storage-key` it keeps them, and the\nfolded groups, in this browser itself: only what someone changed, so the\npage's attributes still set the rest.\n\n`group` gathers the rows under a heading for each value of a column, such\nas a state, with its name (from the column's `groupLabel`) and a chip\ncounting its rows. Pressing a heading folds its rows away. That column\ndoesn't show, since each heading names its value. `toggled-groups` lists\nthe groups, by value, pressed from how they start, and fires `change` too,\nso the folded groups can be kept with the sort. In a `contained` table a\ngroup's heading stays pinned under the column headings while its rows\nscroll past.\n\n`more` says there are rows still to load after these, such as older pages\nfrom a server. Skeleton rows stand in for them after the last row, and as\nthey come within `more-margin` pixels of view the table fires `more`, once,\nand is `aria-busy` until its `rows` change: append the next page then, and\ntake `more` off once there's nothing left to load.",
           "name": "GwTable",
           "cssProperties": [
             {
@@ -36604,7 +36626,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Where toasts appear: the bottom corner on the end side, away from what\npeople click. Call `show(message, tone)`; each toast is announced politely\nand fades out after `duration` milliseconds.\n\nA toast only tells; it has no actions and lets every click through, since\nit may sit over something interactive and leaves before it can be used.\nIt's in the top layer and rises above any dialog each time one shows. It's\na last resort: show an outcome where it happened instead.",
+          "description": "Where toasts appear: the bottom corner on the end side, away from what\npeople click. Call `show(message, tone)`; each toast is announced politely\nand fades out after `duration` milliseconds, and the others slide to make\nroom for it and close up after it.\n\nA toast only tells; it has no actions and lets every click through, since\nit may sit over something interactive and leaves before it can be used.\nIt's in the top layer and rises above any dialog each time one shows. It's\na last resort: show an outcome where it happened instead.",
           "name": "GwToaster",
           "cssProperties": [
             {
@@ -40692,6 +40714,62 @@
           "description": "Glides `element` from the height it had before a change to the height it\nhas after, as an expansion panel opens, so content arriving or going never\njumps the layout. Measure with `before = element.offsetHeight` ahead of the\nchange, then call this once it's rendered. Skipped when motion is reduced."
         },
         {
+          "kind": "function",
+          "name": "measureLayout",
+          "return": {
+            "type": {
+              "text": "(() => void)"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "{ key = (item) => item }",
+              "default": "{}",
+              "type": {
+                "text": "LayoutOptions"
+              }
+            }
+          ],
+          "description": "Measures where each of `container`'s children is, and returns what slides\nthem from there to wherever a change has put them: call it once the change\nhas rendered. `animateLayout()` does both around a change; this is for a\nchange that happens in steps, such as an element's own update."
+        },
+        {
+          "kind": "function",
+          "name": "animateLayout",
+          "return": {
+            "type": {
+              "text": "Promise<void>"
+            }
+          },
+          "parameters": [
+            {
+              "name": "container",
+              "type": {
+                "text": "ParentNode"
+              }
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "() => void | Promise<void>"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "LayoutOptions"
+              }
+            }
+          ],
+          "description": "Runs a change to the items in `container`, such as one added, removed or\nreordered, and slides each item that stays from where it was to its new\nplace, on `--gw-motion-normal` and `--gw-motion-easing`, so the list makes\nroom and closes its gaps rather than jumping. A new item fades in at its\nplace. Animate one that leaves before the change, such as by fading it out.\n\nIt measures each child before and after the change and slides it the\ndifference (FLIP), in translate only, so nothing lays out again while it\nmoves. A second change while items slide starts each from where it is.\nUnder reduced motion the change just happens.\n\nThe change may return a promise, such as an element's `updateComplete`."
+        },
+        {
           "kind": "variable",
           "name": "viewTransitionStyles",
           "description": "The View Transition classes and types, adopted into the document the first\ntime `withViewTransition()` runs, in the components layer so an app's own\nstyles win. Give an element a class with `view-transition-class`, beside\nits `view-transition-name`:\n\n- `gw-travel` moves and resizes it to its new place on `--gw-motion-slow`\n  and `--gw-motion-easing`, such as a tile becoming the whole view;\n- `gw-from-bottom`, `gw-from-top`, `gw-from-start` and `gw-from-end` slide\n  it in from that edge as it arrives, on `--gw-motion-slow` and\n  `--gw-motion-easing-enter`, and back out as it leaves, a step quicker on\n  `--gw-motion-normal` and `--gw-motion-easing-exit`, such as a docked\n  panel. Start and end follow the page's direction;\n- `gw-page` swaps a page's content: with the `gw-forward` or `gw-back`\n  type it slides a short way along the line toward the end or the start\n  and fades through, for a sibling page or tab; with neither it fades\n  through, the old out and the new in, for a page that isn't related.\n\nUnder reduced motion nothing moves or resizes: every old and new view\ncrossfades on `--gw-motion-fade` instead."
@@ -40773,6 +40851,22 @@
           "name": "animateHeight",
           "declaration": {
             "name": "animateHeight",
+            "module": "src/motion.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "measureLayout",
+          "declaration": {
+            "name": "measureLayout",
+            "module": "src/motion.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "animateLayout",
+          "declaration": {
+            "name": "animateLayout",
             "module": "src/motion.ts"
           }
         },
@@ -40895,7 +40989,7 @@
               }
             }
           ],
-          "description": "On a phone on its side (`sidewaysQuery`), or in full screen, puts `bar`\nover the bottom of its picture and slides it down off the edge once it's\nbeen left alone for `hideAfter` while nothing keeps it. Only what does\nnothing else brings it back: a tap where there's nothing to press, a 1\nfinger swipe up (down hides it), a key, a mouse moving, or a handle at the\nbottom while it's hidden. A press on a control does its own thing, and a\ntap that toggles the bar presses nothing else. With `fullscreen`, turning\na phone on its side goes full screen where the browser lets it, and\nturning it back leaves.\n\nIt marks the stage `data-overlay` while the bar is over it, and the bar\n`data-over` and `data-hidden`, for the styles it adopts and an app's own.\nA `gw-control-bar` gets `expandable` while it's over the picture, so it\nshows its first row until its tab opens the rest. It uses `gw-button` for\nthe handle. Returns a function that stops it and puts the bar back."
+          "description": "On a phone on its side (`sidewaysQuery`), or in full screen, puts `bar`\nover the bottom of its picture and slides it down off the edge once it's\nbeen left alone for `hideAfter` while nothing keeps it. Only what does\nnothing else brings it back: a tap where there's nothing to press, a 1\nfinger swipe up, a key, a mouse moving, or a handle at the bottom while\nit's hidden. A finger pulling it down moves it with the finger, and let go\nit goes on down or springs back, as `dragCloses` has it. A press on a\ncontrol does its own thing, and a tap that toggles the bar presses nothing\nelse. With `fullscreen`, turning a phone on its side goes full screen\nwhere the browser lets it, and turning it back leaves.\n\nOver the picture the controls' own fills, `--gw-color-surface-lower`, let\nthe picture through as the bar does; `--gw-overlay-controls-fill` sets\nthem, and `--gw-overlay-controls-background` the bar's. A menu, popover,\nsheet or dialog opened from the bar keeps its solid surface and fills.\n\nIt marks the stage `data-overlay` while the bar is over it, and the bar\n`data-over` and `data-hidden`, for the styles it adopts and an app's own.\nA `gw-control-bar` gets `expandable` while it's over the picture, so it\nshows its first row until its tab opens the rest. It uses `gw-button` for\nthe handle. Returns a function that stops it and puts the bar back."
         }
       ],
       "exports": [
@@ -41466,6 +41560,19 @@
           "description": "The swipe some fingers made, if they made one: they moved `distance` on\naverage, along an axis at least twice as far as across it, and didn't\nspread or close more than `pinch`. For an app tracking fingers itself."
         },
         {
+          "kind": "function",
+          "name": "dragCloses",
+          "parameters": [
+            {
+              "name": "{ distance, velocity, size }",
+              "type": {
+                "text": "DragRelease"
+              }
+            }
+          ],
+          "description": "Whether a drag let go goes on and closes, or springs back: it does when\nflung toward closing faster than 500px a second, or, unless flung back as\nfast, when where it would be 100ms later is past half way. For a drag that\nfollows the finger, such as a sheet or a bar pulled away."
+        },
+        {
           "kind": "variable",
           "name": "options",
           "type": {
@@ -41511,6 +41618,14 @@
           "name": "swipeOf",
           "declaration": {
             "name": "swipeOf",
+            "module": "src/swipe.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "dragCloses",
+          "declaration": {
+            "name": "dragCloses",
             "module": "src/swipe.ts"
           }
         },

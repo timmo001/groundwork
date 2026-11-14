@@ -2,7 +2,8 @@
  * `onSwipe`, the touch swipes of a surface such as a player's picture: one or
  * more fingers moving the same way far enough, rather than pinching or
  * dragging something a drag already moves. Every listener on an element
- * shares one recognizer, and a swipe it takes never also clicks.
+ * shares one recognizer, and a swipe it takes never also clicks. Also
+ * `dragCloses`, whether a drag that follows the finger closes when let go.
  * Docs: https://groundwork.timmo.dev/behavior/#touch
  *
  * @module
@@ -92,6 +93,25 @@ export const swipeOf = (
 };
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
+
+/** A drag let go: how far it went and how fast, along the way it closes. */
+export interface DragRelease {
+  /** How far it was dragged toward closing, in pixels. */
+  readonly distance: number;
+  /** How fast it moved toward closing as it was let go, in pixels a second. */
+  readonly velocity: number;
+  /** How far closing takes it in all, such as a bar's height. */
+  readonly size: number;
+}
+
+/**
+ * Whether a drag let go goes on and closes, or springs back: it does when
+ * flung toward closing faster than 500px a second, or, unless flung back as
+ * fast, when where it would be 100ms later is past half way. For a drag that
+ * follows the finger, such as a sheet or a bar pulled away.
+ */
+export const dragCloses = ({ distance, velocity, size }: DragRelease) =>
+  velocity > 500 || (velocity > -500 && distance + velocity * 0.1 > size / 2);
 
 interface Heard {
   readonly listener: (swipe: Swipe) => void;

@@ -9,8 +9,9 @@
 import { sidewaysQuery } from "./adaptive.js";
 import { css, h } from "./element.js";
 import { adoptStyles } from "./fields.js";
+import { reducedMotion } from "./motion.js";
 import { pressedBelow } from "./pressed.js";
-import { onSwipe } from "./swipe.js";
+import { dragCloses, onSwipe } from "./swipe.js";
 
 // MDI's chevron-up, for the handle that brings the controls back
 const chevronUp =
@@ -45,6 +46,8 @@ export const overlayPressables = [
 const overlayStyles = css`
   [data-overlay] {
     position: relative;
+    /* The solid fill, kept for what opens from the bar */
+    --gw-overlay-controls-solid: var(--gw-color-surface-lower);
   }
 
   [data-overlay-controls][data-over] {
@@ -59,6 +62,13 @@ const overlayStyles = css`
       color-mix(in oklab, var(--gw-color-surface-raised) 30%, transparent)
     );
     backdrop-filter: blur(4px);
+    /* The controls' own fills, such as a segmented track, a select or a
+       control group, let the picture through as the bar does, rather than
+       sit on it as dark slabs */
+    --gw-color-surface-lower: var(
+      --gw-overlay-controls-fill,
+      color-mix(in oklab, var(--gw-color-surface-low) 45%, transparent)
+    );
     /* Back up from the bottom edge, slowing into place */
     transition:
       translate var(--gw-motion-normal) var(--gw-motion-easing-enter),
@@ -80,13 +90,35 @@ const overlayStyles = css`
     cursor: none;
   }
 
-  /* The tab that opens a control bar's other rows, on its top edge */
+  /* Pulled down, it moves with the finger, nothing easing it */
+  [data-overlay-controls][data-over][data-dragging] {
+    transition: none;
+  }
+
+  /* What opens from the bar sits on its own solid surface, so the fields in
+     it keep their solid fill */
+  [data-overlay-controls][data-over] :is(gw-popover, gw-sheet)::part(surface),
+  [data-overlay-controls][data-over] gw-dialog::part(dialog),
+  [data-overlay-controls][data-over] gw-menu-button::part(menu),
+  gw-control-bar[data-over]::part(more-menu),
+  [data-overlay-controls][data-over] :is([popover], dialog) {
+    --gw-color-surface-lower: var(--gw-overlay-controls-solid);
+  }
+
+  /* The tab that opens a control bar's other rows, on its top edge. Over the
+     picture it's pressed with a finger, so it's the handle's size; off it,
+     it stays small */
   gw-control-bar[data-over]::part(expand) {
     inset-inline-end: var(--gw-safe-inline);
     background: inherit;
     border-start-start-radius: var(--gw-radius-control);
     border-start-end-radius: var(--gw-radius-control);
     backdrop-filter: blur(4px);
+  }
+
+  gw-control-bar[data-over]::part(expand-button) {
+    min-inline-size: 4rem;
+    min-block-size: 2.75rem;
   }
 
   /* At the bottom in the middle, clear of a phone's rounded corners, and a
@@ -188,11 +220,17 @@ const overlayOpen = (root: Element | ShadowRoot): boolean =>
  * over the bottom of its picture and slides it down off the edge once it's
  * been left alone for `hideAfter` while nothing keeps it. Only what does
  * nothing else brings it back: a tap where there's nothing to press, a 1
- * finger swipe up (down hides it), a key, a mouse moving, or a handle at the
- * bottom while it's hidden. A press on a control does its own thing, and a
- * tap that toggles the bar presses nothing else. With `fullscreen`, turning
- * a phone on its side goes full screen where the browser lets it, and
- * turning it back leaves.
+ * finger swipe up, a key, a mouse moving, or a handle at the bottom while
+ * it's hidden. A finger pulling it down moves it with the finger, and let go
+ * it goes on down or springs back, as `dragCloses` has it. A press on a
+ * control does its own thing, and a tap that toggles the bar presses nothing
+ * else. With `fullscreen`, turning a phone on its side goes full screen
+ * where the browser lets it, and turning it back leaves.
+ *
+ * Over the picture the controls' own fills, `--gw-color-surface-lower`, let
+ * the picture through as the bar does; `--gw-overlay-controls-fill` sets
+ * them, and `--gw-overlay-controls-background` the bar's. A menu, popover,
+ * sheet or dialog opened from the bar keeps its solid surface and fills.
  *
  * It marks the stage `data-overlay` while the bar is over it, and the bar
  * `data-over` and `data-hidden`, for the styles it adopts and an app's own.
@@ -244,6 +282,21 @@ export const overlayControls = (
   /** Whether turning the phone on its side put it in full screen. */
   let turned = false;
 
+  /**
+   * The one finger pulling the bar down, if it is: where it went down, how
+   * far the bar has come, and its last moves for how fast it was going.
+   */
+  let drag:
+    | {
+        readonly id: number;
+        readonly x0: number;
+        y0: number;
+        following: boolean;
+        distance: number;
+        moves: Array<{ readonly at: number; readonly y: number }>;
+      }
+    | undefined;
+
   const isOver = () =>
     sideways.matches || (document.fullscreenElement?.contains(bar) ?? false);
 
@@ -256,6 +309,8 @@ export const overlayControls = (
     bar.toggleAttribute("data-hidden", hidden);
     stage.toggleAttribute("data-controls-hidden", hidden);
     handle.hidden = !hidden;
+
+    if (!hidden) bar.style.removeProperty("translate");
   };
 
   const sleep = () => {
@@ -376,9 +431,130 @@ export const overlayControls = (
       if (!isOver() || swipe.fingers !== 1) return;
 
       if (swipe.direction === "up") wake();
-      else if (swipe.direction === "down") hide();
+      // A drag down has already settled the bar where it let go
+      else if (swipe.direction === "down" && drag === undefined) hide();
     },
     ignore === undefined ? {} : { ignore },
+  );
+
+  /** Lets the bar go: on down off the edge, or back up, as `dragCloses` has it. */
+  const letGo = (closes: boolean) => {
+    const following = drag?.following === true;
+
+    drag = undefined;
+
+    if (!following) return;
+
+    bar.removeAttribute("data-dragging");
+
+    if (closes) hide();
+    else wake();
+
+    // Under reduced motion it fades out where the finger left it, rather than
+    // jump back up first
+    if (!bar.hasAttribute("data-hidden") || !reducedMotion()) {
+      bar.style.removeProperty("translate");
+    }
+  };
+
+  // A finger pulling the bar down moves it with the finger, then it goes or
+  // springs back by how far and how fast it went
+  stage.addEventListener(
+    "pointerdown",
+    (event) => {
+      if (event.pointerType !== "touch") return;
+
+      // A second finger isn't pulling the bar
+      if (drag !== undefined) {
+        letGo(false);
+
+        return;
+      }
+
+      const path = event.composedPath();
+
+      if (
+        !isOver() ||
+        bar.hasAttribute("data-hidden") ||
+        keeps() ||
+        (ignore !== undefined &&
+          path.some(
+            (target) => target instanceof Element && target.matches(ignore),
+          ))
+      ) {
+        return;
+      }
+
+      drag = {
+        id: event.pointerId,
+        x0: event.clientX,
+        y0: event.clientY,
+        following: false,
+        distance: 0,
+        moves: [{ at: event.timeStamp, y: event.clientY }],
+      };
+    },
+    { capture: true, signal },
+  );
+
+  stage.addEventListener(
+    "pointermove",
+    (event) => {
+      if (drag === undefined || event.pointerId !== drag.id) return;
+
+      const dx = event.clientX - drag.x0;
+      const dy = event.clientY - drag.y0;
+
+      // It follows once it's plainly a pull down, from there on, so it
+      // doesn't jump by the slack
+      if (!drag.following) {
+        if (dy < 10 || dy < 2 * Math.abs(dx)) return;
+
+        drag.following = true;
+        drag.y0 = event.clientY;
+        bar.toggleAttribute("data-dragging", true);
+        clearTimeout(timer);
+      }
+
+      drag.distance = Math.min(
+        Math.max(event.clientY - drag.y0, 0),
+        bar.offsetHeight,
+      );
+      drag.moves = [
+        ...drag.moves.filter((move) => event.timeStamp - move.at < 100),
+        { at: event.timeStamp, y: event.clientY },
+      ];
+      bar.style.translate = `0 ${drag.distance}px`;
+    },
+    { signal },
+  );
+
+  stage.addEventListener(
+    "pointerup",
+    (event) => {
+      if (drag === undefined || event.pointerId !== drag.id) return;
+
+      const [first] = drag.moves;
+      const time = first === undefined ? 0 : event.timeStamp - first.at;
+
+      const velocity =
+        first === undefined || time <= 0
+          ? 0
+          : ((event.clientY - first.y) / time) * 1000;
+
+      const { distance } = drag;
+
+      letGo(dragCloses({ distance, velocity, size: bar.offsetHeight }));
+    },
+    { signal },
+  );
+
+  stage.addEventListener(
+    "pointercancel",
+    (event) => {
+      if (drag !== undefined && event.pointerId === drag.id) letGo(false);
+    },
+    { signal },
   );
 
   // Using the bar keeps it up
@@ -451,9 +627,16 @@ export const overlayControls = (
     stage.removeAttribute("data-overlay");
     stage.removeAttribute("data-controls-hidden");
 
-    for (const name of ["data-overlay-controls", "data-over", "data-hidden"]) {
+    for (const name of [
+      "data-overlay-controls",
+      "data-over",
+      "data-hidden",
+      "data-dragging",
+    ]) {
       bar.removeAttribute(name);
     }
+
+    bar.style.removeProperty("translate");
 
     if (isBar) bar.removeAttribute("expandable");
   };

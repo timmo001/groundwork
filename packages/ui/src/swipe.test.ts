@@ -1,12 +1,12 @@
 /**
  * Tests reading a swipe from fingers' moves: how far, which axis, how many
- * fingers, and a pinch that isn't one.
+ * fingers, and a pinch that isn't one; and whether a drag let go closes.
  *
  * @module
  */
 /// <reference types="bun" />
 import { expect, test } from "bun:test";
-import { swipeOf, type SwipeFinger } from "./swipe.js";
+import { dragCloses, swipeOf, type SwipeFinger } from "./swipe.js";
 
 const finger = (
   x0: number,
@@ -65,4 +65,15 @@ test("an app's own distance and pinch slack", () => {
   expect(
     swipeOf([finger(100, 200, 70, 0), finger(200, 200, 100, 0)], { pinch: 20 }),
   ).toBeUndefined();
+});
+
+test("a drag closes past half way or flung, and springs back otherwise", () => {
+  expect(dragCloses({ distance: 50, velocity: 0, size: 80 })).toBe(true);
+  expect(dragCloses({ distance: 30, velocity: 0, size: 80 })).toBe(false);
+  // Short, but flung
+  expect(dragCloses({ distance: 10, velocity: 600, size: 80 })).toBe(true);
+  // Where it would be 100ms on is past half way
+  expect(dragCloses({ distance: 30, velocity: 200, size: 80 })).toBe(true);
+  // Past half way, but flung back
+  expect(dragCloses({ distance: 60, velocity: -600, size: 80 })).toBe(false);
 });

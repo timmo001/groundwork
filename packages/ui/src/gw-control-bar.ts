@@ -147,7 +147,9 @@ interface Line {
  * @csspart middle - The middle group.
  * @csspart end - The end group, More at its end.
  * @csspart more - The More menu, a `gw-menu-button`.
+ * @csspart more-menu - The More menu's surface, its `menu` part.
  * @csspart expand - The tab that opens the rows past the first, a `gw-button`.
+ * @csspart expand-button - The tab's own button, the `gw-button`'s `button` part, such as to make it a finger's size over a picture.
  *
  * @cssprop --gw-control-bar-gap - The space between groups. Defaults to `--gw-space-6`.
  * @cssprop --gw-control-bar-group-gap - The space between controls in a group. Defaults to `--gw-space-2`.
@@ -313,6 +315,7 @@ export class GwControlBar extends GwElement {
   readonly #more = h("gw-menu-button", {
     class: "more",
     part: "more",
+    exportparts: "menu: more-menu",
     appearance: "plain",
     labels: "hide",
   });
@@ -343,6 +346,7 @@ export class GwControlBar extends GwElement {
   readonly #expand: GwButton = h("gw-button", {
     class: "expand",
     part: "expand",
+    exportparts: "button: expand-button",
     variant: "neutral",
     appearance: "plain",
     size: "small",
