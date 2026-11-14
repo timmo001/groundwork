@@ -33,6 +33,21 @@ export const controlSizes = (name: string) => css`
 `;
 
 /**
+ * A hit area of at least `--gw-target-min` around each control `selector`
+ * matches, reaching past its edges where it's smaller, so a finger finds it
+ * without the control looking any bigger. The control needs a position, and
+ * its `::after` is taken. Set `--gw-target-min: 0px` on an element to leave
+ * its controls at their own size.
+ */
+export const targetArea = (selector: string) => css`
+  ${selector}::after {
+    position: absolute;
+    inset: min(0px, calc((100% - var(--gw-target-min, 0px)) / 2));
+    content: "";
+  }
+`;
+
+/**
  * The standard page widths on a `size` attribute, for `gw-page` and
  * `gw-app-bar`: each sets `--gw-content-width` for the element, so a page and
  * a bar with the same size line up.

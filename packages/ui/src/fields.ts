@@ -624,11 +624,20 @@ export const fieldStyles = css`
   }
 
   :where(gw-switch, gw-checkbox) > label {
+    position: relative;
     display: inline-flex;
     gap: var(--gw-space-3);
     align-items: center;
     font-size: var(--gw-font-size-s);
     cursor: pointer;
+  }
+
+  /* A hit area of at least --gw-target-min, past the label's edges where
+     it's smaller, as targetArea() gives the shadow root controls */
+  :where(gw-switch, gw-checkbox) > label::after {
+    position: absolute;
+    inset: min(0px, calc((100% - var(--gw-target-min, 0px)) / 2));
+    content: "";
   }
 
   :where(gw-input, gw-switch, gw-checkbox, gw-select, gw-date-picker)
@@ -772,10 +781,18 @@ export const fieldStyles = css`
     display: none;
   }
 
+  /* The input is at least --gw-target-min tall, with the track centered in
+     it, and gives the extra back as a negative margin so the row keeps its
+     height */
   :where(gw-range) input {
     display: block;
     width: 100%;
+    block-size: max(var(--gw-range-thumb, 1rem), var(--gw-target-min, 0px));
     margin: 0;
+    margin-block: min(
+      0px,
+      calc((var(--gw-range-thumb, 1rem) - var(--gw-target-min, 0px)) / 2)
+    );
     accent-color: var(--gw-color-fill-accent-resting);
     cursor: pointer;
   }

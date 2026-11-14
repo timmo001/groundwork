@@ -5,6 +5,7 @@
  * @module
  */
 import {
+  defaultLabelsBelow,
   defaultSheetBelow,
   defaultSheetBelowHeight,
   opensAsSheet,
@@ -14,7 +15,13 @@ import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { listIndex } from "./keys.js";
 import { Scrim } from "./scrim.js";
-import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
+import {
+  base,
+  controlSizes,
+  createIcon,
+  setIconPath,
+  targetArea,
+} from "./styles.js";
 
 export interface MenuItem {
   readonly value: string;
@@ -115,6 +122,7 @@ const boxEmpty =
  *
  * @cssprop --gw-menu-button-scale - Scales the trigger, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
+ * @cssprop --gw-target-min - The least hit area, reaching past the trigger's edges where it's smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  * @cssprop --gw-menu-button-menu-width - The menu's least width. Defaults to `15rem`.
  * @cssprop --gw-menu-button-menu-height - The tallest the menu grows before its items scroll. Defaults to `24rem`.
  * @cssprop --gw-menu-button-backdrop - The backdrop behind the menu as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.
@@ -151,6 +159,7 @@ export class GwMenuButton extends GwElement {
   static override styles = [
     base,
     controlSizes("menu-button"),
+    targetArea(".trigger"),
     css`
       :host {
         position: relative;
@@ -635,7 +644,7 @@ export class GwMenuButton extends GwElement {
     this.appearance = "filled";
     this.active = false;
     this.labels = "show";
-    this.labelsBelow = "40rem";
+    this.labelsBelow = defaultLabelsBelow;
     this.loading = false;
     this.sheetBelow = defaultSheetBelow;
     this.sheetBelowHeight = defaultSheetBelowHeight;

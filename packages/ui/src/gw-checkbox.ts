@@ -22,6 +22,7 @@ import { LightElement, fieldId } from "./fields.js";
  * @attr {boolean} label-hidden - Hides the label but keeps it for assistive technology.
  *
  * @cssprop --gw-checkbox-size - The box's size. Defaults to `1.125rem`.
+ * @cssprop --gw-target-min - The least hit area of the box and its label, reaching past their edges where they're smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  */
 export class GwCheckbox extends LightElement {
   static override properties = {
@@ -99,6 +100,7 @@ export class GwCheckbox extends LightElement {
  *
  * @cssprop --gw-switch-width - The track's width. Defaults to `2.5rem`.
  * @cssprop --gw-switch-height - The track's height; the thumb is 0.5rem less. Defaults to `1.5rem`.
+ * @cssprop --gw-target-min - The least hit area of the switch and its label, reaching past their edges where they're smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  */
 export class GwSwitch extends GwCheckbox {
   protected override get controlRole() {

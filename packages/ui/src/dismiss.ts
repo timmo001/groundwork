@@ -52,11 +52,15 @@ export const dismissalStyles = css`
  * way: at once while nothing has changed, and only after asking once
  * something has. Content `input` and `change` events mark it changed, and
  * actions marked `data-needs-changes`, such as Save, stay disabled until
- * then. The question replaces the content in the same surface rather than
- * opening a second layer.
+ * then. With `live`, its controls apply at once, so content events change
+ * nothing to save. The question replaces the content in the same surface
+ * rather than opening a second layer.
  */
 export class Dismissal {
   dirty = false;
+
+  /** Whether content events leave it clean, for controls that apply at once. */
+  live = false;
 
   readonly #host: HTMLElement;
 
@@ -105,7 +109,7 @@ export class Dismissal {
 
     for (const type of ["input", "change"]) {
       host.addEventListener(type, () => {
-        this.mark(true);
+        if (!this.live) this.mark(true);
       });
     }
 

@@ -7,7 +7,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
 import type {} from "./gw-input.js";
-import { base, createIcon, setIconPath } from "./styles.js";
+import { base, createIcon, setIconPath, targetArea } from "./styles.js";
 
 /** One option of a filter. */
 export interface FilterOption {
@@ -77,6 +77,7 @@ const searchFrom = 8;
  * @cssprop --gw-filter-inset - How far the header and options reach past its edges, such as to a sheet's edge. Defaults to `0rem`.
  * @cssprop --gw-filter-header-height - The header's least height. Defaults to `2.75rem`.
  * @cssprop --gw-filter-clear-size - The clear button's size. Defaults to `2.25rem`.
+ * @cssprop --gw-target-min - The clear button's least hit area, reaching past its edges where it's smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  * @cssprop --gw-filter-count-scale - Scales the count chip, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-filter-options-height - The tallest the options' list grows before it scrolls. Defaults to `18rem`.
  * @cssprop --gw-filter-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
@@ -107,6 +108,7 @@ export class GwFilter extends GwElement {
 
   static override styles = [
     base,
+    targetArea(".clear"),
     css`
       :host {
         display: flex;
@@ -188,6 +190,7 @@ export class GwFilter extends GwElement {
       }
 
       .clear {
+        position: relative;
         display: grid;
         place-items: center;
         width: var(--gw-filter-clear-size, 2.25rem);

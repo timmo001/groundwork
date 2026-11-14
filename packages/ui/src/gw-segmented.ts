@@ -4,7 +4,11 @@
  *
  * @module
  */
-import { defaultSheetBelow, defaultSheetBelowHeight } from "./adaptive.js";
+import {
+  defaultLabelsBelow,
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+} from "./adaptive.js";
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type { MenuItem } from "./gw-menu-button.js";
@@ -307,7 +311,7 @@ export class GwSegmented extends GwElement {
         :host {
           --_gw-segmented-touch: var(
             --gw-segmented-touch-size,
-            calc(2.75rem * var(--gw-scale))
+            max(var(--gw-target-min, 0px), calc(2.75rem * var(--gw-scale)))
           );
         }
 
@@ -360,7 +364,7 @@ export class GwSegmented extends GwElement {
     this.name = `gw-segmented-${Math.random().toString(36).slice(2)}`;
     this.value = "";
     this.labels = "show";
-    this.labelsBelow = "40rem";
+    this.labelsBelow = defaultLabelsBelow;
     this.options = [];
     this.size = "medium";
     this.overflow = false;

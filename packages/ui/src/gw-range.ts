@@ -29,6 +29,7 @@ import { LightElement, fieldId } from "./fields.js";
  * @attr {boolean} disabled - Disables it.
  *
  * @cssprop --gw-range-thumb - The thumb's size. Defaults to 1rem.
+ * @cssprop --gw-target-min - The slider's least height to press, past the track without changing the row's height. The theme sets it, larger on a touch screen; `0px` turns it off.
  */
 export class GwRange extends LightElement {
   static override properties = {

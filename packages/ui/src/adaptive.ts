@@ -4,7 +4,9 @@
  * anchored popup or modal everywhere else. `gw-popover`, `gw-select`,
  * `gw-date-picker`, `gw-command-menu`, `gw-menu-button` and `gw-dialog` all
  * decide it here, as does `gw-sheet` with `side="auto"`, so they switch
- * together and an app's own popups can do the same.
+ * together and an app's own popups can do the same. The other sizes that
+ * change the layout are here too, as media queries an app can share.
+ * Docs: https://groundwork.timmo.dev/foundations/layout/#sizes-that-change-the-layout
  *
  * @module
  */
@@ -14,6 +16,23 @@ export const defaultSheetBelow = 600;
 
 /** The viewport height in pixels below which popups open as a bottom sheet. */
 export const defaultSheetBelowHeight = 500;
+
+/**
+ * The viewport width below which a button, menu button or segmented control
+ * with `labels="auto"` shows only its icon, as a CSS length.
+ */
+export const defaultLabelsBelow = "40rem";
+
+/** The media query that matches where labels hide: under `defaultLabelsBelow` wide. */
+export const labelsHiddenQuery = `(width < ${defaultLabelsBelow})`;
+
+/**
+ * The media query for a phone on its side: wider than it's tall, and
+ * shorter than where popups become sheets. Controls go over the content and
+ * gaps get smaller.
+ * Docs: https://groundwork.timmo.dev/foundations/layout/#a-phone-on-its-side
+ */
+export const sidewaysQuery = `(orientation: landscape) and (height < ${defaultSheetBelowHeight}px)`;
 
 /** Where a popup switches to a bottom sheet; `0` turns either side off. */
 export interface SheetRule {
@@ -39,6 +58,22 @@ export const opensAsSheet = (
     height: window.innerHeight,
   },
 ) => viewport.width < below || viewport.height < belowHeight;
+
+/**
+ * The media query that matches where `opensAsSheet` is true for a rule, for
+ * `matchMedia` or a stylesheet: `(width < 600px), (height < 500px)` by
+ * default, and `not all` with both sides off.
+ */
+export const sheetQuery = ({
+  below = defaultSheetBelow,
+  belowHeight = defaultSheetBelowHeight,
+}: SheetRule = {}) =>
+  [
+    below > 0 ? `(width < ${below}px)` : "",
+    belowHeight > 0 ? `(height < ${belowHeight}px)` : "",
+  ]
+    .filter(Boolean)
+    .join(", ") || "not all";
 
 /**
  * The declarations that make a fixed popup, such as one in the top layer, a

@@ -8,6 +8,7 @@ import {
   defaultSheetBelow,
   defaultSheetBelowHeight,
   opensAsSheet,
+  sheetQuery,
 } from "./adaptive.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
@@ -22,15 +23,6 @@ const chevrons = {
 } as const;
 
 type Side = keyof typeof chevrons;
-
-/** The media query that matches where `opensAsSheet` is true for a rule. */
-const sheetQuery = (below: number, belowHeight: number) =>
-  [
-    below > 0 ? `(width < ${below}px)` : "",
-    belowHeight > 0 ? `(height < ${belowHeight}px)` : "",
-  ]
-    .filter(Boolean)
-    .join(", ") || "not all";
 
 /**
  * A panel of filters, settings or details that slides in from an edge of the
@@ -56,6 +48,7 @@ const sheetQuery = (below: number, belowHeight: number) =>
  * @attr {number} sheet-below - Overrides the viewport width in pixels below which `side="auto"` slides up from the bottom; `0` turns the width rule off. Defaults to `600`.
  * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which `side="auto"` slides up from the bottom, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
+ * @attr {boolean} live - For controls that apply at once over something being watched, such as a camera's picture settings: the backdrop dims the page by 15% rather than 40%, so the change shows through.
  *
  * @slot - The content, which scrolls.
  * @slot actions - Buttons in the header, after the heading.
@@ -74,7 +67,7 @@ const sheetQuery = (below: number, belowHeight: number) =>
  * @cssprop --gw-sheet-border-color - The border on its open edge. Defaults to `--gw-color-border-normal`.
  * @cssprop --gw-sheet-radius - The corners of a bottom sheet. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-sheet-shadow - The shadow. Defaults to `--gw-shadow-l`.
- * @cssprop --gw-sheet-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-sheet-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 40%)`, or `15%` with `live`.
  *
  * @fires {Event} close - When it closes.
  */
@@ -86,6 +79,7 @@ export class GwSheet extends GwElement {
     sheetBelow: { type: "number", attribute: "sheet-below" },
     sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     closeLabel: { attribute: "close-label" },
+    live: { type: "boolean", reflect: true },
   } as const;
 
   static override styles = [
@@ -125,6 +119,11 @@ export class GwSheet extends GwElement {
 
       [part="surface"]:popover-open::backdrop {
         background: var(--gw-sheet-backdrop, rgb(0 0 0 / 40%));
+      }
+
+      /* Over live content, the change being made shows through */
+      :host([live]) [part="surface"]:popover-open::backdrop {
+        background: var(--gw-sheet-backdrop, rgb(0 0 0 / 15%));
       }
 
       @starting-style {
@@ -240,6 +239,8 @@ export class GwSheet extends GwElement {
   declare sheetBelowHeight: number;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
+  /** Its controls apply at once over something being watched, so the backdrop is lighter. */
+  declare live: boolean;
 
   readonly #heading = h("h2", { id: "heading", part: "heading" });
 
@@ -276,9 +277,7 @@ export class GwSheet extends GwElement {
   readonly #scrim = new Scrim(() => this.close());
 
   // Follows the rule while it's open, so turning a phone moves it
-  #narrow = window.matchMedia(
-    sheetQuery(defaultSheetBelow, defaultSheetBelowHeight),
-  );
+  #narrow = window.matchMedia(sheetQuery());
 
   // Where focus was before it opened, to go back to when it closes
   #returnFocus: HTMLElement | undefined;
@@ -291,6 +290,7 @@ export class GwSheet extends GwElement {
     this.sheetBelow = defaultSheetBelow;
     this.sheetBelowHeight = defaultSheetBelowHeight;
     this.closeLabel = "Close";
+    this.live = false;
   }
 
   /** Whether it's open. */
@@ -380,7 +380,10 @@ export class GwSheet extends GwElement {
       if (open) this.#narrow.removeEventListener("change", this.#place);
 
       this.#narrow = window.matchMedia(
-        sheetQuery(this.sheetBelow, this.sheetBelowHeight),
+        sheetQuery({
+          below: this.sheetBelow,
+          belowHeight: this.sheetBelowHeight,
+        }),
       );
 
       if (open) this.#narrow.addEventListener("change", this.#place);

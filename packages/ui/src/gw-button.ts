@@ -4,9 +4,16 @@
  *
  * @module
  */
+import { defaultLabelsBelow } from "./adaptive.js";
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
-import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
+import {
+  base,
+  controlSizes,
+  createIcon,
+  setIconPath,
+  targetArea,
+} from "./styles.js";
 
 /**
  * A native button styled through `--gw-*` variables, so it follows the
@@ -27,6 +34,11 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * when there's no icon, so the button keeps its size, and clicks are
  * ignored. The icon fades back once it's done.
  *
+ * While `pending`, for a press that waits on a device or a server and can be
+ * pressed again, such as a camera's zoom step, it gently pulses and still
+ * takes presses. `waitFor(promise)` sets it until every press it counted
+ * has answered. Under reduced motion it's a steady dim.
+ *
  * @element gw-button
  * @summary A pill button, or a link that looks like one.
  *
@@ -38,6 +50,7 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  * @attr {string} label - The accessible name, when the text alone isn't enough.
  * @attr {boolean} disabled - Disables the button.
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and ignores clicks.
+ * @attr {boolean} pending - Pulses while a press waits on an answer, still taking more presses.
  * @attr {string} icon - SVG path data for an icon before the text.
  * @attr {string} swatch - A CSS color, drawn as a small round dot in the icon's place, such as a tag's own color.
  * @attr {"show"|"hide"|"auto"} labels - Whether the text shows beside an icon: always, never, or not below `labels-below`. Defaults to `show`.
@@ -56,8 +69,10 @@ import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
  *
  * @cssprop --gw-button-scale - Scales every dimension, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
+ * @cssprop --gw-target-min - The least hit area, reaching past the button's edges where it's smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  * @cssprop --gw-button-tone - The color, set by `variant`.
  * @cssprop --gw-button-ink - The text color, when it differs from the tone.
+ * @cssprop --gw-button-pending-opacity - How far the pulse fades while `pending`. Defaults to `0.55`.
  */
 export class GwButton extends GwElement {
   static override properties = {
@@ -69,6 +84,7 @@ export class GwButton extends GwElement {
     label: {},
     disabled: { type: "boolean", reflect: true },
     loading: { type: "boolean", reflect: true },
+    pending: { type: "boolean", reflect: true },
     icon: {},
     swatch: {},
     labels: { reflect: true },
@@ -86,6 +102,7 @@ export class GwButton extends GwElement {
   static override styles = [
     base,
     controlSizes("button"),
+    targetArea(".button"),
     css`
       :host {
         --gw-button-tone: var(--gw-color-accent);
@@ -346,6 +363,27 @@ export class GwButton extends GwElement {
         display: none;
       }
 
+      /* A press waiting on an answer breathes until it comes, and still
+         takes presses */
+      :host([pending]) .button {
+        animation: gw-button-pending 900ms var(--gw-motion-easing) infinite
+          alternate;
+      }
+
+      @keyframes gw-button-pending {
+        to {
+          opacity: var(--gw-button-pending-opacity, 0.55);
+        }
+      }
+
+      /* The state layer stops the pulse under reduced motion, leaving it
+         steadily dim */
+      @media (prefers-reduced-motion: reduce) {
+        :host([pending]) .button {
+          opacity: 0.7;
+        }
+      }
+
       /* Icon only, to save space: square, with the text kept for assistive
          technology. auto does this below labels-below */
       .button.compact.has-icon {
@@ -374,6 +412,8 @@ export class GwButton extends GwElement {
   declare disabled: boolean;
   /** Shows a spinning ring in place of the icon and ignores clicks. */
   declare loading: boolean;
+  /** Pulses while a press waits on an answer, still taking more presses. */
+  declare pending: boolean;
   /** SVG path data for an icon before the text. */
   declare icon: string;
   /** A CSS color, drawn as a small round dot in the icon's place. */
@@ -418,6 +458,9 @@ export class GwButton extends GwElement {
 
   readonly #narrow = new Below(() => this.requestUpdate("labels"));
 
+  // Presses still waiting on an answer, through waitFor()
+  #waiting = 0;
+
   #control: HTMLButtonElement | HTMLAnchorElement | HTMLSpanElement = h(
     "button",
     {
@@ -436,7 +479,7 @@ export class GwButton extends GwElement {
     this.icon = "";
     this.swatch = "";
     this.labels = "show";
-    this.labelsBelow = "40rem";
+    this.labelsBelow = defaultLabelsBelow;
     this.toggle = false;
     this.pressed = false;
     this.variant = "brand";
@@ -447,6 +490,7 @@ export class GwButton extends GwElement {
     this.label = "";
     this.disabled = false;
     this.loading = false;
+    this.pending = false;
 
     // Registered first, so it runs before any listener an app adds
     this.addEventListener("click", (event) => {
@@ -511,6 +555,27 @@ export class GwButton extends GwElement {
       attributes: true,
       attributeFilter: ["aria-current"],
     });
+  }
+
+  /**
+   * Marks a press as waiting on `answered`, such as a request to a device,
+   * setting `pending` until it settles. Each call counts, so after several
+   * quick presses it stays pending until the last has answered. Returns
+   * `answered`, to chain on.
+   */
+  waitFor<T>(answered: Promise<T>): Promise<T> {
+    this.#waiting += 1;
+    this.pending = true;
+
+    const settle = () => {
+      this.#waiting -= 1;
+
+      if (this.#waiting === 0) this.pending = false;
+    };
+
+    answered.then(settle, settle);
+
+    return answered;
   }
 
   override connectedCallback() {

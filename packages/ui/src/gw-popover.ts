@@ -32,7 +32,8 @@ const closeIcon =
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
  * outside. A clear scrim covers the page while it's open, so that click only
- * closes it, and nothing beneath reacts. Open it with `show(anchor)`. It
+ * closes it, and nothing beneath reacts. Open it with `show(anchor)`, or
+ * `toggle(anchor)` from a key that also closes it. It
  * focuses the close button, or the first element in its content with
  * `autofocus`, such as a field it's opened to fill in. Put buttons in the
  * `actions` slot: a click on one with a `value` closes it with that value,
@@ -45,6 +46,7 @@ const closeIcon =
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
  * @attr {boolean} fit - Sizes it to its content beside a button or in the middle: at least `--gw-popover-width`, and no wider than the window, so a wide control inside never scrolls sideways.
+ * @attr {boolean} live - For controls that apply at once over something being watched, such as a picture's brightness: changing them isn't an edit, so closing never asks to discard, and the backdrop dims the page by 15% rather than 40%.
  * @attr {number} sheet-below - Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.
  * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
@@ -76,7 +78,7 @@ const closeIcon =
  * @cssprop --gw-popover-border-color - The border. Defaults to `--gw-color-border-normal`.
  * @cssprop --gw-popover-radius - The corners. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-popover-shadow - The shadow. Defaults to `--gw-shadow-l`.
- * @cssprop --gw-popover-backdrop - The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-popover-backdrop - The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`, or `15%` with `live`.
  * @cssprop --gw-adaptive-sheet-width - The widest it grows as a bottom sheet, centered. Defaults to `40rem`.
  * @cssprop --gw-adaptive-sheet-height - The tallest it grows as a bottom sheet, its content scrolling past that. Defaults to `85dvh`.
  * @cssprop --gw-popover-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
@@ -92,6 +94,7 @@ export class GwPopover extends GwElement {
     heading: {},
     confirm: { type: "boolean" },
     fit: { type: "boolean", reflect: true },
+    live: { type: "boolean", reflect: true },
     sheetBelow: { type: "number", attribute: "sheet-below" },
     sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     closeLabel: { attribute: "close-label" },
@@ -209,6 +212,12 @@ export class GwPopover extends GwElement {
         background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%));
       }
 
+      /* Over live content, the change being made shows through */
+      :host([live]) [data-placement="center"]::backdrop,
+      :host([live]) [data-placement="sheet"]::backdrop {
+        background: var(--gw-popover-backdrop, rgb(0 0 0 / 15%));
+      }
+
       header {
         display: flex;
         gap: var(--gw-space-2);
@@ -256,6 +265,8 @@ export class GwPopover extends GwElement {
   declare confirm: boolean;
   /** Sizes it to its content, from `--gw-popover-width` up to the window's width. */
   declare fit: boolean;
+  /** Its controls apply at once, so changing them isn't an edit, and the backdrop is lighter. */
+  declare live: boolean;
   /** The viewport width in pixels below which it's a bottom sheet. */
   declare sheetBelow: number;
   /** The viewport height in pixels below which it's a bottom sheet. */
@@ -326,6 +337,7 @@ export class GwPopover extends GwElement {
     this.heading = "";
     this.confirm = false;
     this.fit = false;
+    this.live = false;
     this.sheetBelow = defaultSheetBelow;
     this.sheetBelowHeight = defaultSheetBelowHeight;
     this.closeLabel = "Close";
@@ -343,6 +355,11 @@ export class GwPopover extends GwElement {
     this.#dismissal.mark(dirty);
   }
 
+  /** Whether it's open. */
+  get open() {
+    return this.#popover.matches(":popover-open");
+  }
+
   /** Opens next to `anchor`, or in the middle without one. */
   show(anchor?: Element) {
     this.#anchor = anchor;
@@ -357,6 +374,17 @@ export class GwPopover extends GwElement {
     this.returnValue = value;
 
     if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
+  }
+
+  /**
+   * Opens it next to `anchor`, or closes it if it's open, asking first when
+   * there are changes, as a key such as `?` for a help popover would. A
+   * press on its button while it's open lands on the scrim, which closes it,
+   * so the button needs no toggle of its own.
+   */
+  toggle(anchor?: Element) {
+    if (this.open) this.#dismissal.request();
+    else this.show(anchor);
   }
 
   // Esc closes it at once, unless there are changes: then it asks first
@@ -462,6 +490,7 @@ export class GwPopover extends GwElement {
     setAttribute(popover, "aria-describedby", this.heading ? "body" : null);
     this.#heading.textContent = this.heading;
     this.#heading.hidden = !this.heading;
+    this.#dismissal.live = this.live;
     this.#closeButton.textContent = this.closeLabel;
     this.#dismissal.text(
       this.discardQuestion,
