@@ -151,7 +151,7 @@ An `href` link lives in the button's shadow root, so it isn't in the page's HTML
   <gw-menu-button label="Power" icon="M16.56,5.44L15.11,6.89C16.84,7.94 18,9.83 18,12A6,6 0 0,1 12,18A6,6 0 0,1 6,12C6,9.83 7.16,7.94 8.88,6.88L7.44,5.44C5.36,6.88 4,9.28 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12C20,9.28 18.64,6.88 16.56,5.44M13,3H11V13H13" items='[{"value":"sleep","label":"Sleep"},{"value":"restart","label":"Restart","description":"Back in about a minute"},{"value":"shutdown","label":"Shut down"}]'></gw-menu-button>
 </Demo>
 
-The menu opens on the Popover API, in the top layer, and closes on Esc or a click outside. Arrow keys, Home and End move between items and actions. Choosing one fires `select` with its `value`, closes the menu and puts focus back on the button.
+The menu opens on the Popover API, in the top layer, and closes on Esc or a click outside. On a narrow or short screen it's a [bottom sheet](/components/overlays#bottom-sheets-on-phones), and `sheet-below` and `sheet-below-height` override where, which apps shouldn't need. Arrow keys, Home and End move between items and actions. Choosing one fires `select` with its `value`, closes the menu and puts focus back on the button.
 
 <Demo id="menu-button-anatomy" layout="stack">
   <gw-anatomy target="[part=trigger]">

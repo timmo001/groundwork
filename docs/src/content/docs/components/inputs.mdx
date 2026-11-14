@@ -100,7 +100,7 @@ A search in a toolbar says what it's for with its icon and placeholder, so `labe
   </gw-select>
 </Demo>
 
-The list opens under the select, growing from it, and is a bottom sheet below `sheet-below`, 600px wide by default. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
+The list opens under the select, growing from it, and is a [bottom sheet](/components/overlays#bottom-sheets-on-phones) on a narrow or short screen. From seven options it has a search field, focused as the list opens, that matches labels, descriptions, groups and `keywords`. Move with the arrow keys, Home, End and Page Up or Down, and pick with Enter. Only the options in view are rendered, so a list of thousands, such as time zones, stays quick.
 
 Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SVG path data), `data-swatch` (a color shown as a dot), `data-description` and `disabled`. Or set `options` to `[{ "value", "label", "description", "icon", "swatch", "group", "keywords", "disabled" }]`. A disabled option still shows and can be reached with the keyboard, so give it a `description` saying why, but it can't be picked. A hidden input carries the value in a form, and it fires `change`.
 
@@ -113,7 +113,7 @@ Write `<option>` children, inside `<optgroup>`s for groups, with `data-icon` (SV
 | `multiple` | Picks several, kept in `values` |
 | `inline-label` | Shows the label inside the trigger, before the value |
 | `label-hidden` | Hides the label but keeps it for assistive technology |
-| `sheet-below` | The viewport width in pixels below which the list is a bottom sheet (`600`). `0` keeps it under the field |
+| `sheet-below`, `sheet-below-height` | Override where the list becomes a [bottom sheet](/components/overlays#bottom-sheets-on-phones), which apps shouldn't need |
 | `clear-label`, `search-label`, `no-match-label` | The button that clears a multiple choice, the search placeholder, and what the list says when the search matches nothing, for an app in another language. Default to Clear, Search and No matches |
 
 ### Anatomy
@@ -179,7 +179,7 @@ A `swatch` on an option draws a dot of that color before its label, such as a ta
   <gw-date-picker label="Due" placeholder="No due date"></gw-date-picker>
 </Demo>
 
-A field that shows the chosen day and opens a calendar under it to pick another. The calendar takes focus as it opens; move with the arrow keys, Home and End to the week's ends and Page Up or Down by a month (with Shift by a year), and pick with Enter, Space or a click. Picking or Esc closes it and returns focus to the field, and Arrow Down on the field opens it. The value is a `YYYY-MM-DD` day, carried in a form by a hidden input, and it fires `change` when a day is picked.
+A field that shows the chosen day and opens a calendar under it to pick another. The calendar takes focus as it opens; move with the arrow keys, Home and End to the week's ends and Page Up or Down by a month (with Shift by a year), and pick with Enter, Space or a click. Picking or Esc closes it and returns focus to the field, and Arrow Down on the field opens it. On a narrow or short screen the calendar is a [bottom sheet](/components/overlays#bottom-sheets-on-phones). The value is a `YYYY-MM-DD` day, carried in a form by a hidden input, and it fires `change` when a day is picked.
 
 | Attribute | What it does |
 | --- | --- |
@@ -194,6 +194,7 @@ A field that shows the chosen day and opens a calendar under it to pick another.
 | `size` | `xs` to `xl`, as on a select |
 | `previous-label`, `next-label`, `marked-label` | The month buttons' names and what a marked day's name adds, for an app in another language. Default to Previous month, Next month and marked |
 | `presets`, `preset-options`, `presets-label` | Shows shortcut buttons under the calendar, which ones as a JSON array, and the group's name. Defaults to Yesterday, Today and Tomorrow, and Shortcuts |
+| `sheet-below`, `sheet-below-height` | Override where the calendar becomes a [bottom sheet](/components/overlays#bottom-sheets-on-phones), which apps shouldn't need |
 
 ### Shortcuts
 

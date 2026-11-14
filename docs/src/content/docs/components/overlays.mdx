@@ -5,7 +5,7 @@ description: Anchored popovers for confirmations, renames and small forms, sheet
 
 ## Popover
 
-Whatever a button asks or offers opens next to that button, not in the middle of the screen, so it stays tied to what was pressed. That covers a confirmation, a rename, a small form and a question that follows the action, such as asking to restart after a save: it opens from the Save button. On phones it's a bottom sheet.
+Whatever a button asks or offers opens next to that button, not in the middle of the screen, so it stays tied to what was pressed. That covers a confirmation, a rename, a small form and a question that follows the action, such as asking to restart after a save: it opens from the Save button. On phones it's a [bottom sheet](#bottom-sheets-on-phones).
 
 Only one overlay shows at a time. A popover, bottom sheet or dialog never opens another over itself: a follow-up question or a next step replaces its content as a new view, and anything bigger is a page.
 
@@ -36,9 +36,9 @@ Keep a popover to one or two fields. A longer form is a view of its own, not a p
 | `confirm` | Makes it an `alertdialog`, for a question that needs an answer |
 | `close(value)` | Closes it; `returnValue` holds the value when it fires `close` |
 | `close-label` | The close button's name, for an app in another language. A dialog takes it too |
-| `sheet-below` | The viewport width in pixels below which it's a bottom sheet (`600`). `0` keeps it by its button at any width |
+| `sheet-below`, `sheet-below-height` | Override where it becomes a [bottom sheet](#bottom-sheets-on-phones), which apps shouldn't need |
 
-It's on the Popover API, in the top layer, so a scrolling parent never clips it. It has a close button in its corner, like a dialog, and the footer holds only the real actions, never a Cancel or Later that does what the close button does. Focus starts on the close button, so Enter never confirms by accident, and goes back to the button afterward. A popover opened to fill in a field, such as a custom value, puts `autofocus` on the field and focus starts there instead. It follows the button as the page scrolls, and it's a bottom sheet below `sheet-below`. Esc and a click outside close it the same way a [dialog](#closing) closes.
+It's on the Popover API, in the top layer, so a scrolling parent never clips it. It has a close button in its corner, like a dialog, and the footer holds only the real actions, never a Cancel or Later that does what the close button does. Focus starts on the close button, so Enter never confirms by accident, and goes back to the button afterward. A popover opened to fill in a field, such as a custom value, puts `autofocus` on the field and focus starts there instead. It follows the button as the page scrolls, and it's a [bottom sheet](#bottom-sheets-on-phones) on a narrow or short screen. Esc and a click outside close it the same way a [dialog](#closing) closes.
 
 ## Closing
 
@@ -58,6 +58,23 @@ An `input` or `change` event from the content marks it changed, and `show()` cle
 | `dirty` | Whether the content changed since it opened. Set by edits, cleared by `show()` |
 | `data-needs-changes` | On an action, keeps it disabled until something changes |
 | `discard-question`, `keep-label`, `discard-label` | The question and its two buttons, for an app in another language. Default to "Discard your changes?", Keep editing and Discard |
+
+## Bottom sheets on phones
+
+Every overlay that opens over the page adapts to the screen by itself: anchored to its button or in the middle on a larger screen, and a bottom sheet on a narrow or short one. That covers the [popover](#popover), [dialog](#dialog), [command menu](#command-menu), the [menu button's](/components/actions#menu-button) menu, and the [select's](/components/inputs#select) list and [date picker's](/components/inputs#date-picker) calendar. An app never chooses it per overlay.
+
+It's a sheet when the viewport is under 600px wide or under 500px tall. The height rule catches a phone on its side, such as 844 by 390, which is wider than 600px but too short for a popup by its button to be easy to use.
+
+The sheet slides up from the bottom edge. It keeps clear of the safe area at the bottom and sides, centers itself no wider than `--gw-adaptive-sheet-width` (`40rem`), so it doesn't stretch across a phone on its side, and grows no taller than `--gw-adaptive-sheet-height` (`85dvh`), so the top of the page stays in view, with its content scrolling past that. Set either property on `:root` to change it for every overlay at once.
+
+| Attribute | What it does |
+| --- | --- |
+| `sheet-below` | Overrides the viewport width in pixels below which it's a sheet (`600`). `0` turns the width rule off |
+| `sheet-below-height` | Overrides the viewport height in pixels below which it's a sheet (`500`). `0` turns the height rule off |
+
+Each of them takes both attributes, but apps shouldn't need them: the defaults are the rule. Set both to `0` only for an overlay that must stay by its button at any size. An app's own popups follow the same rule with `opensAsSheet()` and the `sheetLayout` declarations, both exported from `@timmo001/groundwork-ui`.
+
+There's no separate adaptive dialog element, since the overlays already are one: a [dialog](#dialog) is a modal in the middle that becomes a sheet, and a popover opened without a button does the same for something lighter. The [sheet](#sheet) below is a different thing, a panel from an edge at any size.
 
 ## Sheet
 
@@ -125,11 +142,11 @@ It's built from base elements: the search field is a [`gw-input`](/components/in
 
 Only for something nothing on screen started that blocks the whole app until it's answered, such as an expired sign-in. App-wide state you can work through, such as a lost connection, a needed restart or a new version, is a slim bar instead, and anything a button starts is a [popover](#popover). The button in the demo stands in for the sign-in expiring.
 
-It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, and the page behind can't be reached. The close button in its header is the only way to close it, with Esc and the backdrop, following the [closing rules](#closing). The footer holds only the real actions, never a second Close or Cancel: one action shows one button, two show both. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
+It's a native `<dialog>` opened as a modal, so focus moves into it and back when it closes, and the page behind can't be reached. On a narrow or short screen it's a [bottom sheet](#bottom-sheets-on-phones). The close button in its header is the only way to close it, with Esc and the backdrop, following the [closing rules](#closing). The footer holds only the real actions, never a second Close or Cancel: one action shows one button, two show both. Open it with `show()`. A button in the `actions` slot with a `value` closes it with that value, which is in `returnValue` when it fires `close`.
 
 ## Menus
 
-The [menu button](/components/actions#menu-button) shows its menu on the Popover API, in the top layer, with contextual actions pinned below its items.
+The [menu button](/components/actions#menu-button) shows its menu on the Popover API, in the top layer, with contextual actions pinned below its items. On a narrow or short screen the menu is a [bottom sheet](#bottom-sheets-on-phones).
 
 ## Command menu
 
@@ -138,7 +155,7 @@ The [menu button](/components/actions#menu-button) shows its menu on the Popover
   <gw-command-menu id="commands" shortcut="none" options='[{"value":"restart","label":"Restart","description":"Restart the service","group":"Service","icon":"M12,4C14.1,4 16.1,4.8 17.6,6.3C20.7,9.4 20.7,14.5 17.6,17.6C15.8,19.5 13.3,20.2 10.9,19.9L11.4,17.9C13.1,18.1 14.9,17.5 16.2,16.2C18.5,13.9 18.5,10.1 16.2,7.7C15.1,6.6 13.5,6 12,6V10.6L7,5.6L12,0.6V4M6.3,17.6C3.7,15 3.3,11 5.1,7.9L6.6,9.4C5.5,11.6 5.9,14.4 7.8,16.2C8.3,16.7 8.9,17.1 9.6,17.4L9,19.4C8,19 7.1,18.4 6.3,17.6Z"},{"value":"logs","label":"Show logs","group":"Service","keywords":["journal","output"],"icon":"M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,12H16V14H8V12M8,16H13V18H8V16Z"},{"value":"theme","label":"Change theme","group":"Appearance","keywords":["color","dark","light"],"icon":"M12,18V6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,15.31L23.31,12L20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31Z"},{"value":"settings","label":"Open settings","group":"Appearance","icon":"M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"}]'></gw-command-menu>
 </Demo>
 
-In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that shortcut, so the demo sets `shortcut="none"` and opens from the button. The menu won't open on a shortcut another handler has taken, or over any open dialog. It shares the [select's](/components/inputs#select) list: type to filter by label, description, group or `keywords`, move with the arrow keys and pick with Enter. Picking closes it and fires `pick` with the option's value. Esc or a click outside closes it. It's a bottom sheet below `sheet-below`, 600px wide by default.
+In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that shortcut, so the demo sets `shortcut="none"` and opens from the button. The menu won't open on a shortcut another handler has taken, or over any open dialog. It shares the [select's](/components/inputs#select) list: type to filter by label, description, group or `keywords`, move with the arrow keys and pick with Enter. Picking closes it and fires `pick` with the option's value. Esc or a click outside closes it. It's a [bottom sheet](#bottom-sheets-on-phones) on a narrow or short screen.
 
 | Attribute | What it does |
 | --- | --- |
@@ -148,7 +165,7 @@ In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that sho
 | `shortcut` | `mod+` and the key that opens it with Cmd or Ctrl: `mod+k` (the default), another such as `mod+p`, or `none` to open it only with `show()` |
 | `move-hint`, `pick-hint`, `close-hint` | The footer's words after ↑ ↓, Enter and Esc, for an app in another language. Default to "to move", "to pick" and "to close" |
 | `pick-key`, `close-key` | The names the footer gives the keys that pick and close, for a keyboard in another language. Default to `Enter` and `Esc` |
-| `sheet-below` | The viewport width in pixels below which it's a bottom sheet (`600`). `0` keeps it a modal |
+| `sheet-below`, `sheet-below-height` | Override where it becomes a [bottom sheet](#bottom-sheets-on-phones), which apps shouldn't need |
 
 `--gw-command-menu-height` caps its height (`70vh`) and `--gw-command-menu-sheet-list-height` the list's as a bottom sheet (`60vh`). The list is a [`gw-option-list`](/components/inputs#option-list), the `list` part, so its row heights and parts work here too. Each key hint is the `hint` part, with its keys the `key` part.
 
