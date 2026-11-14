@@ -308,7 +308,8 @@ A [key list](/components/overlays#key-list) lays the list out, with `input="touc
 
 In full screen, or on a phone on its side, a player's controls sit over its picture and slide down off the bottom edge once they've been left alone for 3 seconds while it plays, as a video player's do, while the handle rises in their place. They stay while it's paused, or while more of their rows are open: only the first row shows at first, and a tab at its edge opens the rest, which grow in rather than appear.
 
-- **Only what does nothing else wakes them:** a tap where there's nothing to press (one that moved less than 10px), a 1 finger swipe up (down hides them), a key, a mouse moving, or a handle at the bottom in the middle that shows while they're hidden, at least 64 by 44px so a finger finds it.
+- **Only what does nothing else wakes them:** a tap where there's nothing to press (one that moved less than 10px), a 1 finger swipe up, a key, a mouse moving, or a handle at the bottom in the middle that shows while they're hidden, at least 64 by 44px so a finger finds it. The control bar's tab is the same size while it's over the picture.
+- **Pulling them down moves them with the finger.** Let go past half way, or flung down faster than about 500px a second, they go on down; otherwise they spring back.
 - **A press on a control does its own thing.** A button, a slider, a tile or a camera's own controls never wake or hide the bar, and their press is never swallowed. A tap that does toggle the bar presses nothing else. Only what's inside the stage counts as a control: the stage itself, and anything around it, can be focusable, such as with `tabindex="0"` for [single keys](#keys), and a tap on the picture still wakes or hides the bar.
 - **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of `--gw-safe-inline`, at least `1.5rem` or the safe area where that's wider, and `--gw-safe-bottom` under the bar and the handle. [A phone on its side](/foundations/layout#a-phone-on-its-side) has the tokens and the viewport setting they need.
 - **Turning a phone on its side** goes full screen, and turning it back upright leaves.
@@ -337,7 +338,7 @@ overlayControls(controls, {
 | `ignore` | A selector for what a drag already moves, where a swipe never starts |
 | `handleLabel` | The handle's name (`Show the controls`) |
 
-The handle is a `gw-button` with the `gw-overlay-handle` class, and `--gw-overlay-controls-background` sets the bar's and the handle's see-through fill. The bar and the handle keep the safe margins themselves; the picture under them needs them too, where it has anything to press:
+The handle is a `gw-button` with the `gw-overlay-handle` class, and `--gw-overlay-controls-background` sets the bar's and the handle's see-through fill. The controls' own fills, such as a segmented control's track, a select or a control group, are see-through too while the bar is over the picture, so they don't sit on it as dark slabs: the bar sets `--gw-color-surface-lower` to `--gw-overlay-controls-fill`, 45% of `--gw-color-surface-low` by default. A menu, popover, sheet or dialog opened from the bar keeps its solid surface, and the fields in it their solid fill. The bar and the handle keep the safe margins themselves; the picture under them needs them too, where it has anything to press:
 
 ```css
 [data-overlay] > .picture {

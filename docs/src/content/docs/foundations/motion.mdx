@@ -122,6 +122,24 @@ A site of separate pages with no client router of its own gets the same with one
 
 `viewTransitionStyles` is the stylesheet itself, for a page that starts its own transitions or a site of separate pages. It sits in the components layer, so an app's own `::view-transition-*` rules win.
 
+### Lists
+
+A list's items make room and close their gaps with `animateLayout()`. It measures each child of the container before and after a change, then slides each one that stays from where it was to its new place on `--gw-motion-normal` and `--gw-motion-easing`, in translate only, so nothing lays out again while it moves. A new item fades in at its place. Fade an item out before the change that removes it. A second change while items slide starts each from where it is. Under reduced motion the change just happens.
+
+```ts
+import { animateLayout } from "@timmo001/groundwork-ui";
+
+animateLayout(grid, () => grid.prepend(tile));
+```
+
+A list that draws its items anew on each change, rather than moving them, names each one with `key`, such as `{ key: (item) => item.getAttribute("data-key") }`; an item without a key, such as a spacer, stays put. `measureLayout()` is the same in two steps, for a change that happens in steps of its own: it measures, and returns what slides the items once the change has drawn.
+
+It works inside a shadow root, where a view transition's names can't reach, and in every browser: element-scoped view transitions would do this too, but only Chrome has them so far. The [table](/components/data#table) and [list](/components/data#list) slide their rows as they're sorted, searched, folded or new ones arrive, and toasts slide to make room for the next; a [notification](/components/feedback#notifications) opens out as it arrives and folds away when dismissed.
+
+### Drags
+
+`dragCloses({ distance, velocity, size })` decides where a drag that follows the finger goes when it's let go, such as a bar pulled down: on when it's flung that way faster than 500px a second, or when where it'd be 100ms later is past half way; otherwise back. `overlayControls()` uses it for a bar pulled off the picture.
+
 Keep them simple: every name is used once on a page at a time, and they work at document level, never inside a shadow root. Start a second one whenever it's asked for; it doesn't wait for the first.
 
 ## References
