@@ -11,6 +11,7 @@
   },
   "files": [
     "src",
+    "!src/**/*.test.ts",
     "custom-elements.json",
     "README.md",
     "LICENSE"

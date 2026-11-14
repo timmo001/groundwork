@@ -32616,6 +32616,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/swipe.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/below.js"
           }
         },
@@ -35318,6 +35326,94 @@
           "declaration": {
             "name": "setIconPath",
             "module": "src/styles.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/swipe.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "swipeOf",
+          "return": {
+            "type": {
+              "text": "Swipe | undefined"
+            }
+          },
+          "parameters": [
+            {
+              "name": "fingers",
+              "type": {
+                "text": "ReadonlyArray<SwipeFinger>"
+              }
+            },
+            {
+              "name": "{ distance = 48, pinch = 40 }",
+              "default": "{}",
+              "type": {
+                "text": "Omit<SwipeOptions, \"ignore\">"
+              }
+            }
+          ],
+          "description": "The swipe some fingers made, if they made one: they moved `distance` on\naverage, along an axis at least twice as far as across it, and didn't\nspread or close more than `pinch`. For an app tracking fingers itself."
+        },
+        {
+          "kind": "variable",
+          "name": "options",
+          "type": {
+            "text": "object"
+          },
+          "default": "{ capture: true, signal: controller.signal }"
+        },
+        {
+          "kind": "function",
+          "name": "onSwipe",
+          "return": {
+            "type": {
+              "text": "(() => void)"
+            }
+          },
+          "parameters": [
+            {
+              "name": "element",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "listener",
+              "type": {
+                "text": "(swipe: Swipe) => void"
+              }
+            },
+            {
+              "name": "options",
+              "default": "{}",
+              "type": {
+                "text": "SwipeOptions"
+              }
+            }
+          ],
+          "description": "Calls `listener` with each touch swipe on `element`: one or more fingers\nmoving the same way at least `distance`, along one axis twice as far as\nacross it. A pinch, a touch the browser takes over and a touch that starts\non `ignore` are never swipes, and the click after a swipe does nothing.\nEvery listener on an element shares one recognizer, each with its own\noptions. Give the element a `touch-action` that leaves swipes to the page,\nsuch as `none`. Returns a function that stops listening."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "swipeOf",
+          "declaration": {
+            "name": "swipeOf",
+            "module": "src/swipe.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "onSwipe",
+          "declaration": {
+            "name": "onSwipe",
+            "module": "src/swipe.ts"
           }
         }
       ]
