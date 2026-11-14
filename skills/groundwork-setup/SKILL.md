@@ -27,5 +27,6 @@ Load the skill a step needs when you reach it, where it's available:
 | 7. Agent surface | the `cli-tool` template's README |
 | 9. Theme | `groundwork-themes` |
 | 10. Devices that connect | the Behavior page's Pairing section and `gw-pairing` on the Display page; ask the owner whether a phone or another device will connect, and skip the step when nothing will |
+| Any step that builds or changes a screen | `groundwork-interfaces` |
 
 When a step turns out to be missing from the page, or a repository does it differently for a good reason, change the page in Groundwork rather than only the repository, so the next one gets it too, following `groundwork-changes`.

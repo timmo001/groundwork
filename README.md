@@ -43,6 +43,7 @@ document attached to it.
 | [`skills/groundwork-setup`](skills/groundwork-setup/SKILL.md)             | An agent skill for setting up a repository, step by step from the Setup page              |
 | [`skills/groundwork-changes`](skills/groundwork-changes/SKILL.md)         | An agent skill for changing Groundwork so apps can still customize and extend it          |
 | [`skills/groundwork-themes`](skills/groundwork-themes/SKILL.md)           | An agent skill for choosing, comparing or writing an app's theme and the themes it offers |
+| [`skills/groundwork-interfaces`](skills/groundwork-interfaces/SKILL.md)   | An agent skill for building and reviewing an app's screens against the interface rules    |
 | [`skills/groundwork-conventions`](skills/groundwork-conventions/SKILL.md) | An agent skill for repository kinds and labeling from the manifest                        |
 
 ## docs-kit
