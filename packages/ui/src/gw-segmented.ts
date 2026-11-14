@@ -52,8 +52,8 @@ export interface Segment {
  * `menu-select` and leaves `value` alone. The menu is a bottom sheet on a
  * narrow or short screen, as `gw-menu-button`'s is.
  *
- * On a touch screen each option is at least 44px across at medium, as is
- * its touch area top to bottom.
+ * On a touch screen each option's touch area is at least 44px top to bottom
+ * at medium, and with `overflow` each option and More are 44px across too.
  *
  * @element gw-segmented
  * @summary Picks one of a few options, as a row of radio buttons.
@@ -84,7 +84,7 @@ export interface Segment {
  *
  * @cssprop --gw-segmented-scale - Scales the control, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icons with the theme's density. The theme sets it.
- * @cssprop --gw-segmented-touch-size - The least width of an option, and the height of its touch area, on a touch screen. Defaults to `2.75rem` at medium; `0` turns it off.
+ * @cssprop --gw-segmented-touch-size - The height of an option's touch area on a touch screen, and with `overflow` its least width. Defaults to `2.75rem` at medium; `0` turns it off.
  *
  * @fires {Event} change - When the chosen option changes.
  * @fires {CustomEvent<{ value: string }>} pick - When an option is clicked or picked with the keyboard, the chosen one included, after any `change`, with its `value` in `detail`.
@@ -300,16 +300,19 @@ export class GwSegmented extends GwElement {
         outline-offset: calc(var(--gw-focus-width) * -1);
       }
 
-      /* A finger needs a bigger target than the 32px option: wider, and a
-         touch area that reaches past the track top and bottom */
+      /* A finger needs a bigger target than the 32px option: a touch area
+         that reaches past the track top and bottom, and with overflow, whose
+         options are often short numbers, wider ones too */
       @media (any-pointer: coarse) {
-        label,
-        .more::part(trigger) {
+        :host {
           --_gw-segmented-touch: var(
             --gw-segmented-touch-size,
             calc(2.75rem * var(--gw-scale))
           );
+        }
 
+        :host([overflow]) label,
+        .more::part(trigger) {
           justify-content: center;
           min-inline-size: var(--_gw-segmented-touch);
         }
