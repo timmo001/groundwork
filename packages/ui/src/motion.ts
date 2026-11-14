@@ -68,10 +68,10 @@ export const animateHeight = (element: HTMLElement, before: number) => {
 };
 
 /**
- * The View Transition classes, adopted into the document the first time
- * `withViewTransition()` runs, in the components layer so an app's own
- * styles win. Give an element one with `view-transition-class`, beside its
- * `view-transition-name`:
+ * The View Transition classes and types, adopted into the document the first
+ * time `withViewTransition()` runs, in the components layer so an app's own
+ * styles win. Give an element a class with `view-transition-class`, beside
+ * its `view-transition-name`:
  *
  * - `gw-travel` moves and resizes it to its new place on `--gw-motion-slow`
  *   and `--gw-motion-easing`, such as a tile becoming the whole view;
@@ -79,7 +79,14 @@ export const animateHeight = (element: HTMLElement, before: number) => {
  *   it in from that edge as it arrives, on `--gw-motion-slow` and
  *   `--gw-motion-easing-enter`, and back out as it leaves, a step quicker on
  *   `--gw-motion-normal` and `--gw-motion-easing-exit`, such as a docked
- *   panel. Start and end follow the page's direction.
+ *   panel. Start and end follow the page's direction;
+ * - `gw-page` swaps a page's content: with the `gw-forward` or `gw-back`
+ *   type it slides a short way along the line toward the end or the start
+ *   and fades through, for a sibling page or tab; with neither it fades
+ *   through, the old out and the new in, for a page that isn't related.
+ *
+ * Under reduced motion nothing moves or resizes: every old and new view
+ * crossfades on `--gw-motion-fade` instead.
  */
 export const viewTransitionStyles = (() => {
   const sheet = new CSSStyleSheet();
@@ -121,12 +128,129 @@ export const viewTransitionStyles = (() => {
       }`,
   );
 
+  // A page's swap: the old fades out over the first 35% and the new fades in
+  // over the rest, sliding 30px along the line for a sibling, or growing from
+  // 92% for a page that isn't related
+  const page = "var(--gw-motion-slow, 350ms) var(--gw-motion-easing, ease)";
+
+  const axis = [
+    ["gw-forward", "gw-to-start", "gw-from-end-near"],
+    ["gw-back", "gw-to-end", "gw-from-start-near"],
+  ].map(
+    ([type, leave, arrive]) => `
+      :root:active-view-transition-type(${type})::view-transition-old(*.gw-page) {
+        animation: ${page} both gw-fade-out-through, ${page} both ${leave};
+      }
+
+      :root:active-view-transition-type(${type})::view-transition-new(*.gw-page) {
+        animation: ${page} both gw-fade-in-through, ${page} both ${arrive};
+      }`,
+  );
+
   sheet.replaceSync(`@layer ${componentsLayer} {
-    ::view-transition-group(*.gw-travel) {
-      animation-duration: var(--gw-motion-slow, 350ms);
-      animation-timing-function: var(--gw-motion-easing, ease);
+    @media (prefers-reduced-motion: no-preference) {
+      ::view-transition-group(*.gw-travel) {
+        animation-duration: var(--gw-motion-slow, 350ms);
+        animation-timing-function: var(--gw-motion-easing, ease);
+      }
+      ${slides.join("\n")}
+
+      ::view-transition-old(*.gw-page) {
+        animation: ${page} both gw-fade-out-through;
+      }
+
+      ::view-transition-new(*.gw-page) {
+        animation: ${page} both gw-fade-in-through, ${page} both gw-grow;
+      }
+      ${axis.join("\n")}
     }
-    ${slides.join("\n")}
+
+    @media (prefers-reduced-motion: reduce) {
+      ::view-transition-group(*) {
+        animation-name: none;
+      }
+
+      ::view-transition-old(*) {
+        animation: var(--gw-motion-fade, 150ms) linear both gw-fade-out;
+      }
+
+      ::view-transition-new(*) {
+        animation: var(--gw-motion-fade, 150ms) linear both gw-fade-in;
+      }
+
+      /* The browser's own crossfade blends a pair so it never dims half way;
+         replacing its animation drops that, so it's set here. Inside an
+         isolated pair a lone image draws just as it would without it */
+      ::view-transition-image-pair(*) {
+        isolation: isolate;
+      }
+
+      ::view-transition-old(*),
+      ::view-transition-new(*) {
+        mix-blend-mode: plus-lighter;
+      }
+    }
+
+    @keyframes gw-fade-out {
+      to {
+        opacity: 0;
+      }
+    }
+
+    @keyframes gw-fade-in {
+      from {
+        opacity: 0;
+      }
+    }
+
+    @keyframes gw-fade-out-through {
+      35%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes gw-fade-in-through {
+      0%,
+      35% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes gw-grow {
+      from {
+        scale: 0.92;
+      }
+    }
+
+    @keyframes gw-to-start {
+      to {
+        translate: calc(-30px * var(--gw-page-flip, 1)) 0;
+      }
+    }
+
+    @keyframes gw-to-end {
+      to {
+        translate: calc(30px * var(--gw-page-flip, 1)) 0;
+      }
+    }
+
+    @keyframes gw-from-end-near {
+      from {
+        translate: calc(30px * var(--gw-page-flip, 1)) 0;
+      }
+    }
+
+    @keyframes gw-from-start-near {
+      from {
+        translate: calc(-30px * var(--gw-page-flip, 1)) 0;
+      }
+    }
+
+    /* Start and end swap sides in a right-to-left page */
+    :root:dir(rtl) {
+      --gw-page-flip: -1;
+    }
   }`);
 
   return sheet;
@@ -142,14 +266,31 @@ const adoptTransitionStyles = () => {
   }
 };
 
+/** How `withViewTransition()` runs a change. */
+export interface ViewTransitionOptions {
+  /**
+   * The transition's types, for `:active-view-transition-type()` rules:
+   * `gw-forward` or `gw-back` for moving between sibling pages or tabs, or an
+   * app's own. Left out where the browser has no types.
+   */
+  readonly types?: readonly string[];
+}
+
+/** Whether the browser takes a View Transition's types. */
+const transitionTypes = () =>
+  "ViewTransition" in window && "types" in ViewTransition.prototype;
+
 /**
- * Runs a DOM change inside a View Transition where the browser supports one,
- * motion isn't reduced and the page can be seen, otherwise runs it straight
- * away, after Home Assistant's `withViewTransition()`. Use it for changes to
- * the whole view, such as switching theme or mode, or moving an element with
- * a `view-transition-name` to a new place; component state uses CSS
- * transitions. Elements with one of the `viewTransitionStyles` classes
- * travel or slide from their edge.
+ * Runs a DOM change inside a View Transition where the browser supports one
+ * and the page can be seen, otherwise runs it straight away. Use it for
+ * changes to the whole view, such as switching theme or mode, a page or tab
+ * changing, or moving an element with a `view-transition-name` to a new
+ * place; component state uses CSS transitions. Elements with one of the
+ * `viewTransitionStyles` classes travel, slide from their edge or swap as a
+ * page, and under reduced motion every view crossfades in place instead.
+ *
+ * A second change never waits for the first: the browser skips the running
+ * transition to its end and starts the new one from there.
  *
  * The change may return a promise, such as a Lit element's
  * `updateComplete`, so the new view is captured once it has rendered. Keep
@@ -157,14 +298,9 @@ const adoptTransitionStyles = () => {
  */
 export const withViewTransition = (
   change: () => void | Promise<void>,
+  { types = [] }: ViewTransitionOptions = {},
 ): Promise<void> => {
-  const reduced = reducedMotion();
-
-  if (
-    document.startViewTransition === undefined ||
-    reduced ||
-    document.hidden
-  ) {
+  if (document.startViewTransition === undefined || document.hidden) {
     return Promise.resolve(change());
   }
 
@@ -172,12 +308,17 @@ export const withViewTransition = (
 
   let changed = false;
 
-  try {
-    const transition = document.startViewTransition(() => {
-      changed = true;
+  const update = () => {
+    changed = true;
 
-      return change();
-    });
+    return change();
+  };
+
+  try {
+    const transition =
+      types.length > 0 && transitionTypes()
+        ? document.startViewTransition({ update, types: [...types] })
+        : document.startViewTransition(update);
 
     // A transition skipped by a newer one rejects with AbortError; the change
     // itself still happened.

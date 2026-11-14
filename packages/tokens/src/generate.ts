@@ -266,6 +266,9 @@ const foundations = {
   // How long a loading placeholder waits before it fades in, so a quick load
   // never flashes one
   "motion-delay": "500ms",
+  // A crossfade, the one change that stays under reduced motion: opacity
+  // isn't motion, so a view that changes is still seen
+  "motion-fade": "150ms",
   "focus-width": "2px",
   "focus-offset": "2px",
   // The least hit area of a control: 24px for a mouse, and 44px wherever a

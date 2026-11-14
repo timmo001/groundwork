@@ -109,6 +109,7 @@
     --gw-motion-easing-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
     --gw-motion-easing-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
     --gw-motion-delay: 500ms;
+    --gw-motion-fade: 150ms;
     --gw-focus-width: 2px;
     --gw-focus-offset: 2px;
     --gw-target-min: 1.5rem;
