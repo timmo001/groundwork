@@ -33,6 +33,8 @@ export * from "./adaptive.js";
 
 export * from "./swipe.js";
 
+export * from "./scroll-buttons.js";
+
 export * from "./below.js";
 
 export * from "./storage.js";

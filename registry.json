@@ -96,9 +96,9 @@
     {
       "name": "gw-layout",
       "kind": "element",
-      "description": "gw-page, gw-stack, gw-row and gw-grid",
-      "files": ["packages/ui/src/layout.ts"],
-      "needs": ["ui-base"]
+      "description": "gw-page, gw-stack, gw-row and gw-grid, and scrollButtons for any horizontal scroller",
+      "files": ["packages/ui/src/layout.ts", "packages/ui/src/scroll-buttons.ts"],
+      "needs": ["ui-base", "gw-button"]
     },
     {
       "name": "gw-alert",

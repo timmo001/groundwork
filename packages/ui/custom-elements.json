@@ -32933,6 +32933,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/scroll-buttons.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/below.js"
           }
         },
@@ -34284,12 +34292,38 @@
         },
         {
           "kind": "class",
-          "description": "Lines its children up in a row, wrapping when they run out of room.",
+          "description": "Lines its children up in a row, wrapping when they run out of room.\n\nWith `scroll` it keeps them on one line and scrolls sideways instead, such\nas a row of presets or filter chips on a phone: touch scrolls it, a mouse\ndrags it without the release clicking what's under it, the ends fade on\nthe side with more to scroll, and a child focused from the keyboard\nscrolls into view. A ‹ or › button over each end scrolls it by about a\nview, shown only while there's more that way (`scrollButtons`), and\n`no-scroll-buttons` leaves them out. `scroll=\"narrow\"` wraps on a larger\nscreen and scrolls only on a narrow or short one, under 600px wide or\n500px tall, the same rule that turns popups into bottom sheets.",
           "name": "GwRow",
           "cssProperties": [
             {
               "description": "The gap. Defaults to `--gw-space-2`.",
               "name": "--gw-gap"
+            },
+            {
+              "description": "How far the ends fade while there's more to scroll that way. Defaults to `1.5rem`.",
+              "name": "--gw-row-fade"
+            },
+            {
+              "description": "The scroll buttons' size, as `--gw-button-scale`. Defaults to `1.1`, 44px.",
+              "name": "--gw-row-scroll-button-scale"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "What scrolls in a `scroll` row, around the children.",
+              "name": "track"
+            },
+            {
+              "description": "Each scroll button, a `gw-button`.",
+              "name": "scroll-button"
+            },
+            {
+              "description": "The button that scrolls toward the start, left in a left-to-right page.",
+              "name": "scroll-start"
+            },
+            {
+              "description": "The button that scrolls toward the end.",
+              "name": "scroll-end"
             }
           ],
           "slots": [
@@ -34301,16 +34335,147 @@
           "members": [
             {
               "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ scrollMode: { attribute: \"scroll\" }, noScrollButtons: { type: \"boolean\", reflect: true, attribute: \"no-scroll-buttons\", }, scrollLeftLabel: { attribute: \"scroll-left-label\" }, scrollRightLabel: { attribute: \"scroll-right-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
               "name": "styles",
               "type": {
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, gaps, css` :host { display: flex; flex-wrap: wrap; gap: var(--gw-gap, var(--gw-space-2)); align-items: center; } :host([nowrap]) { flex-wrap: nowrap; } `, alignment, ]",
+              "default": "[ base, gaps, css` :host { --_gw-row-fade: var(--gw-row-fade, 1.5rem); --_gw-row-ring: calc(var(--gw-focus-width) + var(--gw-focus-offset)); --_gw-row-button-scale: var(--gw-row-scroll-button-scale, 1.1); --_gw-row-button: calc( 2.5rem * var(--_gw-row-button-scale) * var(--gw-control-scale, 1) ); display: flex; flex-wrap: wrap; gap: var(--gw-gap, var(--gw-space-2)); align-items: center; } :host([nowrap]) { flex-wrap: nowrap; } .track { display: contents; } ${scrolling(':host([scroll]:not([scroll=\"narrow\"]))')} @media (width < 600px), (height < 500px) { ${scrolling(':host([scroll=\"narrow\"])')} } .scroll-button { --gw-button-scale: var(--_gw-row-button-scale); position: absolute; z-index: 1; inset-block-start: 50%; translate: 0 -50%; border-radius: var(--gw-radius-pill); background: var(--gw-color-surface-overlay); box-shadow: var(--gw-shadow-m); } .start { inset-inline-start: 0; } .end { inset-inline-end: 0; } :host([no-scroll-buttons]) .scroll-button { display: none; } :host(:state(more-start)) { --_gw-row-fade-start: var(--_gw-row-fade); } :host(:state(more-end)) { --_gw-row-fade-end: var(--_gw-row-fade); } :host(:state(overflowing)) .track { cursor: grab; user-select: none; mask-image: linear-gradient( to right, transparent, #000 var(--_gw-row-fade-start, 0px), #000 calc(100% - var(--_gw-row-fade-end, 0px)), transparent ); } :host(:state(overflowing):dir(rtl)) .track { mask-image: linear-gradient( to left, transparent, #000 var(--_gw-row-fade-start, 0px), #000 calc(100% - var(--_gw-row-fade-end, 0px)), transparent ); } /* Nothing under the pointer takes the drag's release as a click */ :host(:state(dragging)) .track { cursor: grabbing; } :host(:state(dragging)) ::slotted(*) { pointer-events: none; } `, alignment, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
               }
+            },
+            {
+              "kind": "field",
+              "name": "scrollMode",
+              "type": {
+                "text": "\"\" | \"narrow\" | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "noScrollButtons",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "scrollLeftLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "scrollRightLabel",
+              "type": {
+                "text": "string | undefined"
+              },
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#slot",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#track",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#start",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#end",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#buttons",
+              "privacy": "private",
+              "type": {
+                "text": "ScrollButtons | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#drag",
+              "privacy": "private",
+              "type": {
+                "text": "| { readonly id: number; readonly x: number; readonly left: number }\n    | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#dragging",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#pressing",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#dragged",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "method",
+              "name": "#scrollButton",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "side",
+                  "type": {
+                    "text": "\"start\" | \"end\""
+                  }
+                }
+              ]
             },
             {
               "kind": "method",
@@ -34331,17 +34496,92 @@
               }
             },
             {
-              "kind": "field",
-              "name": "properties",
-              "type": {
-                "text": "Properties"
-              },
-              "static": true,
-              "default": "{}",
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
               }
+            },
+            {
+              "kind": "method",
+              "name": "#attach",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#detach",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#label",
+              "privacy": "private"
+            },
+            {
+              "kind": "method",
+              "name": "#setState",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "on",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerDown",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerMove",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onPointerEnd",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onClick",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onDragStart",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onFocusIn",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "field",
@@ -34594,24 +34834,6 @@
             },
             {
               "kind": "method",
-              "name": "update",
-              "privacy": "protected",
-              "parameters": [
-                {
-                  "name": "_changed",
-                  "type": {
-                    "text": "ReadonlySet<string>"
-                  }
-                }
-              ],
-              "description": "Sets what the changed properties affect.",
-              "inheritedFrom": {
-                "name": "GwElement",
-                "module": "src/element.ts"
-              }
-            },
-            {
-              "kind": "method",
               "name": "#flush",
               "privacy": "private",
               "inheritedFrom": {
@@ -34666,6 +34888,34 @@
             },
             {
               "type": {
+                "text": "\"\"|\"narrow\""
+              },
+              "description": "Keeps the children on one line and scrolls sideways when they don't fit. `narrow` does that only under 600px wide or 500px tall, and wraps elsewhere.",
+              "name": "scroll"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves out the buttons that scroll a `scroll` row.",
+              "name": "no-scroll-buttons"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the button that scrolls left, for an app in another language. Defaults to `Scroll left`.",
+              "name": "scroll-left-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The name of the button that scrolls right. Defaults to `Scroll right`.",
+              "name": "scroll-right-label"
+            },
+            {
+              "type": {
                 "text": "\"start\"|\"center\"|\"end\"|\"between\""
               },
               "description": "Where the children sit along the row. Defaults to `start`.",
@@ -34680,12 +34930,12 @@
             }
           ],
           "superclass": {
-            "name": "GwSlotted",
-            "module": "src/layout.ts"
+            "name": "GwElement",
+            "module": "/src/element.js"
           },
           "tagName": "gw-row",
           "customElement": true,
-          "summary": "Children in a wrapping row."
+          "summary": "Children in a wrapping or scrolling row."
         },
         {
           "kind": "class",
@@ -35373,6 +35623,107 @@
           "declaration": {
             "name": "placeBeside",
             "module": "src/placement.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/scroll-buttons.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "scrollEdges",
+          "return": {
+            "type": {
+              "text": "ScrollEdges"
+            }
+          },
+          "parameters": [
+            {
+              "name": "{\n  scrollWidth,\n  clientWidth,\n  scrollLeft,\n}",
+              "type": {
+                "text": "Pick<\n  Element,\n  \"scrollWidth\" | \"clientWidth\" | \"scrollLeft\"\n>"
+              }
+            }
+          ],
+          "description": "What a scroller has out of view at each end, allowing a pixel either way\nfor fractional widths. Right to left, `scrollLeft` runs from 0 to negative,\nso it reads its size either way."
+        },
+        {
+          "kind": "function",
+          "name": "scrollByView",
+          "parameters": [
+            {
+              "name": "scroller",
+              "type": {
+                "text": "Element"
+              }
+            },
+            {
+              "name": "toward",
+              "type": {
+                "text": "\"start\" | \"end\""
+              }
+            },
+            {
+              "name": "step",
+              "default": "defaultStep",
+              "type": {
+                "text": "(scroller: Element) => number"
+              }
+            }
+          ],
+          "description": "Scrolls a scroller by about one view toward its inline start or end,\nsmoothly, or at once under reduced motion. `step` gives another distance\nin pixels."
+        },
+        {
+          "kind": "function",
+          "name": "scrollButtons",
+          "return": {
+            "type": {
+              "text": "ScrollButtons"
+            }
+          },
+          "parameters": [
+            {
+              "name": "scroller",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "{ start, end, items, step, onChange }",
+              "default": "{}",
+              "type": {
+                "text": "ScrollButtonsOptions"
+              }
+            }
+          ],
+          "description": "Makes `start` and `end` scroll `scroller` by about a view per press, and\nsets `hidden` on each while there's nothing more its way, so both hide when\neverything fits. A button that hides while focused hands focus to the\nother. It measures as the scroller scrolls, resizes or gains children, and\nas its items resize; call `update()` for any other change. The buttons can\nbe any elements, though `gw-button`s with `labels=\"hide\"`, a chevron icon\nand text such as \"Scroll left\" are what `gw-row` uses; placing them over\nor beside the scroller is up to the app."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "scrollEdges",
+          "declaration": {
+            "name": "scrollEdges",
+            "module": "src/scroll-buttons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scrollByView",
+          "declaration": {
+            "name": "scrollByView",
+            "module": "src/scroll-buttons.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "scrollButtons",
+          "declaration": {
+            "name": "scrollButtons",
+            "module": "src/scroll-buttons.ts"
           }
         }
       ]
