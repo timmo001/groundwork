@@ -85,18 +85,22 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 | `gw-facts` | `gw-skeleton-text` |
 | `gw-filter` | `gw-chip`, `gw-input` |
 | `gw-gauge` | `gw-skeleton-text` |
+| `gw-grid` | `gw-button` |
 | `gw-input` | `gw-popover` |
 | `gw-list` | `gw-chip` |
 | `gw-markdown` | `gw-skeleton-lines` |
 | `gw-meter` | `gw-skeleton`, `gw-skeleton-text` |
 | `gw-notification` | `gw-button` |
 | `gw-notification-center` | `gw-button`, `gw-empty-state` |
+| `gw-page` | `gw-button` |
 | `gw-popover` | `gw-button` |
+| `gw-row` | `gw-button` |
 | `gw-section` | `gw-chip` |
 | `gw-select` | `gw-option-list`, `gw-popover` |
 | `gw-setting-row` | `gw-skeleton`, `gw-skeleton-text` |
 | `gw-sheet` | `gw-button` |
 | `gw-sortable` | `gw-button` |
+| `gw-stack` | `gw-button` |
 | `gw-table` | `gw-chip`, `gw-input`, `gw-skeleton-text` |
 | `gw-theme-picker` | `gw-button`, `gw-menu-button`, `gw-popover`, `gw-segmented`, `gw-select`, `gw-theme-gallery` |
 
@@ -110,6 +114,7 @@ The behavior the composites share is exported on its own too, for an app's own e
 - `placeBeside(popup, anchor, { align, gap, fit })` puts a fixed popup under the control that opened it, or over it when there's more room there, lined up with its start edge or, with `align: "space"`, the edge on the roomier side of the window. It sets `data-placement` and `data-side` for styles that follow the side. `gw-popover`, `gw-select` and `gw-date-picker` open with it.
 - `opensAsSheet({ below, belowHeight })` says whether a popup should open as a [bottom sheet](/components/overlays#bottom-sheets-on-phones): under 600px wide or 500px tall by default, `0` turning either off. `sheetLayout` is the declarations that make a fixed popup that sheet, to put in a rule of its own. Every popover-like element decides with it.
 - `onSwipe(element, listener, { ignore, distance, pinch })` calls `listener` with each touch swipe on a surface, `{ fingers, direction }`, leaving out pinches, touches that start on `ignore` and the click a swipe ends with. Every listener on an element shares one recognizer, and it returns a function that stops listening. [Touch](/behavior#touch) has the gestures and what each does.
+- `scrollButtons(scroller, { start, end })` makes two buttons scroll a horizontal scroller by about a view per press, each shown only while there's more to scroll its way, as a [scrolling row's](/components/layout#scroll-buttons) are. `scrollByView` scrolls one view on its own and `scrollEdges` reads what's out of view at each end.
 - `Below` follows whether the window is narrower than a CSS length, as the `*-below` attributes do.
 - `DirtyState` follows whether a form's values differ from what was last saved: `start(value)` when it loads, `update(value)` on each edit, `markClean()` after a save, and `subscribe(listener)` to enable Save only while something changed. While any one is dirty, closing or reloading the tab asks first, and `confirmLeave()` asks in a `gw-dialog` before the app moves to another page, putting the forms back as they were saved if someone leaves. Its `discard` option is how a form puts itself back. `hasUnsavedChanges()` reads the whole page, and `gw-unsaved-changes` fires on `window` each time that changes.
 

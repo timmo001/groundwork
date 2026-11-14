@@ -143,7 +143,7 @@ Use a [section title](#page-header-and-section-title) for a heading that doesn't
 | --- | --- |
 | `gw-page` | Centers a page's content at `--gw-content-width`, or the standard width `size` picks |
 | `gw-stack` | Stacks its children with the theme's gap |
-| `gw-row` | Lines its children up and wraps them; `nowrap` stops that |
+| `gw-row` | Lines its children up and wraps them; `nowrap` stops that, and `scroll` scrolls them sideways instead |
 | `gw-grid` | Fills columns at least `--gw-grid-min` (18rem) wide, and at most `max` of them |
 
 `gap="s"` or `gap="l"` changes the gap of a stack, row or grid.
@@ -159,6 +159,54 @@ Use a [section title](#page-header-and-section-title) for a heading that doesn't
     <gw-chip>In the middle</gw-chip>
   </gw-stack>
 </Demo>
+
+### Scrolling rows
+
+A row of choices that would wrap onto a second line on a phone, such as a camera's presets or a set of filter chips, scrolls sideways instead with `scroll`. Its children stay on one line at their own size. Touch scrolls it as usual, and a mouse drags it: once the pointer has moved a few pixels it's a drag, and letting go never clicks the child under it. The ends fade while there's more to scroll that way, `--gw-row-fade` (`1.5rem`) deep, and a child focused with Tab scrolls clear of the fade. Its focus ring has room around it, so the row's edge doesn't clip it.
+
+So nobody has to drag or swipe, a ‹ or › button sits over each end while there's more to scroll that way, and both hide when everything fits. Each press scrolls about one view, smoothly, or at once under reduced motion. They're 44px `gw-button`s named "Scroll left" and "Scroll right", which `scroll-left-label` and `scroll-right-label` translate; `--gw-row-scroll-button-scale` sizes them, the `scroll-button` part styles them, and `no-scroll-buttons` leaves them out.
+
+`scroll="narrow"` wraps on a larger screen and scrolls only under 600px wide or 500px tall, the same rule that turns [popups into bottom sheets](/components/overlays#bottom-sheets-on-phones).
+
+<Demo id="row-scroll" layout="stack">
+  <gw-row scroll style="max-width: 20rem">
+    <gw-button size="small" variant="neutral" appearance="outlined">Home</gw-button>
+    <gw-button size="small" variant="neutral" appearance="outlined">Path</gw-button>
+    <gw-button size="small" variant="neutral" appearance="outlined">Slope</gw-button>
+    <gw-button size="small" variant="neutral" appearance="outlined">Gate</gw-button>
+    <gw-button size="small" variant="neutral" appearance="outlined">Driveway</gw-button>
+    <gw-button size="small" variant="neutral" appearance="outlined">Garden</gw-button>
+  </gw-row>
+  <gw-row scroll="narrow"><gw-chip>TypeScript</gw-chip><gw-chip>Web Components</gw-chip><gw-chip>Effect</gw-chip><gw-chip>Bun</gw-chip><gw-chip>Home Assistant</gw-chip></gw-row>
+</Demo>
+
+The row has the `overflowing`, `more-start`, `more-end` and `dragging` custom states for an app's own styles, such as `gw-row:state(dragging)`.
+
+### Scroll buttons
+
+The row's buttons work on any other horizontal scroller, such as a timeline's track. `scrollButtons(scroller, { start, end })` makes `start` scroll toward the inline start and `end` toward the inline end by about a view per press, and sets `hidden` on each while there's nothing more its way. It measures as the scroller scrolls, resizes or gains children, and as its items resize; a button that hides while focused hands focus to the other. Where the buttons sit, over the ends or beside the scroller, is up to the app.
+
+```ts
+import { scrollButtons } from "@timmo001/groundwork-ui";
+
+const buttons = scrollButtons(track, {
+  start: earlierButton,
+  end: laterButton,
+  // How far a press scrolls, 85% of the view by default
+  step: (track) => track.clientWidth / 2,
+  // To fade the ends or style the track as gw-row does
+  onChange: ({ moreStart, moreEnd }) => {
+    track.classList.toggle("more-earlier", moreStart);
+    track.classList.toggle("more-later", moreEnd);
+  },
+});
+
+// Measure again after a change it can't see, and stop when done
+buttons.update();
+buttons.stop();
+```
+
+`items` gives the elements whose size changes what overflows, when they aren't the scroller's own children, such as slotted ones. `scrollByView(scroller, "start" | "end")` scrolls one view on its own, such as from a key, and `scrollEdges(scroller)` reads what's out of view at each end.
 
 ### Capping the columns
 
@@ -179,3 +227,7 @@ On a wide screen a grid keeps adding columns. `max` (2 to 6) caps how many it sh
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
 <ElementApi tags={["gw-app-bar", "gw-page-header", "gw-section-title", "gw-section", "gw-page", "gw-stack", "gw-row", "gw-grid"]} />
+
+## References
+
+- Home Assistant: Code: [drag scroll controller](https://github.com/home-assistant/frontend/blob/dev/src/common/controllers/drag-scroll-controller.ts), [buttons row](https://github.com/home-assistant/frontend/blob/dev/src/panels/lovelace/components/hui-buttons-base.ts), [weather forecast](https://github.com/home-assistant/frontend/blob/dev/src/dialogs/more-info/controls/more-info-weather.ts)
