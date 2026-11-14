@@ -6,6 +6,7 @@
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
+import { Scrim } from "./scrim.js";
 import { base } from "./styles.js";
 
 // MDI's chevrons, pointing the way the sheet leaves when it closes
@@ -27,10 +28,11 @@ const bottomBelow = "40rem";
  * bottom below `bottom-below`, 40rem wide by default.
  *
  * It's on the Popover API, in the top layer, and closes on Esc, a click
- * outside or its close button, whose chevron points the way it leaves. Open
- * it with `show()`, or `toggle()` from the button that opens it. Its content
- * scrolls under a header with the heading and an `actions` slot, such as a
- * Clear button.
+ * outside or its close button, whose chevron points the way it leaves. A
+ * clear scrim covers the page while it's open, so a click outside only
+ * closes it, and nothing beneath reacts. Open it with `show()`, or
+ * `toggle()` from the button that opens it. Its content scrolls under a
+ * header with the heading and an `actions` slot, such as a Clear button.
  *
  * @element gw-sheet
  * @summary A panel that slides in from an edge of the screen.
@@ -44,6 +46,7 @@ const bottomBelow = "40rem";
  * @slot actions - Buttons in the header, after the heading.
  *
  * @csspart surface - The sheet's surface.
+ * @csspart scrim - The clear layer over the page that takes a click outside.
  * @csspart header - The row with the close button, heading and actions.
  * @csspart close - The close button, a `gw-button`.
  * @csspart heading - The heading.
@@ -71,7 +74,7 @@ export class GwSheet extends GwElement {
   static override styles = [
     base,
     css`
-      [popover] {
+      [part="surface"] {
         position: fixed;
         box-sizing: border-box;
         flex-direction: column;
@@ -89,13 +92,13 @@ export class GwSheet extends GwElement {
           overlay var(--gw-motion-normal) allow-discrete;
       }
 
-      [popover]:popover-open {
+      [part="surface"]:popover-open {
         display: flex;
         translate: 0 0;
       }
 
       /* The page dims as the sheet slides in, and back as it leaves */
-      [popover]::backdrop {
+      [part="surface"]::backdrop {
         background: rgb(0 0 0 / 0%);
         transition:
           background-color var(--gw-motion-normal) var(--gw-motion-easing),
@@ -103,12 +106,12 @@ export class GwSheet extends GwElement {
           overlay var(--gw-motion-normal) allow-discrete;
       }
 
-      [popover]:popover-open::backdrop {
+      [part="surface"]:popover-open::backdrop {
         background: var(--gw-sheet-backdrop, rgb(0 0 0 / 40%));
       }
 
       @starting-style {
-        [popover]:popover-open::backdrop {
+        [part="surface"]:popover-open::backdrop {
           background: rgb(0 0 0 / 0%);
         }
       }
@@ -234,7 +237,7 @@ export class GwSheet extends GwElement {
   readonly #surface: HTMLDivElement = h(
     "div",
     {
-      popover: "auto",
+      popover: "manual",
       role: "dialog",
       tabindex: "-1",
       part: "surface",
@@ -248,6 +251,8 @@ export class GwSheet extends GwElement {
     ),
     h("div", { class: "body", part: "body" }, h("slot")),
   );
+
+  readonly #scrim = new Scrim(() => this.close());
 
   #narrow = window.matchMedia(`(width < ${bottomBelow})`);
 
@@ -274,6 +279,7 @@ export class GwSheet extends GwElement {
 
     this.#returnFocus = active instanceof HTMLElement ? active : undefined;
     this.#place();
+    this.#scrim.show();
     this.#surface.showPopover();
   }
 
@@ -310,6 +316,7 @@ export class GwSheet extends GwElement {
     }
 
     this.#narrow.removeEventListener("change", this.#place);
+    this.#scrim.hide();
     this.#returnFocus?.focus();
     this.#returnFocus = undefined;
     this.dispatchEvent(new Event("close", { bubbles: true, composed: true }));
@@ -322,8 +329,15 @@ export class GwSheet extends GwElement {
 
   protected override create(root: ShadowRoot) {
     this.#surface.addEventListener("toggle", this.#onToggle);
+    this.#surface.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      this.close();
+    });
     this.#closeButton.addEventListener("click", () => this.close());
-    root.append(this.#surface);
+    root.append(this.#scrim.element, this.#surface);
   }
 
   protected override update(changed: ReadonlySet<string>) {

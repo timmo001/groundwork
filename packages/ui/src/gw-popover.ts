@@ -14,6 +14,7 @@ import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
 import { placeBeside } from "./placement.js";
+import { Scrim } from "./scrim.js";
 import { base } from "./styles.js";
 
 const gap = 8;
@@ -30,10 +31,12 @@ const closeIcon =
  * middle like a dialog.
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
- * outside. Open it with `show(anchor)`. It focuses the close button, or the
- * first element in its content with `autofocus`, such as a field it's opened
- * to fill in. Put buttons in the `actions` slot: a
- * click on one with a `value` closes it with that value, and fires `close`.
+ * outside. A clear scrim covers the page while it's open, so that click only
+ * closes it, and nothing beneath reacts. Open it with `show(anchor)`. It
+ * focuses the close button, or the first element in its content with
+ * `autofocus`, such as a field it's opened to fill in. Put buttons in the
+ * `actions` slot: a click on one with a `value` closes it with that value,
+ * and fires `close`.
  * `confirm` makes it an `alertdialog`, for a question that needs an answer.
  *
  * @element gw-popover
@@ -53,6 +56,7 @@ const closeIcon =
  * @slot actions - Buttons; one with a `value` closes it with that value.
  *
  * @csspart surface - The popover's surface.
+ * @csspart scrim - The clear layer over the page that takes a click outside.
  * @csspart header - The row with the heading, content and close button.
  * @csspart heading - The heading.
  * @csspart close - The close button, a `gw-button`.
@@ -100,7 +104,7 @@ export class GwPopover extends GwElement {
     base,
     dismissalStyles,
     css`
-      [popover] {
+      [part="surface"] {
         position: fixed;
         inset: unset;
         box-sizing: border-box;
@@ -133,7 +137,7 @@ export class GwPopover extends GwElement {
 
       /* As wide as its content needs, from its usual width up to the
          window's, so a wide control never scrolls sideways in it */
-      :host([fit]) [popover]:not([data-placement="sheet"]) {
+      :host([fit]) [part="surface"]:not([data-placement="sheet"]) {
         width: max-content;
         min-width: min(
           var(--gw-popover-width, 20rem),
@@ -142,13 +146,13 @@ export class GwPopover extends GwElement {
         max-width: calc(100vw - 2 * ${gap}px);
       }
 
-      [popover]:popover-open {
+      [part="surface"]:popover-open {
         opacity: 1;
         scale: 1;
       }
 
       @starting-style {
-        [popover]:popover-open {
+        [part="surface"]:popover-open {
           opacity: 0;
           scale: 0.96;
         }
@@ -309,6 +313,12 @@ export class GwPopover extends GwElement {
     () => this.#position(),
   );
 
+  // A click outside closes it at once, unless there are changes: then it
+  // does nothing
+  readonly #scrim = new Scrim(() => {
+    if (!this.#dismissal.dirty) this.close();
+  });
+
   #anchor: Element | undefined;
 
   constructor() {
@@ -339,6 +349,7 @@ export class GwPopover extends GwElement {
     this.returnValue = "";
     this.#dismissal.reset();
     this.#popover.dataset.placement = this.#placementFor(anchor);
+    this.#scrim.show();
     this.#popover.showPopover();
   }
 
@@ -348,20 +359,13 @@ export class GwPopover extends GwElement {
     if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
   }
 
-  // Esc and a click outside close it at once, unless there are changes:
-  // then Esc asks first and a click outside does nothing
+  // Esc closes it at once, unless there are changes: then it asks first
   readonly #onKeydown = (event: KeyboardEvent) => {
     if (event.key !== "Escape") return;
 
     event.preventDefault();
     event.stopPropagation();
     this.#dismissal.request();
-  };
-
-  readonly #onPointerdown = (event: PointerEvent) => {
-    if (event.composedPath().includes(this)) return;
-
-    if (!this.#dismissal.dirty) this.close();
   };
 
   #placementFor(anchor: Element | undefined) {
@@ -401,7 +405,6 @@ export class GwPopover extends GwElement {
       this.#position();
       window.addEventListener("resize", this.#position);
       window.addEventListener("scroll", this.#position, true);
-      document.addEventListener("pointerdown", this.#onPointerdown, true);
 
       // An element marked `autofocus` in the content takes focus, such as
       // the field it's open to fill in; otherwise the close button does, so
@@ -418,7 +421,7 @@ export class GwPopover extends GwElement {
 
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
-    document.removeEventListener("pointerdown", this.#onPointerdown, true);
+    this.#scrim.hide();
 
     if (this.#anchor instanceof HTMLElement) this.#anchor.focus();
 
@@ -436,7 +439,6 @@ export class GwPopover extends GwElement {
   override disconnectedCallback() {
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
-    document.removeEventListener("pointerdown", this.#onPointerdown, true);
     super.disconnectedCallback();
   }
 
@@ -449,7 +451,7 @@ export class GwPopover extends GwElement {
     this.#popover
       .querySelector("footer")
       ?.addEventListener("click", this.#onAction);
-    root.append(this.#popover);
+    root.append(this.#scrim.element, this.#popover);
   }
 
   protected override update() {

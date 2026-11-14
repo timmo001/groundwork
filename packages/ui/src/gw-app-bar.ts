@@ -26,7 +26,9 @@ const closeIcon =
  * `overlay` lays it over the top of the page rather than taking room, for a
  * page that opens with a hero. Below `menu-below`, 600px wide by default,
  * the nav moves into a menu opened from a button, which closes on Esc, a
- * click outside or a link. Raise it when the nav and actions need more room.
+ * click outside or a link. A clear scrim covers the page while it's open, so
+ * that click only closes it, and nothing beneath reacts. Raise `menu-below`
+ * when the nav and actions need more room.
  * With no nav links there's no menu button, so a bar of only a brand and
  * actions keeps its layout at every width.
  *
@@ -51,6 +53,7 @@ const closeIcon =
  * @csspart nav - The nav links' container, the menu panel on narrow screens.
  * @csspart menu - The button that opens the nav menu on narrow screens.
  * @csspart actions - The actions' container.
+ * @csspart scrim - The clear layer over the page that takes a click outside the open nav menu.
  *
  * @cssprop --gw-app-bar-height - The bar's least height. Defaults to `3.5rem`.
  * @cssprop --gw-app-bar-menu-size - The nav menu button's size on narrow screens. Defaults to `2.5rem`.
@@ -241,6 +244,18 @@ export class GwAppBar extends GwElement {
         visibility: visible;
         opacity: 1;
         translate: 0 0;
+      }
+
+      /* Under the bar and its open menu, over the page, so a click outside
+         only closes the menu */
+      .scrim {
+        position: fixed;
+        inset: 0;
+        display: none;
+      }
+
+      :host([collapsed][menu-open]) .scrim {
+        display: block;
       }
     `,
   ];
@@ -435,7 +450,16 @@ export class GwAppBar extends GwElement {
         h("slot", { name: "actions" }),
       ),
     );
-    root.append(this.#bar);
+
+    const scrim = h("div", {
+      class: "scrim",
+      part: "scrim",
+      "aria-hidden": "true",
+    });
+
+    scrim.addEventListener("pointerdown", (event) => event.preventDefault());
+    scrim.addEventListener("click", () => this.toggleMenu(false));
+    root.append(scrim, this.#bar);
   }
 
   protected override update(changed: ReadonlySet<string>) {

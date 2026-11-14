@@ -94,6 +94,13 @@
       "needs": ["ui-base", "gw-button", "gw-dialog"]
     },
     {
+      "name": "ui-scrim",
+      "kind": "element",
+      "description": "Scrim, the clear layer under an open overlay that keeps a click outside it from reaching the page",
+      "files": ["packages/ui/src/scrim.ts"],
+      "needs": ["ui-base"]
+    },
+    {
       "name": "gw-layout",
       "kind": "element",
       "description": "gw-page, gw-stack, gw-row and gw-grid, and scrollButtons for any horizontal scroller",
@@ -234,7 +241,7 @@
       "kind": "element",
       "description": "A button that opens a menu on the Popover API",
       "files": ["packages/ui/src/gw-menu-button.ts"],
-      "needs": ["ui-base"]
+      "needs": ["ui-base", "ui-scrim"]
     },
     {
       "name": "gw-meter",
@@ -255,14 +262,14 @@
       "kind": "element",
       "description": "A confirmation, rename or small form beside the button that opened it, a bottom sheet on phones, that asks before discarding edits",
       "files": ["packages/ui/src/gw-popover.ts", "packages/ui/src/dismiss.ts"],
-      "needs": ["ui-base", "gw-button"]
+      "needs": ["ui-base", "ui-scrim", "gw-button"]
     },
     {
       "name": "gw-sheet",
       "kind": "element",
       "description": "A panel of filters, settings or details that slides in from an edge of the screen, from the bottom on phones",
       "files": ["packages/ui/src/gw-sheet.ts"],
-      "needs": ["ui-base", "gw-button"]
+      "needs": ["ui-base", "ui-scrim", "gw-button"]
     },
     {
       "name": "gw-section",

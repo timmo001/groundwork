@@ -35,6 +35,8 @@ export * from "./swipe.js";
 
 export * from "./scroll-buttons.js";
 
+export * from "./scrim.js";
+
 export * from "./below.js";
 
 export * from "./storage.js";

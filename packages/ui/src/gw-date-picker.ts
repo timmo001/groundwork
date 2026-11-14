@@ -17,6 +17,7 @@ import type {} from "./gw-calendar.js";
 import { parseDay, toDayString } from "./gw-calendar.js";
 import type {} from "./gw-button.js";
 import { placeBeside } from "./placement.js";
+import { Scrim } from "./scrim.js";
 import { createIcon } from "./styles.js";
 
 /**
@@ -88,6 +89,8 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
  * it opens; picking a day or pressing Esc closes it and returns focus to the
  * field. Arrow Down or Up on the field opens it too. On a narrow or short
  * screen, under 600px wide or 500px tall, the calendar is a bottom sheet.
+ * While it's open, a clear scrim (`.gw-scrim`) covers the page, so a click
+ * outside only closes it, and nothing beneath reacts.
  *
  * The value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and
  * it fires `change` when it changes. `min` and `max` bound the days that can
@@ -262,6 +265,11 @@ export class GwDatePicker extends LightElement {
     this.#presets,
   );
 
+  readonly #scrim = new Scrim(() => {
+    this.close();
+    this.#trigger.focus();
+  });
+
   constructor() {
     super();
     this.label = "";
@@ -302,6 +310,7 @@ export class GwDatePicker extends LightElement {
     if (parseDay(this.value) !== undefined) this.month = this.value.slice(0, 7);
 
     this.#popup.dataset.placement = this.#asSheet() ? "sheet" : "below";
+    this.#scrim.show();
     this.#popup.showPopover();
   }
 
@@ -332,10 +341,6 @@ export class GwDatePicker extends LightElement {
     placeBeside(popup, this.#trigger, { gap });
   };
 
-  readonly #onOutside = (event: PointerEvent) => {
-    if (!event.composedPath().includes(this)) this.close();
-  };
-
   readonly #onToggle = (event: ToggleEvent) => {
     this.open = event.newState === "open";
 
@@ -343,7 +348,6 @@ export class GwDatePicker extends LightElement {
       this.#position();
       window.addEventListener("resize", this.#position);
       window.addEventListener("scroll", this.#position, true);
-      document.addEventListener("pointerdown", this.#onOutside, true);
       void this.#calendar.updateComplete.then(() => {
         this.#calendar.focus();
       });
@@ -351,13 +355,13 @@ export class GwDatePicker extends LightElement {
       return;
     }
 
+    this.#scrim.hide();
     this.#stopListening();
   };
 
   #stopListening() {
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
-    document.removeEventListener("pointerdown", this.#onOutside, true);
   }
 
   override disconnectedCallback() {
@@ -431,6 +435,7 @@ export class GwDatePicker extends LightElement {
       this.#trigger,
       this.#input,
       this.#hint,
+      this.#scrim.element,
       this.#popup,
     );
   }

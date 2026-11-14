@@ -13,6 +13,7 @@ import {
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { listIndex } from "./keys.js";
+import { Scrim } from "./scrim.js";
 import { base, controlSizes, createIcon, setIconPath } from "./styles.js";
 
 export interface MenuItem {
@@ -55,9 +56,10 @@ const boxEmpty =
 
 /**
  * A button that opens a menu on the Popover API, so it shows in the top
- * layer and closes on Esc or a click outside. Set `items`; arrow keys, Home
- * and End move between them, and choosing one fires `select` with its
- * `value` and closes the menu.
+ * layer and closes on Esc or a click outside. A clear scrim covers the page
+ * while it's open, so that click only closes it, and nothing beneath reacts.
+ * Set `items`; arrow keys, Home and End move between them, and choosing one
+ * fires `select` with its `value` and closes the menu.
  *
  * Contextual actions, such as "Add a schedule", go in `actions`: they stay
  * below the items as the list scrolls, so they're found without scrolling to
@@ -98,6 +100,7 @@ const boxEmpty =
  * @csspart chevron - The chevron after the trigger's text.
  * @csspart ring - The spinning ring while `loading`.
  * @csspart menu - The menu's surface.
+ * @csspart scrim - The clear layer over the page that takes a click outside.
  * @csspart items - The scrolling list of items.
  * @csspart actions - The actions pinned under the items.
  * @csspart empty - What the menu says with no items.
@@ -342,7 +345,7 @@ export class GwMenuButton extends GwElement {
 
       /* Below the button down to the window's edge, or above it when there's
          more room there, growing to its content and scrolling past that */
-      [popover] {
+      [part="menu"] {
         position-anchor: --gw-menu;
         position-try-fallbacks: flip-inline;
         /* The area is the room on that side, so 100% is all of it */
@@ -373,7 +376,7 @@ export class GwMenuButton extends GwElement {
           overlay var(--gw-motion-normal) allow-discrete;
       }
 
-      [popover]:popover-open {
+      [part="menu"]:popover-open {
         display: flex;
         flex-direction: column;
         opacity: 1;
@@ -381,7 +384,7 @@ export class GwMenuButton extends GwElement {
       }
 
       @starting-style {
-        [popover]:popover-open {
+        [part="menu"]:popover-open {
           opacity: 0;
           translate: 0 -0.25rem;
         }
@@ -389,7 +392,7 @@ export class GwMenuButton extends GwElement {
 
       /* A bottom sheet on narrow or short screens, sliding up from the
          edge rather than hanging off the button */
-      [popover][data-placement="sheet"] {
+      [part="menu"][data-placement="sheet"] {
         position-area: none;
         position-try-fallbacks: none;
         ${sheetLayout}
@@ -400,17 +403,17 @@ export class GwMenuButton extends GwElement {
         box-shadow: var(--gw-shadow-l);
       }
 
-      [popover][data-placement="sheet"]:popover-open {
+      [part="menu"][data-placement="sheet"]:popover-open {
         translate: 0 0;
       }
 
       @starting-style {
-        [popover][data-placement="sheet"]:popover-open {
+        [part="menu"][data-placement="sheet"]:popover-open {
           translate: 0 100%;
         }
       }
 
-      [popover][data-placement="sheet"]::backdrop {
+      [part="menu"][data-placement="sheet"]::backdrop {
         background: var(--gw-menu-button-backdrop, rgb(0 0 0 / 40%));
       }
 
@@ -613,10 +616,12 @@ export class GwMenuButton extends GwElement {
 
   readonly #popover = h(
     "div",
-    { id: "menu", part: "menu", popover: "auto", role: "menu" },
+    { id: "menu", part: "menu", popover: "manual", role: "menu" },
     this.#items,
     this.#actions,
   );
+
+  readonly #scrim = new Scrim(() => this.#close());
 
   constructor() {
     super();
@@ -673,7 +678,11 @@ export class GwMenuButton extends GwElement {
 
     this.#trigger.setAttribute("aria-expanded", String(expanded));
 
-    if (!expanded) return;
+    if (!expanded) {
+      this.#scrim.hide();
+
+      return;
+    }
 
     const popover = this.#popover;
 
@@ -700,6 +709,14 @@ export class GwMenuButton extends GwElement {
   };
 
   readonly #onKeydown = (event: KeyboardEvent) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      this.#close();
+
+      return;
+    }
+
     const buttons = this.#buttons;
 
     const index = buttons.findIndex(
@@ -714,6 +731,13 @@ export class GwMenuButton extends GwElement {
     buttons[next]?.focus();
   };
 
+  /** Closes the menu and puts focus back on the button. */
+  #close() {
+    if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
+
+    this.#trigger.focus();
+  }
+
   #choose(value: string) {
     this.dispatchEvent(
       new CustomEvent("select", {
@@ -723,8 +747,7 @@ export class GwMenuButton extends GwElement {
       }),
     );
 
-    this.#popover.hidePopover();
-    this.#trigger.focus();
+    this.#close();
   }
 
   // A checkbox keeps the menu open, so several can be changed in a row
@@ -867,7 +890,16 @@ export class GwMenuButton extends GwElement {
     this.#popover.addEventListener("beforetoggle", this.#onBeforeToggle);
     this.#popover.addEventListener("toggle", this.#onToggle);
     this.#popover.addEventListener("keydown", this.#onKeydown);
-    root.append(this.#heading, this.#trigger, this.#popover);
+    // Before `popovertarget` opens the menu, so the menu shows over it
+    this.#trigger.addEventListener("click", () => {
+      if (!this.#popover.matches(":popover-open")) this.#scrim.show();
+    });
+    root.append(
+      this.#heading,
+      this.#trigger,
+      this.#scrim.element,
+      this.#popover,
+    );
   }
 
   protected override update(changed: ReadonlySet<string>) {

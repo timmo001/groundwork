@@ -15,6 +15,7 @@ import { LightElement, fieldId } from "./fields.js";
 import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
 import { placeBeside } from "./placement.js";
+import { Scrim } from "./scrim.js";
 import { createIcon, setIconPath } from "./styles.js";
 
 /** @deprecated Use `OptionItem`, which also takes an icon, description and group. */
@@ -33,7 +34,9 @@ const chevronIcon =
  * A labeled select whose list opens under it. Long lists get a search field,
  * focused as the list opens, and only the options in view are rendered. Move
  * with the arrow keys and pick with Enter. On a narrow or short screen,
- * under 600px wide or 500px tall, the list is a bottom sheet.
+ * under 600px wide or 500px tall, the list is a bottom sheet. While it's
+ * open, a clear scrim (`.gw-scrim`) covers the page, so a click outside only
+ * closes it, and nothing beneath reacts.
  *
  * Pass `options`, or write `<option>` children (in `<optgroup>`s for
  * groups, with `data-icon`, `data-swatch` and `data-description`), which it
@@ -191,6 +194,11 @@ export class GwSelect extends LightElement {
     this.#clear,
   );
 
+  readonly #scrim = new Scrim(() => {
+    this.close();
+    this.#trigger.focus();
+  });
+
   constructor() {
     super();
     this.label = "";
@@ -222,6 +230,7 @@ export class GwSelect extends LightElement {
     if (this.disabled || this.#popup.matches(":popover-open")) return;
 
     this.#popup.dataset.placement = this.#asSheet() ? "sheet" : "below";
+    this.#scrim.show();
     this.#popup.showPopover();
   }
 
@@ -322,10 +331,6 @@ export class GwSelect extends LightElement {
     });
   };
 
-  readonly #onOutside = (event: PointerEvent) => {
-    if (!event.composedPath().includes(this)) this.close();
-  };
-
   readonly #onToggle = (event: ToggleEvent) => {
     this.open = event.newState === "open";
 
@@ -334,18 +339,17 @@ export class GwSelect extends LightElement {
       this.#list.reset();
       window.addEventListener("resize", this.#position);
       window.addEventListener("scroll", this.#position, true);
-      document.addEventListener("pointerdown", this.#onOutside, true);
 
       return;
     }
 
+    this.#scrim.hide();
     this.#stopListening();
   };
 
   #stopListening() {
     window.removeEventListener("resize", this.#position);
     window.removeEventListener("scroll", this.#position, true);
-    document.removeEventListener("pointerdown", this.#onOutside, true);
   }
 
   override disconnectedCallback() {
@@ -426,6 +430,7 @@ export class GwSelect extends LightElement {
       this.#input,
       this.#inputs,
       this.#hint,
+      this.#scrim.element,
       this.#popup,
     );
   }
