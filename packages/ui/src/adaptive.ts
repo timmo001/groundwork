@@ -34,6 +34,27 @@ export const labelsHiddenQuery = `(width < ${defaultLabelsBelow})`;
  */
 export const sidewaysQuery = `(orientation: landscape) and (height < ${defaultSheetBelowHeight}px)`;
 
+/**
+ * The media query for a touch screen, on its own or beside a mouse, where
+ * help lists the gestures.
+ * Docs: https://groundwork.timmo.dev/behavior/#help
+ */
+export const touchQuery = "(any-pointer: coarse)";
+
+/**
+ * The media query for a touch screen with nothing that hovers, such as a
+ * phone or a tablet on its own, which likely has no keyboard. Help leaves
+ * the keys out here.
+ * Docs: https://groundwork.timmo.dev/behavior/#help
+ */
+export const noKeyboardQuery = "(any-pointer: coarse) and (any-hover: none)";
+
+/**
+ * The media query for a device that likely has a keyboard: anything that
+ * doesn't match `noKeyboardQuery`. Help lists the keys here.
+ */
+export const keyboardQuery = `not (${noKeyboardQuery})`;
+
 /** Where a popup switches to a bottom sheet; `0` turns either side off. */
 export interface SheetRule {
   /** The viewport width in pixels below which it's a sheet. Defaults to 600. */

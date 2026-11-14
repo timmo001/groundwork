@@ -28,9 +28,18 @@ const pressables =
 /** How `shortcutKey` reads a key press. */
 export interface ShortcutKeyOptions {
   /**
+   * The region the shortcuts act on, such as a player: a key counts only
+   * while the focus is in it, so typing elsewhere on the page never sets
+   * one off. Give it `tabindex="0"`, so a click or Tab into it gives it the
+   * focus. This is how one-letter shortcuts meet WCAG's Character Key
+   * Shortcuts, and the way to scope them; without it, the whole page counts.
+   */
+  readonly within?: Element;
+  /**
    * Whether one letter, number or symbol on its own, such as `k` or `?`, is
-   * a shortcut. Give people a setting that turns it off, since speech input
-   * types letters and would set them off. Defaults to `true`.
+   * a shortcut. Turn it off from a setting, for an app whose one-letter
+   * shortcuts work page-wide rather than `within` a region, since speech
+   * input types letters and would set them off. Defaults to `true`.
    */
   readonly singleKeys?: boolean;
   /** A selector for more elements whose keys are their own, such as an app's own player. */
@@ -42,6 +51,7 @@ export interface ShortcutKeyOptions {
  * `ArrowLeft` or `Shift+ArrowLeft`; or `undefined` where the key belongs to
  * something else, so the page leaves the event alone:
  *
+ * - a press outside the region `within` gives;
  * - a field being typed in, or text being composed;
  * - the arrows, in a control that moves with them, such as a toggle or list;
  * - Space and Enter, on a button or a link;
@@ -49,8 +59,8 @@ export interface ShortcutKeyOptions {
  * - a press with Ctrl, Cmd or Alt, or one already handled.
  *
  * ```ts
- * document.addEventListener("keydown", (event) => {
- *   const key = shortcutKey(event, { singleKeys: settings.singleKeys });
+ * player.addEventListener("keydown", (event) => {
+ *   const key = shortcutKey(event, { within: player });
  *
  *   if (key === "k") togglePlay();
  *   else if (key === "?") help.toggle(helpButton);
@@ -62,7 +72,7 @@ export interface ShortcutKeyOptions {
  */
 export const shortcutKey = (
   event: KeyboardEvent,
-  { singleKeys = true, ignore }: ShortcutKeyOptions = {},
+  { within, singleKeys = true, ignore }: ShortcutKeyOptions = {},
 ): string | undefined => {
   if (
     event.ctrlKey ||
@@ -78,16 +88,18 @@ export const shortcutKey = (
     .composedPath()
     .filter((target) => target instanceof Element);
 
-  const within = (selector: string) =>
+  if (within !== undefined && !path.includes(within)) return undefined;
+
+  const inside = (selector: string) =>
     path.some((target) => target.matches(selector));
 
-  if (within(typingTargets) || within(keyOverlays)) return undefined;
+  if (inside(typingTargets) || inside(keyOverlays)) return undefined;
 
-  if (ignore !== undefined && within(ignore)) return undefined;
+  if (ignore !== undefined && inside(ignore)) return undefined;
 
-  if (event.key.startsWith("Arrow") && within(arrowOwners)) return undefined;
+  if (event.key.startsWith("Arrow") && inside(arrowOwners)) return undefined;
 
-  if ((event.key === " " || event.key === "Enter") && within(pressables)) {
+  if ((event.key === " " || event.key === "Enter") && inside(pressables)) {
     return undefined;
   }
 
