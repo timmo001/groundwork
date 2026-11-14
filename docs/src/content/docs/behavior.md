@@ -93,14 +93,47 @@ One way for a service to reach phones when its app is closed, so the PWA and the
 
 ## Pairing
 
-Connecting a phone to a service without typing an address or a credential. The Schemas and helpers are in `@timmo001/groundwork-pwa/pairing`.
+Connecting a phone or another device to a service without typing an address or a credential. The device trades a one-time code for a key of its own, so pairing is how a client gets a key. The Schemas and helpers are in `@timmo001/groundwork-pwa/pairing`, and the screens are [`gw-pairing`](/components/display#pairing), [`gw-copy`](/components/display#copy) and [`gw-qr`](/components/display#qr-code).
 
-1. **The link.** The service makes a one-time code and shows its base URL with `?pair=<code>`, as text and a QR code (`pairingUrl`). The code works once and expires a few minutes after it's made.
-2. **Opening it.** The app opens the link, or scans it with `scanPairingLink` from the camera, where the browser has the Barcode Detection API (`canScan`). The page starts the camera and owns the permission prompt; the Android shell passes it through.
+1. **The link.** The service makes a one-time code and shows its base URL with `?pair=<code>`, or `#pair=<code>` to keep it out of request logs (`pairingUrl`). The code works once and expires a few minutes after it's made.
+2. **Opening it.** The app opens the link, or scans it with `scanPairingLink` from the camera, where the browser has the Barcode Detection API (`canScan`). The page starts the camera and owns the permission prompt; the Android shell passes it through. An app opened by the link reads it with `takePairingLink`, which takes the code out of the address bar.
 3. **The handshake.** The app posts `{ code, client }` to `POST pair`. The service checks the code, forgets it, and answers with `{ token, service: { id, name } }`. `pair` does the round trip.
 4. **After.** The app sends `Authorization: Bearer <token>` from then on. The service records the client with when it paired and when it was last seen, and lists them so one can be removed, which ends its token.
 
 The same client `id` goes in the pairing and in the push subscription, so removing a client stops its pushes too.
+
+### Showing a code
+
+The service's own page, on a laptop or a phone already paired, shows the code three ways at once, so whatever's in hand works:
+
+- **A QR code of the link**, always, since a laptop's camera scans too. It's black on white with a quiet zone of four modules on every side in every theme, mode and forced colors, and at least `10rem` across, so a phone reads each module.
+- **The code in large monospace text, in groups of four**, such as `4F9C-82KD`, to type on a device with no camera.
+- **A Copy button for the link**, which says `Copied` for a moment and announces it, to send it to a device by message.
+- **A countdown** of when it stops working, such as `Works once. Expires in 4:07`. When it runs out, the code is hidden, it says the code expired, and Make a new code brings another. Making a new one ends the last.
+- **The paired state, in place.** Once a device uses the code, it says which, such as `Paired with Pixel 9`, then goes back to the list of devices.
+
+`gw-pairing` is all of this, given the app's function that makes a code and one that waits for it to be used.
+
+### Entering a code
+
+The device that pairs has one field that takes either a pasted link or a typed code, so nobody has to know which they have. It ignores case, spaces and dashes, so `4f9c 82kd` is `4F9C82KD`, and a bare code pairs with the service the app already knows. `parsePairingInput(text, service)` reads both; `normalizePairingCode` is the typed part alone.
+
+Codes avoid characters that read alike: Crockford's base32 (digits and capitals without I, L, O and U) gives 40 bits in 8 characters. A service that takes I, L and O as typos for 1, 1 and 0 accepts what someone reads off the screen.
+
+### Devices
+
+The service lists every paired device: its name and kind, when it paired, when it was last seen, and Remove, which ends that device's key at once. A device that's removed has to pair again.
+
+### Security
+
+- **Codes come from a CSPRNG and work once.** The service forgets a code as it's used, and when a new one is made.
+- **Short expiry.** Five minutes: long enough to fetch a phone and scan, short enough that a code someone saw over a shoulder or in a screenshot has gone.
+- **Lockout.** After repeated wrong codes, such as 10 in 5 minutes, the service stops taking codes for a while and drops the open ones, counted on the service rather than per address, so a guesser can't spread out. With 40 bits and a lockout, guessing a live code is out of reach.
+- **Nothing secret in logs.** Codes, links that carry them and keys never go in a log, an error or analytics. A fragment link never reaches the server's request log, and the app takes it out of the address bar once it's read.
+- **One key per client, stored hashed.** Each device gets its own key, at least 256 bits from a CSPRNG, sent as a Bearer token. The service keeps only its SHA-256 hash, compares in constant time, and shows a key once, if a person ever needs to see it.
+- **Show what's being paired.** The paired state names the device, so the person who made the code sees whether the one they meant used it.
+
+Sources: [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) on device codes (§5.1 brute forcing, §5.4 phishing and lifetime, §6.1 characters and dashes), OWASP's [Forgot Password](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html) (single-use expiring tokens), [Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#account-lockout) (lockout) and [Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#data-to-exclude) (what to leave out) cheat sheets, DENSO WAVE on the [QR quiet zone](https://www.qrcode.com/en/howto/code.html) (ISO/IEC 18004), and ML Kit's [barcode scanning](https://developers.google.com/ml-kit/vision/barcode-scanning/android#input-image-guidelines) guidance on module size.
 
 ## Interfaces
 

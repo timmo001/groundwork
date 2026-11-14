@@ -151,3 +151,13 @@ An app that can't switch themes yet, such as one with no UI or no `pageTheme`, p
 - **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts. docs-kit only has Groundwork's own themes, so a site for an app with its own theme renders that theme's stylesheet with `blumeThemeCss` from a site script that writes it into `theme.css`, as the docs-kit README shows.
 - **App:** offer the same themes with [`pageTheme`](/themes#on-a-page) and a [theme picker](/components/actions/#theme-picker), including importing your own theme.
 - **Brand images:** set the default theme's background and accent in `scripts/brand-images.ts` and run `bun run brand`. Then upload the new social preview in the repository's settings, since GitHub doesn't read it from the repository.
+
+## 10. Devices that connect
+
+Ask the owner: will a phone or another device connect to this? A service that a phone app, another computer or a second screen talks to pairs them, as [Pairing](/behavior#pairing) sets out, rather than having anyone type an address or a shared password:
+
+- A pairing page on the service with [`gw-pairing`](/components/display#pairing), its routes from `@timmo001/groundwork-pwa/pairing`, and codes that work once, expire in minutes and lock out after repeated wrong ones.
+- One key per device, stored hashed, and a list of devices with Remove, which ends that device's key.
+- One field on the device that takes the link or the code, read with `parsePairingInput`, and the camera scan where there is one.
+
+A service nothing else connects to skips this step, and one that adds a phone side later comes back to it.
