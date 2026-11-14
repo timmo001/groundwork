@@ -32,6 +32,8 @@ export default defineConfig(
             "/foundations/type",
             "/foundations/spacing",
             "/foundations/iconography",
+            "/foundations/shape",
+            "/foundations/motion",
             "/foundations/layout",
           ],
         },

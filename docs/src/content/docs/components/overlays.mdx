@@ -96,6 +96,28 @@ Each of them takes both attributes, but apps shouldn't need them: the defaults a
 
 There's no separate adaptive dialog element, since the overlays already are one: a [dialog](#dialog) is a modal in the middle that becomes a sheet, and a popover opened without a button does the same for something lighter. The [sheet](#sheet) below is a different thing, a panel from an edge at any size.
 
+## Popover, sheet or dialog
+
+Which overlay to use depends on how much it holds, not on how important it is.
+
+| It holds | Use |
+| --- | --- |
+| One small task tied to a button: a confirmation, a rename, or a few controls that set one thing, such as four sliders and a Reset | A [popover](#popover) by its button, which is a bottom sheet on a phone |
+| Enough to need sections, a list, or scrolling on a desktop window, such as filters with many options or a device's setup | A [sheet](#sheet) from the edge, `side="auto"` so it comes up from the bottom on a phone |
+| A decision that must be made before anything else | A [dialog](#dialog) |
+| More than one screenful, or a flow of several steps | A page |
+
+The line between a popover and a sheet: a popover holds one task in a handful of controls, with no headings inside it, and never scrolls at its full height on a desktop window. Anything past that is a sheet, as a popover that scrolls or covers what it's about stops being a quick look.
+
+## Staying out of the way
+
+An overlay over something a person is watching, such as a live picture they're adjusting, leaves it in view:
+
+- **A lighter backdrop.** Popovers and sheets dim the page by 40% by default, and dialogs by 50%. Over live content, set the backdrop lighter, such as `--gw-sheet-backdrop: rgb(0 0 0 / 15%)` or the same for `--gw-popover-backdrop`, so the change being made shows behind it. A dialog, which asks for a decision first, keeps its default.
+- **Beside, not over.** A sheet comes in from the side that leaves the content clear, such as `wide-side="end"`, and a popover opens by its button rather than in the middle.
+- **One at a time.** Only one overlay shows, and Esc closes the topmost one.
+- **Live controls aren't edits.** Sliders that apply at once, such as a picture's brightness, change nothing to save, so leaving them never asks to discard.
+
 ## Sheet
 
 <Demo id="sheet">
@@ -201,3 +223,6 @@ Every attribute, slot, part, CSS property and event, from each element's docs.
 - Home Assistant: [Adaptive dialog](https://contributors.home-assistant.io/design/components/adaptive-dialog/), [Dialog](https://contributors.home-assistant.io/design/components/dialog/) · Code: [adaptive dialog](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-adaptive-dialog.ts), [dialog](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-dialog.ts)
 - Web Awesome: [Popover](https://webawesome.com/docs/components/popover), [Dialog](https://webawesome.com/docs/components/dialog), [Drawer](https://webawesome.com/docs/components/drawer) · Code: [popover](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/popover), [dialog](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/dialog), [drawer](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/drawer)
 - Primer: [Dialog](https://primer.style/product/components/dialog/) · [Code](https://github.com/primer/react/tree/main/packages/react/src/Dialog)
+- Apple Human Interface Guidelines: [Popovers](https://developer.apple.com/design/human-interface-guidelines/popovers), [Sheets](https://developer.apple.com/design/human-interface-guidelines/sheets)
+- Material Design 3: [Side sheets](https://m3.material.io/components/side-sheets/overview), [Bottom sheets](https://m3.material.io/components/bottom-sheets/overview), [Dialogs](https://m3.material.io/components/dialogs/overview) · [Code](https://github.com/material-components/material-web/tree/main/dialog)
+- MDN: [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using)

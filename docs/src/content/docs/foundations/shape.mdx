@@ -1,0 +1,23 @@
+---
+title: Shape
+description: Radius and elevation, the foundations shared by every theme.
+---
+
+Spacing and control sizes have [their own page](/foundations/spacing), and so does [motion](/foundations/motion).
+
+## Radius
+
+A fixed scale, `--gw-radius-xs` (2px) to `--gw-radius-xl` (16px) and `--gw-radius-pill`, plus three the theme sets: `--gw-radius-control`, `--gw-radius-chip` and `--gw-radius-panel`.
+
+<TokenScale kind="radius" />
+
+## Elevation
+
+`--gw-shadow-s`, `-m` and `-l`, from black at low opacity. Dark modes use stronger shadows, since a shadow reads less on a dark surface. A theme can set their ink and strength with `style.shadow`, as [Writing a theme](/themes/writing-a-theme) shows.
+
+<TokenScale kind="shadow" />
+
+## References
+
+- Home Assistant: [Spacing](https://contributors.home-assistant.io/design/foundations/spacing/) · [Code](https://github.com/home-assistant/frontend/tree/dev/src/resources/theme)
+- Web Awesome: [Borders](https://webawesome.com/docs/tokens/borders), [Shadows](https://webawesome.com/docs/tokens/shadows) · [Code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/styles)

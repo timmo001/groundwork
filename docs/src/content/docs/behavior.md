@@ -139,6 +139,8 @@ Sources: [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) on device codes (§5
 
 How an app's pages hold up as they grow. Groundwork's components do most of this themselves, so a page gets it by using them: [tables](/components/display#table) and [expansion panels](/components/display#expansion-panel) keep their own view state and draw on open, and long lists are windowed.
 
+Agents building, laying out or reviewing a page or app on Groundwork load the `groundwork-interfaces` skill, which checks these rules with the [foundations](/foundations) they rest on: [touch targets](/foundations/spacing#touch-targets), [layout](/foundations/layout) and [motion](/foundations/motion).
+
 ### View state
 
 How someone has set a view up to read it: the sort, the search, folded sections, filters and the chosen tab. It isn't data, which comes from the server, and it isn't a setting, which is an app-wide preference.
@@ -172,6 +174,12 @@ Anything that can grow past a screen, such as a table, a list, a feed or a diff,
 
 A press shows its result in the same frame: the fold opens and the chevron turns. The work it starts, such as a request, marking something read or drawing heavy content, waits until after that frame. A write shows at once and rolls back if it fails.
 
+Every press shows something at once: its result, or that it's on its way. Under a tenth of a second feels instant and needs nothing more; anything longer shows it's waiting.
+
+- **Pending, for an action that waits on a device or a server and can be pressed again**, such as moving a camera a step. The control gently pulses until the answer comes, and keeps taking presses, each one counted, until the last has answered. Under reduced motion the pulse is a steady dim.
+- **Loading, for an action that mustn't run twice**, such as saving or signing in. The button shows a ring and takes no more presses until it's done, as `gw-button`'s `loading` does.
+- **A result that takes longer than a few seconds** shows its progress where it was asked for, and the person can go on with other things meanwhile.
+
 ### Loading
 
 - A skeleton shaped like the content, for each part rather than the whole page, so nothing jumps when the data arrives.
@@ -185,6 +193,37 @@ Polling and live changes redraw only what changed, keyed by each item's id. They
 ### Text
 
 Written text from people or agents, such as a description, a reason or a summary, renders as markdown, sanitized. Short plain values, such as a name or a version, stay plain text.
+
+### Modes
+
+A mode changes what a drag or a key does, such as Move, where a drag on a camera's picture steers it rather than panning. A mode no one notices is one that surprises them, so:
+
+- **Turned on by a labeled control on what it acts on**, never by a gesture or a hidden key alone.
+- **Named in text while it's on**, beside its controls, with a clear Done that turns it off. Esc turns it off too.
+- **Its controls sit off the content**, beside or under it, never over the picture they steer.
+- **Settings that rarely change go in a settings sheet**, not among the mode's controls.
+
+### One press, one thing
+
+A press does what it's on, and only that.
+
+- A press that closes an overlay, such as one outside a popover, never also presses what's under it. Groundwork's popups lay a [scrim](/components/overlays#clicks-outside) that takes it.
+- Pressing the button that opened a popover closes it, rather than closing it and opening it again.
+- A tap that ends a swipe presses nothing, as [Touch](#touch) sets out.
+- A press on a control inside something pressable, such as a button on a tile, does the control's thing and never the tile's too.
+
+### Keys
+
+A page's own shortcuts, such as `k` to play or the arrows to step, never take a key from something that already uses it:
+
+- **Typing.** Nothing fires while a field, a text area or anything editable has the focus.
+- **Controls that own their keys.** The arrows stay with a toggle, a slider, a list or a menu that has the focus, and Space and Enter with a button.
+- **Overlays.** While a popover, a sheet or a dialog is open, its keys are its own, and the page's shortcuts wait until it closes.
+- **Esc closes only the topmost overlay**, one at a time, then ends a mode.
+- **Modifier keys** (Ctrl, Cmd, Alt) belong to the browser and the system, unless a shortcut is written with one.
+- **Single keys can be turned off.** A shortcut that's one letter, number or symbol, such as `k` or `?`, can be turned off in the app's settings, since speech input types letters and would set them off.
+
+`?` opens the page's help where there are shortcuts, as [Help](#help) sets out.
 
 ### Touch
 
@@ -227,7 +266,7 @@ onSwipe(
 
 #### Help
 
-A page's help popover lists the gestures where there's a touch screen and the keys where there's likely a keyboard. A laptop with a touch screen shows both; a phone shows only the gestures.
+Every page with gestures or shortcuts has help: a plain button with a `?` icon, labeled Help, and the `?` key. Pressing either again closes it. It lists the gestures where there's a touch screen and the keys where there's likely a keyboard, in sections by what they act on, such as the player, the timeline and the page, with each key drawn as a key (`<kbd>`). A laptop with a touch screen shows both; a phone shows only the gestures.
 
 ```css
 /* The gestures, where any pointer is a finger */
@@ -247,19 +286,29 @@ A page's help popover lists the gestures where there's a touch screen and the ke
 
 #### Controls over a picture
 
-In full screen, or on a phone on its side, a player's controls sit over its picture and fade once they've been left alone a moment while it plays, as a video player's do. They stay while it's paused, or while more of their rows are open.
+In full screen, or on a phone on its side, a player's controls sit over its picture and fade once they've been left alone for 3 seconds while it plays, as a video player's do. They stay while it's paused, or while more of their rows are open: only the first row shows at first, and a tab at its edge opens the rest.
 
 - **Only what does nothing else wakes them:** a tap where there's nothing to press (one that moved less than 10px), a 1 finger swipe up (down hides them), a key, a mouse moving, or a handle at the bottom in the middle that shows while they're hidden, at least 64 by 44px so a finger finds it.
 - **A press on a control does its own thing.** A button, a slider, a tile or a camera's own controls never wake or hide the bar, and their press is never swallowed. A tap that does toggle the bar presses nothing else.
-- **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of at least `1.5rem`, or the safe area where that's wider, and the bottom safe area under the bar and the handle.
+- **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of `--gw-safe-inline`, at least `1.5rem` or the safe area where that's wider, and `--gw-safe-bottom` under the bar and the handle. [A phone on its side](/foundations/layout#a-phone-on-its-side) has the tokens and the viewport setting they need.
+- **Turning a phone on its side** goes full screen, and turning it back upright leaves.
 
 ```css
 [data-overlay] {
-  --safe-inline: max(
-    1.5rem,
-    env(safe-area-inset-left, 0px),
-    env(safe-area-inset-right, 0px)
-  );
-  --safe-bottom: max(var(--gw-space-2), env(safe-area-inset-bottom, 0px));
+  padding-inline: var(--gw-safe-inline);
+  padding-block-end: var(--gw-safe-bottom);
 }
 ```
+
+#### Text over media
+
+A name or a caption over a picture never hides it. On a large tile it sits in a corner, on a dark band that reads over any picture. On a tile too small for that, under 200px wide as a container query on the tile, it shrinks to a small chip on one line in the corner, and fades with the controls when they hide. The picture comes first; a name that matters goes beside or under it instead.
+
+## References
+
+- Nielsen Norman Group: [Response times: the 3 important limits](https://www.nngroup.com/articles/response-times-3-important-limits/), [Modes in user interfaces](https://www.nngroup.com/articles/modes/)
+- WAI-ARIA Authoring Practices: [Developing a keyboard interface](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/)
+- WCAG 2.2: [Character Key Shortcuts](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html), [Pointer Cancellation](https://www.w3.org/WAI/WCAG22/Understanding/pointer-cancellation.html)
+- GitHub: [Keyboard shortcuts](https://docs.github.com/en/get-started/accessibility/keyboard-shortcuts)
+- Apple Human Interface Guidelines: [Gestures](https://developer.apple.com/design/human-interface-guidelines/gestures), [Playing video](https://developer.apple.com/design/human-interface-guidelines/playing-video)
+- MDN: [Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API/Using)

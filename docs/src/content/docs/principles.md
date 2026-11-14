@@ -16,6 +16,17 @@ description: The rules every part of Groundwork follows, from data-first themes 
 11. **Agents read and use it.** Every page is in llms.txt and the docs MCP, every job has a skill, and every system has an agent surface.
 12. **Fluid.** No versions or releases for the design itself. The base moves with the apps that follow it, apps pin a commit, and the update system carries changes to them.
 
+## Interfaces
+
+How an app's screens treat the person using them. The `groundwork-interfaces` skill checks a page against them.
+
+1. **Nothing gets in the way.** What a person is watching or reading comes first. Controls sit beside it, overlays leave it in view, and nothing covers it unless the screen has no room left. See [Layout](/foundations/layout) and [Staying out of the way](/components/overlays#staying-out-of-the-way).
+2. **Everything can be pressed with a finger.** Every control has a hit area of at least 44px wherever a finger can point, even where it looks smaller, and one press can't land on two. See [Touch targets](/foundations/spacing#touch-targets).
+3. **One press does one thing.** A press does what it's on and shows that at once. Closing an overlay never also presses what's under it, and a page's keys never take one from a field or a control. See [Interfaces](/behavior#interfaces).
+4. **Things travel, they don't jump.** Something that changes place, size or container moves there, and something that arrives comes from where it belongs and leaves the same way. See [Motion](/foundations/motion).
+5. **One layout, many fillings.** A layout shared by several views is one element with slots and properties, not written again for each. See [Building from parts](/components#building-from-parts).
+6. **Follow established patterns, cited.** Every number and pattern comes from a design system, a standard or research, and each page lists its sources under References. Where Groundwork differs, it says why.
+
 ## References
 
 - Home Assistant: [Principles](https://contributors.home-assistant.io/design/principles/) · [Code](https://github.com/home-assistant/frontend)

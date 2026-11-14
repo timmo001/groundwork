@@ -1,35 +1,97 @@
 ---
-title: Shape and motion
-description: Radius, elevation and motion, the foundations shared by every theme.
+title: Layout
+description: "Arranging controls so nothing gets in the way: grouping, the fewest rows, sizes that change how things fit, a phone on its side, media and filling the window."
 ---
 
-Spacing and control sizes have [their own page](/foundations/spacing).
+A layout puts each control where it's found and nothing where it gets in the way. Controls for one thing sit together, the rest sit apart, a bar takes the fewest rows it can, and nothing sits over what a person is watching unless the screen has no room left. Spacing and control sizes have [their own page](/foundations/spacing), and so do [touch targets](/foundations/spacing#touch-targets).
 
-## Radius
+## Grouping
 
-A fixed scale, `--gw-radius-xs` (2px) to `--gw-radius-xl` (16px) and `--gw-radius-pill`, plus three the theme sets: `--gw-radius-control`, `--gw-radius-chip` and `--gw-radius-panel`.
+Things near each other read as one group, and things inside one boundary read as one group even more strongly. So a row holds its controls in groups, by what they act on, and the space between groups is clearly bigger than the space inside one.
 
-<TokenScale kind="radius" />
+| Between | Gap |
+| --- | --- |
+| Controls in one group | `--gw-space-2` (8px) |
+| Groups in one row, with a separator | `--gw-space-3` (12px) each side of the line |
+| Groups in one row, without one | `--gw-space-6` (24px) |
+| Rows of controls | `--gw-space-2` (8px), or more where they act on different things |
 
-## Elevation
+- **A separator** is a 1px line in `--gw-color-border-quiet`, no taller than the controls beside it. It goes between two groups that act on different things, such as a camera's Home button and its presets, never between every control.
+- **One group, one boundary.** A set of controls that only means something together, such as zoom out, the zoom level and zoom in, is one [control group](/components/actions#control-group), whose sections draw their own separators.
+- **Sharing a row is the exception.** Controls for different things share a row only when there's no better place for them. Each group otherwise goes beside what it acts on.
 
-`--gw-shadow-s`, `-m` and `-l`, from black at low opacity. Dark modes use stronger shadows, since a shadow reads less on a dark surface. A theme can set their ink and strength with `style.shadow`, as [Writing a theme](/themes/writing-a-theme) shows.
+## Fewest rows, then overflow
 
-<TokenScale kind="shadow" />
+A bar of controls takes the fewest rows that fit. When it runs short of room it tightens first, in this order, and only takes another row once there's nothing left to tighten:
 
-## Motion
+1. **Labels go.** Buttons with an icon show only the icon (`labels="auto"`), keeping their name for assistive technology.
+2. **Seldom-used controls fold into More.** A More menu at the end of the bar lists them, in order. Each item mirrors its control's label, icon, disabled and pressed state, and choosing one presses the control, or follows it when it's a link. A [toggle](/components/actions#segmented-control) does the same with its own options through `overflow`.
+3. **Controls shrink to their button.** A control with more than one part, such as [volume](/components/inputs#volume), becomes the button that opens it.
+4. **Then two rows**, split between groups, never inside one, and as even as they can be. Rows never wrap unevenly, with one control left alone on a line.
+5. **Then the phone layout.**
 
-Four durations: `--gw-motion-instant` (75ms), `--gw-motion-fast` (150ms), `--gw-motion-normal` (250ms) and `--gw-motion-slow` (350ms), with `--gw-motion-easing`, `cubic-bezier(0.2, 0, 0, 1)`. All drop to 1ms under `prefers-reduced-motion`.
+The order matters: a control in a More menu is one press further away, a second row takes space from the content, and the phone layout changes where everything is. So a bar gives up the least first.
 
-`--gw-motion-delay` (500ms) is how long a loading placeholder waits before it fades in. Skeletons, spinners and the rings on loading buttons and menu buttons all keep their space but stay invisible for it, so a load that finishes quickly never flashes anything and nothing around them moves. Set it to `0ms` on an element to show its placeholder at once.
+To measure, each control has two widths: the least it can be, as its `min-inline-size`, and the width it takes with everything showing, as `inlineWidth`. A bar adds them up to decide what fits, rather than waiting for something to overflow.
 
-Things that move, move fluidly. Inside a component that's a CSS transition: a toggle's picked pill slides to the new option, a switch's knob glides, menus, popovers and dialogs ease in from `@starting-style`, and notices fade in their corner. Color changes use the fast duration, and anything that travels uses the normal one.
+## Sizes that change the layout
 
-Changes to the whole view use the View Transitions API through `withViewTransition()`, which falls back to changing straight away where it isn't supported. Switching theme or mode crossfades the page. Keep them simple, give each `view-transition-name` once, and remember only one runs at a time and that they work at document level, not inside a shadow root.
+Each threshold has a name, so every app changes at the same size.
 
-Content that arrives fades in rather than popping: a page once it has loaded, a panel's body, a list's results. Wrap it in [`gw-fade-in`](/components/feedback#fading-in). A loading placeholder fades in too, after a short wait, so a quick load never flashes one.
+| Name | When | What changes |
+| --- | --- | --- |
+| Labels hide | Under 40rem (640px) wide, with `labels="auto"` | Buttons with an icon show only it |
+| Sheet below | Under 600px wide or 500px tall | Popovers, menus and dialogs open as [bottom sheets](/components/overlays#bottom-sheets-on-phones) |
+| Phone on its side | `(orientation: landscape) and (max-height: 500px)` | Controls go over the content, gaps get smaller, and the edges are kept clear |
+
+A component that changes with the room it has, not the window, uses a container query on itself, so it works the same in a sidebar or a dialog as on a page.
+
+## A phone on its side
+
+A phone turned sideways has a short, wide screen, so the content gets all of it:
+
+- **Controls over the content.** A player's controls sit over its picture, as [Controls over a picture](/behavior#controls-over-a-picture) sets out, rather than taking rows from it.
+- **Smaller gaps.** Gaps drop to `--gw-space-2`, and rows of controls to one where they can.
+- **Clear of the edges.** Nothing that can be pressed goes in the rounded corners or the middle of a side, where the camera cutout sits. Keep an inline margin of `--gw-safe-inline` and a bottom margin of `--gw-safe-bottom`.
+
+| Token | Value |
+| --- | --- |
+| `--gw-safe-inline` | `max(1.5rem, env(safe-area-inset-left), env(safe-area-inset-right))` |
+| `--gw-safe-bottom` | `max(var(--gw-space-2), env(safe-area-inset-bottom))` |
+
+The safe area insets are only there when the page asks to draw under the cutout and the rounded corners. Add `viewport-fit=cover` to the viewport `<meta>`, and keep everything that can be pressed inside the tokens' margins:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+```
+
+## Media fills its box
+
+A picture or a video fills its box, with no bands around it.
+
+- **Give the box the media's shape** wherever the layout allows, with `aspect-ratio`, so all of it shows and none of it is cut off.
+- **Where the layout sets the shape**, such as a grid of tiles or full screen:
+  - a tile, which is a preview, covers its box (`object-fit: cover`) and loses its edges;
+  - a single picture shows all of itself (`object-fit: contain`), since something at its edge may matter, with a choice to fill the box instead.
+- **A stream sent squeezed**, such as a 16:9 picture in a 4:3 frame, is stretched back to its own shape (`object-fit: fill` in a box of the real ratio), never shown squeezed.
+
+## Filling the window
+
+A view that fills the window, such as a player or a map, takes the height under the app bar and any banners, and no more, so the page never scrolls behind it. Size it in `dvh`, which follows the browser's own bars on a phone, less what sits above it:
+
+```css
+.player {
+  block-size: calc(100dvh - var(--fill-top, 0px));
+}
+```
+
+Measure `--fill-top` from the view's own top edge whenever what's above it changes, such as a banner appearing.
 
 ## References
 
-- Home Assistant: [Motion](https://contributors.home-assistant.io/design/foundations/motion/) · [Code](https://github.com/home-assistant/frontend/tree/dev/src/resources/theme)
-- Web Awesome: [Borders](https://webawesome.com/docs/tokens/borders), [Shadows](https://webawesome.com/docs/tokens/shadows), [Transitions](https://webawesome.com/docs/tokens/transitions) · [Code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/styles)
+- Nielsen Norman Group: [Proximity](https://www.nngroup.com/articles/gestalt-proximity/), [Common region](https://www.nngroup.com/articles/common-region/)
+- Apple Human Interface Guidelines: [Layout](https://developer.apple.com/design/human-interface-guidelines/layout), [Toolbars](https://developer.apple.com/design/human-interface-guidelines/toolbars)
+- Material Design 3: [Toolbars](https://m3.material.io/components/toolbars/overview), [Applying layout](https://m3.material.io/foundations/layout/applying-layout/window-size-classes)
+- Primer: [ActionBar](https://primer.style/product/components/action-bar/), [UnderlineNav](https://primer.style/product/components/underline-nav/) · [Code](https://github.com/primer/react)
+- WAI-ARIA Authoring Practices: [Toolbar](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/)
+- MDN: [`env()`](https://developer.mozilla.org/en-US/docs/Web/CSS/env), [`viewport-fit`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/meta/name/viewport), [`object-fit`](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit), [Container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_queries)
