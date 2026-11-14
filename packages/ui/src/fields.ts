@@ -22,6 +22,20 @@ export const fieldStyles = css`
     color: var(--gw-color-text-primary);
   }
 
+  /* The display above, and gw-range's below, beat the browser's own
+     [hidden] rule, so hidden hides them here, as the state layer does for
+     the shadow hosts. A page's own display on one still wins */
+  :where(
+    gw-input,
+    gw-select,
+    gw-date-picker,
+    gw-switch,
+    gw-checkbox,
+    gw-range
+  )[hidden] {
+    display: none;
+  }
+
   :where(gw-input, gw-select, gw-date-picker) .gw-field-heading {
     display: flex;
     gap: var(--gw-space-1);
