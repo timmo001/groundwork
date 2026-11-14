@@ -79,6 +79,7 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 | `gw-chip` | `gw-skeleton-text` |
 | `gw-code` | `gw-button` |
 | `gw-command-menu` | `gw-option-list` |
+| `gw-control-bar` | `gw-button`, `gw-menu-button` |
 | `gw-copy` | `gw-button` |
 | `gw-date-picker` | `gw-button`, `gw-calendar`, `gw-popover` |
 | `gw-dialog` | `gw-button` |
@@ -115,16 +116,17 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 The behavior the composites share is exported on its own too, for an app's own elements that should move and open the same way:
 
 - `listIndex(key, index, length, page?)` gives the index a list key moves to: the arrow keys step and wrap, Page Up and Down jump eight and stop at the ends, Home and End go to them. `gw-option-list` and `gw-menu-button` move with it.
-- `shortcutKey(event, { singleKeys, ignore })` reads a page's own shortcut from a key press, such as `k`, `?` or `Shift+ArrowLeft`, and gives `undefined` where the key belongs to something else: a field, a control that moves with the arrows, a button's Space or Enter, or an open overlay, as [Keys](/behavior#keys) sets out. `singleKeys: false` turns off one-letter shortcuts, for the setting the rules ask for.
+- `shortcutKey(event, { within, singleKeys, ignore })` reads a page's own shortcut from a key press, such as `k`, `?` or `Shift+ArrowLeft`, and gives `undefined` where the key belongs to something else: a press outside the region `within` names, a field, a control that moves with the arrows, a button's Space or Enter, or an open overlay, as [Keys](/behavior#keys) sets out. `within` keeps one-letter shortcuts to the region they act on, as the rules ask, and `singleKeys: false` turns them off for an app whose shortcuts work page-wide.
 - `targetArea(selector)` is the styles that give a control a hit area of at least `--gw-target-min`, past its edges where it's smaller, as every Groundwork control has. It's for an app's own elements' shadow roots.
 - `placeBeside(popup, anchor, { align, gap, fit })` puts a fixed popup under the control that opened it, or over it when there's more room there, lined up with its start edge or, with `align: "space"`, the edge on the roomier side of the window. It sets `data-placement` and `data-side` for styles that follow the side. `gw-popover`, `gw-select` and `gw-date-picker` open with it.
 - `opensAsSheet({ below, belowHeight })` says whether a popup should open as a [bottom sheet](/components/overlays#bottom-sheets-on-phones): under 600px wide or 500px tall by default, `0` turning either off. `sheetLayout` is the declarations that make a fixed popup that sheet, to put in a rule of its own. Every popover-like element decides with it.
-- The [sizes that change the layout](/foundations/layout#sizes-that-change-the-layout) as media queries, for `matchMedia` or a stylesheet: `sheetQuery({ below, belowHeight })` where popups become sheets, `sidewaysQuery` for a phone on its side, and `labelsHiddenQuery` where `labels="auto"` hides text, with `defaultLabelsBelow`, `defaultSheetBelow` and `defaultSheetBelowHeight` as the numbers.
+- The [sizes that change the layout](/foundations/layout#sizes-that-change-the-layout) as media queries, for `matchMedia` or a stylesheet: `sheetQuery({ below, belowHeight })` where popups become sheets, `sidewaysQuery` for a phone on its side, and `labelsHiddenQuery` where `labels="auto"` hides text, with `defaultLabelsBelow`, `defaultSheetBelow` and `defaultSheetBelowHeight` as the numbers. `touchQuery` and `noKeyboardQuery` (or `keyboardQuery`) are where [help](/behavior#help) lists the gestures and the keys.
 - `fillWindow(...elements)` keeps each element's `--gw-fill-top` at its distance from the top of the page, so `calc(100dvh - var(--gw-fill-top))` [fills the window](/foundations/layout#filling-the-window) under whatever's above it. It returns a function that stops measuring.
+- `overlayControls(bar, { stage, fullscreen, hideAfter, stays, pressable, ignore })` puts a player's controls over its picture on a phone on its side or in full screen, fading them while they're left alone, as [Controls over a picture](/behavior#controls-over-a-picture) sets out. It returns a function that stops it.
 - `onSwipe(element, listener, { ignore, distance, pinch })` calls `listener` with each touch swipe on a surface, `{ fingers, direction }`, leaving out pinches, touches that start on `ignore` and the click a swipe ends with. Every listener on an element shares one recognizer, and it returns a function that stops listening. [Touch](/behavior#touch) has the gestures and what each does.
 - `scrollButtons(scroller, { start, end })` makes two buttons scroll a horizontal scroller by about a view per press, each shown only while there's more to scroll its way, as a [scrolling row's](/components/layout#scroll-buttons) are. `scrollByView` scrolls one view on its own and `scrollEdges` reads what's out of view at each end.
 - `Below` follows whether the window is narrower than a CSS length, as the `*-below` attributes do.
-- `withViewTransition(change)` runs a change that moves things across the view as a View Transition, and straight away where there's none, under reduced motion or while the page is hidden. `transitionName(...parts)` builds a valid `view-transition-name` from an app's own ids. [Motion](/foundations/motion#across-the-view) shows them together.
+- `withViewTransition(change)` runs a change that moves things across the view as a View Transition, and straight away where there's none, under reduced motion or while the page is hidden. `transitionName(...parts)` builds a valid `view-transition-name` from an app's own ids, and the `gw-travel` and `gw-from-*` `view-transition-class`es move an element or slide it from its edge on the motion tokens (`viewTransitionStyles`). [Motion](/foundations/motion#across-the-view) shows them together.
 - `DirtyState` follows whether a form's values differ from what was last saved: `start(value)` when it loads, `update(value)` on each edit, `markClean()` after a save, and `subscribe(listener)` to enable Save only while something changed. While any one is dirty, closing or reloading the tab asks first, and `confirmLeave()` asks in a `gw-dialog` before the app moves to another page, putting the forms back as they were saved if someone leaves. Its `discard` option is how a form puts itself back. `hasUnsavedChanges()` reads the whole page, and `gw-unsaved-changes` fires on `window` each time that changes.
 
 ```ts
@@ -261,6 +263,7 @@ const off = on(menu, "pick", (event) => open(event.detail.value));
 | `gw-table`, `gw-list`, `gw-sortable` | `change` |
 | `gw-volume` | `input`, `change`; `mute`, with `detail.muted` |
 | `gw-expansion` | `toggle` |
+| `gw-control-bar` | `toggle`, when its tab opens or closes its other rows |
 | `gw-notification` | `dismiss` |
 | `gw-notification-center` | `clear` |
 

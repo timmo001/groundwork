@@ -369,7 +369,7 @@ A player's mute button and volume slider as one control, a `gw-button` and a `gw
   </div>
 </Demo>
 
-Drag the bar's corner to narrow it. In `auto` it decides again as it or its container resizes, so a bar that tightens switches it rather than hiding the slider. In a flex row the slider gives up its width first, so let the volume shrink before the controls that shouldn't. `currentMode` is the mode it shows, and `:state(inline)`, `:state(expand)`, `:state(popover)` or `:state(mute)` matches it, for a layout that follows it. `inlineWidth` is its width inline, whatever it shows, for a bar that measures its controls before laying them out.
+Drag the bar's corner to narrow it. In `auto` it decides again as it or its container resizes, so a bar that tightens switches it rather than hiding the slider. In a flex row the slider gives up its width first, so let the volume shrink before the controls that shouldn't. `currentMode` is the mode it shows, and `:state(inline)`, `:state(expand)`, `:state(popover)` or `:state(mute)` matches it, for a layout that follows it. `inlineWidth` is its width inline, whatever it shows, and `minInlineWidth` its button's, for a bar that measures its controls before laying them out.
 
 It fires `input` while the slider moves and `change` when it's let go, then read `value`, and `mute` with `detail.muted`. A press that brings the volume back from 0 fires `input` and `change` too.
 

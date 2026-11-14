@@ -221,17 +221,19 @@ A page's own shortcuts, such as `k` to play or the arrows to step, never take a 
 - **Overlays.** While a popover, a sheet or a dialog is open, its keys are its own, and the page's shortcuts wait until it closes.
 - **Esc closes only the topmost overlay**, one at a time, then ends a mode.
 - **Modifier keys** (Ctrl, Cmd, Alt) belong to the browser and the system, unless a shortcut is written with one.
-- **Single keys can be turned off.** A shortcut that's one letter, number or symbol, such as `k` or `?`, can be turned off in the app's settings, since speech input types letters and would set them off.
+- **Single keys belong to a region.** A shortcut that's one letter, number or symbol, such as `k` or `?`, works only while the focus is in what it acts on, such as the player, since speech input types letters and would set them off anywhere else. Give the region `tabindex="0"`, so a click or Tab into it gives it the focus. An app whose one-letter shortcuts work page-wide instead gives people a setting that turns them off.
 
 `?` opens the page's help where there are shortcuts, as [Help](#help) sets out.
 
-`shortcutKey(event, { singleKeys })` from `@timmo001/groundwork-ui` follows these rules: it gives the shortcut a key press asks for, or `undefined` where the key belongs to something else.
+`shortcutKey(event, { within, singleKeys })` from `@timmo001/groundwork-ui` follows these rules: it gives the shortcut a key press asks for, or `undefined` where the key belongs to something else. `within` is the region, and a key outside it counts for nothing; `singleKeys: false` is the setting's off.
 
 ```ts
 import { shortcutKey } from "@timmo001/groundwork-ui";
 
-document.addEventListener("keydown", (event) => {
-  const key = shortcutKey(event, { singleKeys: settings.singleKeys });
+player.tabIndex = 0;
+
+player.addEventListener("keydown", (event) => {
+  const key = shortcutKey(event, { within: player });
 
   if (key === "k") togglePlay();
   else if (key === "?") help.toggle(helpButton);
@@ -284,15 +286,17 @@ onSwipe(
 
 Every page with gestures or shortcuts has help: a plain button with a `?` icon, labeled Help, and the `?` key. Pressing either again closes it. It lists the gestures where there's a touch screen and the keys where there's likely a keyboard, in sections by what they act on, such as the player, the timeline and the page, with each key drawn as a key (`<kbd>`). A laptop with a touch screen shows both; a phone shows only the gestures.
 
+A [key list](/components/overlays#key-list) lays the list out, with `input="touch"` or `input="keys"` to show it only where it applies. `touchQuery` and `noKeyboardQuery` from `@timmo001/groundwork-ui` are the same tests as media queries, for an app's own styles:
+
 ```css
-/* The gestures, where any pointer is a finger */
+/* The gestures, where any pointer is a finger (touchQuery) */
 @media not (any-pointer: coarse) {
   .touch-only {
     display: none;
   }
 }
 
-/* The keys, unless a finger is the only way to point */
+/* The keys, unless a finger is the only way to point (noKeyboardQuery) */
 @media (any-pointer: coarse) and (any-hover: none) {
   .keys-only {
     display: none;
@@ -309,10 +313,35 @@ In full screen, or on a phone on its side, a player's controls sit over its pict
 - **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of `--gw-safe-inline`, at least `1.5rem` or the safe area where that's wider, and `--gw-safe-bottom` under the bar and the handle. [A phone on its side](/foundations/layout#a-phone-on-its-side) has the tokens and the viewport setting they need.
 - **Turning a phone on its side** goes full screen, and turning it back upright leaves.
 
+`overlayControls(bar, options?)` from `@timmo001/groundwork-ui` does all of this. It puts `bar` over the bottom of `stage` (its parent by default) while the phone is on its side (`sidewaysQuery`) or the player is in full screen, and under it otherwise. It marks the stage `data-overlay` and the bar `data-over`, and `data-hidden` while the bar has faded, for an app's own styles. A [control bar](/components/actions#control-bar) gets `expandable` while it's over the picture, so only its first row shows until its tab opens the rest. It returns a function that stops it and puts the bar back.
+
+```ts
+import { overlayControls } from "@timmo001/groundwork-ui";
+
+overlayControls(controls, {
+  stage: player,
+  fullscreen: player,
+  stays: () => video.paused,
+  pressable: ".tile",
+  ignore: "[data-movable]",
+});
+```
+
+| Option | What it does |
+| --- | --- |
+| `stage` | What the controls sit over. Defaults to the bar's parent |
+| `fullscreen` | What goes full screen when a phone turns on its side, and leaves it when it turns back. Leave it out to keep full screen to the app's own button. Browsers mostly allow full screen only from a tap, so turning may not be enough |
+| `hideAfter` | How long the controls stay after the last touch, in milliseconds (`3000`) |
+| `stays` | Whether they should stay anyway, such as while paused. They always stay while a menu or popover in them is open, or a control bar's other rows are |
+| `pressable` | A selector for more that a press does something on, such as a tile, added to `overlayPressables` |
+| `ignore` | A selector for what a drag already moves, where a swipe never starts |
+| `handleLabel` | The handle's name (`Show the controls`) |
+
+The handle is a `gw-button` with the `gw-overlay-handle` class, and `--gw-overlay-controls-background` sets the bar's and the handle's see-through fill. The bar and the handle keep the safe margins themselves; the picture under them needs them too, where it has anything to press:
+
 ```css
-[data-overlay] {
+[data-overlay] > .picture {
   padding-inline: var(--gw-safe-inline);
-  padding-block-end: var(--gw-safe-bottom);
 }
 ```
 

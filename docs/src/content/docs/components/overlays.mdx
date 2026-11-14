@@ -1,6 +1,6 @@
 ---
 title: Overlays
-description: Anchored popovers for confirmations, renames and small forms, sheets from the edge, dialogs, and menus on the Popover API.
+description: Anchored popovers for confirmations, renames and small forms, sheets from the edge, dialogs, menus on the Popover API, and key lists for help.
 ---
 
 ## Popover
@@ -61,7 +61,7 @@ An `input` or `change` event from the content marks it changed, and `show()` cle
 
 ## Clicks outside
 
-A click or tap outside an open overlay only closes it. Nothing on the page beneath reacts until the overlay has gone, with no hover, focus or press, so the click that closes a sheet never also presses the button under it. Focus stays in the overlay until it closes, then goes back to where it was. That holds for the [popover](#popover), [sheet](#sheet), the [menu button's](/components/actions#menu-button) menu, the [select's](/components/inputs#select) list, the [date picker's](/components/inputs#date-picker) calendar and the [app bar's](/components/layout#app-bar) nav menu, as it does for the modal [dialog](#dialog) and [command menu](#command-menu).
+A click or tap outside an open overlay only closes it. Nothing on the page beneath reacts until the overlay has gone, with no hover, focus or press, so the click that closes a sheet never also presses the button under it. That includes the button that opened it: a press on it while the overlay is open only closes the overlay, rather than closing it and opening it again. Focus stays in the overlay until it closes, then goes back to where it was. That holds for the [popover](#popover), [sheet](#sheet), the [menu button's](/components/actions#menu-button) menu, the [select's](/components/inputs#select) list, the [date picker's](/components/inputs#date-picker) calendar and the [app bar's](/components/layout#app-bar) nav menu, as it does for the modal [dialog](#dialog) and [command menu](#command-menu). No overlay lets a press through to what's beneath.
 
 Each lays a clear scrim over the page while it's open, under itself, and the scrim takes the click. Style it with the `scrim` part, or `.gw-scrim` in the select and date picker, which are in light DOM. An app's own popup does the same with `Scrim`, exported from `@timmo001/groundwork-ui`: put its element before the popup, show it just before the popup so the popup sits over it, and hide it once the popup closes.
 
@@ -212,11 +212,55 @@ In an app it opens on Cmd+K or Ctrl+K. This site's search already takes that sho
 
 `--gw-command-menu-height` caps its height (`70vh`) and `--gw-command-menu-sheet-list-height` the list's as a bottom sheet (`60vh`). The list is a [`gw-option-list`](/components/inputs#option-list), the `list` part, so its row heights and parts work here too. Each key hint is the `hint` part, with its keys the `key` part.
 
+## Key list
+
+<Demo id="key-list">
+  <gw-key-list>
+    <h3>Player</h3>
+    <dl>
+      <dt><kbd>Space</kbd> <kbd>K</kbd></dt>
+      <dd>Pause or play</dd>
+      <dt><kbd>Shift</kbd> + <kbd>←</kbd> <kbd>→</kbd></dt>
+      <dd>Back or forward a minute</dd>
+    </dl>
+    <h3>Page</h3>
+    <dl>
+      <dt><kbd>F</kbd></dt>
+      <dd>Full screen</dd>
+      <dt><kbd>?</kbd></dt>
+      <dd>This help</dd>
+    </dl>
+  </gw-key-list>
+</Demo>
+
+The keys or gestures a page answers and what each does, for its [help](/behavior#help), usually in a [popover](#popover) opened from a Help button and `?`. Put a heading before each group where there's more than one, then a `<dl>`: each `<dt>` the keys, every key in a `<kbd>`, and each `<dd>` what they do. The keys sit in a column of their own and what they do lines up beside them, across every group.
+
+`input` shows a list only where it applies: `input="touch"` for the gestures, where there's a touch screen (`touchQuery`), and `input="keys"` for the keys, everywhere but a touch screen with nothing that hovers, such as a phone (`noKeyboardQuery`). Without it the list always shows. A help with one of each shows both on a laptop with a touch screen, and only the gestures on a phone.
+
+```html
+<gw-popover heading="Controls">
+  <gw-key-list input="touch">
+    <dl>
+      <dt>Swipe up or down</dt>
+      <dd>Show or hide the controls</dd>
+    </dl>
+  </gw-key-list>
+  <gw-key-list input="keys">
+    <dl>
+      <dt><kbd>?</kbd></dt>
+      <dd>This help</dd>
+    </dl>
+  </gw-key-list>
+</gw-popover>
+```
+
+Like the fields, it's light DOM: its styles are adopted into the document or shadow root it sits in, in the components layer, so a page's own CSS wins.
+
 ## API reference
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-popover", "gw-sheet", "gw-filter", "gw-dialog", "gw-command-menu"]} />
+<ElementApi tags={["gw-popover", "gw-sheet", "gw-filter", "gw-dialog", "gw-command-menu", "gw-key-list"]} />
 
 ## References
 

@@ -16,7 +16,7 @@ Things near each other read as one group, and things inside one boundary read as
 | Groups in one row, without one | `--gw-space-6` (24px) |
 | Rows of controls | `--gw-space-2` (8px), or more where they act on different things |
 
-- **A separator** is a 1px line in `--gw-color-border-quiet`, no taller than the controls beside it. It goes between two groups that act on different things, such as a camera's Home button and its presets, never between every control.
+- **A separator** is a 1px line in `--gw-color-border-quiet`, no taller than the controls beside it: a [divider](/components/layout#divider). It goes between two groups that act on different things, such as a camera's Home button and its presets, never between every control.
 - **One group, one boundary.** A set of controls that only means something together, such as zoom out, the zoom level and zoom in, is one [control group](/components/actions#control-group), whose sections draw their own separators.
 - **Sharing a row is the exception.** Controls for different things share a row only when there's no better place for them. Each group otherwise goes beside what it acts on.
 
@@ -32,7 +32,9 @@ A bar of controls takes the fewest rows that fit. When it runs short of room it 
 
 The order matters: a control in a More menu is one press further away, a second row takes space from the content, and the phone layout changes where everything is. So a bar gives up the least first.
 
-To measure, each control has two widths: the least it can be, as its `min-inline-size`, and the width it takes with everything showing, as `inlineWidth`. A bar adds them up to decide what fits, rather than waiting for something to overflow.
+To measure, each control has two widths: the least it can be, as its `min-inline-size` and `minInlineWidth`, and the width it takes with everything showing, as `inlineWidth`. `minInlineWidth` is there to read where a page's own styles, such as `* { min-width: 0 }`, override the `min-inline-size`. A bar adds them up to decide what fits, rather than waiting for something to overflow.
+
+A [control bar](/components/actions#control-bar) does all of this for a bar in three groups, start, middle and end, with controls marked `data-overflow` folding into its More.
 
 ## Sizes that change the layout
 
@@ -67,12 +69,11 @@ The safe area insets are only there when the page asks to draw under the cutout 
 
 ## Media fills its box
 
-A picture or a video fills its box, with no bands around it.
+A picture or a video takes all of its box it can, and shows all of itself wherever its edge may matter.
 
-- **Give the box the media's shape** wherever the layout allows, with `aspect-ratio`, so all of it shows and none of it is cut off.
-- **Where the layout sets the shape**, such as a grid of tiles or full screen:
-  - a tile, which is a preview, covers its box (`object-fit: cover`) and loses its edges;
-  - a single picture shows all of itself (`object-fit: contain`), since something at its edge may matter, with a choice to fill the box instead.
+- **Give the box the media's shape** wherever the layout allows, with `aspect-ratio`, so all of it shows, none of it is cut off and there are no bands around it.
+- **Where the layout sets the shape**, such as a grid of tiles or full screen, it shows all of itself (`object-fit: contain`), with bands where the shapes differ. Something at the edge of the frame may be what matters: a person at the edge of a camera's view, or the end of a line in a document.
+- **Covering is a choice, not the rule.** A tile that's only a preview, where nothing at its edge matters, such as a photo in an album, may cover its box (`object-fit: cover`) and lose its edges. An app can offer it as a setting, and zooming in may fill the box.
 - **A stream sent squeezed**, such as a 16:9 picture in a 4:3 frame, is stretched back to its own shape (`object-fit: fill` in a box of the real ratio), never shown squeezed.
 
 ## Filling the window

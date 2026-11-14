@@ -1,6 +1,6 @@
 ---
 title: Actions
-description: Buttons, menu buttons, segmented controls and control groups, on native buttons and radio inputs.
+description: Buttons, menu buttons, segmented controls, control groups and control bars, on native buttons and radio inputs.
 ---
 
 ## Button
@@ -286,7 +286,7 @@ Options can carry an icon as path data. `labels="auto"` shows the text on wide s
 
 `overflow` shows the options in order while they fit and lists the rest in a More menu at the end of the row, as a row of tabs keeps its extra tabs: the "priority+" pattern. Drag the bar's corner to narrow it. The options in the menu are checkable choices, and picking one sets `value` and fires `change` and `pick`, as a click on it would. The chosen option always shows: when it would be in the menu, it takes the last slot instead, so the choice in use is never hidden. More is a [menu button](#menu-button), a [bottom sheet](/components/overlays#bottom-sheets-on-phones) on a narrow or short screen, and `sheet-below` and `sheet-below-height` change when, as they do on the menu button.
 
-It decides again as it resizes. It's as wide as every option, or the room it has, and in a flex row it gives up options first, down to the chosen one and More, which is its least width. `inlineWidth` is its width with every option showing, whatever it shows now, for a bar that measures its controls before laying them out.
+It decides again as it resizes. It's as wide as every option, or the room it has, and in a flex row it gives up options first, down to the chosen one and More, which is its least width. `inlineWidth` is its width with every option showing, whatever it shows now, and `minInlineWidth` its least, for a bar that measures its controls before laying them out.
 
 `menu-items` adds the app's own items to the menu after the options, written as [menu items](#choices) are, such as a group of modes under a heading; with any, More always shows. Choosing one fires `menu-select` with `detail.value` and leaves `value` alone, and a checkbox item fires `check` as the menu button's does. Give them values the options don't use.
 
@@ -328,6 +328,44 @@ The controls draw with no fill or outline of their own. A hovered or pressed one
 It takes `gw-button`, `gw-menu-button`, `gw-segmented`, `gw-select` and `gw-date-picker`. A segmented control loses its own track to the group's, and with `labels="hide"` its options are square, so the picked one is a circle. A select or date picker needs `label-hidden` or `inline-label`, since a label above it would sit inside the pill. A hidden control leaves no line or gap behind, and the next one shown takes the rounded end.
 
 Like the fields, it's light DOM: its styles are adopted into the document or shadow root it sits in, in the components layer, so a page's own CSS wins. Set `--gw-control-group-background`, `--gw-control-group-border-color` and `--gw-control-group-radius` for the track, `--gw-control-group-hovered` and `--gw-control-group-pressed` for a section's fill, and `--gw-control-group-separator` for the lines. Set that last one on a single control, such as to `transparent`, to change only the line before it.
+
+## Control bar
+
+<Demo id="control-bar" layout="stack">
+  <div style={{ resize: "horizontal", overflow: "hidden", inlineSize: "100%", minInlineSize: "14rem", maxInlineSize: "100%" }}>
+    <gw-control-bar label="Player controls">
+      <gw-volume slot="start"></gw-volume>
+      <gw-button slot="start" variant="neutral" appearance="plain" labels="hide" icon="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" data-overflow>Close the camera</gw-button>
+      <gw-button variant="neutral" appearance="plain" labels="hide" icon="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z">Previous event</gw-button>
+      <gw-button variant="neutral" appearance="plain" labels="hide" icon="M14,19H18V5H14M6,19H10V5H6V19Z">Pause</gw-button>
+      <gw-button variant="neutral" appearance="plain" labels="hide" icon="M16,18H18V6H16M6,18L14.5,12L6,6V18Z">Next event</gw-button>
+      <gw-button slot="end" variant="neutral" appearance="plain" labels="hide" toggle icon="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" data-overflow>Show motion</gw-button>
+      <gw-button slot="end" variant="neutral" appearance="plain" labels="hide" icon="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" data-overflow>Download</gw-button>
+      <gw-button slot="end" variant="neutral" appearance="plain" labels="hide" icon="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z">Full screen</gw-button>
+    </gw-control-bar>
+  </div>
+</Demo>
+
+A bar of controls, such as a player's, in three groups: `start`, the middle and `end`. It takes the [fewest rows](/foundations/layout#fewest-rows-then-overflow) they fit, measuring them laid out in one row whenever it or a control changes size, so it never waits for something to overflow and never wraps unevenly. Drag the demo's corner to narrow it.
+
+1. **One row**, the middle group in the middle while the sides leave it room.
+2. **Tight**, still one row: controls marked `data-overflow` fold into a More menu at the end, and a [volume](/components/inputs#volume) gives up its slider for its button.
+3. **Two rows**: the middle group across the top, and the start and end under it at either side, tight too where that's what it takes.
+4. **Compact**: each group on a row of its own, middle first, as on a phone.
+
+It matches `:state(tight)`, `:state(split)` (two rows) or `:state(compact)` for an app's own styles, and an app with a phone layout of its own sets it through the `bar`, `start`, `middle` and `end` parts.
+
+Each item in More mirrors its control as it changes: its label, icon, whether it's disabled or hidden, and a toggle's `pressed`, as a checkbox. Choosing one clicks the control, or follows it when it's a link. A control with an `inlineWidth` and a `minInlineWidth` (or a `min-inline-size`) of its own, such as a volume or a [segmented control](#segmented-control) with `overflow`, counts as its full width for one row and its least for tight. `minInlineWidth` comes first, as a page's `* { min-width: 0 }` overrides a control's own `min-inline-size`.
+
+| Attribute | Values |
+| --- | --- |
+| `label` | Names the bar for assistive technology, such as `Player controls` |
+| `more-label`, `more-icon` | The More button's name (`More`) and icon (three dots) |
+| `expandable` | Shows only the first row while it takes more than one, with a tab on its top edge that opens the rest. [`overlayControls()`](/behavior#controls-over-a-picture) sets it while the bar is over a picture |
+| `expanded` | Whether the rows past the first are open, with `expandable`. It fires `toggle` when the tab changes it |
+| `expand-label`, `collapse-label` | The tab's names, `More controls` and `Fewer controls` |
+
+`--gw-control-bar-gap` sets the space between groups (`--gw-space-6`), `--gw-control-bar-group-gap` the space inside one (`--gw-space-2`) and `--gw-control-bar-row-gap` the space between rows (`--gw-space-2`), as [Grouping](/foundations/layout#grouping) sets out. Put a [divider](/components/layout#divider) with `orientation="vertical"` between two groups in one slot that act on different things.
 
 ## Theme picker
 
@@ -443,7 +481,7 @@ It's a `<fieldset>` of native radio buttons, so arrow keys move the choice. Set 
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-button", "gw-menu-button", "gw-segmented", "gw-control-group", "gw-theme-picker", "gw-theme-gallery"]} />
+<ElementApi tags={["gw-button", "gw-menu-button", "gw-segmented", "gw-control-group", "gw-control-bar", "gw-theme-picker", "gw-theme-gallery"]} />
 
 ## References
 

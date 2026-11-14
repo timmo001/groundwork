@@ -1,6 +1,6 @@
 ---
 title: Layout
-description: App bars, pages, page headers, section titles, sections, stacks, rows and grids.
+description: App bars, pages, page headers, section titles, sections, stacks, rows, grids and dividers.
 ---
 
 ## App bar
@@ -222,11 +222,28 @@ On a wide screen a grid keeps adding columns. `max` (2 to 6) caps how many it sh
   </gw-grid>
 </Demo>
 
+## Divider
+
+<Demo id="divider" layout="stack">
+  <gw-row>
+    <gw-button variant="neutral" appearance="plain">Home</gw-button>
+    <gw-divider orientation="vertical"></gw-divider>
+    <gw-button variant="neutral" appearance="plain">Door</gw-button>
+    <gw-button variant="neutral" appearance="plain">Drive</gw-button>
+  </gw-row>
+  <gw-divider></gw-divider>
+  <p>Below the line</p>
+</Demo>
+
+A 1px line in `--gw-color-border-quiet` between two groups that act on different things, such as a camera's Home button and its presets, never between every control, as [Grouping](/foundations/layout#grouping) sets out. It runs across a stack by default, like `<hr>`. With `orientation="vertical"` it stands between groups in a row, centered and shorter than the controls beside it, and keeps `--gw-space-1` on each side, so a row with the usual 8px gap between controls has 12px (`--gw-space-3`) either side of the line.
+
+It's a `separator` for assistive technology. `--gw-divider-color` sets its color, and `--gw-divider-length` a vertical line's height (`1.25rem`).
+
 ## API reference
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-app-bar", "gw-page-header", "gw-section-title", "gw-section", "gw-page", "gw-stack", "gw-row", "gw-grid"]} />
+<ElementApi tags={["gw-app-bar", "gw-page-header", "gw-section-title", "gw-section", "gw-page", "gw-stack", "gw-row", "gw-grid", "gw-divider"]} />
 
 ## References
 
