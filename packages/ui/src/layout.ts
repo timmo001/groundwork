@@ -171,6 +171,8 @@ const scrolling = (host: string) => `
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
+    /* The scroll buttons and the fade stand in for a scrollbar */
+    scrollbar-width: none;
     padding: var(--_gw-row-ring);
     margin: calc(-1 * var(--_gw-row-ring));
     scroll-padding-inline: calc(var(--_gw-row-cover) + var(--_gw-row-fade));
