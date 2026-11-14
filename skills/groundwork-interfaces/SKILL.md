@@ -12,7 +12,7 @@ The rules live in the docs, with their numbers and sources. Read each page fresh
 | `/principles` (Interfaces) | The goals every item below serves |
 | `/foundations/spacing` (Touch targets) | Hit areas and the gap between them |
 | `/foundations/layout` | Grouping, the fewest rows, thresholds, a phone on its side, media fit, filling the window |
-| `/foundations/motion` | Durations, easing, and moving things across the view |
+| `/foundations/motion` | Durations, easing, reduced motion, moving things across the view, pages and tabs |
 | `/behavior` (Interfaces) | Respond first, modes, one press one thing, keys, touch, help, controls over a picture |
 | `/behavior` (Pairing) | Connecting a phone or another device: showing and entering a code, the device list, security |
 | `/components/overlays` | Popover, sheet or dialog, and staying out of the way |
@@ -32,7 +32,7 @@ Go through it for each screen, at a desktop width, a phone upright and a phone o
 7. **Keys.** Shortcuts read through `shortcutKey()`, so they skip fields, controls that own their keys and open overlays. Esc closes the topmost overlay first. One-letter shortcuts work only while their region has the focus (`within`), or can be turned off. `?` and a Help button list the keys and gestures, each in a `gw-key-list` with `input="keys"` or `input="touch"`.
 8. **Modes are obvious.** Turned on by a labeled control, named while on, with Done and Esc to leave, and their controls off the content.
 9. **The right overlay.** Chosen by how much it holds, from the table on the overlays page.
-10. **Motion travels.** Moves and resizes go through `withViewTransition()` with a name from `transitionName()` and a `view-transition-class` (`gw-travel`, or `gw-from-*` for an edge), arrivals come from their edge or anchor, fades only for content arriving in place, and nothing moves under reduced motion.
+10. **Motion travels.** Use the motion tokens, travel rather than jump, never animate a resize. Moves and resizes go through `withViewTransition()` with a name from `transitionName()` and a `view-transition-class` (`gw-travel`, `gw-from-*` for an edge, `gw-page` for page and tab content with a `gw-forward` or `gw-back` type), leaving the timing to those classes rather than one duration on every group. Arrivals come from their edge or anchor and leave the way they came, a quicker step; lists make room and close their gaps; fades only for content arriving in place. Motion answers a person's action: what a resize or turning the device changes snaps. A second press never waits, a drag follows the finger, every press shows within `--gw-motion-instant`, and under reduced motion nothing moves but views still crossfade on `--gw-motion-fade`.
 11. **Media and the window.** Pictures show all of themselves (`contain`) wherever the layout sets the shape and their edge may matter, a full view fills the window under the app bar (`fillWindow()`), and nothing that can be pressed sits in a phone's corners or cutout. Layout changes follow the shared media queries (`sheetQuery()`, `sidewaysQuery`, `labelsHiddenQuery`).
 12. **Pairing.** A screen that connects another device shows the code with `gw-pairing` (the QR code of the link, the grouped code with Copy, a countdown, then the paired device by name), and the device that pairs has one field for a link or a code, read with `parsePairingInput`. Devices are listed with Remove, and nothing asks anyone to type an address or a password.
 

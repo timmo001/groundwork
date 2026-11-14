@@ -174,7 +174,7 @@ Anything that can grow past a screen, such as a table, a list, a feed or a diff,
 
 A press shows its result in the same frame: the fold opens and the chevron turns. The work it starts, such as a request, marking something read or drawing heavy content, waits until after that frame. A write shows at once and rolls back if it fails.
 
-Every press shows something at once: its result, or that it's on its way. Under a tenth of a second feels instant and needs nothing more; anything longer shows it's waiting.
+Every press shows something at once: its result, or that it's on its way. Under a tenth of a second feels instant and needs nothing more; anything longer shows it's waiting. Every Groundwork control shows it's pressed within `--gw-motion-instant` (75ms), a tint and, on a button, a slight shrink, so the press is seen before the action answers.
 
 - **Pending, for an action that waits on a device or a server and can be pressed again**, such as moving a camera a step. The control gently pulses until the answer comes, and keeps taking presses, each one counted, until the last has answered. Under reduced motion the pulse is a steady dim. `gw-button`'s `pending` attribute draws it, and `button.waitFor(request)` sets it until every press has answered.
 - **Loading, for an action that mustn't run twice**, such as saving or signing in. The button shows a ring and takes no more presses until it's done, as `gw-button`'s `loading` does.
@@ -306,14 +306,14 @@ A [key list](/components/overlays#key-list) lays the list out, with `input="touc
 
 #### Controls over a picture
 
-In full screen, or on a phone on its side, a player's controls sit over its picture and fade once they've been left alone for 3 seconds while it plays, as a video player's do. They stay while it's paused, or while more of their rows are open: only the first row shows at first, and a tab at its edge opens the rest.
+In full screen, or on a phone on its side, a player's controls sit over its picture and slide down off the bottom edge once they've been left alone for 3 seconds while it plays, as a video player's do, while the handle rises in their place. They stay while it's paused, or while more of their rows are open: only the first row shows at first, and a tab at its edge opens the rest, which grow in rather than appear.
 
 - **Only what does nothing else wakes them:** a tap where there's nothing to press (one that moved less than 10px), a 1 finger swipe up (down hides them), a key, a mouse moving, or a handle at the bottom in the middle that shows while they're hidden, at least 64 by 44px so a finger finds it.
-- **A press on a control does its own thing.** A button, a slider, a tile or a camera's own controls never wake or hide the bar, and their press is never swallowed. A tap that does toggle the bar presses nothing else.
+- **A press on a control does its own thing.** A button, a slider, a tile or a camera's own controls never wake or hide the bar, and their press is never swallowed. A tap that does toggle the bar presses nothing else. Only what's inside the stage counts as a control: the stage itself, and anything around it, can be focusable, such as with `tabindex="0"` for [single keys](#keys), and a tap on the picture still wakes or hides the bar.
 - **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of `--gw-safe-inline`, at least `1.5rem` or the safe area where that's wider, and `--gw-safe-bottom` under the bar and the handle. [A phone on its side](/foundations/layout#a-phone-on-its-side) has the tokens and the viewport setting they need.
 - **Turning a phone on its side** goes full screen, and turning it back upright leaves.
 
-`overlayControls(bar, options?)` from `@timmo001/groundwork-ui` does all of this. It puts `bar` over the bottom of `stage` (its parent by default) while the phone is on its side (`sidewaysQuery`) or the player is in full screen, and under it otherwise. It marks the stage `data-overlay` and the bar `data-over`, and `data-hidden` while the bar has faded, for an app's own styles. A [control bar](/components/actions#control-bar) gets `expandable` while it's over the picture, so only its first row shows until its tab opens the rest. It returns a function that stops it and puts the bar back.
+`overlayControls(bar, options?)` from `@timmo001/groundwork-ui` does all of this. It puts `bar` over the bottom of `stage` (its parent by default) while the phone is on its side (`sidewaysQuery`) or the player is in full screen, and under it otherwise. It marks the stage `data-overlay` and the bar `data-over`, and `data-hidden` while the bar is away, for an app's own styles. A [control bar](/components/actions#control-bar) gets `expandable` while it's over the picture, so only its first row shows until its tab opens the rest. It returns a function that stops it and puts the bar back.
 
 ```ts
 import { overlayControls } from "@timmo001/groundwork-ui";

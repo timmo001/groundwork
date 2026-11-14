@@ -1,9 +1,9 @@
 ---
 title: Motion
-description: How things move from one place to another, how long it takes and how it eases, and how it all stops under reduced motion.
+description: How things move from one place to another, how long it takes and how it eases, and how it turns to a crossfade under reduced motion.
 ---
 
-Motion shows where something went. When a thing changes place, size or container, it travels there, so the eye follows it; when it jumps, the person has to find it again. Used too much, motion gets in the way, so it's kept short, runs on the tokens below, and stops for anyone who asks for less of it.
+Motion shows where something went. When a thing changes place, size or container, it travels there, so the eye follows it; when it jumps, the person has to find it again. Used too much, motion gets in the way, so it's kept short, runs on the tokens below, answers what a person does, and keeps still for anyone who asks for less of it.
 
 ## Tokens
 
@@ -17,26 +17,40 @@ Motion shows where something went. When a thing changes place, size or container
 | `--gw-motion-easing-enter` | `cubic-bezier(0.05, 0.7, 0.1, 1)` | Arriving from an edge or out of an anchor: quick, then slowing into place |
 | `--gw-motion-easing-exit` | `cubic-bezier(0.3, 0, 0.8, 0.15)` | Leaving: easing off, then speeding away |
 | `--gw-motion-delay` | 500ms | How long a loading placeholder waits before it fades in |
+| `--gw-motion-fade` | 150ms | A crossfade in place, and what travel turns into under reduced motion |
 
 Pick the duration by how far a thing travels, not by how important it is: the further it goes, the longer it takes, up to `--gw-motion-slow`. Leaving takes one step less than arriving, as nobody needs to watch something go: a sheet slides in on `slow` and out on `normal`.
 
-Every duration drops to 1ms under `prefers-reduced-motion`, so anything timed with them happens at once with nothing else to do. An animation the tokens don't time, such as a loop, needs its own `@media (prefers-reduced-motion: reduce)` rule, and turns into a still state there, such as a dim in place of a pulse, so what it showed is still there.
+## Reduced motion
+
+Under `prefers-reduced-motion`, nothing moves, grows or shrinks, but a change that replaces what's on screen still crossfades, so it's seen:
+
+- **Every duration but the fade drops to 1ms**, so anything timed with them happens at once. A control's own change sits under the press that made it, so it's seen without motion.
+- **A change across the view crossfades in place** on `--gw-motion-fade`: [`withViewTransition()`](#across-the-view) keeps everything still and fades the old view out and the new one in, where it would have traveled or slid. A bar that leaves by itself, such as [controls over a picture](/behavior#controls-over-a-picture), fades rather than slides.
+- **An animation the tokens don't time**, such as a loop, needs its own `@media (prefers-reduced-motion: reduce)` rule, and turns into a still state there, such as a dim in place of a pulse, so what it showed is still there.
+- **A drag still follows the finger.** It's the person moving it, not an animation.
+
+Opacity isn't motion: WCAG's Animation from Interactions counts what changes an element's size, shape or position, and Apple's guidance for Reduce Motion replaces sliding transitions with fades rather than dropping them. A view that changed at once with nothing to show it is easy to miss. Set `--gw-motion-fade` to `1ms` for no fade at all.
 
 ## Things travel, they don't jump
 
 - **Changing place, size or container moves there.** A tile that becomes the only picture grows out of its place in the grid, and shrinks back into it when it's done. A picked pill slides to the new option.
-- **Arriving comes from somewhere, and leaving goes back there.** A popover or menu grows out of its button, a sheet slides in from its own edge, and a panel docked to a side slides in from that side. Each leaves the way it came.
+- **Arriving comes from somewhere, and leaving goes back there.** A popover or menu grows out of its button, a sheet slides in from its own edge, and a panel or bar docked to a side slides in from that side. Each leaves the way it came.
+- **A list makes room and closes its gaps.** An item that arrives comes from where it belongs, such as a notice from its corner, or fades in at its place in a list where nothing else moves; the items around it slide to make room, and slide together when one leaves.
 - **Fading is for content arriving in place**, where nothing moves: a page once it has loaded, a panel's body, a list's results. Wrap it in [`gw-fade-in`](/components/feedback#fading-in). A loading placeholder fades in too, after `--gw-motion-delay`, so a quick load never flashes one. Skeletons, spinners and the rings on loading buttons and menu buttons keep their space while they wait, so nothing around them moves; set the token to `0ms` on an element to show its placeholder at once. Switching theme or mode crossfades the page.
-- **One at a time.** A press starts one motion. Two unrelated things never animate for the same press, and a new view transition waits for the last one rather than starting over it.
-- **Only when it can be seen.** Nothing animates while the page is hidden, and nothing animates under reduced motion.
+- **Motion answers a person's action, never a resize.** A change someone makes, such as opening a bar's other rows or turning on a control that adds one, travels. A change from resizing the window or turning the device doesn't: the person is already watching the size change, and motion would trail behind their drag. A layout that fits itself to its width, such as a [control bar](/components/actions#control-bar) folding controls into More, or a [row](/components/layout#stack-row-and-grid) dropping its labels, snaps to its new shape.
+- **One press, one motion.** Two unrelated things never animate for the same press.
+- **A second press never waits.** A press during a motion starts the next one straight away, from where things are: a CSS transition turns around mid-way, and a new view transition skips the running one to its end and starts from there. Nobody waits for an animation to finish before they can act.
+- **A drag follows the finger.** Something dragged, such as a bar swiped away, moves with the finger with nothing easing it, then on release settles where it's going on `--gw-motion-easing`, or springs back. A release that's past half way, or that's moving fast, about 500px a second, goes on; otherwise it goes back.
+- **Only when it can be seen.** Nothing animates while the page is hidden.
 
 ## Inside a component
 
-Inside a component, motion is a CSS transition on the tokens: a toggle's pill slides to the new option, a switch's knob glides, menus, popovers and dialogs ease in from `@starting-style`, and notices fade in their corner. Every Groundwork component does this already, and an app's own element follows the same table.
+Inside a component, motion is a CSS transition on the tokens: a toggle's pill slides to the new option, a switch's knob glides, menus, popovers and dialogs ease in from `@starting-style`, and notices fade in their corner. A press shows within `--gw-motion-instant`, before the action answers. Every Groundwork component does this already, and an app's own element follows the same table.
 
 ## Across the view
 
-A change that moves things across the page, such as a tile becoming the whole view or a panel docking at the side, goes through the View Transitions API with `withViewTransition()`. It runs the change straight away where the browser has no View Transitions, under reduced motion and while the page is hidden.
+A change that moves things across the page, such as a tile becoming the whole view, a panel docking at the side or a page changing, goes through the View Transitions API with `withViewTransition()`. It runs the change straight away where the browser has no View Transitions and while the page is hidden.
 
 Give each element that travels a `view-transition-name` of its own, and the browser moves and resizes it from its old place to its new one. `transitionName()` builds a valid name from an app's own ids:
 
@@ -56,6 +70,7 @@ Something that only arrives or leaves, rather than moving, slides in from its ed
 | --- | --- |
 | `gw-travel` | Moves and resizes to its new place on `--gw-motion-slow` and `--gw-motion-easing`, such as a tile becoming the whole view |
 | `gw-from-bottom`, `gw-from-top`, `gw-from-start`, `gw-from-end` | Arriving, slides in from that edge on `--gw-motion-slow` and `--gw-motion-easing-enter`; leaving, slides back out a step quicker, on `--gw-motion-normal` and `--gw-motion-easing-exit`. Start and end follow the page's direction |
+| `gw-page` | A page's content swapping, on `--gw-motion-slow` and `--gw-motion-easing`. With the `gw-forward` or `gw-back` type, a sibling page or tab: the old slides 30px toward the start (or the end, going back) and fades out over the first 35%, and the new slides in the same way from the other side and fades in over the rest. With neither, a page that isn't related fades through: the old fades out over the first 35%, then the new fades in while growing from 92% |
 
 ```css
 .dock {
@@ -68,15 +83,54 @@ Something that only arrives or leaves, rather than moving, slides in from its ed
 }
 ```
 
-`viewTransitionStyles` is the stylesheet itself, for a page that starts its own transitions. It sits in the components layer, so an app's own `::view-transition-*` rules win.
+Leave the timing to these classes rather than setting one duration on every group with `::view-transition-group(*)`: that would also time slides, page swaps and the root's crossfade the same, against the rule that the further something goes, the longer it takes.
 
-Keep them simple: every name is used once on a page at a time, only one transition runs at a time, and they work at document level, never inside a shadow root.
+### Pages and tabs
+
+Moving between pages or tabs changes the content, and the app bar and anything else they share stays still:
+
+- **Siblings slide along their line.** Pages at the same level, such as Live, Recordings and Settings, or the tabs of one view, slide a short way toward the end going forward (to a page further along) and toward the start going back, with a fade between them.
+- **Unrelated pages fade through.** A page that isn't next to the last, such as one opened from a search, fades the old out, then the new in.
+
+Give the content a name and the `gw-page` class, and pass the direction as a type:
+
+```css
+main {
+  view-transition-name: page;
+  view-transition-class: gw-page;
+}
+```
+
+```ts
+const go = (to: number) =>
+  withViewTransition(() => show(to), {
+    types: [to > current ? "gw-forward" : "gw-back"],
+  });
+```
+
+Types need a recent browser; where it has View Transitions but no types, the page fades through. Groundwork's own controls don't change pages themselves, so the app runs this from its router or from a [toggle](/components/actions#toggle)'s `change`.
+
+A site of separate pages with no client router of its own gets the same with one rule. The browser runs a crossfade between same-origin pages, and `gw-page` works there too once the content has its name and class. A site whose router already runs view transitions, such as Astro's `ClientRouter`, leaves it out, or each page would animate twice:
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+```
+
+`viewTransitionStyles` is the stylesheet itself, for a page that starts its own transitions or a site of separate pages. It sits in the components layer, so an app's own `::view-transition-*` rules win.
+
+Keep them simple: every name is used once on a page at a time, and they work at document level, never inside a shadow root. Start a second one whenever it's asked for; it doesn't wait for the first.
 
 ## References
 
-- Material Design 3: [Easing and duration](https://m3.material.io/styles/motion/easing-and-duration), [Transitions](https://m3.material.io/styles/motion/transitions) · [Code](https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-sys-motion.scss)
-- Apple Human Interface Guidelines: [Motion](https://developer.apple.com/design/human-interface-guidelines/motion)
+- Material Design 3: [Easing and duration](https://m3.material.io/styles/motion/easing-and-duration), [Transitions](https://m3.material.io/styles/motion/transitions) · [Code](https://github.com/material-components/material-web/blob/main/tokens/versions/v0_192/_md-sys-motion.scss), [Android transitions](https://github.com/material-components/material-components-android/blob/master/docs/theming/Motion.md), [Bottom sheet drag](https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/bottomsheet/BottomSheetBehavior.java)
+- Apple Human Interface Guidelines: [Motion](https://developer.apple.com/design/human-interface-guidelines/motion), [Accessibility: Motion](https://developer.apple.com/design/human-interface-guidelines/accessibility#Motion)
 - Home Assistant: [Motion](https://contributors.home-assistant.io/design/foundations/motion/) · [Code](https://github.com/home-assistant/frontend/tree/dev/src/resources/theme)
 - Web Awesome: [Transitions](https://webawesome.com/docs/tokens/transitions) · [Code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/styles)
 - WCAG 2.2: [Animation from Interactions](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)
-- MDN: [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API), [`view-transition-class`](https://developer.mozilla.org/en-US/docs/Web/CSS/view-transition-class), [View transition types](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using_types)
+- MDN: [View Transition API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API), [`view-transition-class`](https://developer.mozilla.org/en-US/docs/Web/CSS/view-transition-class), [View transition types](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using_types), [`@view-transition`](https://developer.mozilla.org/en-US/docs/Web/CSS/@view-transition), [`Element.startViewTransition()`](https://developer.mozilla.org/en-US/docs/Web/API/Element/startViewTransition), [`interpolate-size`](https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size)
+- CSS View Transitions: [Starting a transition skips the running one](https://drafts.csswg.org/css-view-transitions-1/#dom-document-startviewtransition)
+- Paul Lewis: [FLIP your animations](https://aerotwist.com/blog/flip-your-animations/)
