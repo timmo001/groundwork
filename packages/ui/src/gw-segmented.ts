@@ -50,6 +50,7 @@ export interface Segment {
  * shows, taking the last slot when it would be in the menu. It decides again
  * as it resizes, and in a flex row it gives up options first, down to the
  * chosen one and More. `inlineWidth` is its width with every option showing,
+ * and `minInlineWidth` the least it can be,
  * for a bar that measures its controls before laying them out.
  * `menu-items` adds the app's own items to the menu after the options, such
  * as a group of modes, and keeps More showing: choosing one fires
@@ -401,6 +402,8 @@ export class GwSegmented extends GwElement {
 
   #natural = 0;
 
+  #least = 0;
+
   #frame = 0;
 
   readonly #narrow = new Below(() => this.requestUpdate("labels"));
@@ -455,6 +458,20 @@ export class GwSegmented extends GwElement {
     if (this.#natural === 0) this.#fit();
 
     return this.#natural;
+  }
+
+  /**
+   * The least it can be in pixels: the chosen option and More with
+   * overflow, its width without. It's what its `min-inline-size` asks for,
+   * there to read where a page's own styles, such as `* { min-width: 0 }`,
+   * override that.
+   */
+  get minInlineWidth(): number {
+    if (!this.overflow) return this.getBoundingClientRect().width;
+
+    if (this.#natural === 0) this.#fit();
+
+    return this.#least;
   }
 
   /** Moves keyboard focus to the chosen option, or the first that can be picked. */
@@ -549,6 +566,7 @@ export class GwSegmented extends GwElement {
     if (!this.overflow || !this.isConnected) {
       this.#setWidths("");
       this.#natural = 0;
+      this.#least = 0;
       this.#inMenu = new Set();
       this.#more.close();
       this.#more.hidden = true;
@@ -600,6 +618,7 @@ export class GwSegmented extends GwElement {
         : span([chosen], segments.length > 1 || always);
 
     this.#natural = span(all, always);
+    this.#least = least;
     this.#setWidths(
       `:host { --_gw-segmented-natural: ${Math.ceil(this.#natural)}px; --_gw-segmented-least: ${Math.ceil(least)}px; }`,
     );

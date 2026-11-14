@@ -66,8 +66,9 @@ export const canSetVolume = (): boolean => {
  *
  * `currentMode` is the mode it shows, and `:state(inline)`,
  * `:state(expand)`, `:state(popover)` or `:state(mute)` matches it for
- * styles. `inlineWidth` is its width inline whatever it shows, for a bar
- * that measures its controls before laying them out.
+ * styles. `inlineWidth` is its width inline whatever it shows, and
+ * `minInlineWidth` its button's, for a bar that measures its controls
+ * before laying them out.
  *
  * @element gw-volume
  * @summary A mute button and volume slider that stay together.
@@ -298,6 +299,15 @@ export class GwVolume extends GwElement {
       this.#button.getBoundingClientRect().width +
       (Number.isFinite(panel) ? panel : 0)
     );
+  }
+
+  /**
+   * The least it can be in pixels, its button alone. It's what its
+   * `min-inline-size` asks for, there to read where a page's own styles,
+   * such as `* { min-width: 0 }`, override that.
+   */
+  get minInlineWidth(): number {
+    return this.#button.getBoundingClientRect().width;
   }
 
   override connectedCallback() {

@@ -15,6 +15,9 @@ export interface GwEventMap {
   "gw-command-menu": {
     pick: CustomEvent<{ value: string }>;
   };
+  "gw-control-bar": {
+    toggle: Event;
+  };
   "gw-date-picker": {
     month: CustomEvent<{ month: string }>;
     change: Event;

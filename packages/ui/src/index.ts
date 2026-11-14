@@ -35,6 +35,8 @@ export * from "./adaptive.js";
 
 export * from "./swipe.js";
 
+export * from "./overlay-controls.js";
+
 export * from "./scroll-buttons.js";
 
 export * from "./scrim.js";
@@ -67,6 +69,8 @@ export * from "./gw-code.js";
 
 export * from "./gw-command-menu.js";
 
+export * from "./gw-control-bar.js";
+
 export * from "./gw-control-group.js";
 
 export * from "./gw-copy.js";
@@ -74,6 +78,8 @@ export * from "./gw-copy.js";
 export * from "./gw-date-picker.js";
 
 export * from "./gw-dialog.js";
+
+export * from "./gw-divider.js";
 
 export * from "./gw-dot.js";
 
@@ -90,6 +96,8 @@ export * from "./gw-fade-in.js";
 export * from "./gw-gauge.js";
 
 export * from "./gw-input.js";
+
+export * from "./gw-key-list.js";
 
 export * from "./gw-list.js";
 

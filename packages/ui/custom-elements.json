@@ -46,6 +46,30 @@
           "description": "The media query for a phone on its side: wider than it's tall, and\nshorter than where popups become sheets. Controls go over the content and\ngaps get smaller.\nDocs: https://groundwork.timmo.dev/foundations/layout/#a-phone-on-its-side"
         },
         {
+          "kind": "variable",
+          "name": "touchQuery",
+          "type": {
+            "text": "string"
+          },
+          "default": "\"(any-pointer: coarse)\"",
+          "description": "The media query for a touch screen, on its own or beside a mouse, where\nhelp lists the gestures.\nDocs: https://groundwork.timmo.dev/behavior/#help"
+        },
+        {
+          "kind": "variable",
+          "name": "noKeyboardQuery",
+          "type": {
+            "text": "string"
+          },
+          "default": "\"(any-pointer: coarse) and (any-hover: none)\"",
+          "description": "The media query for a touch screen with nothing that hovers, such as a\nphone or a tablet on its own, which likely has no keyboard. Help leaves\nthe keys out here.\nDocs: https://groundwork.timmo.dev/behavior/#help"
+        },
+        {
+          "kind": "variable",
+          "name": "keyboardQuery",
+          "default": "`not (${noKeyboardQuery})`",
+          "description": "The media query for a device that likely has a keyboard: anything that\ndoesn't match `noKeyboardQuery`. Help lists the keys here."
+        },
+        {
           "kind": "function",
           "name": "opensAsSheet",
           "parameters": [
@@ -125,6 +149,30 @@
           "name": "sidewaysQuery",
           "declaration": {
             "name": "sidewaysQuery",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "touchQuery",
+          "declaration": {
+            "name": "touchQuery",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "noKeyboardQuery",
+          "declaration": {
+            "name": "noKeyboardQuery",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "keyboardQuery",
+          "declaration": {
+            "name": "keyboardQuery",
             "module": "src/adaptive.ts"
           }
         },
@@ -9494,6 +9542,711 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-control-bar.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A bar of controls, such as a player's, in three groups: `start`, the\nmiddle (the default slot, such as play and pause) and `end`. It takes the\nfewest rows they fit, measuring them laid out in one row whenever it or\nany control changes size, so it never waits for something to overflow and\nnever wraps unevenly. It tightens in the order the\n[layout](https://groundwork.timmo.dev/foundations/layout/#fewest-rows-then-overflow)\nsets out, before it takes another row:\n\n1. **One row**, the middle group centered between the sides while they\n   leave it room.\n2. **Tight** (`:state(tight)`), still one row: controls marked\n   `data-overflow` fold into a More menu at the end, and `gw-volume` gives\n   up its slider for its button.\n3. **Two rows** (`:state(split)`): the middle group across the top, and\n   the start and end under it, at either side; tight too, where that's\n   what it takes.\n4. **Compact** (`:state(compact)`): each group on a row of its own,\n   middle first, as on a phone. An app with a phone layout of its own\n   sets it here, through the `bar`, `start`, `middle` and `end` parts.\n\nEach item in More mirrors its control: its label, icon, whether it's\ndisabled, and a toggle's `pressed`. Choosing one clicks the control, or\nfollows it when it's a link.\n\nA control with an `inlineWidth` of its own, and a `minInlineWidth` or\n`min-inline-size`, such as `gw-volume` or a `gw-segmented` with\n`overflow`, counts as its full width for one row and its least for tight.\n\nWith `expandable`, once it takes more than one row it shows only the\nfirst, the middle group, with a tab at its top edge that opens the rest,\nas a player's controls over its picture do. `overlayControls()` sets it\nthere.",
+          "name": "GwControlBar",
+          "cssProperties": [
+            {
+              "description": "The space between groups. Defaults to `--gw-space-6`.",
+              "name": "--gw-control-bar-gap"
+            },
+            {
+              "description": "The space between controls in a group. Defaults to `--gw-space-2`.",
+              "name": "--gw-control-bar-group-gap"
+            },
+            {
+              "description": "The space between rows. Defaults to `--gw-space-2`.",
+              "name": "--gw-control-bar-row-gap"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The grid that holds the groups.",
+              "name": "bar"
+            },
+            {
+              "description": "The start group.",
+              "name": "start"
+            },
+            {
+              "description": "The middle group.",
+              "name": "middle"
+            },
+            {
+              "description": "The end group, More at its end.",
+              "name": "end"
+            },
+            {
+              "description": "The More menu, a `gw-menu-button`.",
+              "name": "more"
+            },
+            {
+              "description": "The tab that opens the rows past the first, a `gw-button`.",
+              "name": "expand"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The controls at the start, such as the volume.",
+              "name": "start"
+            },
+            {
+              "description": "The controls in the middle, such as play and pause.",
+              "name": ""
+            },
+            {
+              "description": "The controls at the end, such as full screen.",
+              "name": "end"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ label: {}, moreLabel: { attribute: \"more-label\" }, moreIcon: { attribute: \"more-icon\" }, expandable: { type: \"boolean\", reflect: true }, expanded: { type: \"boolean\", reflect: true }, expandLabel: { attribute: \"expand-label\" }, collapseLabel: { attribute: \"collapse-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { position: relative; display: block; } /* The sides share what the middle leaves, so it sits in the middle while they're even and beside the wider one when they aren't */ .bar { display: grid; grid-template-columns: minmax(max-content, 1fr) auto minmax(max-content, 1fr); gap: var(--gw-control-bar-row-gap, var(--gw-space-2)) var(--gw-control-bar-gap, var(--gw-space-6)); align-items: center; } .group { display: flex; flex-wrap: nowrap; gap: var(--gw-control-bar-group-gap, var(--gw-space-2)); align-items: center; grid-row: 1; } .start { grid-column: 1; } .middle { grid-column: 2; justify-content: center; } .end { grid-column: 3; justify-content: flex-end; } .more, .expand { display: none; } /* Tight: the seldom used fold into More, and the start group takes what room is left, so a volume gives up its slider for its button */ :host(:is(:state(tight), :state(compact))) ::slotted([data-overflow]) { display: none; } :host(:is(:state(tight), :state(compact))) .more { display: inline-block; } :host(:state(tight)) .bar { grid-template-columns: minmax(0, 1fr) auto minmax(max-content, 1fr); } :host(:state(tight)) .group { min-inline-size: 0; } /* Two rows: the middle across the top, the sides under it */ :host(:state(split)) .bar { grid-template-columns: auto auto; justify-content: space-between; } :host(:state(split):state(tight)) .bar { grid-template-columns: minmax(0, 1fr) max-content; } :host(:state(split)) .middle { grid-column: 1 / -1; } :host(:state(split)) :is(.start, .end) { grid-row: 2; } :host(:state(split)) .start { grid-column: 1; } :host(:state(split)) .end { grid-column: 2; } /* Compact: a group on each row, the middle first */ :host(:state(compact)) .bar { grid-template-columns: minmax(0, 1fr); } :host(:state(compact)) .group { grid-column: 1; flex-wrap: wrap; justify-content: center; } :host(:state(compact)) .start { grid-row: 2; } :host(:state(compact)) .end { grid-row: 3; } /* Expandable: the first row only, until the tab opens the rest */ :host([expandable]:is(:state(split), :state(compact))) .expand { position: absolute; inset-block-end: 100%; inset-inline-end: 0; display: inline-block; } :host([expandable]:not([expanded]):is(:state(split), :state(compact))) :is(.start, .end) { display: none; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The bar's accessible name.",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "moreLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"More\""
+            },
+            {
+              "kind": "field",
+              "name": "moreIcon",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z\""
+            },
+            {
+              "kind": "field",
+              "name": "expandable",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows only its first row while it takes more than one, with a tab that opens the rest.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "expanded",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the rows past the first are open, with `expandable`.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "expandLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"More controls\""
+            },
+            {
+              "kind": "field",
+              "name": "collapseLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Fewer controls\""
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#slots",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "readonly": true,
+              "default": "{ start: h(\"slot\", { name: \"start\" }), middle: h(\"slot\"), end: h(\"slot\", { name: \"end\" }), }"
+            },
+            {
+              "kind": "field",
+              "name": "#more",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#groups",
+              "privacy": "private",
+              "type": {
+                "text": "object"
+              },
+              "readonly": true,
+              "default": "{ start: h(\"div\", { class: \"group start\", part: \"start\" }, this.#slots.start), middle: h( \"div\", { class: \"group middle\", part: \"middle\" }, this.#slots.middle, ), end: h( \"div\", { class: \"group end\", part: \"end\" }, this.#slots.end, this.#more, ), }"
+            },
+            {
+              "kind": "field",
+              "name": "#bar",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#expand",
+              "privacy": "private",
+              "type": {
+                "text": "GwButton"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeObserver(() => { this.#schedule(); })"
+            },
+            {
+              "kind": "field",
+              "name": "#mirror",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new MutationObserver(() => { this.#fillMore(); })",
+              "description": "Mirrors the folded controls into More as they change."
+            },
+            {
+              "kind": "field",
+              "name": "#folded",
+              "privacy": "private",
+              "type": {
+                "text": "readonly Element[]"
+              },
+              "default": "[]",
+              "description": "The controls marked `data-overflow`, in order."
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#controls",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "\"start\" | \"middle\" | \"end\""
+                  }
+                }
+              ],
+              "description": "The controls in each group, as slotted."
+            },
+            {
+              "kind": "field",
+              "name": "#watch",
+              "privacy": "private",
+              "readonly": true,
+              "description": "Watches the bar and every control, as one shown, hidden or relabeled changes what fits."
+            },
+            {
+              "kind": "field",
+              "name": "#schedule",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#fillMore",
+              "privacy": "private",
+              "description": "Each folded control as an item: a toggle's says whether it's on."
+            },
+            {
+              "kind": "field",
+              "name": "#onSelect",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#line",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Line & { readonly folded: number }"
+                }
+              },
+              "parameters": [
+                {
+                  "name": "group",
+                  "type": {
+                    "text": "\"start\" | \"middle\" | \"end\""
+                  }
+                }
+              ],
+              "description": "What a group takes with every control showing, and tight."
+            },
+            {
+              "kind": "method",
+              "name": "#fit",
+              "privacy": "private",
+              "description": "Lays the groups out in the fewest rows they fit, measured in one row."
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"group\""
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "toggle",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the tab opens or closes the rows past the first. Read `expanded`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The bar's accessible name, such as `Player controls`.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The More button's accessible name and tooltip. Defaults to `More`.",
+              "name": "more-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for the More button's icon. Defaults to three dots.",
+              "name": "more-icon"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows only its first row while it takes more than one, with a tab that opens the rest.",
+              "name": "expandable"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether the rows past the first are open, with `expandable`.",
+              "name": "expanded"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The tab's name while it would open the rows. Defaults to `More controls`.",
+              "name": "expand-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The tab's name while it would close them. Defaults to `Fewer controls`.",
+              "name": "collapse-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-control-bar",
+          "customElement": true,
+          "summary": "A bar of controls that takes the fewest rows they fit."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwControlBar",
+          "declaration": {
+            "name": "GwControlBar",
+            "module": "src/gw-control-bar.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-control-group.ts",
       "declarations": [
         {
@@ -12288,6 +13041,432 @@
           "declaration": {
             "name": "GwDialog",
             "module": "src/gw-dialog.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-divider.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A 1px line between two groups that act on different things, such as a\ncamera's Home button and its presets. Across a stack by default, like\n`<hr>`; `vertical` stands it between groups in a row, centered and\nshorter than the controls beside it, with `--gw-space-1` on each side, so\na row with the gap between controls (`--gw-space-2`) has `--gw-space-3`\neither side of the line. It's a `separator` for assistive technology.",
+          "name": "GwDivider",
+          "cssProperties": [
+            {
+              "description": "The line's color. Defaults to `--gw-color-border-quiet`.",
+              "name": "--gw-divider-color"
+            },
+            {
+              "description": "A vertical line's height, never more than the row's. Defaults to `1.25rem`.",
+              "name": "--gw-divider-length"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The line.",
+              "name": "line"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ orientation: { reflect: true }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` /* The line is drawn inside, as a page's resets, such as \\`* { border: 0; margin: 0 }\\`, beat the host's own styles. A border rather than a fill, so it stays in forced colors */ :host { display: block; flex: none; align-self: stretch; } .line { display: block; border: 0 solid var(--gw-divider-color, var(--gw-color-border-quiet)); border-block-start-width: 1px; } :host([orientation=\"vertical\"]) { display: inline-block; align-self: center; block-size: var(--gw-divider-length, 1.25rem); max-block-size: 100%; vertical-align: middle; } :host([orientation=\"vertical\"]) .line { block-size: 100%; margin-inline: var(--gw-space-1); border-block-start-width: 0; border-inline-start-width: 1px; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "orientation",
+              "type": {
+                "text": "\"horizontal\" | \"vertical\""
+              },
+              "default": "\"horizontal\""
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"separator\""
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "\"horizontal\"|\"vertical\""
+              },
+              "description": "Which way the line runs. Defaults to `horizontal`.",
+              "name": "orientation"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-divider",
+          "customElement": true,
+          "summary": "A line between groups."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwDivider",
+          "declaration": {
+            "name": "GwDivider",
+            "module": "src/gw-divider.ts"
           }
         }
       ]
@@ -17188,6 +18367,407 @@
           "declaration": {
             "name": "GwInput",
             "module": "src/gw-input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-key-list.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "The keys or gestures a page answers and what each does, as a page's help\nlists them: a `<dl>` of `<dt>` (each key in a `<kbd>`, such as\n`<kbd>Shift</kbd> + <kbd>←</kbd>`) and `<dd>`, after a heading for each\ngroup where there's more than one. Keys sit in a column of their own, and\nwhat they do lines up beside them across every group.\n\n`input` shows the list only where it applies: `touch` for gestures, where\nthere's a touch screen, and `keys` for keys, everywhere but a touch screen\nwith nothing that hovers, such as a phone. A help with both lists shows\nboth on a laptop with a touch screen.\n\nIts children stay in light DOM, and its styles are adopted into the\ndocument or shadow root it sits in, in the components layer, so a page's\nown CSS still wins.",
+          "name": "GwKeyList",
+          "slots": [
+            {
+              "description": "Headings and `<dl>` lists of keys or gestures.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "false",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ input: { reflect: true }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "input",
+              "type": {
+                "text": "\"touch\" | \"keys\" | undefined"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_root",
+                  "type": {
+                    "text": "ShadowRoot | HTMLElement"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "\"touch\"|\"keys\""
+              },
+              "description": "Shows it only where a touch screen (`touch`) or a keyboard (`keys`) is likely. Leave it out to always show it.",
+              "name": "input"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-key-list",
+          "customElement": true,
+          "summary": "The keys or gestures a page answers, for its help."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwKeyList",
+          "declaration": {
+            "name": "GwKeyList",
+            "module": "src/gw-key-list.ts"
           }
         }
       ]
@@ -26390,7 +27970,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.\n\n`pick` fires on every pick, the chosen option included, so an option such\nas a Custom one can open a popover each time it's clicked. Open it beside\nthe option with `optionFor(value)`, which also takes the focus back when it\ncloses.\n\n`overflow` shows the options in order while they fit, and lists the rest\nin a More menu at the end of the row, as checkable choices: picking one\nfires `change` and `pick` as a click would. The chosen option always\nshows, taking the last slot when it would be in the menu. It decides again\nas it resizes, and in a flex row it gives up options first, down to the\nchosen one and More. `inlineWidth` is its width with every option showing,\nfor a bar that measures its controls before laying them out.\n`menu-items` adds the app's own items to the menu after the options, such\nas a group of modes, and keeps More showing: choosing one fires\n`menu-select` and leaves `value` alone. The menu is a bottom sheet on a\nnarrow or short screen, as `gw-menu-button`'s is.\n\nOn a touch screen each option's touch area is at least 44px top to bottom\nat medium, and with `overflow` each option and More are 44px across too.",
+          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.\n\n`pick` fires on every pick, the chosen option included, so an option such\nas a Custom one can open a popover each time it's clicked. Open it beside\nthe option with `optionFor(value)`, which also takes the focus back when it\ncloses.\n\n`overflow` shows the options in order while they fit, and lists the rest\nin a More menu at the end of the row, as checkable choices: picking one\nfires `change` and `pick` as a click would. The chosen option always\nshows, taking the last slot when it would be in the menu. It decides again\nas it resizes, and in a flex row it gives up options first, down to the\nchosen one and More. `inlineWidth` is its width with every option showing,\nand `minInlineWidth` the least it can be,\nfor a bar that measures its controls before laying them out.\n`menu-items` adds the app's own items to the menu after the options, such\nas a group of modes, and keeps More showing: choosing one fires\n`menu-select` and leaves `value` alone. The menu is a bottom sheet on a\nnarrow or short screen, as `gw-menu-button`'s is.\n\nOn a touch screen each option's touch area is at least 44px top to bottom\nat medium, and with `overflow` each option and More are 44px across too.",
           "name": "GwSegmented",
           "cssProperties": [
             {
@@ -26624,6 +28204,15 @@
             },
             {
               "kind": "field",
+              "name": "#least",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
               "name": "#frame",
               "privacy": "private",
               "type": {
@@ -26705,6 +28294,15 @@
                 "text": "number"
               },
               "description": "Its width in pixels with every option showing, whatever it shows now.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "minInlineWidth",
+              "type": {
+                "text": "number"
+              },
+              "description": "The least it can be in pixels: the chosen option and More with\noverflow, its width without. It's what its `min-inline-size` asks for,\nthere to read where a page's own styles, such as `* { min-width: 0 }`,\noverride that.",
               "readonly": true
             },
             {
@@ -35461,7 +37059,7 @@
         },
         {
           "kind": "class",
-          "description": "A mute button and a volume slider as one control, so they never split\nwhen a player's bar gets tight. `value` runs 0 to 100, and muting keeps it\nto come back to: the slider shows 0 while muted, and turning it up, or\npressing the button at 0, unmutes, as a speaker would. The button's icon\nfollows the level, and its name says what a press does, Mute or Unmute,\nwith `mute-key` after it.\n\n`mode` picks the layout. `inline` puts the button and the slider side by\nside. `expand` shows the button alone, and the slider slides out beside it\non hover or focus. `popover` makes the button open a popover, a bottom\nsheet on a phone, holding the mute and the slider. `mute` is the button\nalone, for where the page can't set the volume. `auto`, the default, is\n`mute` where the volume can't be set, such as on iOS (`canSetVolume`),\n`inline` while it has the room, and otherwise `expand` with a mouse or\n`popover` with touch. It decides again as it or its container resizes, so\na bar that tightens switches it rather than hiding the slider. In a flex\nrow it gives up the slider's width first, so let it shrink before the\ncontrols that shouldn't.\n\n`currentMode` is the mode it shows, and `:state(inline)`,\n`:state(expand)`, `:state(popover)` or `:state(mute)` matches it for\nstyles. `inlineWidth` is its width inline whatever it shows, for a bar\nthat measures its controls before laying them out.",
+          "description": "A mute button and a volume slider as one control, so they never split\nwhen a player's bar gets tight. `value` runs 0 to 100, and muting keeps it\nto come back to: the slider shows 0 while muted, and turning it up, or\npressing the button at 0, unmutes, as a speaker would. The button's icon\nfollows the level, and its name says what a press does, Mute or Unmute,\nwith `mute-key` after it.\n\n`mode` picks the layout. `inline` puts the button and the slider side by\nside. `expand` shows the button alone, and the slider slides out beside it\non hover or focus. `popover` makes the button open a popover, a bottom\nsheet on a phone, holding the mute and the slider. `mute` is the button\nalone, for where the page can't set the volume. `auto`, the default, is\n`mute` where the volume can't be set, such as on iOS (`canSetVolume`),\n`inline` while it has the room, and otherwise `expand` with a mouse or\n`popover` with touch. It decides again as it or its container resizes, so\na bar that tightens switches it rather than hiding the slider. In a flex\nrow it gives up the slider's width first, so let it shrink before the\ncontrols that shouldn't.\n\n`currentMode` is the mode it shows, and `:state(inline)`,\n`:state(expand)`, `:state(popover)` or `:state(mute)` matches it for\nstyles. `inlineWidth` is its width inline whatever it shows, and\n`minInlineWidth` its button's, for a bar that measures its controls\nbefore laying them out.",
           "name": "GwVolume",
           "cssProperties": [
             {
@@ -35740,6 +37338,15 @@
                 "text": "number"
               },
               "description": "Its width in pixels inline, the button and the slider side by side, whatever mode it shows.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "minInlineWidth",
+              "type": {
+                "text": "number"
+              },
+              "description": "The least it can be in pixels, its button alone. It's what its\n`min-inline-size` asks for, there to read where a page's own styles,\nsuch as `* { min-width: 0 }`, override that.",
               "readonly": true
             },
             {
@@ -36407,6 +38014,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/overlay-controls.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/scroll-buttons.js"
           }
         },
@@ -36535,6 +38150,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-control-bar.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-control-group.js"
           }
         },
@@ -36560,6 +38183,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-dialog.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-divider.js"
           }
         },
         {
@@ -36624,6 +38255,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-input.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-key-list.js"
           }
         },
         {
@@ -36986,14 +38625,14 @@
               }
             },
             {
-              "name": "{ singleKeys = true, ignore }",
+              "name": "{ within, singleKeys = true, ignore }",
               "default": "{}",
               "type": {
                 "text": "ShortcutKeyOptions"
               }
             }
           ],
-          "description": "The shortcut a key press asks for, such as `k`, `F` lowered to `f`, `?`,\n`ArrowLeft` or `Shift+ArrowLeft`; or `undefined` where the key belongs to\nsomething else, so the page leaves the event alone:\n\n- a field being typed in, or text being composed;\n- the arrows, in a control that moves with them, such as a toggle or list;\n- Space and Enter, on a button or a link;\n- anything in an open popover, sheet or dialog, whose keys are its own;\n- a press with Ctrl, Cmd or Alt, or one already handled.\n\n```ts\ndocument.addEventListener(\"keydown\", (event) => {\n  const key = shortcutKey(event, { singleKeys: settings.singleKeys });\n\n  if (key === \"k\") togglePlay();\n  else if (key === \"?\") help.toggle(helpButton);\n  else return;\n\n  event.preventDefault();\n});\n```"
+          "description": "The shortcut a key press asks for, such as `k`, `F` lowered to `f`, `?`,\n`ArrowLeft` or `Shift+ArrowLeft`; or `undefined` where the key belongs to\nsomething else, so the page leaves the event alone:\n\n- a press outside the region `within` gives;\n- a field being typed in, or text being composed;\n- the arrows, in a control that moves with them, such as a toggle or list;\n- Space and Enter, on a button or a link;\n- anything in an open popover, sheet or dialog, whose keys are its own;\n- a press with Ctrl, Cmd or Alt, or one already handled.\n\n```ts\nplayer.addEventListener(\"keydown\", (event) => {\n  const key = shortcutKey(event, { within: player });\n\n  if (key === \"k\") togglePlay();\n  else if (key === \"?\") help.toggle(helpButton);\n  else return;\n\n  event.preventDefault();\n});\n```"
         },
         {
           "kind": "function",
@@ -39053,6 +40692,11 @@
           "description": "Glides `element` from the height it had before a change to the height it\nhas after, as an expansion panel opens, so content arriving or going never\njumps the layout. Measure with `before = element.offsetHeight` ahead of the\nchange, then call this once it's rendered. Skipped when motion is reduced."
         },
         {
+          "kind": "variable",
+          "name": "viewTransitionStyles",
+          "description": "The View Transition classes, adopted into the document the first time\n`withViewTransition()` runs, in the components layer so an app's own\nstyles win. Give an element one with `view-transition-class`, beside its\n`view-transition-name`:\n\n- `gw-travel` moves and resizes it to its new place on `--gw-motion-slow`\n  and `--gw-motion-easing`, such as a tile becoming the whole view;\n- `gw-from-bottom`, `gw-from-top`, `gw-from-start` and `gw-from-end` slide\n  it in from that edge as it arrives, on `--gw-motion-slow` and\n  `--gw-motion-easing-enter`, and back out as it leaves, a step quicker on\n  `--gw-motion-normal` and `--gw-motion-easing-exit`, such as a docked\n  panel. Start and end follow the page's direction."
+        },
+        {
           "kind": "function",
           "name": "withViewTransition",
           "return": {
@@ -39068,7 +40712,7 @@
               }
             }
           ],
-          "description": "Runs a DOM change inside a View Transition where the browser supports one,\nmotion isn't reduced and the page can be seen, otherwise runs it straight\naway, after Home Assistant's `withViewTransition()`. Use it for changes to\nthe whole view, such as switching theme or mode, or moving an element with\na `view-transition-name` to a new place; component state uses CSS\ntransitions.\n\nThe change may return a promise, such as a Lit element's\n`updateComplete`, so the new view is captured once it has rendered. Keep\nit quick: the page is frozen until it settles."
+          "description": "Runs a DOM change inside a View Transition where the browser supports one,\nmotion isn't reduced and the page can be seen, otherwise runs it straight\naway, after Home Assistant's `withViewTransition()`. Use it for changes to\nthe whole view, such as switching theme or mode, or moving an element with\na `view-transition-name` to a new place; component state uses CSS\ntransitions. Elements with one of the `viewTransitionStyles` classes\ntravel or slide from their edge.\n\nThe change may return a promise, such as a Lit element's\n`updateComplete`, so the new view is captured once it has rendered. Keep\nit quick: the page is frozen until it settles."
         },
         {
           "kind": "function",
@@ -39122,6 +40766,14 @@
           "name": "animateHeight",
           "declaration": {
             "name": "animateHeight",
+            "module": "src/motion.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "viewTransitionStyles",
+          "declaration": {
+            "name": "viewTransitionStyles",
             "module": "src/motion.ts"
           }
         },
@@ -39200,6 +40852,60 @@
           "declaration": {
             "name": "on",
             "module": "src/on.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/overlay-controls.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "overlayPressables",
+          "description": "What a press does something on, so it never wakes or hides the controls:\na control, a field, a popover or anything focusable."
+        },
+        {
+          "kind": "function",
+          "name": "overlayControls",
+          "return": {
+            "type": {
+              "text": "(() => void)"
+            }
+          },
+          "parameters": [
+            {
+              "name": "bar",
+              "type": {
+                "text": "HTMLElement"
+              }
+            },
+            {
+              "name": "{\n    stage = bar.parentElement ?? undefined,\n    fullscreen,\n    hideAfter = 3000,\n    stays = () => false,\n    pressable,\n    ignore,\n    handleLabel = \"Show the controls\",\n  }",
+              "default": "{}",
+              "type": {
+                "text": "OverlayControlsOptions"
+              }
+            }
+          ],
+          "description": "On a phone on its side (`sidewaysQuery`), or in full screen, puts `bar`\nover the bottom of its picture and lets it fade once it's been left alone\nfor `hideAfter` while nothing keeps it. Only what does nothing else brings\nit back: a tap where there's nothing to press, a 1 finger swipe up (down\nhides it), a key, a mouse moving, or a handle at the bottom while it's\nhidden. A press on a control does its own thing, and a tap that toggles\nthe bar presses nothing else. With `fullscreen`, turning a phone on its\nside goes full screen where the browser lets it, and turning it back\nleaves.\n\nIt marks the stage `data-overlay` while the bar is over it, and the bar\n`data-over` and `data-hidden`, for the styles it adopts and an app's own.\nA `gw-control-bar` gets `expandable` while it's over the picture, so it\nshows its first row until its tab opens the rest. It uses `gw-button` for\nthe handle. Returns a function that stops it and puts the bar back."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "overlayPressables",
+          "declaration": {
+            "name": "overlayPressables",
+            "module": "src/overlay-controls.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "overlayControls",
+          "declaration": {
+            "name": "overlayControls",
+            "module": "src/overlay-controls.ts"
           }
         }
       ]
@@ -39844,6 +41550,12 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/define/gw-control-bar.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/define/gw-control-group.ts",
       "declarations": [],
       "exports": []
@@ -39863,6 +41575,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-dialog.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-divider.ts",
       "declarations": [],
       "exports": []
     },
@@ -39911,6 +41629,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-input.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-key-list.ts",
       "declarations": [],
       "exports": []
     },
