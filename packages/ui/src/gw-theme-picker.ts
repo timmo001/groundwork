@@ -490,8 +490,9 @@ export class GwThemePicker extends GwElement {
 
     this.#mode.labels = mode ? "hide" : "show";
     this.#theme.inlineLabel = theme;
-    // The popover's heading names it once the mode is out of it
-    this.#theme.labelHidden = mode && !theme;
+    // In the popover, its heading already names the select, so the label is
+    // kept only for assistive technology
+    this.#theme.labelHidden = this.layout !== "inline" && !theme;
     // The palette while the popover holds the theme; the overflow dots once
     // the theme is in place, as a menu of Reset and Import when they're all
     // that's left
@@ -688,6 +689,9 @@ export class GwThemePicker extends GwElement {
     }
 
     this.#popover.heading = this.label;
+    // Wide enough for the mode control's every option; the gallery keeps
+    // its set width and wraps its cards
+    this.#popover.fit = !this.gallery;
     this.#menu.label = this.label;
     this.#theme.label = this.label;
     this.#mode.label = this.modeLabel;

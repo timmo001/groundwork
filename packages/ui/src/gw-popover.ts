@@ -34,6 +34,7 @@ const closeIcon =
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
+ * @attr {boolean} fit - Sizes it to its content beside a button or in the middle: at least `--gw-popover-width`, and no wider than the window, so a wide control inside never scrolls sideways.
  * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it by its button. Defaults to `600`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
@@ -57,7 +58,7 @@ const closeIcon =
  *
  * @cssprop --gw-popover-close-scale - Scales the close button, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-discard-scale - Scales the Keep editing and Discard buttons, around 1 for medium. Defaults to `0.8`, small.
- * @cssprop --gw-popover-width - Its width beside a button. Defaults to `20rem`.
+ * @cssprop --gw-popover-width - Its width beside a button, or its least width with `fit`. Defaults to `20rem`.
  * @cssprop --gw-popover-padding - The space inside it. Defaults to `--gw-space-4`.
  * @cssprop --gw-popover-background - The surface. Defaults to `--gw-color-surface-overlay`.
  * @cssprop --gw-popover-border-color - The border. Defaults to `--gw-color-border-normal`.
@@ -76,6 +77,7 @@ export class GwPopover extends GwElement {
   static override properties = {
     heading: {},
     confirm: { type: "boolean" },
+    fit: { type: "boolean", reflect: true },
     sheetBelow: { type: "number", attribute: "sheet-below" },
     closeLabel: { attribute: "close-label" },
     discardQuestion: { attribute: "discard-question" },
@@ -116,6 +118,17 @@ export class GwPopover extends GwElement {
           translate var(--gw-motion-normal) var(--gw-motion-easing),
           display var(--gw-motion-normal) allow-discrete,
           overlay var(--gw-motion-normal) allow-discrete;
+      }
+
+      /* As wide as its content needs, from its usual width up to the
+         window's, so a wide control never scrolls sideways in it */
+      :host([fit]) [popover]:not([data-placement="sheet"]) {
+        width: max-content;
+        min-width: min(
+          var(--gw-popover-width, 20rem),
+          calc(100vw - 2 * ${gap}px)
+        );
+        max-width: calc(100vw - 2 * ${gap}px);
       }
 
       [popover]:popover-open {
@@ -231,6 +244,8 @@ export class GwPopover extends GwElement {
 
   declare heading: string;
   declare confirm: boolean;
+  /** Sizes it to its content, from `--gw-popover-width` up to the window's width. */
+  declare fit: boolean;
   /** The viewport width in pixels below which it's a bottom sheet. */
   declare sheetBelow: number;
   /** The close button's name, for an app in another language. */
@@ -292,6 +307,7 @@ export class GwPopover extends GwElement {
     super();
     this.heading = "";
     this.confirm = false;
+    this.fit = false;
     this.sheetBelow = 600;
     this.closeLabel = "Close";
     this.discardQuestion = "Discard your changes?";
