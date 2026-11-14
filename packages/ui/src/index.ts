@@ -132,3 +132,5 @@ export * from "./gw-theme-gallery.js";
 export * from "./gw-theme-picker.js";
 
 export * from "./gw-toast.js";
+
+export * from "./gw-volume.js";

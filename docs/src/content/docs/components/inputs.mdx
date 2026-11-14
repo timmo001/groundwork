@@ -338,6 +338,51 @@ list.addEventListener("change", () => {
 
 A labeled native slider. While it's held, a bubble above the thumb shows the value, so a slider with no readout beside it still says where it is. `readout` shows the value beside the track all the time, for settings where the number matters. It takes `label`, `name`, `value`, `min`, `max`, `step`, `unit`, `readout`, `hint` and `disabled`; `unit` follows the value in the bubble, the readout and for assistive technology. The native `input` event fires while dragging and `change` when it's let go. `label-hidden` keeps the label for assistive technology but hides it.
 
+## Volume
+
+<Demo id="volume" layout="stack">
+  <div style="display: flex; flex-wrap: wrap; gap: var(--gw-space-4); align-items: center">
+    <gw-volume mode="inline" value="60" mute-key="M"></gw-volume>
+    <gw-volume mode="expand" value="30"></gw-volume>
+    <gw-volume mode="popover" value="80"></gw-volume>
+    <gw-volume mode="mute" muted></gw-volume>
+  </div>
+</Demo>
+
+A player's mute button and volume slider as one control, a `gw-button` and a `gw-range`, so the two never split when a bar gets tight. `value` runs 0 to 100, and `step` is how far an arrow key moves it (`5`). Muting keeps the value to come back to: the slider shows 0 while muted, and turning it up unmutes, as a speaker would. Pressing the button after the slider's been turned down to 0 brings back the last volume. The icon follows the level: muted or 0, under 50, or 50 and up. The button's name says what a press does, `Mute` or `Unmute` (`mute-label`, `unmute-label`), and `mute-key` adds the app's own key after it, such as `Mute (M)`, which the tooltip shows too.
+
+`mode` sets the layout:
+
+- `inline`: the button and the slider side by side.
+- `expand`: the button alone, with the slider sliding out beside it on hover or keyboard focus.
+- `popover`: the button opens a popover holding the mute and the slider, a [bottom sheet](/components/overlays#bottom-sheets-on-phones) on a phone. The slider takes focus, so the arrow keys turn it at once.
+- `mute`: the button alone, for where the page can't set the volume. iOS and iPadOS leave the volume to the device's own buttons and ignore a media element's `volume`, and `canSetVolume()` checks for that.
+- `auto`, the default: `mute` where the volume can't be set, `inline` while there's room, and otherwise `expand` with a mouse or `popover` with touch.
+
+<Demo id="volume-auto" layout="stack">
+  <div style="box-sizing: border-box; inline-size: 26rem; min-inline-size: 10rem; max-inline-size: 100%; padding: var(--gw-space-2) var(--gw-space-3); overflow: hidden; resize: horizontal; border: 1px dashed var(--gw-color-border-normal); border-radius: var(--gw-radius-panel)">
+    <div style="display: flex; gap: var(--gw-space-2); align-items: center">
+      <gw-button variant="neutral" appearance="plain" labels="hide" icon="M8,5.14V19.14L19,12.14L8,5.14Z" style="flex: none">Play</gw-button>
+      <gw-volume value="60" mute-key="M"></gw-volume>
+      <span style="flex: none; margin-inline-start: auto; font-variant-numeric: tabular-nums">0:42 / 3:15</span>
+    </div>
+  </div>
+</Demo>
+
+Drag the bar's corner to narrow it. In `auto` it decides again as it or its container resizes, so a bar that tightens switches it rather than hiding the slider. In a flex row the slider gives up its width first, so let the volume shrink before the controls that shouldn't. `currentMode` is the mode it shows, and `:state(inline)`, `:state(expand)`, `:state(popover)` or `:state(mute)` matches it, for a layout that follows it. `inlineWidth` is its width inline, whatever it shows, for a bar that measures its controls before laying them out.
+
+It fires `input` while the slider moves and `change` when it's let go, then read `value`, and `mute` with `detail.muted`. A press that brings the volume back from 0 fires `input` and `change` too.
+
+```ts
+import { on } from "@timmo001/groundwork-ui";
+
+// volume is the gw-volume, video the player's <video>
+on(volume, "input", () => (video.volume = volume.value / 100));
+on(volume, "mute", (event) => (video.muted = event.detail.muted));
+```
+
+`label` names the group, the slider and the popover's heading (`Volume`). `size` sets the buttons' size, as `--gw-volume-scale` does, `--gw-volume-slider-width` the slider's width beside the button (`6rem`), `--gw-volume-gap` the space on each side of it and `--gw-volume-popover-width` the popover's width (`16rem`). Its parts are the `button`, the `panel` around the slider, the `slider`, the `popover` and the `popover-mute` button.
+
 ## Setting row
 
 <Demo id="setting-row" layout="stack">
@@ -391,4 +436,9 @@ gw-input .gw-hint {
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-input", "gw-select", "gw-date-picker", "gw-calendar", "gw-option-list", "gw-sortable", "gw-checkbox", "gw-switch", "gw-range", "gw-setting-row"]} />
+<ElementApi tags={["gw-input", "gw-select", "gw-date-picker", "gw-calendar", "gw-option-list", "gw-sortable", "gw-checkbox", "gw-switch", "gw-range", "gw-volume", "gw-setting-row"]} />
+
+## References
+
+- Media Chrome: [Mute button](https://www.media-chrome.org/docs/en/components/media-mute-button), [Volume range](https://www.media-chrome.org/docs/en/components/media-volume-range) · Code: [mute button](https://github.com/muxinc/media-chrome/blob/main/src/js/media-mute-button.ts), [volume range](https://github.com/muxinc/media-chrome/blob/main/src/js/media-volume-range.ts)
+- Vidstack: [Mute button](https://vidstack.io/docs/player/components/buttons/mute-button), [Volume slider](https://vidstack.io/docs/player/components/sliders/volume-slider) · Code: [mute button](https://github.com/vidstack/player/tree/main/packages/vidstack/src/components/ui/buttons/mute-button.ts), [volume slider](https://github.com/vidstack/player/blob/main/packages/vidstack/src/components/ui/sliders/volume-slider.ts)

@@ -335,6 +335,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-volume",
+      "kind": "element",
+      "description": "A mute button and volume slider that stay together: inline, sliding out, in a popover or mute only, picked by the room",
+      "files": ["packages/ui/src/gw-volume.ts", "packages/ui/src/gw-range.ts"],
+      "needs": ["ui-base", "gw-button", "gw-popover"]
+    },
+    {
       "name": "lit-effect",
       "kind": "lit",
       "description": "AtomController, the registry context, a typed router and the @storage decorator",

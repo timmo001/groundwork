@@ -77,4 +77,9 @@ export interface GwEventMap {
     theme: CustomEvent<{ id: string }>;
     import: CustomEvent<{ text: string, name: string }>;
   };
+  "gw-volume": {
+    mute: CustomEvent<{ muted: boolean }>;
+    input: Event;
+    change: Event;
+  };
 }

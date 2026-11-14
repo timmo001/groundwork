@@ -26194,7 +26194,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes from the start edge, full height, and from the\nbottom below `bottom-below`, 40rem wide by default.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. A\nclear scrim covers the page while it's open, so a click outside only\ncloses it, and nothing beneath reacts. Open it with `show()`, or\n`toggle()` from the button that opens it. Its content scrolls under a\nheader with the heading and an `actions` slot, such as a Clear button.",
+          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes up from the bottom where popups open as bottom\nsheets, under 600px wide or 500px tall (`opensAsSheet`), so a phone on its\nside gets one too, and from the start edge, full height, everywhere else.\n`wide-side=\"end\"` brings it from the end edge there instead.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. A\nclear scrim covers the page while it's open, so a click outside only\ncloses it, and nothing beneath reacts. Open it with `show()`, or\n`toggle()` from the button that opens it. Its content scrolls under a\nheader with the heading and an `actions` slot, such as a Clear button.",
           "name": "GwSheet",
           "cssProperties": [
             {
@@ -26274,7 +26274,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, side: { reflect: true }, bottomBelow: { attribute: \"bottom-below\" }, closeLabel: { attribute: \"close-label\" }, }",
+              "default": "{ heading: {}, side: { reflect: true }, wideSide: { attribute: \"wide-side\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, closeLabel: { attribute: \"close-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -26311,12 +26311,30 @@
             },
             {
               "kind": "field",
-              "name": "bottomBelow",
+              "name": "wideSide",
               "type": {
-                "text": "string"
+                "text": "\"start\" | \"end\""
               },
-              "description": "The viewport width, as a CSS length, below which `side=\"auto\"` slides up from the bottom.",
-              "default": "\"40rem\""
+              "description": "The edge `side=\"auto\"` slides in from where it isn't a bottom sheet.",
+              "default": "\"start\""
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which `side=\"auto\"` slides up from the bottom.",
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which `side=\"auto\"` slides up from the bottom.",
+              "default": "defaultSheetBelowHeight"
             },
             {
               "kind": "field",
@@ -26396,7 +26414,7 @@
                   "text": "Side"
                 }
               },
-              "description": "The edge it comes from now, with `auto` settled by the screen's width."
+              "description": "The edge it comes from now, with `auto` settled by the screen's size."
             },
             {
               "kind": "field",
@@ -26755,15 +26773,29 @@
               "type": {
                 "text": "\"auto\"|\"start\"|\"end\"|\"bottom\""
               },
-              "description": "The edge it slides in from. `auto` is the start edge, or the bottom below `bottom-below`. Defaults to `auto`.",
+              "description": "The edge it slides in from. `auto` is the bottom where popups open as bottom sheets, and `wide-side` elsewhere. Defaults to `auto`.",
               "name": "side"
             },
             {
               "type": {
-                "text": "string"
+                "text": "\"start\"|\"end\""
               },
-              "description": "The viewport width, as a CSS length, below which `side=\"auto\"` slides up from the bottom. Defaults to `40rem`.",
-              "name": "bottom-below"
+              "description": "The edge `side=\"auto\"` slides in from where it isn't a bottom sheet. Defaults to `start`.",
+              "name": "wide-side"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which `side=\"auto\"` slides up from the bottom; `0` turns the width rule off. Defaults to `600`.",
+              "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which `side=\"auto\"` slides up from the bottom, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             },
             {
               "type": {
@@ -32868,6 +32900,854 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-volume.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "canSetVolume",
+          "return": {
+            "type": {
+              "text": "boolean"
+            }
+          },
+          "description": "Whether the page can set a media element's volume. iOS and iPadOS leave\nthe volume to the device's own buttons and ignore `volume`, so only\nmuting works there."
+        },
+        {
+          "kind": "class",
+          "description": "A mute button and a volume slider as one control, so they never split\nwhen a player's bar gets tight. `value` runs 0 to 100, and muting keeps it\nto come back to: the slider shows 0 while muted, and turning it up, or\npressing the button at 0, unmutes, as a speaker would. The button's icon\nfollows the level, and its name says what a press does, Mute or Unmute,\nwith `mute-key` after it.\n\n`mode` picks the layout. `inline` puts the button and the slider side by\nside. `expand` shows the button alone, and the slider slides out beside it\non hover or focus. `popover` makes the button open a popover, a bottom\nsheet on a phone, holding the mute and the slider. `mute` is the button\nalone, for where the page can't set the volume. `auto`, the default, is\n`mute` where the volume can't be set, such as on iOS (`canSetVolume`),\n`inline` while it has the room, and otherwise `expand` with a mouse or\n`popover` with touch. It decides again as it or its container resizes, so\na bar that tightens switches it rather than hiding the slider. In a flex\nrow it gives up the slider's width first, so let it shrink before the\ncontrols that shouldn't.\n\n`currentMode` is the mode it shows, and `:state(inline)`,\n`:state(expand)`, `:state(popover)` or `:state(mute)` matches it for\nstyles. `inlineWidth` is its width inline whatever it shows, for a bar\nthat measures its controls before laying them out.",
+          "name": "GwVolume",
+          "cssProperties": [
+            {
+              "description": "Scales the buttons, around 1 for medium.",
+              "name": "--gw-volume-scale"
+            },
+            {
+              "description": "The slider's width beside the button. Defaults to `6rem`.",
+              "name": "--gw-volume-slider-width"
+            },
+            {
+              "description": "The space on each side of the slider. Defaults to `--gw-space-2`.",
+              "name": "--gw-volume-gap"
+            },
+            {
+              "description": "The popover's width. Defaults to `16rem`.",
+              "name": "--gw-volume-popover-width"
+            }
+          ],
+          "cssParts": [
+            {
+              "description": "The button, a `gw-button`: the mute, or what opens the popover.",
+              "name": "button"
+            },
+            {
+              "description": "Around the slider beside the button.",
+              "name": "panel"
+            },
+            {
+              "description": "The slider, a `gw-range`.",
+              "name": "slider"
+            },
+            {
+              "description": "The popover in `popover` mode, a `gw-popover`.",
+              "name": "popover"
+            },
+            {
+              "description": "The mute button in the popover, a `gw-button`.",
+              "name": "popover-mute"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ value: { type: \"number\" }, muted: { type: \"boolean\", reflect: true }, step: { type: \"number\" }, disabled: { type: \"boolean\", reflect: true }, label: {}, mode: { reflect: true }, size: { reflect: true }, muteLabel: { attribute: \"mute-label\" }, unmuteLabel: { attribute: \"unmute-label\" }, muteKey: { attribute: \"mute-key\" }, closeLabel: { attribute: \"close-label\" }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, controlSizes(\"volume\"), css` :host { --_gw-volume-panel: calc( var(--gw-volume-slider-width, 6rem) + 2 * var(--gw-volume-gap, var(--gw-space-2)) ); display: inline-flex; align-items: center; min-inline-size: calc( 2.5rem * var(--gw-volume-scale, 1) * var(--gw-control-scale, 1) ); max-inline-size: 100%; vertical-align: middle; } .button, .popover-mute { --gw-button-scale: var(--gw-volume-scale, 1); flex: none; } /* The slider beside the button, which gives up its width first when the room runs out. Its max is the width inline, which inlineWidth reads */ .panel { display: flex; flex: 0 1 auto; align-items: center; min-inline-size: 0; inline-size: var(--_gw-volume-panel); max-inline-size: var(--_gw-volume-panel); } .slider { flex: 1; min-inline-size: 0; margin-inline: var(--gw-volume-gap, var(--gw-space-2)); } /* Slides out beside the button on hover or focus, clipped at its side while it travels but not above, where the value shows while it's held */ :host(:state(expand)) .panel { flex: none; inline-size: 0; clip-path: inset(-4rem 0); opacity: 0; transition: inline-size var(--gw-motion-normal) var(--gw-motion-easing), opacity var(--gw-motion-fast) var(--gw-motion-easing); } :host(:state(expand):is(:hover, :focus-within)) .panel { inline-size: var(--_gw-volume-panel); opacity: 1; } :host(:state(expand)) .slider { flex: none; inline-size: var(--gw-volume-slider-width, 6rem); } :host(:is(:state(popover), :state(mute))) .panel { display: none; } .popover { --gw-popover-width: var(--gw-volume-popover-width, 16rem); } .popover-row { display: flex; align-items: center; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "value",
+              "type": {
+                "text": "number"
+              },
+              "description": "The volume, 0 to 100, kept while muted.",
+              "default": "100"
+            },
+            {
+              "kind": "field",
+              "name": "muted",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "step",
+              "type": {
+                "text": "number"
+              },
+              "description": "How far an arrow key moves the slider.",
+              "default": "5"
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "description": "The accessible name, the slider's and the popover's heading.",
+              "default": "\"Volume\""
+            },
+            {
+              "kind": "field",
+              "name": "mode",
+              "type": {
+                "text": "\"auto\" | VolumeMode"
+              },
+              "description": "How it lays out; `auto` picks by the room, the pointer and whether the volume can be set.",
+              "default": "\"auto\""
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
+              },
+              "default": "\"medium\""
+            },
+            {
+              "kind": "field",
+              "name": "muteLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Mute\""
+            },
+            {
+              "kind": "field",
+              "name": "unmuteLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Unmute\""
+            },
+            {
+              "kind": "field",
+              "name": "muteKey",
+              "type": {
+                "text": "string"
+              },
+              "description": "The key the app mutes with, shown after the button's name.",
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "closeLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Close\""
+            },
+            {
+              "kind": "field",
+              "name": "#internals",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#button",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#range",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#panel",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#popoverMute",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#popoverRow",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#popover",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#resize",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new ResizeObserver(() => { this.#schedule(); })"
+            },
+            {
+              "kind": "field",
+              "name": "#hover",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#current",
+              "privacy": "private",
+              "type": {
+                "text": "VolumeMode"
+              },
+              "default": "\"inline\""
+            },
+            {
+              "kind": "field",
+              "name": "#audible",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "50",
+              "description": "The volume a press brings back after it's been turned down to 0."
+            },
+            {
+              "kind": "field",
+              "name": "#open",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#collapsedAt",
+              "privacy": "private",
+              "type": {
+                "text": "{ readonly container: number; readonly room: number } | undefined"
+              },
+              "description": "The container's width and the room it had when `auto` last collapsed."
+            },
+            {
+              "kind": "field",
+              "name": "currentMode",
+              "type": {
+                "text": "VolumeMode"
+              },
+              "description": "The mode it shows: `mode`, or what `auto` picked.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "inlineWidth",
+              "type": {
+                "text": "number"
+              },
+              "description": "Its width in pixels inline, the button and the slider side by side, whatever mode it shows.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#container",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "Element | null"
+                }
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#mute",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "muted",
+                  "type": {
+                    "text": "boolean"
+                  }
+                }
+              ],
+              "description": "Mutes or unmutes, firing `mute` when that changes it."
+            },
+            {
+              "kind": "method",
+              "name": "#toggle",
+              "privacy": "private",
+              "description": "A press of the mute: mutes, or unmutes and brings back the volume from 0."
+            },
+            {
+              "kind": "field",
+              "name": "#onInput",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onChange",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#show",
+              "privacy": "private"
+            },
+            {
+              "kind": "field",
+              "name": "#onClose",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#schedule",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "#initial",
+              "privacy": "private",
+              "return": {
+                "type": {
+                  "text": "VolumeMode"
+                }
+              },
+              "description": "The mode to show before `auto` has measured."
+            },
+            {
+              "kind": "method",
+              "name": "#fit",
+              "privacy": "private",
+              "description": "Inline, it collapses once it has less room than it needs. Collapsed,\nits own width no longer says how much room there is, so it goes back\ninline once its container has grown by what it was short, then checks\nagain."
+            },
+            {
+              "kind": "method",
+              "name": "#apply",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "mode",
+                  "type": {
+                    "text": "VolumeMode"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "role",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"group\""
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "mute",
+              "type": {
+                "text": "CustomEvent<{ muted: boolean }>"
+              },
+              "description": "When it's muted or unmuted, with the new state in `detail`, also in `muted`."
+            },
+            {
+              "name": "input",
+              "type": {
+                "text": "Event"
+              },
+              "description": "While the slider moves, and when a press brings the volume back from 0. Read `value`."
+            },
+            {
+              "name": "change",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the slider is let go, and when a press brings the volume back from 0. Read `value`."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "The volume, 0 to 100, kept while muted. Defaults to 100.",
+              "name": "value"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Whether it's muted.",
+              "name": "muted"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "How far an arrow key moves the slider. Defaults to 5.",
+              "name": "step"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disables it.",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The accessible name, the slider's and the popover's heading. Defaults to `Volume`.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "\"auto\"|\"inline\"|\"expand\"|\"popover\"|\"mute\""
+              },
+              "description": "How it lays out. Defaults to `auto`.",
+              "name": "mode"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The buttons' size, 24 to 56px tall. Defaults to `medium`.",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button's name while a press mutes. Defaults to `Mute`.",
+              "name": "mute-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The button's name while a press unmutes. Defaults to `Unmute`.",
+              "name": "unmute-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The key the app mutes with, shown after the button's name, such as `M`.",
+              "name": "mute-key"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The popover's close button's name. Defaults to `Close`.",
+              "name": "close-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-volume",
+          "customElement": true,
+          "summary": "A mute button and volume slider that stay together."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "canSetVolume",
+          "declaration": {
+            "name": "canSetVolume",
+            "module": "src/gw-volume.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "GwVolume",
+          "declaration": {
+            "name": "GwVolume",
+            "module": "src/gw-volume.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/index.ts",
       "declarations": [],
       "exports": [
@@ -33365,6 +34245,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-toast.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-volume.js"
           }
         }
       ]
@@ -36450,6 +37338,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-toast.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-volume.ts",
       "declarations": [],
       "exports": []
     },

@@ -218,6 +218,28 @@
     min-block-size: calc(3.5rem * var(--gw-control-scale, 1));
   }
 
+  gw-volume:not(:defined) {
+    display: inline-flex;
+    min-block-size: calc(2.5rem * var(--gw-control-scale, 1));
+    vertical-align: middle;
+  }
+
+  gw-volume[size="xs"]:not(:defined) {
+    min-block-size: calc(1.5rem * var(--gw-control-scale, 1));
+  }
+
+  gw-volume[size="small"]:not(:defined) {
+    min-block-size: calc(2rem * var(--gw-control-scale, 1));
+  }
+
+  gw-volume[size="large"]:not(:defined) {
+    min-block-size: calc(3rem * var(--gw-control-scale, 1));
+  }
+
+  gw-volume[size="xl"]:not(:defined) {
+    min-block-size: calc(3.5rem * var(--gw-control-scale, 1));
+  }
+
   gw-card:not(:defined) {
     display: block;
     padding: var(--gw-space-4);

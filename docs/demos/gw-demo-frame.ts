@@ -42,9 +42,9 @@ const labels = new Map([
 ]);
 
 /**
- * What a demo's `change`, `select`, `close` or `pick` event carries: the
- * event's `detail.value`, else its element's `value`, `checked` or
- * `returnValue`.
+ * What a demo's `change`, `select`, `close`, `pick` or `mute` event carries:
+ * the event's `detail.value` or `detail.muted`, else its element's `value`,
+ * `checked` or `returnValue`.
  */
 const shownValue = (event: Event, source: HTMLElement) => {
   const detail: unknown = event instanceof CustomEvent ? event.detail : undefined;
@@ -53,8 +53,15 @@ const shownValue = (event: Event, source: HTMLElement) => {
     return detail.value;
   }
 
-  if (Predicate.hasProperty(source, "value") && Predicate.isString(source.value)) {
-    return source.value;
+  if (Predicate.hasProperty(detail, "muted") && Predicate.isBoolean(detail.muted)) {
+    return String(detail.muted);
+  }
+
+  if (
+    Predicate.hasProperty(source, "value") &&
+    (Predicate.isString(source.value) || Predicate.isNumber(source.value))
+  ) {
+    return String(source.value);
   }
 
   if (Predicate.hasProperty(source, "checked") && Predicate.isBoolean(source.checked)) {
@@ -233,7 +240,7 @@ export class GwDemoFrame extends GwElement {
       }
     });
 
-    for (const type of ["change", "select", "close", "pick"]) {
+    for (const type of ["change", "select", "close", "pick", "mute"]) {
       this.addEventListener(type, (event) => {
         const source = event.target;
 

@@ -399,6 +399,12 @@ const preUpgrade = {
   },
   ...sized("gw-button", 2.5, ["min-block-size", "line-height"]),
   ...sized("gw-menu-button", 2.5),
+  "gw-volume": {
+    display: "inline-flex",
+    "min-block-size": dense(2.5),
+    "vertical-align": "middle",
+  },
+  ...sized("gw-volume", 2.5),
   "gw-card": {
     display: "block",
     padding: "var(--gw-space-4)",

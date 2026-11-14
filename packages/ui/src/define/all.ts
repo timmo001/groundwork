@@ -48,4 +48,5 @@ import "./gw-table.js";
 import "./gw-theme-gallery.js";
 import "./gw-theme-picker.js";
 import "./gw-toast.js";
+import "./gw-volume.js";
 import "./layout.js";
