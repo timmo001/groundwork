@@ -14,6 +14,7 @@ The rules live in the docs, with their numbers and sources. Read each page fresh
 | `/foundations/layout` | Grouping, the fewest rows, thresholds, a phone on its side, media fit, filling the window |
 | `/foundations/motion` | Durations, easing, and moving things across the view |
 | `/behavior` (Interfaces) | Respond first, modes, one press one thing, keys, touch, help, controls over a picture |
+| `/behavior` (Pairing) | Connecting a phone or another device: showing and entering a code, the device list, security |
 | `/components/overlays` | Popover, sheet or dialog, and staying out of the way |
 
 Use Groundwork's elements and helpers wherever one does the job, as each already follows these rules. Write an app's own only where none fits, and follow the same page.
@@ -33,5 +34,6 @@ Go through it for each screen, at a desktop width, a phone upright and a phone o
 9. **The right overlay.** Chosen by how much it holds, from the table on the overlays page.
 10. **Motion travels.** Moves and resizes go through `withViewTransition()` with a name from `transitionName()` and a `view-transition-class` (`gw-travel`, or `gw-from-*` for an edge), arrivals come from their edge or anchor, fades only for content arriving in place, and nothing moves under reduced motion.
 11. **Media and the window.** Pictures show all of themselves (`contain`) wherever the layout sets the shape and their edge may matter, a full view fills the window under the app bar (`fillWindow()`), and nothing that can be pressed sits in a phone's corners or cutout. Layout changes follow the shared media queries (`sheetQuery()`, `sidewaysQuery`, `labelsHiddenQuery`).
+12. **Pairing.** A screen that connects another device shows the code with `gw-pairing` (the QR code of the link, the grouped code with Copy, a countdown, then the paired device by name), and the device that pairs has one field for a link or a code, read with `parsePairingInput`. Devices are listed with Remove, and nothing asks anyone to type an address or a password.
 
 Report each item that fails with the page and section it breaks. When a rule doesn't fit the app for a good reason, or Groundwork is missing a piece the app has to write itself, raise it as a Groundwork change following `groundwork-changes` rather than only working around it in the app.
