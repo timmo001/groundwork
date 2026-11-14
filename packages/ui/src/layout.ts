@@ -222,6 +222,7 @@ const chevrons = {
  * @csspart scroll-end - The button that scrolls toward the end.
  *
  * @cssprop --gw-gap - The gap. Defaults to `--gw-space-2`.
+ * @cssprop --gw-row-target-gap - The least gap, so the hit areas of small controls side by side don't overlap. Defaults to `--gw-target-min` less `2rem`, the 32px of a small button: 12px on a touch screen, and nothing with a mouse. `0px` turns it off.
  * @cssprop --gw-row-fade - How far the children fade out toward an end, beside its scroll button, while there's more to scroll that way. Defaults to `1.5rem`.
  * @cssprop --gw-row-scroll-button-scale - The scroll buttons' size, as `--gw-button-scale`. Defaults to `1.1`, 44px.
  */
@@ -253,7 +254,12 @@ export class GwRow extends GwElement {
         --_gw-row-cover: var(--_gw-row-button);
         display: flex;
         flex-wrap: wrap;
-        gap: var(--gw-gap, var(--gw-space-2));
+        /* Never so tight that small controls' hit areas overlap, which only
+           happens on a touch screen */
+        gap: max(
+          var(--gw-gap, var(--gw-space-2)),
+          var(--gw-row-target-gap, calc(var(--gw-target-min, 0px) - 2rem))
+        );
         align-items: center;
       }
 

@@ -57,6 +57,7 @@ const hideIcon =
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
  * @cssprop --gw-field-info-size - The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.
+ * @cssprop --gw-target-min - The least hit area of the field and its buttons, reaching past their edges where they're smaller; a press beside the field focuses it. The theme sets it, larger on a touch screen; `0px` turns it off.
  */
 export class GwInput extends LightElement {
   static override properties = {
@@ -261,19 +262,22 @@ export class GwInput extends LightElement {
       this.#revealed = !this.#revealed;
       this.requestUpdate("reveal");
     });
-    root.append(
-      this.#info.heading,
-      h(
-        "span",
-        { class: "gw-input-control" },
-        this.#icon,
-        this.#control,
-        this.#suffix,
-        this.#reveal,
-      ),
-      this.#hint,
-      this.#error,
+
+    const field = h(
+      "span",
+      { class: "gw-input-control" },
+      this.#icon,
+      this.#control,
+      this.#suffix,
+      this.#reveal,
     );
+
+    // A press on the hit area past the field's edges focuses it, as one on
+    // the field would
+    field.addEventListener("click", (event) => {
+      if (event.target === field) this.#control.focus();
+    });
+    root.append(this.#info.heading, field, this.#hint, this.#error);
     this.#suffixSize.observe(this.#suffix);
   }
 

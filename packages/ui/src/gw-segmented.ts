@@ -58,7 +58,8 @@ export interface Segment {
  * narrow or short screen, as `gw-menu-button`'s is.
  *
  * On a touch screen each option's touch area is at least 44px top to bottom
- * at medium, and with `overflow` each option and More are 44px across too.
+ * at medium, and each option and More are 44px across too, since they sit
+ * side by side.
  *
  * @element gw-segmented
  * @summary Picks one of a few options, as a row of radio buttons.
@@ -89,7 +90,7 @@ export interface Segment {
  *
  * @cssprop --gw-segmented-scale - Scales the control, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height and icons with the theme's density. The theme sets it.
- * @cssprop --gw-segmented-touch-size - The height of an option's touch area on a touch screen, and with `overflow` its least width. Defaults to `2.75rem` at medium; `0` turns it off.
+ * @cssprop --gw-segmented-touch-size - The height of an option's touch area on a touch screen, and its least width. Defaults to `2.75rem` at medium; `0` turns it off.
  *
  * @fires {Event} change - When the chosen option changes.
  * @fires {CustomEvent<{ value: string }>} pick - When an option is clicked or picked with the keyboard, the chosen one included, after any `change`, with its `value` in `detail`.
@@ -316,8 +317,8 @@ export class GwSegmented extends GwElement {
       }
 
       /* A finger needs a bigger target than the 32px option: a touch area
-         that reaches past the track top and bottom, and with overflow, whose
-         options are often short numbers, wider ones too */
+         that reaches past the track top and bottom, and options at least as
+         wide, since they sit side by side with no room to reach into */
       @media (any-pointer: coarse) {
         :host {
           --_gw-segmented-touch: var(
@@ -326,7 +327,7 @@ export class GwSegmented extends GwElement {
           );
         }
 
-        :host([overflow]) label,
+        label,
         .more::part(trigger) {
           justify-content: center;
           min-inline-size: var(--_gw-segmented-touch);

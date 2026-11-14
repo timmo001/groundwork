@@ -79,9 +79,11 @@ export const controlGroupStyles = css`
   }
 
   /* Buttons draw as plain ones in their own color, with no fill or outline
-     until they're hovered or pressed */
+     until they're hovered or pressed. Sections meet edge to edge, so each is
+     at least --gw-target-min wide rather than reaching into the next */
   gw-control-group > gw-button::part(button),
   gw-control-group > gw-menu-button::part(trigger) {
+    min-inline-size: var(--gw-target-min, 0px);
     height: auto;
     background: transparent;
     border-color: transparent;

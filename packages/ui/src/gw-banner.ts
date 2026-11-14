@@ -69,7 +69,10 @@ export class GwBanner extends GwElement {
         align-items: center;
         justify-content: center;
         min-height: var(--gw-banner-height, 2.5rem);
-        padding: var(--gw-space-1) var(--gw-space-3);
+        /* On a touch screen, room for its small buttons' hit areas, which
+           the clip would otherwise cut off */
+        padding: max(var(--gw-space-1), (var(--gw-target-min, 0px) - 2rem) / 2)
+          var(--gw-space-3);
         font-size: var(--gw-font-size-s);
         color: var(--gw-color-text-strong);
         background: var(--gw-tone-fill, var(--gw-color-fill-info-quiet));

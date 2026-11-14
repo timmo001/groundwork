@@ -499,16 +499,21 @@ export class GwOptionList extends GwElement {
       if (this.search) event.preventDefault();
     });
 
-    root.append(
-      h(
-        "div",
-        { class: "search", part: "search" },
-        createIcon(searchIcon, { part: "search-icon" }),
-        this.#input,
-      ),
-      this.#listbox,
-      this.#none,
+    const search = h(
+      "div",
+      { class: "search", part: "search" },
+      createIcon(searchIcon, { part: "search-icon" }),
+      this.#input,
     );
+
+    // The whole row is the field's hit area: a press beside it focuses it
+    search.addEventListener("pointerdown", (event) => {
+      if (event.target === this.#input) return;
+
+      event.preventDefault();
+      this.#input.focus();
+    });
+    root.append(search, this.#listbox, this.#none);
   }
 
   protected override update(changed: ReadonlySet<string>) {

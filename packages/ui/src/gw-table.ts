@@ -192,7 +192,7 @@ type Shown =
  * @csspart search - The search field, a `gw-input`.
  * @csspart table - The table.
  * @csspart header - Each column's heading cell.
- * @csspart sort - Each sortable column's heading button.
+ * @csspart sort - Each sortable column's heading button. Its hit area is the whole heading cell.
  * @csspart sort-icon - The arrow on the column it sorts by.
  * @csspart row - Each row.
  * @csspart cell - Each cell.
@@ -211,7 +211,7 @@ type Shown =
  * @cssprop --gw-table-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
  * @cssprop --gw-table-search-width - The search field's starting width, before it grows into the toolbar. Defaults to `14rem`.
  * @cssprop --gw-table-search-max-width - The widest the search field grows. Defaults to `24rem`.
- * @cssprop --gw-table-header-height - The column headings' height. Defaults to `2.5rem`.
+ * @cssprop --gw-table-header-height - The column headings' height. Defaults to `2.5rem`, or `--gw-target-min` where that's taller, such as on a touch screen, since a whole heading is its sort button's hit area.
  * @cssprop --gw-table-sort-icon-size - The sort arrow's size. Defaults to `0.875rem`.
  * @cssprop --gw-table-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
  * @cssprop --gw-table-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
@@ -377,7 +377,10 @@ export class GwTable extends GwElement {
          scroll past, and the next group's heading takes its place */
       :host([contained]) tr.group td {
         position: sticky;
-        top: var(--_gw-table-head, var(--gw-table-header-height, 2.5rem));
+        top: var(
+          --_gw-table-head,
+          var(--gw-table-header-height, max(2.5rem, var(--gw-target-min, 0px)))
+        );
         z-index: 1;
       }
 
@@ -416,11 +419,20 @@ export class GwTable extends GwElement {
       }
 
       th {
-        height: var(--gw-table-header-height, 2.5rem);
+        position: relative;
+        height: var(
+          --gw-table-header-height,
+          max(2.5rem, var(--gw-target-min, 0px))
+        );
         font-size: var(--gw-font-size-xs);
         font-weight: var(--gw-font-weight-strong);
         color: var(--gw-color-text-secondary);
         background: var(--gw-color-surface-lower, transparent);
+      }
+
+      /* A narrow column's heading is still wide enough to press */
+      th:has(> button) {
+        min-width: var(--gw-target-min, 0px);
       }
 
       th button {
@@ -434,6 +446,15 @@ export class GwTable extends GwElement {
         background: none;
         border: 0;
         --gw-icon-size: var(--gw-table-sort-icon-size, 0.875rem);
+      }
+
+      /* The whole heading cell is the sort button's hit area, which reaches
+         --gw-target-min with the header's height without reaching into a
+         neighbor or the first row */
+      th button::after {
+        position: absolute;
+        inset: 0;
+        content: "";
       }
 
       th button:focus-visible {

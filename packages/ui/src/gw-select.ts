@@ -82,6 +82,7 @@ const chevronIcon =
  * @cssprop --gw-adaptive-sheet-height - The tallest the whole sheet grows, the list scrolling within it. Defaults to `85dvh`.
  * @cssprop --gw-select-clear-height - The Clear button's height with `multiple`. Defaults to `2.5rem`.
  * @cssprop --gw-field-info-size - The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.
+ * @cssprop --gw-target-min - The least hit area of the trigger and the (i) button, reaching past their edges where they're smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  *
  * @fires {Event} change - When the value, or `values` with `multiple`, changes.
  */

@@ -5,7 +5,13 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
-import { base, contentWidths, createIcon, setIconPath } from "./styles.js";
+import {
+  base,
+  contentWidths,
+  createIcon,
+  setIconPath,
+  targetArea,
+} from "./styles.js";
 
 // MDI's menu and close
 const menuIcon = "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z";
@@ -57,6 +63,7 @@ const closeIcon =
  *
  * @cssprop --gw-app-bar-height - The bar's least height. Defaults to `3.5rem`.
  * @cssprop --gw-app-bar-menu-size - The nav menu button's size on narrow screens. Defaults to `2.5rem`.
+ * @cssprop --gw-target-min - The menu button's least hit area, reaching past its edges where it's smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  * @cssprop --gw-app-bar-background - The surface once it floats. Defaults to `--gw-color-surface-default` at 82%.
  * @cssprop --gw-app-bar-border-color - The bottom border once it floats. Defaults to `--gw-color-border-quiet`.
  * @cssprop --gw-app-bar-backdrop - The backdrop filter once it floats. Defaults to `blur(12px) saturate(1.4)`.
@@ -79,6 +86,7 @@ export class GwAppBar extends GwElement {
   static override styles = [
     base,
     contentWidths,
+    targetArea(".menu"),
     css`
       :host {
         position: sticky;
@@ -190,6 +198,7 @@ export class GwAppBar extends GwElement {
       }
 
       .menu {
+        position: relative;
         display: none;
         place-items: center;
         width: var(--gw-app-bar-menu-size, 2.5rem);

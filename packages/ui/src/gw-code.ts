@@ -329,13 +329,20 @@ export class GwCode extends GwElement {
         border-radius: var(--gw-radius-control);
       }
 
+      /* On a touch screen the gap and padding grow, so the buttons' hit
+         areas reach --gw-target-min without overlapping or being cut off */
       .tools {
+        --_gw-code-tools-reach: calc(
+          var(--gw-target-min, 0px) - 2.5rem * var(--gw-code-tools-scale, 0.8)
+        );
+
         display: flex;
         flex: none;
         flex-wrap: wrap;
         justify-content: flex-end;
-        gap: var(--gw-space-1);
-        padding: var(--gw-space-1) var(--gw-space-2);
+        gap: max(var(--gw-space-1), var(--_gw-code-tools-reach));
+        padding: max(var(--gw-space-1), var(--_gw-code-tools-reach) / 2)
+          var(--gw-space-2);
         background: var(--gw-color-surface-default);
         border-bottom: var(--gw-border-width) solid var(--gw-color-border-quiet);
       }

@@ -299,7 +299,7 @@ on(layout, "menu-select", (event) => setTiling(event.detail.value));
 
 The arrow keys move between the options that show, and Tab reaches More, whose menu moves with the arrow keys too. `more-label` names it (`More`) and is its tooltip, and `more-icon` swaps its three dots. It's the `more` part, its button `more-trigger`, the menu `more-menu` and each item in it `more-item`.
 
-On a touch screen each option's touch area reaches 44px top to bottom at medium, past the track, and with `overflow` each option and More are at least 44px across too, since its options are often short numbers; `--gw-segmented-touch-size` sets that size, and `0` turns it off. Under reduced motion the chosen pill moves at once rather than sliding.
+On a touch screen each option's touch area reaches 44px top to bottom at medium, past the track, and each option and More are at least 44px across too, since they sit side by side; `--gw-segmented-touch-size` sets that size, and `0` turns it off. Under reduced motion the chosen pill moves at once rather than sliding.
 
 ## Control group
 

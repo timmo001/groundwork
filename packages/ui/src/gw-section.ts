@@ -7,7 +7,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
 import { getStorage } from "./storage.js";
-import { base, createIcon } from "./styles.js";
+import { base, createIcon, targetArea } from "./styles.js";
 
 // MDI's chevron-right
 const chevronIcon =
@@ -48,6 +48,7 @@ const chevronIcon =
  *
  * @cssprop --gw-section-count-scale - Scales the count chip, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-section-gap - The space between the heading and the content. Defaults to `--gw-space-2`.
+ * @cssprop --gw-target-min - The toggle's least hit area, reaching past its top and bottom where it's shorter. The theme sets it, larger on a touch screen; `0px` turns it off.
  *
  * @fires {Event} toggle - When it folds or opens. Read `collapsed`.
  */
@@ -62,6 +63,7 @@ export class GwSection extends GwElement {
 
   static override styles = [
     base,
+    targetArea(".toggle"),
     css`
       :host {
         display: block;
@@ -81,6 +83,7 @@ export class GwSection extends GwElement {
       }
 
       .toggle {
+        position: relative;
         display: flex;
         gap: var(--gw-space-2);
         align-items: center;

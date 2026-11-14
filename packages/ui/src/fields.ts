@@ -51,6 +51,7 @@ export const fieldStyles = css`
 
   /* The (i) button by the label that opens a field's longer help */
   :where(gw-input, gw-select, gw-date-picker) .gw-info {
+    position: relative;
     display: inline-grid;
     place-items: center;
     width: var(--gw-field-info-size, 1.5rem);
@@ -83,6 +84,24 @@ export const fieldStyles = css`
 
   :where(gw-input, gw-select, gw-date-picker) .gw-info[hidden] {
     display: none;
+  }
+
+  /* Its hit area reaches down only as far as the gap above the field, so
+     it never covers the field, and takes the rest above */
+  :where(gw-input, gw-select, gw-date-picker) .gw-info::after {
+    --_gw-info-below: max(
+      calc(var(--gw-space-2) * -1),
+      min(0px, calc((100% - var(--gw-target-min, 0px)) / 2))
+    );
+
+    position: absolute;
+    inset-block: min(
+        0px,
+        calc(100% - var(--gw-target-min, 0px) - var(--_gw-info-below))
+      )
+      var(--_gw-info-below);
+    inset-inline: min(0px, calc((100% - var(--gw-target-min, 0px)) / 2));
+    content: "";
   }
 
   :where(gw-input, gw-select, gw-date-picker) .gw-info > .icon {
@@ -130,10 +149,33 @@ export const fieldStyles = css`
     transition: border-color var(--gw-motion-fast) var(--gw-motion-easing);
   }
 
+  /* A hit area of at least --gw-target-min, past the field's top and bottom
+     where it's shorter, as targetArea() gives the shadow root controls. An
+     input's sits behind it, so a press on the input still lands there, and
+     one around it focuses the input */
+  :where(gw-select) .gw-select-trigger,
+  :where(gw-date-picker) .gw-date-picker-trigger {
+    position: relative;
+  }
+
+  :where(gw-select) .gw-select-trigger::after,
+  :where(gw-date-picker) .gw-date-picker-trigger::after,
+  :where(gw-input) .gw-input-control::after,
+  :where(gw-input) .gw-reveal::after {
+    position: absolute;
+    inset: min(0px, calc((100% - var(--gw-target-min, 0px)) / 2));
+    content: "";
+  }
+
+  :where(gw-input) .gw-input-control::after {
+    z-index: -1;
+  }
+
   /* An icon inside the field, before the text, with the text moved clear of
      it */
   :where(gw-input) .gw-input-control {
     position: relative;
+    isolation: isolate;
     display: flex;
     align-items: center;
   }
@@ -646,11 +688,15 @@ export const fieldStyles = css`
     color: var(--gw-color-danger);
   }
 
+  /* At least --gw-target-min tall, so ones stacked one above another make
+     room for each other's hit areas rather than overlapping, which only
+     grows them on a touch screen */
   :where(gw-switch, gw-checkbox) > label {
     position: relative;
     display: inline-flex;
     gap: var(--gw-space-3);
     align-items: center;
+    min-block-size: var(--gw-target-min, 0px);
     font-size: var(--gw-font-size-s);
     cursor: pointer;
   }

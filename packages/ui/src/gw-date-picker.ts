@@ -134,7 +134,8 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
  * @cssprop --gw-field-info-size - The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.
- * @cssprop --gw-calendar-day-size - Each day's width and height in the calendar. Defaults to `2.5rem`.
+ * @cssprop --gw-calendar-day-size - Each day's width and height in the calendar. Defaults to `2.5rem`, or `--gw-target-min` where that's larger, such as on a touch screen.
+ * @cssprop --gw-target-min - The least hit area of the trigger and the (i) button, reaching past their edges where they're smaller. The theme sets it, larger on a touch screen; `0px` turns it off.
  * @cssprop --gw-date-picker-backdrop - The backdrop behind the calendar as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.
  * @cssprop --gw-adaptive-sheet-width - The widest the sheet grows, centered. Defaults to `40rem`.
  * @cssprop --gw-adaptive-sheet-height - The tallest the sheet grows, the calendar scrolling within it. Defaults to `85dvh`.

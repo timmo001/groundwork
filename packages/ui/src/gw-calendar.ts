@@ -163,7 +163,7 @@ const localeFirstDay = (tag: string) => {
  * @csspart weekday - Each weekday's heading.
  * @csspart day - Each day's button, also `today`, `selected`, `marked`, `unmarked` and `outside` (in the months either side) where they apply.
  *
- * @cssprop --gw-calendar-day-size - Each day's width and height. Defaults to `2.5rem`, smaller on a phone so seven fit across.
+ * @cssprop --gw-calendar-day-size - Each day's width and height. Defaults to `2.5rem`, or `--gw-target-min` where that's larger, such as on a touch screen, and smaller on a phone so seven fit across.
  * @cssprop --gw-calendar-mark - The marked days' dot color. Defaults to `--gw-color-accent`.
  * @cssprop --gw-calendar-dim-opacity - How faded `unmarked="dim"` days are. Defaults to `0.45`.
  *
@@ -189,12 +189,13 @@ export class GwCalendar extends GwElement {
   static override styles = [
     base,
     css`
-      /* On a narrow phone the days shrink so seven fit across, with room
-         for a popup's padding */
+      /* Days sit side by side, so on a touch screen each is at least
+         --gw-target-min across. On a narrow phone they shrink so seven fit
+         across, with room for a popup's padding */
       :host {
         --gw-calendar-cell: var(
           --gw-calendar-day-size,
-          min(2.5rem, calc((100vw - 3rem) / 7))
+          min(max(2.5rem, var(--gw-target-min, 0px)), calc((100vw - 3rem) / 7))
         );
 
         display: inline-flex;
