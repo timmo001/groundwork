@@ -67,6 +67,135 @@ export const animateHeight = (element: HTMLElement, before: number) => {
   );
 };
 
+/** What identifies an item to `animateLayout()`; `null` or `undefined` leaves it alone. */
+export type LayoutKey = string | number | Element | null | undefined;
+
+/** How `animateLayout()` and `measureLayout()` follow a container's items. */
+export interface LayoutOptions {
+  /**
+   * What identifies an item across the change, for a list that rebuilds its
+   * items rather than moving them, such as `(item) => item.getAttribute("data-key")`.
+   * An item with no key, `null` or `undefined`, is left alone, such as a
+   * spacer. Defaults to the item itself.
+   */
+  readonly key?: (item: Element) => LayoutKey;
+}
+
+/** Each item's slide, so a second change starts it from where it is. */
+const sliding = new WeakMap<Element, Animation>();
+
+/**
+ * Measures where each of `container`'s children is, and returns what slides
+ * them from there to wherever a change has put them: call it once the change
+ * has rendered. `animateLayout()` does both around a change; this is for a
+ * change that happens in steps, such as an element's own update.
+ */
+export const measureLayout = (
+  container: ParentNode,
+  { key = (item) => item }: LayoutOptions = {},
+): (() => void) => {
+  if (reducedMotion() || document.hidden) return () => undefined;
+
+  const before = new Map<LayoutKey, DOMRect>();
+
+  for (const item of container.children) {
+    const id = key(item);
+
+    if (id !== null && id !== undefined) {
+      before.set(id, item.getBoundingClientRect());
+    }
+  }
+
+  return () => {
+    const items = [...container.children];
+
+    // A slide still running starts again from where the item is now, which
+    // the measure above took in
+    for (const item of items) sliding.get(item)?.cancel();
+
+    const style = getComputedStyle(
+      container instanceof Element
+        ? container
+        : container instanceof ShadowRoot
+          ? container.host
+          : document.documentElement,
+    );
+
+    const duration =
+      Number.parseFloat(style.getPropertyValue("--gw-motion-normal")) || 250;
+
+    const easing =
+      style.getPropertyValue("--gw-motion-easing").trim() ||
+      "cubic-bezier(0.2, 0, 0, 1)";
+
+    for (const item of items) {
+      const id = key(item);
+
+      if (id === null || id === undefined) continue;
+
+      const now = item.getBoundingClientRect();
+
+      if (now.width === 0 && now.height === 0) continue;
+
+      const was = before.get(id);
+
+      // A new item fades in at its place, unless the list was empty, as on
+      // its first draw
+      if (was === undefined || (was.width === 0 && was.height === 0)) {
+        if (before.size > 0) {
+          item.animate([{ opacity: 0 }, { opacity: 1 }], {
+            duration,
+            easing: fadeEasing,
+            fill: "backwards",
+          });
+        }
+
+        continue;
+      }
+
+      const x = was.left - now.left;
+      const y = was.top - now.top;
+
+      if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) continue;
+
+      // Added to any translate of its own, such as an arrival still running
+      sliding.set(
+        item,
+        item.animate([{ translate: `${x}px ${y}px` }, { translate: "0 0" }], {
+          duration,
+          easing,
+          composite: "add",
+        }),
+      );
+    }
+  };
+};
+
+/**
+ * Runs a change to the items in `container`, such as one added, removed or
+ * reordered, and slides each item that stays from where it was to its new
+ * place, on `--gw-motion-normal` and `--gw-motion-easing`, so the list makes
+ * room and closes its gaps rather than jumping. A new item fades in at its
+ * place. Animate one that leaves before the change, such as by fading it out.
+ *
+ * It measures each child before and after the change and slides it the
+ * difference (FLIP), in translate only, so nothing lays out again while it
+ * moves. A second change while items slide starts each from where it is.
+ * Under reduced motion the change just happens.
+ *
+ * The change may return a promise, such as an element's `updateComplete`.
+ */
+export const animateLayout = async (
+  container: ParentNode,
+  change: () => void | Promise<void>,
+  options: LayoutOptions = {},
+): Promise<void> => {
+  const slide = measureLayout(container, options);
+
+  await change();
+  slide();
+};
+
 /**
  * The View Transition classes and types, adopted into the document the first
  * time `withViewTransition()` runs, in the components layer so an app's own

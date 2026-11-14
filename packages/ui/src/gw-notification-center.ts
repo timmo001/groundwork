@@ -8,7 +8,12 @@ import { GwElement, css, h } from "./element.js";
 import type {} from "./gw-button.js";
 import type {} from "./gw-empty-state.js";
 import type {} from "./gw-notification.js";
-import { animateHeight } from "./motion.js";
+import {
+  animateHeight,
+  fadeEasing,
+  motionDuration,
+  reducedMotion,
+} from "./motion.js";
 import { base } from "./styles.js";
 
 // MDI's bell-check-outline
@@ -19,7 +24,8 @@ const emptyIcon =
  * Where notifications wait until they're dealt with: a list of
  * `gw-notification` cards with Clear all, and an empty state once nothing's
  * left. Put it in a page, a panel or a popover from a bell button. Each
- * card folds away when dismissed, and the list closes up smoothly. It fires
+ * card opens out as it arrives and folds away when dismissed, so the list
+ * makes room and closes up smoothly. It fires
  * `clear` when Clear all is pressed.
  *
  * @element gw-notification-center
@@ -148,7 +154,10 @@ export class GwNotificationCenter extends GwElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.#observer = new MutationObserver(() => this.#refresh());
+    this.#observer = new MutationObserver((records) => {
+      this.#refresh();
+      this.#arrive(records);
+    });
     this.#observer.observe(this, { childList: true });
     this.#refresh(false);
   }
@@ -171,6 +180,31 @@ export class GwNotificationCenter extends GwElement {
     }
 
     if (animate) animateHeight(this.#body, before);
+  }
+
+  /**
+   * A new notification opens out at its place, as one that's dismissed folds
+   * away, so those around it slide to make room rather than jump.
+   */
+  #arrive(records: readonly MutationRecord[]) {
+    if (reducedMotion()) return;
+
+    const duration = motionDuration(this, "--gw-motion-normal", 250);
+
+    for (const record of records) {
+      for (const node of record.addedNodes) {
+        if (!(node instanceof HTMLElement) || !node.matches("gw-notification"))
+          continue;
+
+        node.animate(
+          [
+            { opacity: 0, height: "0px", overflow: "clip" },
+            { opacity: 1, height: `${node.offsetHeight}px`, overflow: "clip" },
+          ],
+          { duration, easing: fadeEasing },
+        );
+      }
+    }
   }
 
   protected override create(root: ShadowRoot) {

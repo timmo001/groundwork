@@ -5,13 +5,19 @@
  * @module
  */
 import { GwElement, css, h } from "./element.js";
-import { fadeEasing, motionDuration, reducedMotion } from "./motion.js";
+import {
+  fadeEasing,
+  measureLayout,
+  motionDuration,
+  reducedMotion,
+} from "./motion.js";
 import { base, type Tone } from "./styles.js";
 
 /**
  * Where toasts appear: the bottom corner on the end side, away from what
  * people click. Call `show(message, tone)`; each toast is announced politely
- * and fades out after `duration` milliseconds.
+ * and fades out after `duration` milliseconds, and the others slide to make
+ * room for it and close up after it.
  *
  * A toast only tells; it has no actions and lets every click through, since
  * it may sit over something interactive and leaves before it can be used.
@@ -127,7 +133,15 @@ export class GwToaster extends GwElement {
         : `var(--gw-color-${tone})`,
     );
     this.#raise();
+
+    // The toasts already up slide to make room, and together once it's gone;
+    // it rises on its own
+    const slide = measureLayout(this.#list, {
+      key: (item) => (item === toast ? undefined : item),
+    });
+
     this.#list.append(toast);
+    slide();
 
     const reduced = reducedMotion();
     const slow = motionDuration(this, "--gw-motion-slow", 350);
@@ -147,8 +161,15 @@ export class GwToaster extends GwElement {
         fill: "forwards",
       });
 
-      leave.addEventListener("finish", () => toast.remove());
-      leave.addEventListener("cancel", () => toast.remove());
+      const remove = () => {
+        const close = measureLayout(this.#list);
+
+        toast.remove();
+        close();
+      };
+
+      leave.addEventListener("finish", remove);
+      leave.addEventListener("cancel", remove);
     }, this.duration);
   }
 

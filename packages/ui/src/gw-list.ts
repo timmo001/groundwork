@@ -18,6 +18,7 @@ import {
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
 import { keep, keptAt, textsOf } from "./kept.js";
+import { measureLayout } from "./motion.js";
 import { base, createIcon } from "./styles.js";
 
 /** Draws one item into its container, which sits in the page's light DOM. */
@@ -57,7 +58,9 @@ interface Drawn<T> {
  * components work in it, the first time it scrolls into view and again when
  * the item or `draw` changes. An item scrolled away keeps what was drawn, so
  * it comes back as it was left, such as with a panel open. `keyOf` names
- * each item, so it keeps its place and its drawing across updates.
+ * each item, so it keeps its place and its drawing across updates. Items
+ * slide to their new places as others arrive, leave or fold away, and a new
+ * one fades in.
  *
  * `groupOf` gathers the items under a heading for each value it returns, in
  * the order they first appear, with a chip counting each group's items.
@@ -569,6 +572,15 @@ export class GwList<T extends object = object> extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
+    // Items arriving, leaving or folded away slide to their new places;
+    // scrolling only brings them into view
+    const slide =
+      changed.has("items") || changed.has("toggledGroups")
+        ? measureLayout(this.#body, {
+            key: (row) => (row.hasAttribute("data-index") ? row : undefined),
+          })
+        : undefined;
+
     const data = [
       "items",
       "keyOf",
@@ -602,6 +614,7 @@ export class GwList<T extends object = object> extends GwElement {
     this.#none.hidden = this.items.length > 0;
     this.#none.textContent = this.emptyLabel;
     this.#render();
+    slide?.();
   }
 
   protected override create(root: ShadowRoot) {

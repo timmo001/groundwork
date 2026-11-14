@@ -38,6 +38,7 @@ import type {} from "./gw-chip.js";
 import type {} from "./gw-input.js";
 import type {} from "./gw-skeleton.js";
 import { isText, keep, keptAt, textsOf } from "./kept.js";
+import { measureLayout } from "./motion.js";
 import { scrollbarValues } from "./scrollbars.js";
 import { base, createIcon } from "./styles.js";
 
@@ -137,7 +138,10 @@ type Shown =
  * properties. Each column says how to read a row's value, which sorting and
  * search use, and, set as a property, can draw its cell as any node, such as
  * a link or a `gw-chip`. `row-key` names the row property
- * that identifies it, so a row keeps its place across updates. The sort and
+ * that identifies it, so a row keeps its place across updates. Rows slide
+ * to their new places as they're sorted, searched, folded or new ones
+ * arrive, and a new row fades in; give new data a `row-key` so each row is
+ * followed rather than its position. The sort and
  * search are the table's own, set from their attributes to start with; it
  * fires `change` when they change. With `storage-key` it keeps them, and the
  * folded groups, in this browser itself: only what someone changed, so the
@@ -1199,6 +1203,7 @@ export class GwTable extends GwElement {
       // what's in its cells can draw later, and until then the frame would
       // shrink and its scroll clamp, as new data rebuilds every row
       row.style.height = `${item.size}px`;
+      row.dataset["key"] = `${shown.kind}:${shown.key}`;
       this.#drawnRows.set(shown, row);
 
       return [row];
@@ -1317,6 +1322,19 @@ export class GwTable extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
+    // Rows sorted, searched, folded or arriving slide to their new places;
+    // a change of columns or grouping redraws the table, and scrolling only
+    // brings rows into view
+    const moved = ["rows", "sort", "descending", "query", "toggledGroups"].some(
+      (name) => changed.has(name),
+    );
+
+    const slide = moved
+      ? measureLayout(this.#body, {
+          key: (row) => row.getAttribute("data-key"),
+        })
+      : undefined;
+
     const data = [
       "columns",
       "rows",
@@ -1382,6 +1400,7 @@ export class GwTable extends GwElement {
     }
 
     this.#renderBody();
+    slide?.();
 
     if (
       skeletons ||

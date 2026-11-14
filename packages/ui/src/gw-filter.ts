@@ -7,6 +7,7 @@
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-chip.js";
 import type {} from "./gw-input.js";
+import { measureLayout } from "./motion.js";
 import { base, createIcon, setIconPath, targetArea } from "./styles.js";
 
 /** One option of a filter. */
@@ -471,7 +472,7 @@ export class GwFilter extends GwElement {
 
         return h(
           "li",
-          {},
+          { "data-value": option.value },
           h(
             "label",
             { title: option.label, part: "option" },
@@ -495,7 +496,7 @@ export class GwFilter extends GwElement {
     );
   }
 
-  protected override update() {
+  protected override update(changed: ReadonlySet<string>) {
     const filtering = this.#isFiltering();
     const shown = this.value.length || this.options.length;
 
@@ -516,7 +517,16 @@ export class GwFilter extends GwElement {
       (this.search !== "always" && this.options.length < this.searchFrom);
     this.#search.label = this.searchLabel;
     this.#search.placeholder = this.searchLabel;
+
+    // Options a search keeps slide together as the rest drop out
+    const slide = changed.has("options")
+      ? measureLayout(this.#list, {
+          key: (item) => item.getAttribute("data-value"),
+        })
+      : undefined;
+
     this.#renderOptions();
+    slide?.();
   }
 }
 
