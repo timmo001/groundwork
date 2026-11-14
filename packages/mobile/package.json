@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-mobile",
-  "version": "0.32.0",
+  "version": "0.33.0",
   "description": "The page side of Groundwork's Android shell: the app config, the typed bridge to the shell, and a fallback to the PWA outside it",
   "license": "Apache-2.0",
   "type": "module",
@@ -33,8 +33,8 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@timmo001/groundwork-pwa": "0.32.0",
-    "@timmo001/groundwork-tokens": "0.32.0",
+    "@timmo001/groundwork-pwa": "0.33.0",
+    "@timmo001/groundwork-tokens": "0.33.0",
     "effect": "4.1.4"
   },
   "devDependencies": {
