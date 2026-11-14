@@ -194,8 +194,13 @@ export class GwThemeGallery extends GwElement {
           background-color var(--gw-motion-fast) var(--gw-motion-easing);
       }
 
-      label:hover {
+      label:hover,
+      label:active {
         border-color: var(--gw-color-border-accent);
+      }
+
+      label:active {
+        transition-duration: var(--gw-motion-instant);
       }
 
       label:has(input:checked) {

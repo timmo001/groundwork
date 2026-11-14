@@ -262,6 +262,11 @@ export class GwCalendar extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      .day:active:not([aria-disabled="true"], [data-selected]) {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       .day:focus-visible {
         outline-offset: calc(var(--gw-focus-width) * -1);
       }

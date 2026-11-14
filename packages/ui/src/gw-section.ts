@@ -103,6 +103,11 @@ export class GwSection extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      .toggle:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       .toggle:focus-visible {
         outline: var(--gw-focus-width) solid var(--gw-color-focus);
         outline-offset: calc(-1 * var(--gw-focus-width));

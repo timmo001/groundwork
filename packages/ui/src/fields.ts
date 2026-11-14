@@ -71,6 +71,11 @@ export const fieldStyles = css`
     background: var(--gw-color-fill-neutral-hovered);
   }
 
+  :where(gw-input, gw-select, gw-date-picker) .gw-info:active {
+    background: var(--gw-color-fill-neutral-pressed);
+    transition-duration: var(--gw-motion-instant);
+  }
+
   :where(gw-input, gw-select, gw-date-picker) .gw-info:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: var(--gw-focus-offset);
@@ -201,6 +206,11 @@ export const fieldStyles = css`
   :where(gw-input) .gw-reveal:hover:not(:disabled) {
     color: var(--gw-color-text-strong);
     background: var(--gw-color-fill-neutral-hovered);
+  }
+
+  :where(gw-input) .gw-reveal:active:not(:disabled) {
+    background: var(--gw-color-fill-neutral-pressed);
+    transition-duration: var(--gw-motion-instant);
   }
 
   :where(gw-input) .gw-reveal:focus-visible {
@@ -429,6 +439,11 @@ export const fieldStyles = css`
     background: var(--gw-color-fill-neutral-hovered);
   }
 
+  :where(gw-select) .gw-select-clear:active {
+    background: var(--gw-color-fill-neutral-pressed);
+    transition-duration: var(--gw-motion-instant);
+  }
+
   :where(gw-select) .gw-select-clear:focus-visible {
     outline: var(--gw-focus-width) solid var(--gw-color-focus);
     outline-offset: calc(var(--gw-focus-width) * -1);
@@ -587,6 +602,14 @@ export const fieldStyles = css`
   :where(gw-input, gw-select, gw-date-picker)
     :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger):hover {
     border-color: var(--gw-color-border-loud);
+  }
+
+  /* A press shows within --gw-motion-instant, before the popup answers */
+  :where(gw-select, gw-date-picker)
+    :where(.gw-select-trigger, .gw-date-picker-trigger):active {
+    background: var(--gw-color-fill-neutral-hovered);
+    border-color: var(--gw-color-border-loud);
+    transition-duration: var(--gw-motion-instant);
   }
 
   :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox)

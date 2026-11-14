@@ -163,9 +163,11 @@ export class GwButton extends GwElement {
           scale var(--gw-motion-fast) var(--gw-motion-easing);
       }
 
-      /* A slight press, so a click feels physical */
+      /* A slight press, so a click feels physical, shown within
+         --gw-motion-instant so it's seen before the action answers */
       .button:active {
         scale: 0.97;
+        transition-duration: var(--gw-motion-instant);
       }
 
       .button:hover {

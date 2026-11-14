@@ -129,6 +129,7 @@ export class GwExpansion extends GwElement {
 
       summary:active {
         background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
       }
 
       summary:focus-visible {
@@ -174,6 +175,7 @@ export class GwExpansion extends GwElement {
 
       summary:active .toggle {
         background: var(--gw-color-fill-neutral-selected);
+        transition-duration: var(--gw-motion-instant);
       }
 
       /* The actions sit over a gap the summary keeps for them, so they show

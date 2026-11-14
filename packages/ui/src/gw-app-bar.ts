@@ -208,6 +208,11 @@ export class GwAppBar extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      .menu:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       /* Below menu-below, which sets collapsed, the nav folds into a menu,
          unless there's no nav to fold */
       :host([collapsed]) .bar:not(.no-nav) .menu {

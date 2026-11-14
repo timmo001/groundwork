@@ -207,6 +207,11 @@ export class GwFilter extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      .clear:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       .clear[hidden] {
         display: none;
       }
@@ -251,6 +256,11 @@ export class GwFilter extends GwElement {
 
       label:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      label:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
       }
 
       label:has(input:disabled) {

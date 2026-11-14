@@ -186,13 +186,22 @@ export class GwMenuButton extends GwElement {
         background: var(--gw-color-fill-neutral-resting);
         border: var(--gw-border-width) solid var(--gw-border-color);
         border-radius: var(--gw-radius-control);
-        transition: background-color var(--gw-motion-fast)
-          var(--gw-motion-easing);
+        transition:
+          background-color var(--gw-motion-fast) var(--gw-motion-easing),
+          scale var(--gw-motion-fast) var(--gw-motion-easing);
         anchor-name: --gw-menu;
       }
 
       .trigger:hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      /* The same slight press as a button's, shown within
+         --gw-motion-instant so it's seen before the menu opens */
+      .trigger:active {
+        scale: 0.97;
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
       }
 
       /* While a chosen action runs, a ring takes the icon's place: they share
@@ -478,6 +487,11 @@ export class GwMenuButton extends GwElement {
       .item:focus-visible {
         background: var(--gw-color-fill-neutral-hovered);
         outline: none;
+      }
+
+      .item:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
       }
 
       .item:focus-visible {

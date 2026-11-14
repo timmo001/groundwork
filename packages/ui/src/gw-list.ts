@@ -166,6 +166,11 @@ export class GwList<T extends object = object> extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      .group-toggle:active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       .group-toggle:focus-visible {
         outline: var(--gw-focus-width) solid var(--gw-color-focus);
         outline-offset: calc(-1 * var(--gw-focus-width));

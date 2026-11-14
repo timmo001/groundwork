@@ -183,6 +183,11 @@ export class GwSegmented extends GwElement {
         background: var(--gw-color-fill-neutral-hovered);
       }
 
+      label:active:not(:has(input:checked)) {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
+      }
+
       label:has(input:disabled) {
         color: var(--gw-color-text-disabled);
         cursor: not-allowed;
@@ -299,6 +304,11 @@ export class GwSegmented extends GwElement {
 
       .more::part(trigger):hover {
         background: var(--gw-color-fill-neutral-hovered);
+      }
+
+      .more::part(trigger):active {
+        background: var(--gw-color-fill-neutral-pressed);
+        transition-duration: var(--gw-motion-instant);
       }
 
       .more::part(trigger):focus-visible {

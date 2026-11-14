@@ -99,8 +99,15 @@ export class GwCard extends GwElement {
       }
 
       a.card:hover,
-      .card.linked:hover {
+      .card.linked:hover,
+      a.card:active,
+      .card.linked:active {
         border-color: var(--gw-color-border-accent);
+      }
+
+      a.card:active,
+      .card.linked:active {
+        transition-duration: var(--gw-motion-instant);
       }
 
       /* A card following a link in its heading slot */
