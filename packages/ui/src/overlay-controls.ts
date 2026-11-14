@@ -1,7 +1,7 @@
 /**
  * `overlayControls`, which puts a player's controls over its picture on a
- * phone on its side or in full screen, fading them while they're left alone,
- * as a video player's do.
+ * phone on its side or in full screen, sliding them away while they're left
+ * alone, as a video player's do.
  * Docs: https://groundwork.timmo.dev/behavior/#controls-over-a-picture
  *
  * @module
@@ -9,6 +9,7 @@
 import { sidewaysQuery } from "./adaptive.js";
 import { css, h } from "./element.js";
 import { adoptStyles } from "./fields.js";
+import { pressedBelow } from "./pressed.js";
 import { onSwipe } from "./swipe.js";
 
 // MDI's chevron-up, for the handle that brings the controls back
@@ -40,7 +41,7 @@ export const overlayPressables = [
   "gw-sheet",
 ].join(", ");
 
-/** The bar over the picture, its fade and the handle, in the components layer so an app's own styles win. */
+/** The bar over the picture, its slide and the handle, in the components layer so an app's own styles win. */
 const overlayStyles = css`
   [data-overlay] {
     position: relative;
@@ -58,12 +59,21 @@ const overlayStyles = css`
       color-mix(in oklab, var(--gw-color-surface-raised) 30%, transparent)
     );
     backdrop-filter: blur(4px);
-    transition: opacity var(--gw-motion-normal) var(--gw-motion-easing);
+    /* Back up from the bottom edge, slowing into place */
+    transition:
+      translate var(--gw-motion-normal) var(--gw-motion-easing-enter),
+      opacity var(--gw-motion-fast) linear;
   }
 
+  /* Leaving, it goes down off the edge it sits on, a step quicker, and fades
+     with it, so it never hangs below a stage that doesn't clip */
   [data-overlay-controls][data-over][data-hidden] {
+    translate: 0 100%;
     opacity: 0;
     pointer-events: none;
+    transition:
+      translate var(--gw-motion-fast) var(--gw-motion-easing-exit),
+      opacity var(--gw-motion-fast) linear;
   }
 
   [data-overlay][data-controls-hidden] {
@@ -95,6 +105,24 @@ const overlayStyles = css`
     border-start-start-radius: var(--gw-radius-control);
     border-start-end-radius: var(--gw-radius-control);
     backdrop-filter: blur(4px);
+    /* It rises as the bar goes down, and drops as the bar comes back */
+    transition:
+      translate var(--gw-motion-normal) var(--gw-motion-easing-enter),
+      display var(--gw-motion-fast) allow-discrete;
+  }
+
+  .gw-overlay-handle[hidden] {
+    display: none;
+    translate: -50% 100%;
+    transition:
+      translate var(--gw-motion-fast) var(--gw-motion-easing-exit),
+      display var(--gw-motion-fast) allow-discrete;
+  }
+
+  @starting-style {
+    .gw-overlay-handle {
+      translate: -50% 100%;
+    }
   }
 
   .gw-overlay-handle::part(button) {
@@ -102,8 +130,18 @@ const overlayStyles = css`
     min-block-size: 2.75rem;
   }
 
+  /* Under reduced motion nothing slides: the bar fades in place, as it goes
+     by itself rather than at a press */
   @media (prefers-reduced-motion: reduce) {
-    [data-overlay-controls][data-over] {
+    [data-overlay-controls][data-over],
+    [data-overlay-controls][data-over][data-hidden] {
+      translate: none;
+      transition: opacity var(--gw-motion-fade, 150ms) linear;
+    }
+
+    .gw-overlay-handle,
+    .gw-overlay-handle[hidden] {
+      translate: -50% 0;
       transition: none;
     }
   }
@@ -147,14 +185,14 @@ const overlayOpen = (root: Element | ShadowRoot): boolean =>
 
 /**
  * On a phone on its side (`sidewaysQuery`), or in full screen, puts `bar`
- * over the bottom of its picture and lets it fade once it's been left alone
- * for `hideAfter` while nothing keeps it. Only what does nothing else brings
- * it back: a tap where there's nothing to press, a 1 finger swipe up (down
- * hides it), a key, a mouse moving, or a handle at the bottom while it's
- * hidden. A press on a control does its own thing, and a tap that toggles
- * the bar presses nothing else. With `fullscreen`, turning a phone on its
- * side goes full screen where the browser lets it, and turning it back
- * leaves.
+ * over the bottom of its picture and slides it down off the edge once it's
+ * been left alone for `hideAfter` while nothing keeps it. Only what does
+ * nothing else brings it back: a tap where there's nothing to press, a 1
+ * finger swipe up (down hides it), a key, a mouse moving, or a handle at the
+ * bottom while it's hidden. A press on a control does its own thing, and a
+ * tap that toggles the bar presses nothing else. With `fullscreen`, turning
+ * a phone on its side goes full screen where the browser lets it, and
+ * turning it back leaves.
  *
  * It marks the stage `data-overlay` while the bar is over it, and the bar
  * `data-over` and `data-hidden`, for the styles it adopts and an app's own.
@@ -270,9 +308,13 @@ export const overlayControls = (
 
       const path = event.composedPath();
 
+      // Only what's on the picture counts: the stage may be focusable itself,
+      // such as with tabindex="0" for shortcutKey's within
       const pressed =
         path.includes(bar) ||
-        path.some(
+        pressedBelow(
+          path,
+          stage,
           (target) => target instanceof Element && target.matches(presses),
         );
 

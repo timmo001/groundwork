@@ -8,6 +8,7 @@
 import { GwElement, css, h } from "./element.js";
 import type { GwButton } from "./gw-button.js";
 import type { MenuItem } from "./gw-menu-button.js";
+import { animateHeight } from "./motion.js";
 import { base } from "./styles.js";
 
 // MDI's dots-vertical, for the More menu
@@ -383,8 +384,12 @@ export class GwControlBar extends GwElement {
     // A toggle's item is a checkbox, which fires check and stays open
     this.#more.addEventListener("check", this.#onSelect);
     this.#expand.addEventListener("click", () => {
+      // The rows past the first grow and shrink rather than appear
+      const before = this.#bar.offsetHeight;
+
       this.expanded = !this.expanded;
       this.dispatchEvent(new Event("toggle"));
+      void this.updateComplete.then(() => animateHeight(this.#bar, before));
     });
     root.append(this.#bar, this.#expand);
   }
