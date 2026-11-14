@@ -152,3 +152,81 @@ Polling and live changes redraw only what changed, keyed by each item's id. They
 ### Text
 
 Written text from people or agents, such as a description, a reason or a summary, renders as markdown, sanitized. Short plain values, such as a name or a version, stay plain text.
+
+### Touch
+
+One set of gestures on a touch screen, so a swipe does the same thing in every app. They belong on a surface that fills the view, such as a player's picture or a photo, never on a page that scrolls.
+
+| Gesture | Does |
+| --- | --- |
+| 1 finger up or down | Shows or hides the controls over the picture, in full screen or a phone on its side |
+| 1 finger left or right | The next or previous item, or a seek |
+| 2 fingers left or right | The next or previous larger step, such as a day or a chapter |
+| 3 fingers up or down | Opens or closes the help |
+| Pinch | Zooms in or out |
+| Double tap | Focuses one item, such as showing one camera alone |
+
+Left goes forward, as a finger pulls the next item in from the right. An app leaves out the gestures it has nothing for, and never gives one of these a different meaning.
+
+The rules:
+
+- **Never on what a drag already moves.** A zoomed picture, a camera being steered, a slider, a popover or the controls themselves take their own drags, so a touch that starts on one isn't a swipe.
+- **Never also a click.** The tap that ends a swipe presses nothing, and a pinch or a touch the browser takes over, such as to scroll, is no gesture at all.
+- **A swipe is a clear one.** At least 48px, along one axis twice as far as across it, with every finger moving the same way and two fingers spreading or closing no more than 40px.
+- **The surface owns its touches.** Give it `touch-action: none`, or `pan-y` where the page still scrolls through it, so the browser doesn't scroll or zoom the page under a gesture.
+
+`onSwipe(element, listener, options?)` in groundwork-ui recognizes them, with the rules above built in. Every listener on an element shares one recognizer, so the controls and the page can each listen to the same surface, and it returns a function that stops listening. `ignore` is a selector for what a drag already moves, and `distance` and `pinch` change the thresholds. `swipeOf(fingers, options?)` reads a swipe from fingers an app tracks itself.
+
+```ts
+import { onSwipe } from "@timmo001/groundwork-ui";
+
+onSwipe(
+  stage,
+  ({ fingers, direction }) => {
+    if (fingers === 1 && direction === "left") next();
+    if (fingers === 1 && direction === "right") previous();
+    if (fingers === 3 && direction === "up") help.show();
+    if (fingers === 3 && direction === "down") help.close();
+  },
+  { ignore: "[data-movable], gw-range, gw-popover" },
+);
+```
+
+#### Help
+
+A page's help popover lists the gestures where there's a touch screen and the keys where there's likely a keyboard. A laptop with a touch screen shows both; a phone shows only the gestures.
+
+```css
+/* The gestures, where any pointer is a finger */
+@media not (any-pointer: coarse) {
+  .touch-only {
+    display: none;
+  }
+}
+
+/* The keys, unless a finger is the only way to point */
+@media (any-pointer: coarse) and (any-hover: none) {
+  .keys-only {
+    display: none;
+  }
+}
+```
+
+#### Controls over a picture
+
+In full screen, or on a phone on its side, a player's controls sit over its picture and fade once they've been left alone a moment while it plays, as a video player's do. They stay while it's paused, or while more of their rows are open.
+
+- **Only what does nothing else wakes them:** a tap where there's nothing to press (one that moved less than 10px), a 1 finger swipe up (down hides them), a key, a mouse moving, or a handle at the bottom in the middle that shows while they're hidden, at least 64 by 44px so a finger finds it.
+- **A press on a control does its own thing.** A button, a slider, a tile or a camera's own controls never wake or hide the bar, and their press is never swallowed. A tap that does toggle the bar presses nothing else.
+- **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of at least `1.5rem`, or the safe area where that's wider, and the bottom safe area under the bar and the handle.
+
+```css
+[data-overlay] {
+  --safe-inline: max(
+    1.5rem,
+    env(safe-area-inset-left, 0px),
+    env(safe-area-inset-right, 0px)
+  );
+  --safe-bottom: max(var(--gw-space-2), env(safe-area-inset-bottom, 0px));
+}
+```
