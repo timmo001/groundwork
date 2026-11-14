@@ -42,7 +42,8 @@ const labels = new Map([
 ]);
 
 /**
- * What a demo's `change`, `select`, `close`, `pick` or `mute` event carries:
+ * What a demo's `change`, `select`, `close`, `pick`, `mute` or `menu-select`
+ * event carries:
  * the event's `detail.value` or `detail.muted`, else its element's `value`,
  * `checked` or `returnValue`.
  */
@@ -240,7 +241,7 @@ export class GwDemoFrame extends GwElement {
       }
     });
 
-    for (const type of ["change", "select", "close", "pick", "mute"]) {
+    for (const type of ["change", "select", "close", "pick", "mute", "menu-select"]) {
       this.addEventListener(type, (event) => {
         const source = event.target;
 

@@ -731,10 +731,14 @@ export class GwMenuButton extends GwElement {
     buttons[next]?.focus();
   };
 
+  /** Closes the menu, leaving the focus where it is. */
+  close() {
+    if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
+  }
+
   /** Closes the menu and puts focus back on the button. */
   #close() {
-    if (this.#popover.matches(":popover-open")) this.#popover.hidePopover();
-
+    this.close();
     this.#trigger.focus();
   }
 

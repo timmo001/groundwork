@@ -96,6 +96,7 @@ A check run by `mise run gen` fails when an element renders a `gw-` element its 
 | `gw-popover` | `gw-button` |
 | `gw-row` | `gw-button` |
 | `gw-section` | `gw-chip` |
+| `gw-segmented` | `gw-menu-button` |
 | `gw-select` | `gw-option-list`, `gw-popover` |
 | `gw-setting-row` | `gw-skeleton`, `gw-skeleton-text` |
 | `gw-sheet` | `gw-button` |
@@ -248,7 +249,7 @@ const off = on(menu, "pick", (event) => open(event.detail.value));
 | `gw-menu-button` | `select`, with `detail.value`; `check`, with `detail.value` and `detail.checked` |
 | `gw-dialog`, `gw-popover`, `gw-sheet` | `close` |
 | `gw-select` | `change` |
-| `gw-segmented` | `change`; `pick`, with `detail.value`, on every pick, the chosen option included |
+| `gw-segmented` | `change`; `pick`, with `detail.value`, on every pick, the chosen option included; `menu-select`, with `detail.value`, and `check` from its `menu-items` |
 | `gw-filter` | `change`, `toggle` |
 | `gw-table`, `gw-list`, `gw-sortable` | `change` |
 | `gw-volume` | `input`, `change`; `mute`, with `detail.muted` |

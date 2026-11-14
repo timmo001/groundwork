@@ -17994,6 +17994,11 @@
             },
             {
               "kind": "method",
+              "name": "close",
+              "description": "Closes the menu, leaving the focus where it is."
+            },
+            {
+              "kind": "method",
               "name": "#close",
               "privacy": "private",
               "description": "Closes the menu and puts focus back on the button."
@@ -24109,7 +24114,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.\n\n`pick` fires on every pick, the chosen option included, so an option such\nas a Custom one can open a popover each time it's clicked. Open it beside\nthe option with `optionFor(value)`, which also takes the focus back when it\ncloses.",
+          "description": "Picks one of a few options, as a row of native radio buttons, so arrow\nkeys move between them and a form submits the choice. Fires `change`.\n\nOptions can carry icons. `labels` decides\nwhether their text shows: `show` (the default), `hide` (icons only, with\nthe text as a tooltip and accessible name) or `auto`, which shows the text\non wide screens and only the icons below `labels-below`. An option with\n`disabled` shows but can't be picked.\n\n`pick` fires on every pick, the chosen option included, so an option such\nas a Custom one can open a popover each time it's clicked. Open it beside\nthe option with `optionFor(value)`, which also takes the focus back when it\ncloses.\n\n`overflow` shows the options in order while they fit, and lists the rest\nin a More menu at the end of the row, as checkable choices: picking one\nfires `change` and `pick` as a click would. The chosen option always\nshows, taking the last slot when it would be in the menu. It decides again\nas it resizes, and in a flex row it gives up options first, down to the\nchosen one and More. `inlineWidth` is its width with every option showing,\nfor a bar that measures its controls before laying them out.\n`menu-items` adds the app's own items to the menu after the options, such\nas a group of modes, and keeps More showing: choosing one fires\n`menu-select` and leaves `value` alone. The menu is a bottom sheet on a\nnarrow or short screen, as `gw-menu-button`'s is.\n\nOn a touch screen each option is at least 44px across at medium, as is\nits touch area top to bottom.",
           "name": "GwSegmented",
           "cssProperties": [
             {
@@ -24119,6 +24124,10 @@
             {
               "description": "Scales its height and icons with the theme's density. The theme sets it.",
               "name": "--gw-control-scale"
+            },
+            {
+              "description": "The least width of an option, and the height of its touch area, on a touch screen. Defaults to `2.75rem` at medium; `0` turns it off.",
+              "name": "--gw-segmented-touch-size"
             }
           ],
           "cssParts": [
@@ -24141,6 +24150,22 @@
             {
               "description": "The pill that slides to the chosen option.",
               "name": "indicator"
+            },
+            {
+              "description": "The More button at the end of the track, a `gw-menu-button`.",
+              "name": "more"
+            },
+            {
+              "description": "The More button's own button.",
+              "name": "more-trigger"
+            },
+            {
+              "description": "The More menu's surface.",
+              "name": "more-menu"
+            },
+            {
+              "description": "Each item in the More menu.",
+              "name": "more-item"
             }
           ],
           "members": [
@@ -24151,7 +24176,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: { reflect: true }, labels: { reflect: true }, labelsBelow: { attribute: \"labels-below\" }, options: { type: \"json\" }, size: { reflect: true }, }",
+              "default": "{ label: {}, name: {}, value: { reflect: true }, labels: { reflect: true }, labelsBelow: { attribute: \"labels-below\" }, options: { type: \"json\" }, size: { reflect: true }, overflow: { type: \"boolean\", reflect: true }, menuItems: { type: \"json\", attribute: \"menu-items\" }, moreLabel: { attribute: \"more-label\" }, moreIcon: { attribute: \"more-icon\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24164,7 +24189,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"segmented\"), css` :host { --gw-size: var(--gw-segmented-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; /* 32px options in a 40px track at medium, matching fields and buttons */ height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: calc(var(--gw-font-size-s) * var(--gw-size)); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: calc(1.125rem * var(--gw-scale)); } label.compact.has-icon { padding-inline: var(--gw-space-2); } label.compact.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } input:disabled { cursor: not-allowed; } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } /* Forced colors drop the pill's background, so the picked option takes the system's selection colors instead */ @media (forced-colors: active) { .indicator { background: Highlight; forced-color-adjust: none; } label:has(input:checked) { color: HighlightText; forced-color-adjust: none; } } `, ]",
+              "default": "[ base, controlSizes(\"segmented\"), css` :host { --gw-size: var(--gw-segmented-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); display: inline-block; } /* A pill track with the picked option as a pill inside, as Home Assistant's toggles are */ fieldset { display: inline-flex; gap: 2px; padding: 3px; margin: 0; background: var(--gw-color-surface-lower); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-pill); } legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label { position: relative; display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; /* 32px options in a 40px track at medium, matching fields and buttons */ height: calc(2rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-3) * var(--gw-size)); font-size: calc(var(--gw-font-size-s) * var(--gw-size)); color: var(--gw-color-text-primary); cursor: pointer; background: transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: calc(1.125rem * var(--gw-scale)); } label.compact.has-icon { padding-inline: var(--gw-space-2); } label.compact.has-icon .text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } label:hover { background: var(--gw-color-fill-neutral-hovered); } label:has(input:disabled) { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } input:disabled { cursor: not-allowed; } input { position: absolute; inset: 0; margin: 0; cursor: pointer; opacity: 0; } /* The picked pill is one element that slides between options, under their text, so the choice moves rather than jumps */ fieldset { position: relative; isolation: isolate; } .indicator { position: absolute; inset-block-start: 0; inset-inline-start: 0; z-index: -1; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-pill); box-shadow: var(--gw-shadow-s); opacity: 0; } .indicator.placed { opacity: 1; } .indicator.moving { transition: translate var(--gw-motion-normal) var(--gw-motion-easing), width var(--gw-motion-normal) var(--gw-motion-easing), height var(--gw-motion-normal) var(--gw-motion-easing); } label { transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-normal) var(--gw-motion-easing); } label:has(input:checked), label:has(input:checked):hover { color: var(--gw-color-on-accent); background: transparent; } label:has(input:focus-visible) { outline: var(--gw-focus-width) solid var(--gw-color-focus); /* Inset, so the ring sits inside the track rather than on its border */ outline-offset: calc(var(--gw-focus-width) * -1); } /* Forced colors drop the pill's background, so the picked option takes the system's selection colors instead */ @media (forced-colors: active) { .indicator { background: Highlight; forced-color-adjust: none; } label:has(input:checked) { color: HighlightText; forced-color-adjust: none; } } /* With overflow it's as wide as every option, or the room it has, down to the chosen one and More; the widths come from measuring */ :host([overflow]) { inline-size: var(--_gw-segmented-natural, auto); min-inline-size: var(--_gw-segmented-least, 0); max-inline-size: 100%; } :host([overflow]) label { flex: none; white-space: nowrap; } label[hidden], .more[hidden] { display: none; } /* More reads as one more option: the same height and pill, quiet until hovered */ .more { --gw-menu-button-scale: var(--gw-size); flex: none; } .more::part(trigger) { justify-content: center; min-inline-size: calc(2rem * var(--gw-scale)); height: calc(2rem * var(--gw-scale)); padding: 0; color: var(--gw-color-text-primary); border-radius: var(--gw-radius-pill); } .more::part(trigger):hover { background: var(--gw-color-fill-neutral-hovered); } .more::part(trigger):focus-visible { outline-offset: calc(var(--gw-focus-width) * -1); } /* A finger needs a bigger target than the 32px option: wider, and a touch area that reaches past the track top and bottom */ @media (any-pointer: coarse) { label, .more::part(trigger) { --_gw-segmented-touch: var( --gw-segmented-touch-size, calc(2.75rem * var(--gw-scale)) ); justify-content: center; min-inline-size: var(--_gw-segmented-touch); } input, .more::part(trigger)::after { inset-block: min( 0px, calc((2rem * var(--gw-scale) - var(--_gw-segmented-touch)) / 2) ); } .more::part(trigger)::after { position: absolute; inset-inline: 0; content: \"\"; } } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24229,6 +24254,59 @@
             },
             {
               "kind": "field",
+              "name": "overflow",
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows the options that fit and lists the rest in a More menu.",
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "menuItems",
+              "type": {
+                "text": "readonly MenuItem[]"
+              },
+              "description": "The app's own items, listed in the More menu after the options.",
+              "default": "[]"
+            },
+            {
+              "kind": "field",
+              "name": "moreLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"More\""
+            },
+            {
+              "kind": "field",
+              "name": "moreIcon",
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for the More button's icon.",
+              "default": "\"M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z\""
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the More menu is a bottom sheet.",
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which the More menu is a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
+            },
+            {
+              "kind": "field",
               "name": "#legend",
               "privacy": "private",
               "readonly": true
@@ -24241,9 +24319,41 @@
             },
             {
               "kind": "field",
+              "name": "#more",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
               "name": "#fieldset",
               "privacy": "private",
               "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#widths",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new CSSStyleSheet()",
+              "description": "The widths `overflow` measured, set on the host."
+            },
+            {
+              "kind": "field",
+              "name": "#natural",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
+            },
+            {
+              "kind": "field",
+              "name": "#frame",
+              "privacy": "private",
+              "type": {
+                "text": "number"
+              },
+              "default": "0"
             },
             {
               "kind": "field",
@@ -24266,7 +24376,7 @@
               "name": "#resize",
               "privacy": "private",
               "readonly": true,
-              "default": "new ResizeObserver(() => this.#place(false))"
+              "default": "new ResizeObserver(() => { this.#place(false); this.#schedule(); })"
             },
             {
               "kind": "method",
@@ -24313,6 +24423,15 @@
               "description": "The radio for an option, to open a popover beside it: it covers the\noption, and the focus can go back to it."
             },
             {
+              "kind": "field",
+              "name": "inlineWidth",
+              "type": {
+                "text": "number"
+              },
+              "description": "Its width in pixels with every option showing, whatever it shows now.",
+              "readonly": true
+            },
+            {
               "kind": "method",
               "name": "focus",
               "parameters": [
@@ -24339,6 +24458,86 @@
                 }
               ],
               "description": "Puts the pill under the picked option, sliding there unless it's the first placing."
+            },
+            {
+              "kind": "field",
+              "name": "#schedule",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#extras",
+              "privacy": "private",
+              "type": {
+                "text": "readonly MenuItem[]"
+              },
+              "description": "The menu's own items, from `menu-items`.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#inMenu",
+              "privacy": "private",
+              "default": "new Set<string>()",
+              "description": "The values of the options in the More menu."
+            },
+            {
+              "kind": "field",
+              "name": "#menuKey",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#widthsText",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "method",
+              "name": "#fit",
+              "privacy": "private",
+              "description": "Shows the options in order while they fit with More after them, the\nchosen one taking the last slot when it's further along, and lists the\nrest in the menu. Measures every option showing first, so a resize\neither way finds the right count."
+            },
+            {
+              "kind": "method",
+              "name": "#menu",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "readonly Segment[]"
+                  }
+                }
+              ],
+              "description": "Lists the options that don't fit, then `menu-items`, in More."
+            },
+            {
+              "kind": "method",
+              "name": "#setWidths",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "text",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "kind": "field",
+              "name": "#onSelect",
+              "privacy": "private",
+              "readonly": true
             },
             {
               "kind": "method",
@@ -24678,6 +24877,20 @@
                 "text": "CustomEvent<{ value: string }>"
               },
               "description": "When an option is clicked or picked with the keyboard, the chosen one included, after any `change`, with its `value` in `detail`."
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{ value: string }>"
+              },
+              "description": "When one of `menu-items` is chosen, with its `value` in `detail`.",
+              "name": "menu-select"
+            },
+            {
+              "type": {
+                "text": "CustomEvent<{ value: string, checked: boolean }>"
+              },
+              "description": "When a checkbox item in `menu-items` is toggled, with its `value` and the state it should change to in `detail`.",
+              "name": "check"
             }
           ],
           "attributes": [
@@ -24729,6 +24942,48 @@
               },
               "description": "The size, 40px tall at medium. Defaults to `medium`.",
               "name": "size"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Shows the options that fit and lists the rest in a More menu.",
+              "name": "overflow"
+            },
+            {
+              "type": {
+                "text": "MenuItem[]"
+              },
+              "description": "The app's own items, listed in the More menu after the options, as JSON. With any, More always shows.",
+              "name": "menu-items"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The More button's accessible name and tooltip. Defaults to `More`.",
+              "name": "more-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for the More button's icon. Defaults to three dots.",
+              "name": "more-icon"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which the More menu is a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
+              "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which the More menu is a bottom sheet; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             }
           ],
           "superclass": {

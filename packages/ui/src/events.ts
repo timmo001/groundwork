@@ -54,6 +54,8 @@ export interface GwEventMap {
   "gw-segmented": {
     change: Event;
     pick: CustomEvent<{ value: string }>;
+    "menu-select": CustomEvent<{ value: string }>;
+    check: CustomEvent<{ value: string, checked: boolean }>;
   };
   "gw-select": {
     change: Event;
