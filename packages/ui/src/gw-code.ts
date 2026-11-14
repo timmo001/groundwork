@@ -28,25 +28,18 @@ import {
 import { Decoration, EditorView, keymap, lineNumbers } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 
+import { CopyFeedback, copiedIcon, copyIcon } from "./copy.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
 import { getStorage } from "./storage.js";
 import { base, controlSizes } from "./styles.js";
 
-// MDI's wrap, magnify, content-copy and check
+// MDI's wrap and magnify
 const wrapIcon =
   "M21,5H3V7H21V5M3,19H10V17H3V19M3,13H18C19,13 20,13.43 20,15C20,16.57 19,17 18,17H16V15L12,18L16,21V19H18C20.95,19 22,17.73 22,15C22,12.28 21,11 18,11H3V13Z";
 
 const findIcon =
   "M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z";
-
-const copyIcon =
-  "M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z";
-
-const copiedIcon = "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z";
-
-/** How long the Copy button says what happened before it's back. */
-const copiedFor = 2000;
 
 /** How a diff line reads, from its first characters. */
 const kindOf = (line: string) => {
@@ -441,10 +434,7 @@ export class GwCode extends GwElement {
 
   #view: EditorView | undefined;
 
-  #copiedTimer: ReturnType<typeof setTimeout> | undefined;
-
-  // Whether the Copy button shows what happened rather than its label
-  #copied: "copied" | "failed" | undefined;
+  readonly #copy = new CopyFeedback(() => this.#showCopied());
 
   constructor() {
     super();
@@ -516,34 +506,22 @@ export class GwCode extends GwElement {
     this.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
   };
 
-  readonly #onCopyClick = async () => {
-    let copied = true;
-
-    try {
-      await navigator.clipboard.writeText(this.content);
-    } catch {
-      copied = false;
-    }
-
-    this.#copied = copied ? "copied" : "failed";
-    this.#showCopied();
-    clearTimeout(this.#copiedTimer);
-    this.#copiedTimer = setTimeout(() => {
-      this.#copied = undefined;
-      this.#showCopied();
-    }, copiedFor);
+  readonly #onCopyClick = () => {
+    void this.#copy.copy(this.content);
   };
 
   #showCopied() {
+    const { state } = this.#copy;
+
     setAttribute(
       this.#copyButton,
       "icon",
-      this.#copied === "copied" ? copiedIcon : copyIcon,
+      state === "copied" ? copiedIcon : copyIcon,
     );
     this.#copyButton.textContent =
-      this.#copied === "copied"
+      state === "copied"
         ? this.copiedLabel
-        : this.#copied === "failed"
+        : state === "failed"
           ? this.copyFailedLabel
           : this.copyLabel;
   }

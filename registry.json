@@ -170,8 +170,15 @@
       "name": "gw-code",
       "kind": "element",
       "description": "Code or a diff in its own scrolling frame, with a diff's added and removed lines tinted",
-      "files": ["packages/ui/src/gw-code.ts"],
+      "files": ["packages/ui/src/gw-code.ts", "packages/ui/src/copy.ts"],
       "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-copy",
+      "kind": "element",
+      "description": "A short value, such as a code, a link or a key, with a Copy button that says when it's copied",
+      "files": ["packages/ui/src/gw-copy.ts", "packages/ui/src/copy.ts"],
+      "needs": ["ui-base", "gw-button"]
     },
     {
       "name": "gw-command-menu",
@@ -258,11 +265,25 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-pairing",
+      "kind": "element",
+      "description": "The pairing screen: a one-time code as a QR code and grouped text with a Copy button, a countdown and the paired state",
+      "files": ["packages/ui/src/gw-pairing.ts"],
+      "needs": ["ui-base", "gw-button", "gw-copy", "gw-qr", "gw-spinner"]
+    },
+    {
       "name": "gw-popover",
       "kind": "element",
       "description": "A confirmation, rename or small form beside the button that opened it, a bottom sheet on phones, that asks before discarding edits",
       "files": ["packages/ui/src/gw-popover.ts", "packages/ui/src/dismiss.ts"],
       "needs": ["ui-base", "ui-scrim", "gw-button"]
+    },
+    {
+      "name": "gw-qr",
+      "kind": "element",
+      "description": "A QR code of a link or text, black on white in every theme, drawn with the uqr package the app installs",
+      "files": ["packages/ui/src/gw-qr.ts"],
+      "needs": ["ui-base"]
     },
     {
       "name": "gw-sheet",

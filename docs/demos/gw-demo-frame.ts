@@ -18,6 +18,7 @@ import {
   withViewTransition,
 } from "@timmo001/groundwork-ui";
 import { Predicate } from "effect";
+import { fillSamplePairings } from "./pairing-samples.ts";
 import { fillSampleTables } from "./table-samples.ts";
 
 const tones = ["neutral", "accent", "info", "success", "warning", "danger", "important"] as const;
@@ -42,10 +43,9 @@ const labels = new Map([
 ]);
 
 /**
- * What a demo's `change`, `select`, `close`, `pick`, `mute` or `menu-select`
- * event carries:
- * the event's `detail.value` or `detail.muted`, else its element's `value`,
- * `checked` or `returnValue`.
+ * What a demo's `change`, `select`, `close`, `pick`, `mute`, `menu-select` or
+ * `paired` event carries: the event's `detail.value`, `detail.muted` or
+ * `detail.name`, else its element's `value`, `checked` or `returnValue`.
  */
 const shownValue = (event: Event, source: HTMLElement) => {
   const detail: unknown = event instanceof CustomEvent ? event.detail : undefined;
@@ -56,6 +56,10 @@ const shownValue = (event: Event, source: HTMLElement) => {
 
   if (Predicate.hasProperty(detail, "muted") && Predicate.isBoolean(detail.muted)) {
     return String(detail.muted);
+  }
+
+  if (Predicate.hasProperty(detail, "name") && Predicate.isString(detail.name)) {
+    return detail.name;
   }
 
   if (
@@ -84,8 +88,9 @@ const shownValue = (event: Event, source: HTMLElement) => {
  * button with `data-opens="id"` opens that dialog, one with `data-toggles="id"`
  * opens or closes that banner, one with `data-toast`
  * shows a toast in the frame's `gw-toaster`, a `gw-table` with `data-sample`
- * gets sample rows (`table-samples.ts`), and the last `change`, `select`
- * or `close` event is shown in the toolbar.
+ * gets sample rows (`table-samples.ts`), a `gw-pairing` with `data-sample`
+ * gets a stand-in service (`pairing-samples.ts`), and the last `change`,
+ * `select` or `close` event is shown in the toolbar.
  */
 export class GwDemoFrame extends GwElement {
   static override properties = {
@@ -241,7 +246,17 @@ export class GwDemoFrame extends GwElement {
       }
     });
 
-    for (const type of ["change", "select", "close", "pick", "mute", "menu-select"]) {
+    for (const type of [
+      "change",
+      "select",
+      "close",
+      "pick",
+      "mute",
+      "menu-select",
+      "expired",
+      "paired",
+      "done",
+    ]) {
       this.addEventListener(type, (event) => {
         const source = event.target;
 
@@ -310,6 +325,7 @@ export class GwDemoFrame extends GwElement {
     fillSampleTables(this, (_table, page) => {
       this.event = `more: page ${page} loaded`;
     });
+    fillSamplePairings(this);
 
     this.#select.options = tokens.themes.map((theme) => ({
       value: theme.id,

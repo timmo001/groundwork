@@ -67,6 +67,8 @@ export * from "./gw-command-menu.js";
 
 export * from "./gw-control-group.js";
 
+export * from "./gw-copy.js";
+
 export * from "./gw-date-picker.js";
 
 export * from "./gw-dialog.js";
@@ -103,7 +105,11 @@ export * from "./gw-option-list.js";
 
 export * from "./gw-page-header.js";
 
+export * from "./gw-pairing.js";
+
 export * from "./gw-popover.js";
+
+export * from "./gw-qr.js";
 
 export * from "./gw-range.js";
 

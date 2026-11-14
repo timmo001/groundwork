@@ -45,6 +45,11 @@ export interface GwEventMap {
   "gw-option-list": {
     pick: CustomEvent<{ value: string }>;
   };
+  "gw-pairing": {
+    paired: CustomEvent<{ name: string }>;
+    done: Event;
+    expired: Event;
+  };
   "gw-popover": {
     close: Event;
   };

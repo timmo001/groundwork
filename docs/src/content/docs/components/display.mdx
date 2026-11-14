@@ -1,6 +1,6 @@
 ---
 title: Display
-description: Cards, chips, badges, dots, alerts, facts, meters and gauges.
+description: Cards, chips, badges, alerts, meters, QR codes and pairing.
 ---
 
 Components with a `tone` take `neutral`, `accent`, `info`, `success`, `warning`, `danger` or `important`, each from the theme's status roles.
@@ -327,14 +327,92 @@ code.extensions = [javascript()];
 
 The toolbar's buttons are `gw-button`s, the `wrap`, `find` and `copy` parts, and `--gw-code-selection` colors selected text. `--gw-code-find-height` sets the find panel's field and buttons (`1.875rem`). The view shows a focus ring inside its frame when it has focus.
 
+## Copy
+
+<Demo id="copy" layout="stack">
+  <gw-copy label="API key" value="gwk_7Q2M9X4RTB8KD3VHZ6NC1PFJ5W0SGYAE"></gw-copy>
+  <gw-copy label="Pairing code" value="4F9C82KD" display="4F9C-82KD" size="medium" style="--gw-copy-font-size: var(--gw-font-size-2xl)"></gw-copy>
+</Demo>
+
+A short value someone takes somewhere else, such as a pairing code, a link or a key that shows once, with a Copy button. The value is selectable mono text, and one click selects all of it. Pressing Copy says `Copied` on the button for two seconds, and a hidden status announces it, so a screen reader hears it too. Where the page can't reach the clipboard, such as over plain HTTP, it says `Couldn't copy` and selects the value, ready for Ctrl+C.
+
+| Attribute | What it does |
+| --- | --- |
+| `value` | What's copied, and shown unless `display` is set |
+| `display` | What shows in its place, such as a code grouped for reading while the plain code or its link is copied |
+| `label` | The value's accessible name, such as `Pairing code` |
+| `size`, `labels` | The Copy button's size (`small`) and whether its text shows beside its icon (`show`), as a button's |
+| `copy-label`, `copied-label`, `copy-failed-label` | Its words, for an app in another language |
+
+`copy()` copies from code, and resolves with whether it worked. Style it through the `value` and `copy` parts, with `--gw-copy-font-family` and `--gw-copy-font-size` for the value and `--gw-copy-scale` for the button. Code's Copy button behaves the same, with the same words.
+
+## QR code
+
+<Demo id="qr" layout="row">
+  <gw-qr value="https://kestrel.local/#pair=4F9C82KD" label="QR code to pair with Kestrel"></gw-qr>
+  <gw-qr value="https://groundwork.timmo.dev/" label="QR code of the Groundwork docs" level="L" style="--gw-qr-size: 10rem"></gw-qr>
+</Demo>
+
+A QR code of a link or text, drawn as SVG with [uqr](https://github.com/unjs/uqr), which the app installs beside Groundwork. It stays black on white with a quiet zone of four modules in every theme, mode and forced colors, since that's what scanners look for, so a dark theme never inverts it. Keep it at least `10rem` across, so a phone at arm's length reads each module, and give it a `label` saying what it opens, since a screen reader can't read the code.
+
+| Attribute | What it does |
+| --- | --- |
+| `value` | The text it encodes, such as a link. Empty, or too long for any QR code, draws nothing |
+| `label` | Its accessible name (`QR code`) |
+| `level` | How much of it can be covered and still read: `L`, `M`, `Q` or `H`, from 7% to 30% (`M`). Higher is denser |
+| `margin` | The quiet zone around it, in modules (`4`) |
+
+`--gw-qr-size` sets its width and height (`12rem`). `--gw-qr-dark` and `--gw-qr-light` change its colors, such as for a brand; keep the dark modules much darker than the light, since a scanner may not read the reverse. The SVG is the `code` part.
+
+## Pairing
+
+<Demo id="pairing" layout="stack">
+  <gw-pairing data-sample></gw-pairing>
+  <gw-button data-pairs size="small" variant="neutral" appearance="plain">Use the code on a phone</gw-button>
+</Demo>
+
+The screen a service shows to pair a phone or another device, as [Pairing](/behavior#pairing) sets out. It shows the one-time code three ways at once: a QR code of the link, which a laptop's camera reads as well as a phone's, the code in large grouped text, and a Copy button for the link. A countdown says how long it works for. When it runs out, the code is hidden, it says the code expired and fires `expired`; Make a new code brings another. Once a device uses it, it says which, in place, with a Done button that fires `done`, for the app to go back to its list of devices.
+
+<Demo id="pairing-states" layout="row">
+  <gw-pairing data-sample data-expires="15"></gw-pairing>
+  <gw-pairing device="Pixel 9"></gw-pairing>
+</Demo>
+
+Give it `make`, the app's call to its service for a new code, and `wait`, which resolves with the device's name once that code is used, such as by polling the service's list of devices. It makes the first code when it's shown. `make` answers with `{ code, link, expires }`, the shape of `PairingCode` in `@timmo001/groundwork-pwa/pairing`, so a service's answer passes straight through:
+
+```ts
+pairing.make = async () => {
+  const response = await fetch("api/pair/codes", { method: "POST" });
+
+  return response.json();
+};
+pairing.wait = (offer, signal) => devices.waitForNew(offer.code, signal);
+pairing.addEventListener("done", () => showDevices());
+```
+
+Without `make`, set `code`, `link` and `expires` from the app, and `device` once it pairs.
+
+| Attribute | What it does |
+| --- | --- |
+| `code`, `link`, `expires` | The code, the link that carries it, and when it stops working, as an ISO date. `make` sets them |
+| `device` | The name of the device that paired, which shows the paired state. Clearing it shows a new code |
+| `group` | How many characters each group of the shown code has (`4`, for `4F9C-82KD`). `0` shows it as given |
+| `copies` | What Copy copies when there's a link: `link` or `code` (`link`) |
+| `label`, `qr-label` | The code's and the QR code's accessible names |
+| `instructions-label`, `expires-label`, `expired-label`, `renew-label`, `making-label`, `failed-label`, `paired-label`, `done-label`, `copy-link-label`, `copy-code-label`, `copied-label`, `copy-failed-label` | Its words, for an app in another language. `expires-label` takes `{time}` and `paired-label` takes `{name}` |
+
+The countdown is a `timer` that screen readers don't read out each second, and the expired, failed and paired messages are a status they announce. `refresh()` makes a new code from code. It's built from a [QR code](#qr-code), a [Copy](#copy), a spinner and buttons, the `qr`, `copy`, `renew` and `done` parts, beside the `instructions`, `countdown`, `status` and `paired-icon` parts. `--gw-pairing-qr-size` (`12rem`), `--gw-pairing-code-size` (`--gw-font-size-2xl`) and `--gw-pairing-width` (`24rem`) size it.
+
+On the device that pairs, one field takes either a pasted link or a typed code: `parsePairingInput(text, service)` from `@timmo001/groundwork-pwa/pairing` reads both, ignoring case, spaces and dashes.
+
 ## API reference
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-card", "gw-expansion", "gw-chip", "gw-dot", "gw-badge", "gw-alert", "gw-facts", "gw-meter", "gw-gauge", "gw-table", "gw-list", "gw-markdown", "gw-code"]} />
+<ElementApi tags={["gw-card", "gw-expansion", "gw-chip", "gw-dot", "gw-badge", "gw-alert", "gw-facts", "gw-meter", "gw-gauge", "gw-table", "gw-list", "gw-markdown", "gw-code", "gw-copy", "gw-qr", "gw-pairing"]} />
 
 ## References
 
 - Home Assistant: [Badge](https://contributors.home-assistant.io/design/components/badge/), [Alert](https://contributors.home-assistant.io/design/components/alert/), [Gauge](https://contributors.home-assistant.io/design/components/gauge/), [Expansion panel](https://contributors.home-assistant.io/design/components/expansion-panel/) · Code: [badge](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-badge.ts), [alert](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-alert.ts), [gauge](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-gauge.ts), [expansion panel](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-expansion-panel.ts)
-- Web Awesome: [Badge](https://webawesome.com/docs/components/badge), [Callout](https://webawesome.com/docs/components/callout), [Progress ring](https://webawesome.com/docs/components/progress-ring), [Details](https://webawesome.com/docs/components/details) · Code: [badge](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/badge), [callout](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/callout), [progress ring](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/progress-ring), [details](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/details)
+- Web Awesome: [Badge](https://webawesome.com/docs/components/badge), [Callout](https://webawesome.com/docs/components/callout), [Progress ring](https://webawesome.com/docs/components/progress-ring), [Details](https://webawesome.com/docs/components/details), [Copy button](https://webawesome.com/docs/components/copy-button), [QR code](https://webawesome.com/docs/components/qr-code) · Code: [badge](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/badge), [callout](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/callout), [progress ring](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/progress-ring), [details](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/details), [copy button](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/copy-button), [QR code](https://github.com/shoelace-style/webawesome/tree/next/packages/webawesome/src/components/qr-code)
 - Primer: [Label](https://primer.style/product/components/label/), [Banner](https://primer.style/product/components/banner/) · Code: [Label](https://github.com/primer/react/tree/main/packages/react/src/Label), [Banner](https://github.com/primer/react/tree/main/packages/react/src/Banner)
