@@ -111,6 +111,13 @@ export class GwFilter extends GwElement {
       :host {
         display: flex;
         flex-direction: column;
+      }
+
+      /* The header and body reach past the host rather than the host past
+         its parent, since a page's reset, such as Tailwind's
+         * { margin: 0 }, beats any margin on :host */
+      .header,
+      .body {
         margin-inline: calc(-1 * var(--gw-filter-inset, 0rem));
       }
 
