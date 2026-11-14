@@ -87,6 +87,16 @@ export const base = css`
     outline-offset: var(--gw-focus-offset);
   }
 
+  /* What's open in the top layer sits over everything, so it takes presses
+     even where it's placed under something that lets them through, such as
+     an overlay bar while it's hidden, and shows the pointer even where the
+     page hides it, such as over a picture */
+  :popover-open,
+  dialog:modal {
+    pointer-events: auto;
+    cursor: auto;
+  }
+
   .icon {
     flex: none;
     width: var(--gw-icon-size, 1.25rem);

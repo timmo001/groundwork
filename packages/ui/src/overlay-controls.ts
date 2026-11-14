@@ -86,8 +86,20 @@ const overlayStyles = css`
       opacity var(--gw-motion-fast) linear;
   }
 
+  /* What opens from it while it's hidden, such as a popover from a key or a
+     swipe, still takes presses and scrolls rather than letting them through
+     to the picture */
+  [data-overlay-controls][data-over][data-hidden]
+    :is(:popover-open, dialog:modal) {
+    pointer-events: auto;
+  }
+
   [data-overlay][data-controls-hidden] {
     cursor: none;
+  }
+
+  [data-overlay][data-controls-hidden] :is(:popover-open, dialog:modal) {
+    cursor: auto;
   }
 
   /* Pulled down, it moves with the finger, nothing easing it */
