@@ -113,10 +113,10 @@ The line between a popover and a sheet: a popover holds one task in a handful of
 
 An overlay over something a person is watching, such as a live picture they're adjusting, leaves it in view:
 
-- **A lighter backdrop.** Popovers and sheets dim the page by 40% by default, and dialogs by 50%. Over live content, set the backdrop lighter, such as `--gw-sheet-backdrop: rgb(0 0 0 / 15%)` or the same for `--gw-popover-backdrop`, so the change being made shows behind it. A dialog, which asks for a decision first, keeps its default.
+- **A lighter backdrop.** Popovers and sheets dim the page by 40% by default, and dialogs by 50%. Over live content, give the popover or sheet `live`, which dims it by 15%, so the change being made shows behind it. `--gw-popover-backdrop` and `--gw-sheet-backdrop` set any other. A dialog, which asks for a decision first, keeps its default.
 - **Beside, not over.** A sheet comes in from the side that leaves the content clear, such as `wide-side="end"`, and a popover opens by its button rather than in the middle.
 - **One at a time.** Only one overlay shows, and Esc closes the topmost one.
-- **Live controls aren't edits.** Sliders that apply at once, such as a picture's brightness, change nothing to save, so leaving them never asks to discard.
+- **Live controls aren't edits.** Sliders that apply at once, such as a picture's brightness, change nothing to save, so leaving them never asks to discard. A popover with `live` doesn't count them.
 
 ## Sheet
 

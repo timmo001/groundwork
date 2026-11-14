@@ -176,7 +176,7 @@ A press shows its result in the same frame: the fold opens and the chevron turns
 
 Every press shows something at once: its result, or that it's on its way. Under a tenth of a second feels instant and needs nothing more; anything longer shows it's waiting.
 
-- **Pending, for an action that waits on a device or a server and can be pressed again**, such as moving a camera a step. The control gently pulses until the answer comes, and keeps taking presses, each one counted, until the last has answered. Under reduced motion the pulse is a steady dim.
+- **Pending, for an action that waits on a device or a server and can be pressed again**, such as moving a camera a step. The control gently pulses until the answer comes, and keeps taking presses, each one counted, until the last has answered. Under reduced motion the pulse is a steady dim. `gw-button`'s `pending` attribute draws it, and `button.waitFor(request)` sets it until every press has answered.
 - **Loading, for an action that mustn't run twice**, such as saving or signing in. The button shows a ring and takes no more presses until it's done, as `gw-button`'s `loading` does.
 - **A result that takes longer than a few seconds** shows its progress where it was asked for, and the person can go on with other things meanwhile.
 
@@ -208,7 +208,7 @@ A mode changes what a drag or a key does, such as Move, where a drag on a camera
 A press does what it's on, and only that.
 
 - A press that closes an overlay, such as one outside a popover, never also presses what's under it. Groundwork's popups lay a [scrim](/components/overlays#clicks-outside) that takes it.
-- Pressing the button that opened a popover closes it, rather than closing it and opening it again.
+- Pressing the button that opened a popover closes it, rather than closing it and opening it again. The scrim takes that press, so it does. A key that opens it, such as `?`, calls `popover.toggle(button)`.
 - A tap that ends a swipe presses nothing, as [Touch](#touch) sets out.
 - A press on a control inside something pressable, such as a button on a tile, does the control's thing and never the tile's too.
 
@@ -224,6 +224,22 @@ A page's own shortcuts, such as `k` to play or the arrows to step, never take a 
 - **Single keys can be turned off.** A shortcut that's one letter, number or symbol, such as `k` or `?`, can be turned off in the app's settings, since speech input types letters and would set them off.
 
 `?` opens the page's help where there are shortcuts, as [Help](#help) sets out.
+
+`shortcutKey(event, { singleKeys })` from `@timmo001/groundwork-ui` follows these rules: it gives the shortcut a key press asks for, or `undefined` where the key belongs to something else.
+
+```ts
+import { shortcutKey } from "@timmo001/groundwork-ui";
+
+document.addEventListener("keydown", (event) => {
+  const key = shortcutKey(event, { singleKeys: settings.singleKeys });
+
+  if (key === "k") togglePlay();
+  else if (key === "?") help.toggle(helpButton);
+  else return;
+
+  event.preventDefault();
+});
+```
 
 ### Touch
 

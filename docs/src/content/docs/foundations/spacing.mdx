@@ -34,20 +34,22 @@ A finger is bigger and less exact than a mouse, and it hides what it presses. So
 | A mouse, trackpad or pen | `1.5rem` (24px) |
 | Wherever a finger can point, `(any-pointer: coarse)` | `2.75rem` (44px) |
 
-- **The hit area grows, not the look.** Padding, or an empty `::before` reaching past the control's edges, takes the press, so a 32px option in a toggle still has a 44px hit area that reaches past its track.
+- **The hit area grows, not the look.** Padding, or an empty `::after` reaching past the control's edges, takes the press, so a 32px option in a toggle still has a 44px hit area that reaches past its track.
 - **One press lands on one control.** Hit areas never overlap a neighbor's. Where a row is too tight for that, the controls themselves grow on a touch screen, or the gap between them does. Keep at least `--gw-space-2` (8px) between controls with a visible edge and `--gw-space-6` (24px) around ones without, such as an icon on its own.
 - **Denser for a mouse.** With no finger to point, controls can be as small as their looks, down to 24px.
 - **Bigger where it counts.** A control pressed often, one near the screen's edge, and one whose result can't be undone go above the minimum.
 - **Text links inside a sentence** keep the line's height.
 
-An app that wants Material's 48px sets `--gw-target-min: 3rem` under `(any-pointer: coarse)`. An app's own small control reaches the token with a hit area of its own:
+Every Groundwork control does this: buttons, menu buttons, toggles, sliders, checkboxes, switches and the close and clear buttons inside other elements. Set `--gw-target-min: 0px` on one to leave it at its own size.
+
+An app that wants Material's 48px sets `--gw-target-min: 3rem` under `(any-pointer: coarse)`. An app's own small control reaches the token with a hit area of its own, or with `targetArea(selector)` from `@timmo001/groundwork-ui` in a shadow root:
 
 ```css
 .my-control {
   position: relative;
 }
 
-.my-control::before {
+.my-control::after {
   position: absolute;
   inset: min(0px, calc((100% - var(--gw-target-min)) / 2));
   content: "";

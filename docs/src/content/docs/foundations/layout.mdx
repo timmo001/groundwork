@@ -36,13 +36,13 @@ To measure, each control has two widths: the least it can be, as its `min-inline
 
 ## Sizes that change the layout
 
-Each threshold has a name, so every app changes at the same size.
+Each threshold has a name, so every app changes at the same size. `@timmo001/groundwork-ui` exports each as a media query, for `matchMedia` or an app's own styles.
 
 | Name | When | What changes |
 | --- | --- | --- |
-| Labels hide | Under 40rem (640px) wide, with `labels="auto"` | Buttons with an icon show only it |
-| Sheet below | Under 600px wide or 500px tall | Popovers, menus and dialogs open as [bottom sheets](/components/overlays#bottom-sheets-on-phones) |
-| Phone on its side | `(orientation: landscape) and (max-height: 500px)` | Controls go over the content, gaps get smaller, and the edges are kept clear |
+| Labels hide (`labelsHiddenQuery`) | Under 40rem (640px) wide, with `labels="auto"` | Buttons with an icon show only it |
+| Sheet below (`sheetQuery()`) | Under 600px wide or 500px tall | Popovers, menus and dialogs open as [bottom sheets](/components/overlays#bottom-sheets-on-phones) |
+| Phone on its side (`sidewaysQuery`) | `(orientation: landscape) and (height < 500px)` | Controls go over the content, gaps get smaller, and the edges are kept clear |
 
 A component that changes with the room it has, not the window, uses a container query on itself, so it works the same in a sidebar or a dialog as on a page.
 
@@ -81,11 +81,11 @@ A view that fills the window, such as a player or a map, takes the height under 
 
 ```css
 .player {
-  block-size: calc(100dvh - var(--fill-top, 0px));
+  block-size: calc(100dvh - var(--gw-fill-top, 0px));
 }
 ```
 
-Measure `--fill-top` from the view's own top edge whenever what's above it changes, such as a banner appearing.
+`fillWindow(player)` from `@timmo001/groundwork-ui` keeps `--gw-fill-top` at the view's own top edge, measuring again whenever what's above it changes, such as a banner appearing, and after full screen.
 
 ## References
 
