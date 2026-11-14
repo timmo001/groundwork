@@ -4,6 +4,7 @@
  *
  * @module
  */
+import { componentsLayer } from "./element.js";
 
 /** Whether the person asked for reduced motion. */
 export const reducedMotion = () =>
@@ -67,12 +68,88 @@ export const animateHeight = (element: HTMLElement, before: number) => {
 };
 
 /**
+ * The View Transition classes, adopted into the document the first time
+ * `withViewTransition()` runs, in the components layer so an app's own
+ * styles win. Give an element one with `view-transition-class`, beside its
+ * `view-transition-name`:
+ *
+ * - `gw-travel` moves and resizes it to its new place on `--gw-motion-slow`
+ *   and `--gw-motion-easing`, such as a tile becoming the whole view;
+ * - `gw-from-bottom`, `gw-from-top`, `gw-from-start` and `gw-from-end` slide
+ *   it in from that edge as it arrives, on `--gw-motion-slow` and
+ *   `--gw-motion-easing-enter`, and back out as it leaves, a step quicker on
+ *   `--gw-motion-normal` and `--gw-motion-easing-exit`, such as a docked
+ *   panel. Start and end follow the page's direction.
+ */
+export const viewTransitionStyles = (() => {
+  const sheet = new CSSStyleSheet();
+
+  const edges = {
+    bottom: ["0 100%", "0 100%"],
+    top: ["0 -100%", "0 -100%"],
+    start: ["-100% 0", "100% 0"],
+    end: ["100% 0", "-100% 0"],
+  } as const;
+
+  const slides = Object.entries(edges).map(
+    ([edge, [ltr, rtl]]) => `
+      ::view-transition-new(*.gw-from-${edge}):only-child {
+        animation: var(--gw-motion-slow, 350ms)
+          var(--gw-motion-easing-enter, ease-out) both gw-from-${edge};
+      }
+
+      ::view-transition-old(*.gw-from-${edge}):only-child {
+        animation: var(--gw-motion-normal, 250ms)
+          var(--gw-motion-easing-exit, ease-in) both gw-from-${edge} reverse;
+      }
+
+      @keyframes gw-from-${edge} {
+        from {
+          translate: ${ltr};
+        }
+      }
+
+      :root:dir(rtl)::view-transition-new(*.gw-from-${edge}):only-child,
+      :root:dir(rtl)::view-transition-old(*.gw-from-${edge}):only-child {
+        animation-name: gw-from-${edge}-rtl;
+      }
+
+      @keyframes gw-from-${edge}-rtl {
+        from {
+          translate: ${rtl};
+        }
+      }`,
+  );
+
+  sheet.replaceSync(`@layer ${componentsLayer} {
+    ::view-transition-group(*.gw-travel) {
+      animation-duration: var(--gw-motion-slow, 350ms);
+      animation-timing-function: var(--gw-motion-easing, ease);
+    }
+    ${slides.join("\n")}
+  }`);
+
+  return sheet;
+})();
+
+/** Adopts `viewTransitionStyles` into the document, once. */
+const adoptTransitionStyles = () => {
+  if (!document.adoptedStyleSheets.includes(viewTransitionStyles)) {
+    document.adoptedStyleSheets = [
+      ...document.adoptedStyleSheets,
+      viewTransitionStyles,
+    ];
+  }
+};
+
+/**
  * Runs a DOM change inside a View Transition where the browser supports one,
  * motion isn't reduced and the page can be seen, otherwise runs it straight
  * away, after Home Assistant's `withViewTransition()`. Use it for changes to
  * the whole view, such as switching theme or mode, or moving an element with
  * a `view-transition-name` to a new place; component state uses CSS
- * transitions.
+ * transitions. Elements with one of the `viewTransitionStyles` classes
+ * travel or slide from their edge.
  *
  * The change may return a promise, such as a Lit element's
  * `updateComplete`, so the new view is captured once it has rendered. Keep
@@ -90,6 +167,8 @@ export const withViewTransition = (
   ) {
     return Promise.resolve(change());
   }
+
+  adoptTransitionStyles();
 
   let changed = false;
 

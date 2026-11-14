@@ -50,29 +50,25 @@ withViewTransition(() => {
 });
 ```
 
-Something that only arrives or leaves, rather than moving, is timed and eased from its edge with the tokens:
+Something that only arrives or leaves, rather than moving, slides in from its edge. Groundwork's View Transition classes time and ease both with the tokens; `withViewTransition()` adds them to the page:
+
+| `view-transition-class` | What it does |
+| --- | --- |
+| `gw-travel` | Moves and resizes to its new place on `--gw-motion-slow` and `--gw-motion-easing`, such as a tile becoming the whole view |
+| `gw-from-bottom`, `gw-from-top`, `gw-from-start`, `gw-from-end` | Arriving, slides in from that edge on `--gw-motion-slow` and `--gw-motion-easing-enter`; leaving, slides back out a step quicker, on `--gw-motion-normal` and `--gw-motion-easing-exit`. Start and end follow the page's direction |
 
 ```css
 .dock {
   view-transition-name: dock;
+  view-transition-class: gw-from-end;
 }
 
-::view-transition-new(dock):only-child {
-  animation: var(--gw-motion-slow) var(--gw-motion-easing-enter) both
-    dock-in;
-}
-
-::view-transition-old(dock):only-child {
-  animation: var(--gw-motion-normal) var(--gw-motion-easing-exit) both
-    dock-in reverse;
-}
-
-@keyframes dock-in {
-  from {
-    translate: 0 100%;
-  }
+.tile {
+  view-transition-class: gw-travel;
 }
 ```
+
+`viewTransitionStyles` is the stylesheet itself, for a page that starts its own transitions. It sits in the components layer, so an app's own `::view-transition-*` rules win.
 
 Keep them simple: every name is used once on a page at a time, only one transition runs at a time, and they work at document level, never inside a shadow root.
 
