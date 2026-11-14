@@ -4,6 +4,11 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+} from "./adaptive.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
 import { Scrim } from "./scrim.js";
@@ -18,14 +23,22 @@ const chevrons = {
 
 type Side = keyof typeof chevrons;
 
-/** Below this width, `side="auto"` slides up from the bottom. */
-const bottomBelow = "40rem";
+/** The media query that matches where `opensAsSheet` is true for a rule. */
+const sheetQuery = (below: number, belowHeight: number) =>
+  [
+    below > 0 ? `(width < ${below}px)` : "",
+    belowHeight > 0 ? `(height < ${belowHeight}px)` : "",
+  ]
+    .filter(Boolean)
+    .join(", ") || "not all";
 
 /**
  * A panel of filters, settings or details that slides in from an edge of the
  * screen over the page, rather than taking a place in its layout. With
- * `side="auto"` it comes from the start edge, full height, and from the
- * bottom below `bottom-below`, 40rem wide by default.
+ * `side="auto"` it comes up from the bottom where popups open as bottom
+ * sheets, under 600px wide or 500px tall (`opensAsSheet`), so a phone on its
+ * side gets one too, and from the start edge, full height, everywhere else.
+ * `wide-side="end"` brings it from the end edge there instead.
  *
  * It's on the Popover API, in the top layer, and closes on Esc, a click
  * outside or its close button, whose chevron points the way it leaves. A
@@ -38,8 +51,10 @@ const bottomBelow = "40rem";
  * @summary A panel that slides in from an edge of the screen.
  *
  * @attr {string} heading - The heading beside the close button.
- * @attr {"auto"|"start"|"end"|"bottom"} side - The edge it slides in from. `auto` is the start edge, or the bottom below `bottom-below`. Defaults to `auto`.
- * @attr {string} bottom-below - The viewport width, as a CSS length, below which `side="auto"` slides up from the bottom. Defaults to `40rem`.
+ * @attr {"auto"|"start"|"end"|"bottom"} side - The edge it slides in from. `auto` is the bottom where popups open as bottom sheets, and `wide-side` elsewhere. Defaults to `auto`.
+ * @attr {"start"|"end"} wide-side - The edge `side="auto"` slides in from where it isn't a bottom sheet. Defaults to `start`.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which `side="auto"` slides up from the bottom; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which `side="auto"` slides up from the bottom, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  *
  * @slot - The content, which scrolls.
@@ -67,7 +82,9 @@ export class GwSheet extends GwElement {
   static override properties = {
     heading: {},
     side: { reflect: true },
-    bottomBelow: { attribute: "bottom-below" },
+    wideSide: { attribute: "wide-side" },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     closeLabel: { attribute: "close-label" },
   } as const;
 
@@ -215,8 +232,12 @@ export class GwSheet extends GwElement {
 
   declare heading: string;
   declare side: "auto" | Side;
-  /** The viewport width, as a CSS length, below which `side="auto"` slides up from the bottom. */
-  declare bottomBelow: string;
+  /** The edge `side="auto"` slides in from where it isn't a bottom sheet. */
+  declare wideSide: "start" | "end";
+  /** Overrides the viewport width in pixels below which `side="auto"` slides up from the bottom. */
+  declare sheetBelow: number;
+  /** Overrides the viewport height in pixels below which `side="auto"` slides up from the bottom. */
+  declare sheetBelowHeight: number;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
 
@@ -254,7 +275,10 @@ export class GwSheet extends GwElement {
 
   readonly #scrim = new Scrim(() => this.close());
 
-  #narrow = window.matchMedia(`(width < ${bottomBelow})`);
+  // Follows the rule while it's open, so turning a phone moves it
+  #narrow = window.matchMedia(
+    sheetQuery(defaultSheetBelow, defaultSheetBelowHeight),
+  );
 
   // Where focus was before it opened, to go back to when it closes
   #returnFocus: HTMLElement | undefined;
@@ -263,7 +287,9 @@ export class GwSheet extends GwElement {
     super();
     this.heading = "";
     this.side = "auto";
-    this.bottomBelow = bottomBelow;
+    this.wideSide = "start";
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.closeLabel = "Close";
   }
 
@@ -293,11 +319,18 @@ export class GwSheet extends GwElement {
     else this.show();
   }
 
-  /** The edge it comes from now, with `auto` settled by the screen's width. */
+  /** The edge it comes from now, with `auto` settled by the screen's size. */
   #edge(): Side {
     if (this.side !== "auto") return this.side;
 
-    return this.#narrow.matches ? "bottom" : "start";
+    const sheet = opensAsSheet({
+      below: this.sheetBelow,
+      belowHeight: this.sheetBelowHeight,
+    });
+
+    if (sheet) return "bottom";
+
+    return this.wideSide === "end" ? "end" : "start";
   }
 
   readonly #place = () => {
@@ -341,12 +374,14 @@ export class GwSheet extends GwElement {
   }
 
   protected override update(changed: ReadonlySet<string>) {
-    if (changed.has("bottomBelow")) {
+    if (changed.has("sheetBelow") || changed.has("sheetBelowHeight")) {
       const { open } = this;
 
       if (open) this.#narrow.removeEventListener("change", this.#place);
 
-      this.#narrow = window.matchMedia(`(width < ${this.bottomBelow})`);
+      this.#narrow = window.matchMedia(
+        sheetQuery(this.sheetBelow, this.sheetBelowHeight),
+      );
 
       if (open) this.#narrow.addEventListener("change", this.#place);
     }

@@ -3,8 +3,8 @@
  * narrow or short screen, such as a phone upright or on its side, and an
  * anchored popup or modal everywhere else. `gw-popover`, `gw-select`,
  * `gw-date-picker`, `gw-command-menu`, `gw-menu-button` and `gw-dialog` all
- * decide it here, so they switch together and an app's own popups can do the
- * same.
+ * decide it here, as does `gw-sheet` with `side="auto"`, so they switch
+ * together and an app's own popups can do the same.
  *
  * @module
  */

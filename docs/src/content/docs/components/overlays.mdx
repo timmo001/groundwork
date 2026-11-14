@@ -81,7 +81,7 @@ popup.showPopover();
 
 ## Bottom sheets on phones
 
-Every overlay that opens over the page adapts to the screen by itself: anchored to its button or in the middle on a larger screen, and a bottom sheet on a narrow or short one. That covers the [popover](#popover), [dialog](#dialog), [command menu](#command-menu), the [menu button's](/components/actions#menu-button) menu, and the [select's](/components/inputs#select) list and [date picker's](/components/inputs#date-picker) calendar. An app never chooses it per overlay.
+Every overlay that opens over the page adapts to the screen by itself: anchored to its button or in the middle on a larger screen, and a bottom sheet on a narrow or short one. That covers the [popover](#popover), [dialog](#dialog), [command menu](#command-menu), the [menu button's](/components/actions#menu-button) menu, and the [select's](/components/inputs#select) list and [date picker's](/components/inputs#date-picker) calendar. A [sheet](#sheet) with `side="auto"` comes up from the bottom by the same rule. An app never chooses it per overlay.
 
 It's a sheet when the viewport is under 600px wide or under 500px tall. The height rule catches a phone on its side, such as 844 by 390, which is wider than 600px but too short for a popup by its button to be easy to use.
 
@@ -109,13 +109,14 @@ There's no separate adaptive dialog element, since the overlays already are one:
   </gw-sheet>
 </Demo>
 
-A panel of filters, settings or details that slides in from an edge over the page, so the list it changes stays in view beside it. It comes from the start edge at full height, and up from the bottom below `bottom-below`, 40rem wide by default. Its content scrolls under a header with a close button, the heading and an `actions` slot, such as Clear. The close button's chevron points the way it leaves.
+A panel of filters, settings or details that slides in from an edge over the page, so the list it changes stays in view beside it. With `side="auto"` it comes up from the bottom wherever popups open as [bottom sheets](#bottom-sheets-on-phones), under 600px wide or 500px tall, so a phone on its side gets one too, and from the start edge at full height everywhere else. It decides as it opens, and again if the window changes while it's open. `wide-side="end"` brings it from the end edge on a larger screen instead, such as for settings beside what they change. Its content scrolls under a header with a close button, the heading and an `actions` slot, such as Clear. The close button's chevron points the way it leaves.
 
 | Attribute or method | What it does |
 | --- | --- |
 | `heading` | The heading, which names it |
 | `side` | `auto` (the default), `start`, `end` or `bottom` |
-| `bottom-below` | The viewport width, as a CSS length, below which `auto` comes up from the bottom (`40rem`) |
+| `wide-side` | The edge `auto` comes from where it isn't a bottom sheet: `start` (the default) or `end` |
+| `sheet-below`, `sheet-below-height` | Override where `auto` comes up from the bottom, which apps shouldn't need |
 | `show()`, `close()`, `toggle()` | Opens or closes it; `toggle()` suits the button that opens it |
 | `open` | Whether it's open |
 | `close-label` | The close button's name, for an app in another language |
