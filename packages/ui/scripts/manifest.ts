@@ -61,9 +61,14 @@ const eventMap = [
   "export interface GwEventMap {",
   ...entries.flatMap(({ tagName, events }) => [
     `  "${tagName}": {`,
-    ...events.map(
-      (event) => `    ${event.name}: ${event.type?.text ?? "Event"};`,
-    ),
+    ...events.map((event) => {
+      // A name such as menu-select needs quotes to be a key
+      const key = /^[A-Za-z_$][\w$]*$/.test(event.name)
+        ? event.name
+        : JSON.stringify(event.name);
+
+      return `    ${key}: ${event.type?.text ?? "Event"};`;
+    }),
     "  };",
   ]),
   "}",
