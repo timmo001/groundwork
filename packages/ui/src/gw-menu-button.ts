@@ -4,6 +4,12 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+  sheetLayout,
+} from "./adaptive.js";
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import { listIndex } from "./keys.js";
@@ -65,6 +71,9 @@ const boxEmpty =
  * Items render inside the component, so a page's own button styles can't
  * reach them; style them through the `menu`, `item` and other parts.
  *
+ * On a narrow or short screen, under 600px wide or 500px tall, the menu is a
+ * bottom sheet.
+ *
  * @element gw-menu-button
  * @summary A button that opens a menu of items and actions.
  *
@@ -80,6 +89,8 @@ const boxEmpty =
  * @attr {"show"|"hide"|"auto"} labels - Whether the trigger's text shows beside its icon: always, never (a square icon button without the chevron, such as ⋮ for more actions), or not below `labels-below`. Defaults to `show`.
  * @attr {string} labels-below - The viewport width, as a CSS length, below which `labels="auto"` hides the trigger's text. Defaults to `40rem`.
  * @attr {boolean} loading - Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which the menu is a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which the menu is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  *
  * @csspart trigger - The button that opens the menu.
  * @csspart trigger-icon - The trigger's icon.
@@ -103,6 +114,9 @@ const boxEmpty =
  * @cssprop --gw-control-scale - Scales its height and icon with the theme's density. The theme sets it.
  * @cssprop --gw-menu-button-menu-width - The menu's least width. Defaults to `15rem`.
  * @cssprop --gw-menu-button-menu-height - The tallest the menu grows before its items scroll. Defaults to `24rem`.
+ * @cssprop --gw-menu-button-backdrop - The backdrop behind the menu as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-adaptive-sheet-width - The widest the menu grows as a bottom sheet, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest the menu grows as a bottom sheet, its items scrolling past that. Defaults to `85dvh`.
  * @cssprop --gw-menu-button-item-height - Each item's least height. Defaults to `2.5rem`.
  * @cssprop --gw-menu-button-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
  * @cssprop --gw-menu-button-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
@@ -127,6 +141,8 @@ export class GwMenuButton extends GwElement {
     labels: { reflect: true },
     labelsBelow: { attribute: "labels-below" },
     loading: { type: "boolean", reflect: true },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
   } as const;
 
   static override styles = [
@@ -371,6 +387,33 @@ export class GwMenuButton extends GwElement {
         }
       }
 
+      /* A bottom sheet on narrow or short screens, sliding up from the
+         edge rather than hanging off the button */
+      [popover][data-placement="sheet"] {
+        position-area: none;
+        position-try-fallbacks: none;
+        ${sheetLayout}
+        padding-block-end: env(safe-area-inset-bottom);
+        border-radius: var(--gw-radius-panel);
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+        box-shadow: var(--gw-shadow-l);
+      }
+
+      [popover][data-placement="sheet"]:popover-open {
+        translate: 0 0;
+      }
+
+      @starting-style {
+        [popover][data-placement="sheet"]:popover-open {
+          translate: 0 100%;
+        }
+      }
+
+      [popover][data-placement="sheet"]::backdrop {
+        background: var(--gw-menu-button-backdrop, rgb(0 0 0 / 40%));
+      }
+
       /* The items scroll; the actions stay put below them, so "Add" is always
          in reach rather than at the end of a long list */
       .items,
@@ -533,6 +576,10 @@ export class GwMenuButton extends GwElement {
   declare labelsBelow: string;
   /** Shows a spinning ring in the icon's place and disables the trigger. */
   declare loading: boolean;
+  /** The viewport width in pixels below which the menu is a bottom sheet. */
+  declare sheetBelow: number;
+  /** The viewport height in pixels below which the menu is a bottom sheet. */
+  declare sheetBelowHeight: number;
 
   readonly #trigger = h("button", {
     class: "trigger",
@@ -585,6 +632,8 @@ export class GwMenuButton extends GwElement {
     this.labels = "show";
     this.labelsBelow = "40rem";
     this.loading = false;
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
   }
 
   readonly #narrow = new Below(() => this.requestUpdate("labels"));
@@ -606,6 +655,19 @@ export class GwMenuButton extends GwElement {
     );
   }
 
+  // Decided before it shows, so a sheet slides up from the edge rather than
+  // starting by the button
+  readonly #onBeforeToggle = (event: ToggleEvent) => {
+    if (event.newState !== "open") return;
+
+    this.#popover.dataset.placement = opensAsSheet({
+      below: this.sheetBelow,
+      belowHeight: this.sheetBelowHeight,
+    })
+      ? "sheet"
+      : "beside";
+  };
+
   readonly #onToggle = (event: ToggleEvent) => {
     const expanded = event.newState === "open";
 
@@ -613,22 +675,27 @@ export class GwMenuButton extends GwElement {
 
     if (!expanded) return;
 
-    // Below the button while the menu fits there or there's more room than
-    // above it; the area's height then caps the menu, which scrolls
     const popover = this.#popover;
-    const rect = this.#trigger.getBoundingClientRect();
-    const below = window.innerHeight - rect.bottom;
 
     popover.style.positionArea = "";
 
-    const items = this.#items;
+    if (popover.dataset.placement !== "sheet") {
+      // Below the button while the menu fits there or there's more room
+      // than above it; the area's height then caps the menu, which scrolls
+      const rect = this.#trigger.getBoundingClientRect();
+      const below = window.innerHeight - rect.bottom;
+      const items = this.#items;
 
-    const height =
-      popover.offsetHeight - items.clientHeight + items.scrollHeight;
+      const height =
+        popover.offsetHeight - items.clientHeight + items.scrollHeight;
 
-    const fitsBelow = below >= height + 16 || below >= rect.top;
+      const fitsBelow = below >= height + 16 || below >= rect.top;
 
-    popover.style.positionArea = fitsBelow ? "" : "block-start span-inline-end";
+      popover.style.positionArea = fitsBelow
+        ? ""
+        : "block-start span-inline-end";
+    }
+
     this.#buttons[0]?.focus({ preventScroll: true });
   };
 
@@ -797,6 +864,7 @@ export class GwMenuButton extends GwElement {
       this.#triggerText,
       h("span", { class: "chevron", part: "chevron", "aria-hidden": "true" }),
     );
+    this.#popover.addEventListener("beforetoggle", this.#onBeforeToggle);
     this.#popover.addEventListener("toggle", this.#onToggle);
     this.#popover.addEventListener("keydown", this.#onKeydown);
     root.append(this.#heading, this.#trigger, this.#popover);

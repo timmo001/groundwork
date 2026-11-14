@@ -5,6 +5,7 @@
  *
  * @module
  */
+import { sheetLayout } from "./adaptive.js";
 import { GwElement, css } from "./element.js";
 
 /**
@@ -380,18 +381,16 @@ export const fieldStyles = css`
   }
 
   :where(gw-select) .gw-select-popup[data-placement="sheet"] {
-    inset: auto 0 0;
-    width: 100%;
-    max-width: none;
+    ${sheetLayout}
     padding-block-end: env(safe-area-inset-bottom);
-    border-end-start-radius: 0;
-    border-end-end-radius: 0;
-    scale: 1;
-    translate: 0 100%;
     --gw-option-list-height: var(--gw-select-sheet-height, 60vh);
   }
 
+  /* The list shrinks to the sheet's height and scrolls, so the search field
+     and Clear stay in view */
   :where(gw-select) .gw-select-popup[data-placement="sheet"]:popover-open {
+    display: flex;
+    flex-direction: column;
     translate: 0 0;
   }
 
@@ -523,6 +522,7 @@ export const fieldStyles = css`
     transition:
       opacity var(--gw-motion-fast) var(--gw-motion-easing),
       scale var(--gw-motion-normal) var(--gw-motion-easing),
+      translate var(--gw-motion-normal) var(--gw-motion-easing),
       display var(--gw-motion-normal) allow-discrete,
       overlay var(--gw-motion-normal) allow-discrete;
   }
@@ -541,6 +541,32 @@ export const fieldStyles = css`
       opacity: 0;
       scale: 1 0.96;
     }
+  }
+
+  /* A bottom sheet on narrow or short screens, the calendar centered in it */
+  :where(gw-date-picker) .gw-date-picker-popup[data-placement="sheet"] {
+    ${sheetLayout}
+    padding-block-end: calc(var(--gw-space-3) + env(safe-area-inset-bottom));
+  }
+
+  :where(gw-date-picker)
+    .gw-date-picker-popup[data-placement="sheet"]:popover-open {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    translate: 0 0;
+  }
+
+  @starting-style {
+    :where(gw-date-picker)
+      .gw-date-picker-popup[data-placement="sheet"]:popover-open {
+      translate: 0 100%;
+    }
+  }
+
+  :where(gw-date-picker)
+    .gw-date-picker-popup[data-placement="sheet"]::backdrop {
+    background: var(--gw-date-picker-backdrop, rgb(0 0 0 / 40%));
   }
 
   /* Shortcuts sit in a wrapping row under the calendar */

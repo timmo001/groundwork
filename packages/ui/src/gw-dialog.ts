@@ -4,6 +4,12 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+  sheetLayout,
+} from "./adaptive.js";
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h } from "./element.js";
 import type {} from "./gw-button.js";
@@ -17,13 +23,16 @@ const closeIcon =
  * A modal on the native `<dialog>`, so focus is trapped and returned, Esc
  * closes it and the page behind is inert. Open it with `show()`. Put buttons
  * in the `actions` slot; a click on one with a `value` closes the dialog with
- * that value, and fires `close`.
+ * that value, and fires `close`. On a narrow or short screen, under 600px
+ * wide or 500px tall, it's a bottom sheet.
  *
  * @element gw-dialog
  * @summary A modal for what blocks the whole app.
  *
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} open - Whether it shows.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
  * @attr {string} keep-label - The button that goes back to editing. Defaults to `Keep editing`.
@@ -52,6 +61,8 @@ const closeIcon =
  * @cssprop --gw-dialog-radius - The corners. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-dialog-shadow - The shadow. Defaults to `--gw-shadow-l`.
  * @cssprop --gw-dialog-backdrop - The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.
+ * @cssprop --gw-adaptive-sheet-width - The widest it grows as a bottom sheet, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest it grows as a bottom sheet, its body scrolling past that. Defaults to `85dvh`.
  * @cssprop --gw-dialog-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
  * @cssprop --gw-dialog-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
  * @cssprop --gw-dialog-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
@@ -64,6 +75,8 @@ export class GwDialog extends GwElement {
   static override properties = {
     heading: {},
     open: { type: "boolean", reflect: true },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     closeLabel: { attribute: "close-label" },
     discardQuestion: { attribute: "discard-question" },
     keepLabel: { attribute: "keep-label" },
@@ -103,6 +116,7 @@ export class GwDialog extends GwElement {
         transition:
           opacity var(--gw-motion-normal) var(--gw-motion-easing),
           scale var(--gw-motion-normal) var(--gw-motion-easing),
+          translate var(--gw-motion-normal) var(--gw-motion-easing),
           display var(--gw-motion-normal) allow-discrete,
           overlay var(--gw-motion-normal) allow-discrete;
       }
@@ -136,6 +150,23 @@ export class GwDialog extends GwElement {
 
         dialog[open] {
           scale: 0.96;
+        }
+      }
+
+      /* A bottom sheet on narrow or short screens, sliding up from the
+         edge */
+      dialog[data-placement="sheet"] {
+        ${sheetLayout}
+        padding-block-end: env(safe-area-inset-bottom);
+      }
+
+      dialog[data-placement="sheet"][open] {
+        translate: 0 0;
+      }
+
+      @starting-style {
+        dialog[data-placement="sheet"][open] {
+          translate: 0 100%;
         }
       }
 
@@ -183,6 +214,10 @@ export class GwDialog extends GwElement {
 
   declare heading: string;
   declare open: boolean;
+  /** The viewport width in pixels below which it's a bottom sheet. */
+  declare sheetBelow: number;
+  /** The viewport height in pixels below which it's a bottom sheet. */
+  declare sheetBelowHeight: number;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
   declare discardQuestion: string;
@@ -196,6 +231,8 @@ export class GwDialog extends GwElement {
     super();
     this.heading = "";
     this.open = false;
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.closeLabel = "Close";
     this.discardQuestion = "Discard your changes?";
     this.keepLabel = "Keep editing";
@@ -301,6 +338,12 @@ export class GwDialog extends GwElement {
     );
 
     if (this.open && !dialog.open) {
+      dialog.dataset.placement = opensAsSheet({
+        below: this.sheetBelow,
+        belowHeight: this.sheetBelowHeight,
+      })
+        ? "sheet"
+        : "center";
       dialog.showModal();
       // Toasts rise back above it
       document.dispatchEvent(new Event("gw-dialog-open"));

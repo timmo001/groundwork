@@ -4,6 +4,91 @@
   "modules": [
     {
       "kind": "javascript-module",
+      "path": "src/adaptive.ts",
+      "declarations": [
+        {
+          "kind": "variable",
+          "name": "defaultSheetBelow",
+          "type": {
+            "text": "number"
+          },
+          "default": "600",
+          "description": "The viewport width in pixels below which popups open as a bottom sheet."
+        },
+        {
+          "kind": "variable",
+          "name": "defaultSheetBelowHeight",
+          "type": {
+            "text": "number"
+          },
+          "default": "500",
+          "description": "The viewport height in pixels below which popups open as a bottom sheet."
+        },
+        {
+          "kind": "function",
+          "name": "opensAsSheet",
+          "parameters": [
+            {
+              "name": "{\n    below = defaultSheetBelow,\n    belowHeight = defaultSheetBelowHeight,\n  }",
+              "default": "{}",
+              "type": {
+                "text": "SheetRule"
+              }
+            },
+            {
+              "name": "viewport",
+              "default": "{\n    width: window.innerWidth,\n    height: window.innerHeight,\n  }",
+              "type": {
+                "text": "{ readonly width: number; readonly height: number }"
+              }
+            }
+          ],
+          "description": "Whether a popup opens as a bottom sheet: when the viewport is narrower\nthan `below` or shorter than `belowHeight`, so a phone on its side gets a\nsheet too rather than a small popup over the page. Pass `viewport` to\ndecide for a size other than the window's."
+        },
+        {
+          "kind": "variable",
+          "name": "sheetLayout",
+          "default": "` inset: auto env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px); width: auto; min-width: 0; max-width: var(--gw-adaptive-sheet-width, 40rem); max-height: var(--gw-adaptive-sheet-height, 85dvh); margin: 0 auto; border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; `",
+          "description": "The declarations that make a fixed popup, such as one in the top layer, a\nbottom sheet: along the bottom edge and clear of the safe area at its\nsides, centered no wider than `--gw-adaptive-sheet-width` (`40rem`), and\nno taller than `--gw-adaptive-sheet-height` (`85dvh`) so the top of the\npage stays in view. It sits below the screen, `translate: 0 100%`, until\nan open rule slides it to `0 0`. Its content scrolls within it, and the\nbottom safe area goes in its own padding."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "defaultSheetBelow",
+          "declaration": {
+            "name": "defaultSheetBelow",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "defaultSheetBelowHeight",
+          "declaration": {
+            "name": "defaultSheetBelowHeight",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "opensAsSheet",
+          "declaration": {
+            "name": "opensAsSheet",
+            "module": "src/adaptive.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "sheetLayout",
+          "declaration": {
+            "name": "sheetLayout",
+            "module": "src/adaptive.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/below.ts",
       "declarations": [
         {
@@ -956,7 +1041,7 @@
         {
           "kind": "variable",
           "name": "fieldStyles",
-          "default": "css` :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } /* The display above, and gw-range's below, beat the browser's own [hidden] rule, so hidden hides them here, as the state layer does for the shadow hosts. A page's own display on one still wins */ :where( gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox, gw-range )[hidden] { display: none; } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select, gw-date-picker) .gw-info { display: inline-grid; place-items: center; width: var(--gw-field-info-size, 1.5rem); height: var(--gw-field-info-size, 1.5rem); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select, gw-date-picker) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select, gw-date-picker) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) .gw-info[hidden] { display: none; } :where(gw-input, gw-select, gw-date-picker) .gw-info > .icon { width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select, gw-date-picker)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select, gw-date-picker)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select, gw-date-picker)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select, gw-date-picker)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* A suffix sits inside the end of the field, before any reveal button, with the text kept clear of it */ :where(gw-input) .gw-input-suffix { position: absolute; inset-inline-end: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); font-size: calc(var(--gw-font-size-s) * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); white-space: nowrap; pointer-events: none; } :where(gw-input) .gw-input-suffix[hidden] { display: none; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > .gw-input-suffix { inset-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } :where(gw-input) .gw-input-control:has(> .gw-input-suffix:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-3) + var(--gw-space-2)) * var(--gw-field-scale, 1) + var(--gw-input-suffix-width, 1ch) ); } :where(gw-input) .gw-input-control:has(> .gw-input-suffix:not([hidden])):has( > .gw-reveal:not([hidden]) ) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1) + var(--gw-space-2)) * var(--gw-field-scale, 1) + var(--gw-input-suffix-width, 1ch) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-select-sheet-height, 60vh); } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-select-backdrop, rgb(0 0 0 / 40%)); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: var(--gw-select-clear-height, 2.5rem); padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } /* The date picker's trigger reads like the select's: a calendar icon, the day, and a chevron that turns over while the calendar is open */ :where(gw-date-picker) .gw-date-picker-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); font-variant-numeric: tabular-nums; text-align: start; cursor: pointer; } :where(gw-date-picker) .gw-date-picker-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } :where(gw-date-picker[inline-label]) { display: inline-flex; } :where(gw-date-picker[inline-label]) .gw-date-picker-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } :where(gw-date-picker) .gw-date-picker-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-inline-label[hidden] { display: none; } :where(gw-date-picker) .gw-date-picker-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); color: var(--gw-color-text-secondary); fill: currentColor; } :where(gw-date-picker) .gw-date-picker-trigger > .icon:last-child { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-date-picker[open]) .gw-date-picker-trigger > .icon:last-child { rotate: 180deg; } :where(gw-date-picker) .gw-date-picker-trigger > .icon[hidden] { display: none; } /* The calendar opens under the trigger, growing from it */ :where(gw-date-picker) .gw-date-picker-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: var(--gw-space-3); margin: 0; overflow: auto; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 0; scale: 1 0.96; } } /* Shortcuts sit in a wrapping row under the calendar */ :where(gw-date-picker) .gw-date-picker-presets:not([hidden]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); padding-top: var(--gw-space-2); margin-top: var(--gw-space-2); border-top: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :where( input, textarea, .gw-select-trigger, .gw-date-picker-trigger ):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select, gw-date-picker) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: var(--gw-checkbox-size, 1.125rem); height: var(--gw-checkbox-size, 1.125rem); margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: var(--gw-switch-width, 2.5rem); height: var(--gw-switch-height, 1.5rem); margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: calc( var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem) ) 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } /* Forced colors drop the thumb's and track's fills, so the switch draws in system colors: a text-colored thumb, and a highlighted track on */ @media (forced-colors: active) { :where(gw-switch) input { forced-color-adjust: none; background: Canvas; border-color: CanvasText; } :where(gw-switch) input::after { background: CanvasText; } :where(gw-switch) input:checked { background: Highlight; border-color: Highlight; } :where(gw-switch) input:checked::after { background: HighlightText; } :where(gw-switch) input:disabled { border-color: GrayText; } :where(gw-switch) input:disabled::after { background: GrayText; } :where(gw-switch) input:focus-visible { outline-color: Highlight; } } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
+          "default": "css` :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) { display: flex; flex-direction: column; gap: var(--gw-space-2); font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } /* The display above, and gw-range's below, beat the browser's own [hidden] rule, so hidden hides them here, as the state layer does for the shadow hosts. A page's own display on one still wins */ :where( gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox, gw-range )[hidden] { display: none; } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading { display: flex; gap: var(--gw-space-1); align-items: center; } :where(gw-input, gw-select, gw-date-picker) .gw-field-heading > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } /* The (i) button by the label that opens a field's longer help */ :where(gw-input, gw-select, gw-date-picker) .gw-info { display: inline-grid; place-items: center; width: var(--gw-field-info-size, 1.5rem); height: var(--gw-field-info-size, 1.5rem); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-pill); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input, gw-select, gw-date-picker) .gw-info:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input, gw-select, gw-date-picker) .gw-info:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) .gw-info[hidden] { display: none; } :where(gw-input, gw-select, gw-date-picker) .gw-info > .icon { width: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); height: calc(var(--gw-field-info-size, 1.5rem) * 2 / 3); fill: currentColor; } /* Sizes run xs to xl through --gw-field-scale, around 1 for medium, and the control's height follows the theme's density too */ :where(gw-input, gw-select, gw-date-picker)[size=\"xs\"] { --gw-field-scale: 0.6; } :where(gw-input, gw-select, gw-date-picker)[size=\"small\"] { --gw-field-scale: 0.8; } :where(gw-input, gw-select, gw-date-picker)[size=\"large\"] { --gw-field-scale: 1.2; } :where(gw-input, gw-select, gw-date-picker)[size=\"xl\"] { --gw-field-scale: 1.4; } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger) { --gw-field-size: var(--gw-field-scale, 1); --gw-icon-size: calc( 1.25rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); width: 100%; min-height: calc( 2.5rem * var(--gw-field-size) * var(--gw-control-scale, 1) ); padding: 0 calc(var(--gw-space-3) * var(--gw-field-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-field-size)); color: var(--gw-color-text-strong); background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); transition: border-color var(--gw-motion-fast) var(--gw-motion-easing); } /* An icon inside the field, before the text, with the text moved clear of it */ :where(gw-input) .gw-input-control { position: relative; display: flex; align-items: center; } :where(gw-input) .gw-input-control > .icon { position: absolute; inset-inline-start: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); pointer-events: none; fill: currentColor; } :where(gw-input) .gw-input-control > .icon[hidden] { display: none; } :where(gw-input) .gw-input-control > .icon:not([hidden]) + input { padding-inline-start: calc( (var(--gw-space-3) * 2 + 1.125rem) * var(--gw-field-scale, 1) ); } /* A textarea keeps the field's padding on every side and grows by its corner, never sideways out of the layout */ :where(gw-input) textarea { display: block; /* Pill-shaped controls would make a tall box a stadium, so it rounds no more than a panel */ border-radius: min(var(--gw-radius-control), var(--gw-radius-panel)); padding-block: calc(var(--gw-space-2) * var(--gw-field-size)); line-height: 1.5; resize: vertical; } :where(gw-input[monospace]) :is(input, textarea) { font-family: var(--gw-font-mono); } :where(gw-input) .gw-optional { font-weight: var(--gw-font-weight-regular); color: var(--gw-color-text-secondary); } :where(gw-input) .gw-optional[hidden] { display: none; } /* The show and hide button sits inside the end of a password field, with the text kept clear of it */ :where(gw-input) .gw-reveal { position: absolute; inset-inline-end: calc(var(--gw-space-1) * var(--gw-field-scale, 1)); display: grid; place-items: center; width: calc(2rem * var(--gw-field-scale, 1)); height: calc(2rem * var(--gw-field-scale, 1)); padding: 0; color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-radius: var(--gw-radius-control); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-input) .gw-reveal:hover:not(:disabled) { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-input) .gw-reveal:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-input) .gw-reveal:disabled { cursor: not-allowed; opacity: 0.5; } :where(gw-input) .gw-reveal[hidden] { display: none; } :where(gw-input) .gw-reveal > .icon { width: calc(1.125rem * var(--gw-field-scale, 1)); height: calc(1.125rem * var(--gw-field-scale, 1)); fill: currentColor; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } /* A suffix sits inside the end of the field, before any reveal button, with the text kept clear of it */ :where(gw-input) .gw-input-suffix { position: absolute; inset-inline-end: calc(var(--gw-space-3) * var(--gw-field-scale, 1)); font-size: calc(var(--gw-font-size-s) * var(--gw-field-scale, 1)); color: var(--gw-color-text-secondary); white-space: nowrap; pointer-events: none; } :where(gw-input) .gw-input-suffix[hidden] { display: none; } :where(gw-input) .gw-input-control:has(> .gw-reveal:not([hidden])) > .gw-input-suffix { inset-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1)) * var(--gw-field-scale, 1) ); } :where(gw-input) .gw-input-control:has(> .gw-input-suffix:not([hidden])) > input { padding-inline-end: calc( (var(--gw-space-3) + var(--gw-space-2)) * var(--gw-field-scale, 1) + var(--gw-input-suffix-width, 1ch) ); } :where(gw-input) .gw-input-control:has(> .gw-input-suffix:not([hidden])):has( > .gw-reveal:not([hidden]) ) > input { padding-inline-end: calc( (var(--gw-space-1) + 2rem + var(--gw-space-1) + var(--gw-space-2)) * var(--gw-field-scale, 1) + var(--gw-input-suffix-width, 1ch) ); } /* The trigger shows the chosen option, with its icon, and a chevron with room around it that turns over while the list is open */ :where(gw-select) .gw-select-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); text-align: start; cursor: pointer; } :where(gw-select) .gw-select-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } /* With an inline label the select sits among toolbar controls, so it's a pill that fits its content, like the toggles and buttons beside it */ :where(gw-select[inline-label]) { display: inline-flex; } :where(gw-select[inline-label]) .gw-select-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } /* An inline label reads as a quiet prefix to the value */ :where(gw-select) .gw-select-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-inline-label[hidden] { display: none; } :where(gw-select) .gw-select-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-select) .gw-select-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); fill: currentColor; } :where(gw-select) .gw-select-trigger > .icon:last-child { color: var(--gw-color-text-secondary); transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-select[open]) .gw-select-trigger > .icon:last-child { rotate: 180deg; } :where(gw-select) .gw-select-trigger > .icon[hidden] { display: none; } /* The list opens under the trigger, growing from it, or as a bottom sheet sliding up on phones */ :where(gw-select) .gw-select-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: 0; margin: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-select) .gw-select-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-select) .gw-select-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-select) .gw-select-popup:popover-open { opacity: 0; scale: 1 0.96; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"] { ${sheetLayout} padding-block-end: env(safe-area-inset-bottom); --gw-option-list-height: var(--gw-select-sheet-height, 60vh); } /* The list shrinks to the sheet's height and scrolls, so the search field and Clear stay in view */ :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { display: flex; flex-direction: column; translate: 0 0; } @starting-style { :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-select) .gw-select-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-select-backdrop, rgb(0 0 0 / 40%)); } /* With multiple, a full-width Clear under the list empties the choice */ :where(gw-select) .gw-select-clear { display: block; width: 100%; min-height: var(--gw-select-clear-height, 2.5rem); padding: 0 var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); cursor: pointer; background: none; border: 0; border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); transition: color var(--gw-motion-fast) var(--gw-motion-easing), background-color var(--gw-motion-fast) var(--gw-motion-easing); } :where(gw-select) .gw-select-clear:hover { color: var(--gw-color-text-strong); background: var(--gw-color-fill-neutral-hovered); } :where(gw-select) .gw-select-clear:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: calc(var(--gw-focus-width) * -1); } :where(gw-select) .gw-select-clear[hidden] { display: none; } /* The date picker's trigger reads like the select's: a calendar icon, the day, and a chevron that turns over while the calendar is open */ :where(gw-date-picker) .gw-date-picker-trigger { display: flex; gap: calc(var(--gw-space-2) * var(--gw-field-size)); align-items: center; padding-inline-end: calc(var(--gw-space-3) * var(--gw-field-size)); font-variant-numeric: tabular-nums; text-align: start; cursor: pointer; } :where(gw-date-picker) .gw-date-picker-value { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } :where(gw-date-picker[inline-label]) { display: inline-flex; } :where(gw-date-picker[inline-label]) .gw-date-picker-trigger { width: auto; padding-inline: calc(var(--gw-space-4) * var(--gw-field-size)) calc(var(--gw-space-3) * var(--gw-field-size)); border-radius: var(--gw-radius-pill); } :where(gw-date-picker) .gw-date-picker-inline-label { flex: none; color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-inline-label[hidden] { display: none; } :where(gw-date-picker) .gw-date-picker-value[data-placeholder] { color: var(--gw-color-text-secondary); } :where(gw-date-picker) .gw-date-picker-trigger > .icon { flex: none; width: var(--gw-icon-size, 1.25rem); height: var(--gw-icon-size, 1.25rem); color: var(--gw-color-text-secondary); fill: currentColor; } :where(gw-date-picker) .gw-date-picker-trigger > .icon:last-child { transition: rotate var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-date-picker[open]) .gw-date-picker-trigger > .icon:last-child { rotate: 180deg; } :where(gw-date-picker) .gw-date-picker-trigger > .icon[hidden] { display: none; } /* The calendar opens under the trigger, growing from it */ :where(gw-date-picker) .gw-date-picker-popup { position: fixed; inset: unset; box-sizing: border-box; max-width: calc(100vw - 12px); padding: var(--gw-space-3); margin: 0; overflow: auto; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-panel); box-shadow: var(--gw-shadow-l); opacity: 0; scale: 1 0.96; transform-origin: top; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"above\"] { transform-origin: bottom; } :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 1; scale: 1; } @starting-style { :where(gw-date-picker) .gw-date-picker-popup:popover-open { opacity: 0; scale: 1 0.96; } } /* A bottom sheet on narrow or short screens, the calendar centered in it */ :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"sheet\"] { ${sheetLayout} padding-block-end: calc(var(--gw-space-3) + env(safe-area-inset-bottom)); } :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"sheet\"]:popover-open { display: flex; flex-direction: column; align-items: center; translate: 0 0; } @starting-style { :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } :where(gw-date-picker) .gw-date-picker-popup[data-placement=\"sheet\"]::backdrop { background: var(--gw-date-picker-backdrop, rgb(0 0 0 / 40%)); } /* Shortcuts sit in a wrapping row under the calendar */ :where(gw-date-picker) .gw-date-picker-presets:not([hidden]) { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); padding-top: var(--gw-space-2); margin-top: var(--gw-space-2); border-top: max(var(--gw-border-width), 1px) solid var(--gw-color-border-quiet); } :where(gw-input) .gw-input-control:focus-within > .icon { color: var(--gw-color-text-strong); } :where(gw-input, gw-select, gw-date-picker) :where(input, textarea, .gw-select-trigger, .gw-date-picker-trigger):hover { border-color: var(--gw-color-border-loud); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :where( input, textarea, .gw-select-trigger, .gw-date-picker-trigger ):focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-input, gw-select, gw-date-picker) [aria-invalid=\"true\"] { border-color: var(--gw-color-border-danger); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) :disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-input, gw-select, gw-date-picker, gw-switch, gw-checkbox) .gw-error { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-danger); } :where(gw-switch, gw-checkbox) > label { display: inline-flex; gap: var(--gw-space-3); align-items: center; font-size: var(--gw-font-size-s); cursor: pointer; } :where(gw-input, gw-switch, gw-checkbox, gw-select, gw-date-picker) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } :where(gw-checkbox) input { width: var(--gw-checkbox-size, 1.125rem); height: var(--gw-checkbox-size, 1.125rem); margin: 0; accent-color: var(--gw-color-fill-accent-resting); } :where(gw-switch) input { position: relative; flex: none; width: var(--gw-switch-width, 2.5rem); height: var(--gw-switch-height, 1.5rem); margin: 0; cursor: pointer; appearance: none; background: var(--gw-color-surface-lower); border: var(--gw-border-width) solid var(--gw-color-border-loud); border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-normal) var(--gw-motion-easing), border-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input::after { position: absolute; inset-block-start: 0.1875rem; inset-inline-start: 0.1875rem; width: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); height: calc(var(--gw-switch-height, 1.5rem) - 0.5rem); content: \"\"; background: var(--gw-color-text-secondary); border-radius: 50%; transition: translate var(--gw-motion-normal) var(--gw-motion-easing), background-color var(--gw-motion-normal) var(--gw-motion-easing); } :where(gw-switch) input:checked { background: var(--gw-color-fill-accent-resting); border-color: transparent; } :where(gw-switch) input:checked::after { translate: calc( var(--gw-switch-width, 2.5rem) - var(--gw-switch-height, 1.5rem) ) 0; background: var(--gw-color-on-accent); } :where(gw-switch) input:disabled { opacity: 0.5; } /* Forced colors drop the thumb's and track's fills, so the switch draws in system colors: a text-colored thumb, and a highlighted track on */ @media (forced-colors: active) { :where(gw-switch) input { forced-color-adjust: none; background: Canvas; border-color: CanvasText; } :where(gw-switch) input::after { background: CanvasText; } :where(gw-switch) input:checked { background: Highlight; border-color: Highlight; } :where(gw-switch) input:checked::after { background: HighlightText; } :where(gw-switch) input:disabled { border-color: GrayText; } :where(gw-switch) input:disabled::after { background: GrayText; } :where(gw-switch) input:focus-visible { outline-color: Highlight; } } :where(gw-range) { display: flex; flex-direction: column; gap: var(--gw-space-2); min-width: 0; font-family: var(--gw-font-sans); color: var(--gw-color-text-primary); } :where(gw-range) > label { font-size: var(--gw-font-size-s); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } :where(gw-range) .gw-range-row { display: flex; gap: var(--gw-space-3); align-items: center; } :where(gw-range) .gw-range-control { position: relative; display: block; flex: 1; min-width: 0; } /* The value beside the track, with readout */ :where(gw-range) .gw-range-readout { min-width: 5ch; font-size: var(--gw-font-size-s); font-variant-numeric: tabular-nums; color: var(--gw-color-text-secondary); text-align: end; white-space: nowrap; } :where(gw-range) .gw-range-readout[hidden] { display: none; } :where(gw-range) input { display: block; width: 100%; margin: 0; accent-color: var(--gw-color-fill-accent-resting); cursor: pointer; } :where(gw-range) input:focus-visible { outline: var(--gw-focus-width) solid var(--gw-color-focus); outline-offset: var(--gw-focus-offset); } :where(gw-range) input:disabled { cursor: not-allowed; opacity: 0.5; } /* The value above the thumb while it's held */ :where(gw-range) .gw-range-bubble { position: absolute; bottom: calc(100% + var(--gw-space-1)); padding: var(--gw-space-1) var(--gw-space-2); font-size: var(--gw-font-size-xs); font-variant-numeric: tabular-nums; color: var(--gw-color-on-accent); white-space: nowrap; pointer-events: none; background: var(--gw-color-fill-accent-resting); border-radius: var(--gw-radius-control); box-shadow: var(--gw-shadow-s); translate: -50% 0; } :where(gw-range) .gw-range-bubble[hidden] { display: none; } :where(gw-range) .gw-hint { margin: 0; font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } :where(gw-range) .gw-visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `",
           "description": "Field components render their native control in light DOM, never in a\nshadow root: password managers and `<label for>` can't reach across one,\nand a form only submits controls it can see. Their styles are adopted into\nwhichever document or shadow root they sit in."
         },
         {
@@ -8390,7 +8475,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet below `sheet-below`,\n600px wide by default. Picking one closes the menu and fires `pick` with\nits value. Esc or a click outside closes it. It won't open over another\ndialog, so only one overlay shows at a time. Set `shortcut=\"none\"` to open\nit only with `show()`.",
+          "description": "A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a\nmodal near the top of the page, or a bottom sheet on a narrow or short\nscreen, under 600px wide or 500px tall. Picking one closes the menu and\nfires `pick` with its value. Esc or a click outside closes it. It won't\nopen over another dialog, so only one overlay shows at a time. Set\n`shortcut=\"none\"` to open it only with `show()`.",
           "name": "GwCommandMenu",
           "cssProperties": [
             {
@@ -8412,6 +8497,14 @@
             {
               "description": "The tallest the list grows as a bottom sheet. Defaults to `60vh`.",
               "name": "--gw-command-menu-sheet-list-height"
+            },
+            {
+              "description": "The widest it grows as a bottom sheet, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest the whole sheet grows, the list scrolling within it. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             },
             {
               "description": "The surface. Defaults to `--gw-color-surface-overlay`.",
@@ -8464,7 +8557,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ options: { type: \"json\" }, value: {}, label: {}, placeholder: {}, noMatchLabel: { attribute: \"no-match-label\" }, shortcut: {}, moveHint: { attribute: \"move-hint\" }, pickHint: { attribute: \"pick-hint\" }, closeHint: { attribute: \"close-hint\" }, pickKey: { attribute: \"pick-key\" }, closeKey: { attribute: \"close-key\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, open: { type: \"boolean\", reflect: true }, }",
+              "default": "{ options: { type: \"json\" }, value: {}, label: {}, placeholder: {}, noMatchLabel: { attribute: \"no-match-label\" }, shortcut: {}, moveHint: { attribute: \"move-hint\" }, pickHint: { attribute: \"pick-hint\" }, closeHint: { attribute: \"close-hint\" }, pickKey: { attribute: \"pick-key\" }, closeKey: { attribute: \"close-key\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, open: { type: \"boolean\", reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8477,7 +8570,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` dialog { top: var(--gw-command-menu-top, 12vh); width: min( var(--gw-command-menu-width, 36rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: var(--gw-command-menu-height, 70vh); padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-command-menu-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-command-menu-border-color, var(--gw-color-border-loud)); border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel)); box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l)); --gw-option-list-height: var( --gw-command-menu-list-height, min(24rem, 56vh) ); } dialog::backdrop { background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%)); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: env(safe-area-inset-bottom); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; --gw-option-list-height: var(--gw-command-menu-sheet-list-height, 60vh); } dialog[data-placement=\"sheet\"][open] { opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
+              "default": "[ base, css` dialog { top: var(--gw-command-menu-top, 12vh); width: min( var(--gw-command-menu-width, 36rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: var(--gw-command-menu-height, 70vh); padding: 0; margin-block: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-command-menu-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-command-menu-border-color, var(--gw-color-border-loud)); border-radius: var(--gw-command-menu-radius, var(--gw-radius-panel)); box-shadow: var(--gw-command-menu-shadow, var(--gw-shadow-l)); --gw-option-list-height: var( --gw-command-menu-list-height, min(24rem, 56vh) ); } dialog::backdrop { background: var(--gw-command-menu-backdrop, rgb(0 0 0 / 60%)); } dialog, dialog::backdrop { opacity: 0; transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } dialog[data-placement=\"sheet\"] { ${sheetLayout} padding-block-end: env(safe-area-inset-bottom); --gw-option-list-height: var(--gw-command-menu-sheet-list-height, 60vh); } /* The list shrinks to the sheet's height and scrolls */ dialog[data-placement=\"sheet\"][open] { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } footer { display: flex; gap: var(--gw-space-3); padding: var(--gw-space-2) var(--gw-space-3); font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); border-block-start: var(--gw-border-width) solid var(--gw-color-border-quiet); } kbd { padding: var(--gw-space-0-5) calc(var(--gw-space-1) * 1.5); font: inherit; line-height: 1; background: color-mix( in oklab, var(--gw-color-surface-overlay), var(--gw-color-text-primary) 8% ); border: 1px solid var(--gw-color-border-normal); border-radius: var(--gw-radius-control); } dialog[data-placement=\"sheet\"] footer { display: none; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -8580,7 +8673,16 @@
                 "text": "number"
               },
               "description": "The viewport width in pixels below which it's a bottom sheet.",
-              "default": "600"
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which it's a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
             },
             {
               "kind": "field",
@@ -9064,8 +9166,15 @@
               "type": {
                 "text": "number"
               },
-              "description": "The viewport width in pixels below which it's a bottom sheet; `0` keeps it a modal. Defaults to `600`.",
+              "description": "Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
               "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             },
             {
               "type": {
@@ -9583,7 +9692,7 @@
         },
         {
           "kind": "class",
-          "description": "A labeled field that shows the chosen day, such as \"Wed, 11 Nov 2026\", and\nopens a `gw-calendar` under it to pick another. The calendar takes focus as\nit opens; picking a day or pressing Esc closes it and returns focus to the\nfield. Arrow Down or Up on the field opens it too.\n\nThe value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and\nit fires `change` when it changes. `min` and `max` bound the days that can\nbe picked, `marked` makes days stand out, and `unmarked` dims or disables\nthe rest. It fires `month` as the calendar moves between months, so a\npage can load that month's `marked` days.",
+          "description": "A labeled field that shows the chosen day, such as \"Wed, 11 Nov 2026\", and\nopens a `gw-calendar` under it to pick another. The calendar takes focus as\nit opens; picking a day or pressing Esc closes it and returns focus to the\nfield. Arrow Down or Up on the field opens it too. On a narrow or short\nscreen, under 600px wide or 500px tall, the calendar is a bottom sheet.\n\nThe value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and\nit fires `change` when it changes. `min` and `max` bound the days that can\nbe picked, `marked` makes days stand out, and `unmarked` dims or disables\nthe rest. It fires `month` as the calendar moves between months, so a\npage can load that month's `marked` days.",
           "name": "GwDatePicker",
           "cssProperties": [
             {
@@ -9601,6 +9710,18 @@
             {
               "description": "Each day's width and height in the calendar. Defaults to `2.5rem`.",
               "name": "--gw-calendar-day-size"
+            },
+            {
+              "description": "The backdrop behind the calendar as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.",
+              "name": "--gw-date-picker-backdrop"
+            },
+            {
+              "description": "The widest the sheet grows, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest the sheet grows, the calendar scrolling within it. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             }
           ],
           "members": [
@@ -9611,7 +9732,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, min: {}, max: {}, marked: { type: \"json\" }, unmarked: {}, month: {}, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, format: { type: \"json\" }, locale: {}, firstDay: { type: \"number\", attribute: \"first-day\" }, previousLabel: { attribute: \"previous-label\" }, nextLabel: { attribute: \"next-label\" }, markedLabel: { attribute: \"marked-label\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, iconHidden: { type: \"boolean\", attribute: \"icon-hidden\" }, presets: { type: \"boolean\" }, presetOptions: { type: \"json\", attribute: \"preset-options\" }, presetsLabel: { attribute: \"presets-label\" }, size: { reflect: true }, }",
+              "default": "{ label: {}, name: {}, value: {}, min: {}, max: {}, marked: { type: \"json\" }, unmarked: {}, month: {}, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, format: { type: \"json\" }, locale: {}, firstDay: { type: \"number\", attribute: \"first-day\" }, previousLabel: { attribute: \"previous-label\" }, nextLabel: { attribute: \"next-label\" }, markedLabel: { attribute: \"marked-label\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, iconHidden: { type: \"boolean\", attribute: \"icon-hidden\" }, presets: { type: \"boolean\" }, presetOptions: { type: \"json\", attribute: \"preset-options\" }, presetsLabel: { attribute: \"presets-label\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, size: { reflect: true }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -9829,6 +9950,24 @@
             },
             {
               "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the calendar is a bottom sheet.",
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which the calendar is a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
+            },
+            {
+              "kind": "field",
               "name": "size",
               "type": {
                 "text": "\"xs\" | \"small\" | \"medium\" | \"large\" | \"xl\""
@@ -9916,6 +10055,11 @@
             {
               "kind": "method",
               "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "#asSheet",
+              "privacy": "private"
             },
             {
               "kind": "field",
@@ -10529,6 +10673,20 @@
             },
             {
               "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which the calendar is a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
+              "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which the calendar is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
+            },
+            {
+              "type": {
                 "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
               },
               "description": "The field's size, 40px tall at medium. Defaults to `medium`.",
@@ -10577,7 +10735,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A modal on the native `<dialog>`, so focus is trapped and returned, Esc\ncloses it and the page behind is inert. Open it with `show()`. Put buttons\nin the `actions` slot; a click on one with a `value` closes the dialog with\nthat value, and fires `close`.",
+          "description": "A modal on the native `<dialog>`, so focus is trapped and returned, Esc\ncloses it and the page behind is inert. Open it with `show()`. Put buttons\nin the `actions` slot; a click on one with a `value` closes the dialog with\nthat value, and fires `close`. On a narrow or short screen, under 600px\nwide or 500px tall, it's a bottom sheet.",
           "name": "GwDialog",
           "cssProperties": [
             {
@@ -10611,6 +10769,14 @@
             {
               "description": "The backdrop over the page. Defaults to `rgb(0 0 0 / 50%)`.",
               "name": "--gw-dialog-backdrop"
+            },
+            {
+              "description": "The widest it grows as a bottom sheet, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest it grows as a bottom sheet, its body scrolling past that. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             },
             {
               "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
@@ -10697,7 +10863,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
+              "default": "{ heading: {}, open: { type: \"boolean\", reflect: true }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10710,7 +10876,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` dialog { width: min( var(--gw-dialog-width, 32rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-dialog-background, var(--gw-color-surface-overlay) ); border: var(--gw-border-width) solid var(--gw-dialog-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-dialog-radius, var(--gw-radius-panel)); box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l)); } dialog::backdrop { background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%)); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-dialog-close-scale, 0.8); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` dialog { width: min( var(--gw-dialog-width, 32rem), calc(100vw - 2 * var(--gw-space-3)) ); max-height: calc(100dvh - 2 * var(--gw-space-3)); padding: 0; overflow: hidden; color: var(--gw-color-text-primary); background: var( --gw-dialog-background, var(--gw-color-surface-overlay) ); border: var(--gw-border-width) solid var(--gw-dialog-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-dialog-radius, var(--gw-radius-panel)); box-shadow: var(--gw-dialog-shadow, var(--gw-shadow-l)); } dialog::backdrop { background: var(--gw-dialog-backdrop, rgb(0 0 0 / 50%)); } /* Fades and lifts in and out, the backdrop with it */ dialog, dialog::backdrop { transition: opacity var(--gw-motion-normal) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } dialog, dialog::backdrop { opacity: 0; } dialog { scale: 0.96; } dialog[open], dialog[open]::backdrop { opacity: 1; } dialog[open] { /* The heading and actions stay put while a long body scrolls */ display: flex; flex-direction: column; scale: 1; } @starting-style { dialog[open], dialog[open]::backdrop { opacity: 0; } dialog[open] { scale: 0.96; } } /* A bottom sheet on narrow or short screens, sliding up from the edge */ dialog[data-placement=\"sheet\"] { ${sheetLayout} padding-block-end: env(safe-area-inset-bottom); } dialog[data-placement=\"sheet\"][open] { translate: 0 0; } @starting-style { dialog[data-placement=\"sheet\"][open] { translate: 0 100%; } } header { display: flex; gap: var(--gw-space-2); align-items: center; padding: var(--gw-space-3) var(--gw-space-3) 0 var(--gw-space-4); } h2 { flex: 1; margin: 0; font-size: var(--gw-font-size-l); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-dialog-close-scale, 0.8); } .body { flex: 1 1 auto; min-height: 0; padding: var(--gw-space-3) var(--gw-space-4); overflow-y: auto; overscroll-behavior: contain; font-size: var(--gw-font-size-s); } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-1); justify-content: flex-end; padding: 0 var(--gw-space-4) var(--gw-space-4); } dialog > .discard { padding: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -10731,6 +10897,24 @@
                 "text": "boolean"
               },
               "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which it's a bottom sheet.",
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which it's a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
             },
             {
               "kind": "field",
@@ -11195,6 +11379,20 @@
               },
               "description": "Whether it shows.",
               "name": "open"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
+              "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             },
             {
               "type": {
@@ -17423,7 +17621,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them; style them through the `menu`, `item` and other parts.",
+          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. Set `items`; arrow keys, Home\nand End move between them, and choosing one fires `select` with its\n`value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them; style them through the `menu`, `item` and other parts.\n\nOn a narrow or short screen, under 600px wide or 500px tall, the menu is a\nbottom sheet.",
           "name": "GwMenuButton",
           "cssProperties": [
             {
@@ -17441,6 +17639,18 @@
             {
               "description": "The tallest the menu grows before its items scroll. Defaults to `24rem`.",
               "name": "--gw-menu-button-menu-height"
+            },
+            {
+              "description": "The backdrop behind the menu as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.",
+              "name": "--gw-menu-button-backdrop"
+            },
+            {
+              "description": "The widest the menu grows as a bottom sheet, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest the menu grows as a bottom sheet, its items scrolling past that. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             },
             {
               "description": "Each item's least height. Defaults to `2.5rem`.",
@@ -17545,7 +17755,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, heading: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, appearance: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, labelsBelow: { attribute: \"labels-below\" }, loading: { type: \"boolean\", reflect: true }, }",
+              "default": "{ label: {}, heading: {}, icon: {}, empty: {}, items: { type: \"json\" }, actions: { type: \"json\" }, size: { reflect: true }, appearance: { reflect: true }, active: { type: \"boolean\", reflect: true }, labels: { reflect: true }, labelsBelow: { attribute: \"labels-below\" }, loading: { type: \"boolean\", reflect: true }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17558,7 +17768,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* While a chosen action runs, a ring takes the icon's place: they share one cell and crossfade after --gw-motion-delay, so a quick action never flashes it and nothing moves. Without an icon, the ring sits over the hidden text. */ .lead { display: grid; flex: none; place-items: center; } .trigger:not(.has-icon) > .lead { display: contents; } .lead > * { grid-area: 1 / 1; } .lead > *, .label { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } .trigger:not(.has-icon) .ring { position: absolute; inset: 0; margin: auto; } .trigger { position: relative; } @keyframes spin { to { transform: rotate(360deg); } } :host([loading]) .trigger { cursor: progress; } :host([loading]) .ring { opacity: 1; transition-delay: var(--gw-motion-delay, 500ms); } :host([loading]) .lead > .icon, :host([loading]) .trigger:not(.has-icon) > .label { opacity: 0; transition-delay: var(--gw-motion-delay, 500ms); } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } .compact.has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* auto keeps the chevron below labels-below, so it still reads as a menu */ :host([labels=\"auto\"]) .trigger.compact.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: var(--gw-menu-button-menu-width, 15rem); max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min( var(--gw-menu-button-menu-height, 24rem), calc(100% - 2 * var(--gw-space-2)) ); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: var(--gw-menu-button-item-height, 2.5rem); padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } /* Forced colors drop box shadows, so the focused item takes an outline instead */ @media (forced-colors: active) { .item:focus-visible { outline: var(--gw-focus-width) solid Highlight; outline-offset: calc(var(--gw-focus-width) * -1); } } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .item[role=\"menuitemcheckbox\"] .box { flex: none; color: var(--gw-color-text-secondary); } .item[role=\"menuitemcheckbox\"][aria-checked=\"true\"] .box { color: var(--gw-color-accent); } .group { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .group:not(:first-child) { padding-block-start: var(--gw-space-1); margin-block-start: var(--gw-space-0-5); border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .group-heading { padding: var(--gw-space-1) var(--gw-space-3) 0; margin: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
+              "default": "[ base, controlSizes(\"menu-button\"), css` :host { position: relative; display: inline-block; anchor-scope: --gw-menu; } .trigger { --gw-size: var(--gw-menu-button-scale, 1); --gw-scale: calc(var(--gw-size) * var(--gw-control-scale, 1)); --gw-icon-size: calc(1.25rem * var(--gw-scale)); display: inline-flex; gap: calc(var(--gw-space-2) * var(--gw-size)); align-items: center; box-sizing: border-box; height: calc(2.5rem * var(--gw-scale)); padding: 0 calc(var(--gw-space-4) * var(--gw-size)); font: inherit; font-size: calc(var(--gw-font-size-s) * var(--gw-size)); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); cursor: pointer; background: var(--gw-color-fill-neutral-resting); border: var(--gw-border-width) solid var(--gw-border-color); border-radius: var(--gw-radius-control); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); anchor-name: --gw-menu; } .trigger:hover { background: var(--gw-color-fill-neutral-hovered); } /* While a chosen action runs, a ring takes the icon's place: they share one cell and crossfade after --gw-motion-delay, so a quick action never flashes it and nothing moves. Without an icon, the ring sits over the hidden text. */ .lead { display: grid; flex: none; place-items: center; } .trigger:not(.has-icon) > .lead { display: contents; } .lead > * { grid-area: 1 / 1; } .lead > *, .label { transition: opacity var(--gw-motion-normal) cubic-bezier(0.4, 0, 0.2, 1); } .ring { width: calc(var(--gw-icon-size) * 0.8); height: calc(var(--gw-icon-size) * 0.8); border: calc(2px * var(--gw-scale)) solid color-mix(in oklch, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; opacity: 0; animation: spin 0.9s linear infinite; } .trigger:not(.has-icon) .ring { position: absolute; inset: 0; margin: auto; } .trigger { position: relative; } @keyframes spin { to { transform: rotate(360deg); } } :host([loading]) .trigger { cursor: progress; } :host([loading]) .ring { opacity: 1; transition-delay: var(--gw-motion-delay, 500ms); } :host([loading]) .lead > .icon, :host([loading]) .trigger:not(.has-icon) > .label { opacity: 0; transition-delay: var(--gw-motion-delay, 500ms); } /* The other appearances draw the trigger as gw-button draws a neutral one, a pill, so it sits in a row of buttons without a seam */ :host([appearance=\"accent\"]) .trigger, :host([appearance=\"outlined\"]) .trigger, :host([appearance=\"plain\"]) .trigger { background: transparent; border: max(var(--gw-border-width), 1px) solid transparent; border-radius: var(--gw-radius-pill); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing), border-color var(--gw-motion-fast) var(--gw-motion-easing), color var(--gw-motion-fast) var(--gw-motion-easing); } :host([appearance=\"outlined\"]) .trigger { border-color: var(--gw-color-text-secondary); } :host([appearance=\"outlined\"]) .trigger:hover, :host([appearance=\"plain\"]) .trigger:hover { background: color-mix( in oklch, var(--gw-color-text-secondary) 16%, transparent ); } /* A solid fill, with text that flips between black and white by the fill's lightness, as gw-button's accent does */ :host([appearance=\"accent\"]) .trigger { color: oklch( from var(--gw-color-accent) clamp(0, (0.66 - l) * 1000, 1) 0 0 ); background: var(--gw-color-accent); } :host([appearance=\"accent\"]) .trigger:hover { background: oklch( from var(--gw-color-accent) calc(l + (0.6 - l) * 0.2) c h ); } :host([active]:not([appearance=\"accent\"])) .trigger { color: var(--gw-color-accent); border-color: var(--gw-color-accent); } /* Icon only, square like an icon-only gw-button, such as a ⋮ for more actions, with the text kept for assistive technology */ :host([labels=\"hide\"]) .trigger.has-icon { justify-content: center; min-width: calc(2.5rem * var(--gw-scale)); padding: 0; } :host([labels=\"hide\"]) .has-icon .chevron { display: none; } .compact.has-icon .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } /* auto keeps the chevron below labels-below, so it still reads as a menu */ :host([labels=\"auto\"]) .trigger.compact.has-icon { padding: 0 calc(var(--gw-space-2) * var(--gw-size)); } .chevron { width: 0.4rem; height: 0.4rem; margin-inline-start: var(--gw-space-1); border-inline-end: 1.5px solid currentColor; border-block-end: 1.5px solid currentColor; rotate: 45deg; translate: 0 -0.125rem; transition: rotate var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing); } .trigger[aria-expanded=\"true\"] .chevron { rotate: 225deg; translate: 0 0.125rem; } /* Below the button down to the window's edge, or above it when there's more room there, growing to its content and scrolling past that */ [popover] { position-anchor: --gw-menu; position-try-fallbacks: flip-inline; /* The area is the room on that side, so 100% is all of it */ position-area: block-end span-inline-end; inset: auto; box-sizing: border-box; min-width: var(--gw-menu-button-menu-width, 15rem); max-width: calc(100vw - 2 * var(--gw-space-2)); max-height: min( var(--gw-menu-button-menu-height, 24rem), calc(100% - 2 * var(--gw-space-2)) ); padding: 0; margin: var(--gw-space-1) 0; overflow: hidden; color: var(--gw-color-text-primary); background: var(--gw-color-surface-overlay); border: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); border-radius: var(--gw-radius-l); box-shadow: var(--gw-shadow-m); opacity: 0; translate: 0 -0.25rem; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } [popover]:popover-open { display: flex; flex-direction: column; opacity: 1; translate: 0 0; } @starting-style { [popover]:popover-open { opacity: 0; translate: 0 -0.25rem; } } /* A bottom sheet on narrow or short screens, sliding up from the edge rather than hanging off the button */ [popover][data-placement=\"sheet\"] { position-area: none; position-try-fallbacks: none; ${sheetLayout} padding-block-end: env(safe-area-inset-bottom); border-radius: var(--gw-radius-panel); border-end-start-radius: 0; border-end-end-radius: 0; box-shadow: var(--gw-shadow-l); } [popover][data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [popover][data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [popover][data-placement=\"sheet\"]::backdrop { background: var(--gw-menu-button-backdrop, rgb(0 0 0 / 40%)); } /* The items scroll; the actions stay put below them, so \"Add\" is always in reach rather than at the end of a long list */ .items, .actions { display: flex; flex-direction: column; gap: var(--gw-space-0-5); padding: var(--gw-space-1); } .items { flex: 1; min-height: 0; overflow-y: auto; } .actions { border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .empty { padding: var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); color: var(--gw-color-text-secondary); } .item { display: flex; gap: var(--gw-space-3); align-items: center; box-sizing: border-box; min-height: var(--gw-menu-button-item-height, 2.5rem); padding: var(--gw-space-2) var(--gw-space-3); font: inherit; font-size: var(--gw-font-size-s); color: var(--gw-color-text-primary); text-align: start; cursor: pointer; background: transparent; border: 0; border-radius: var(--gw-radius-m); transition: background-color var(--gw-motion-fast) var(--gw-motion-easing); --gw-icon-size: 1.125rem; } .item:hover, .item:focus-visible { background: var(--gw-color-fill-neutral-hovered); outline: none; } .item:focus-visible { box-shadow: inset 0 0 0 var(--gw-focus-width) var(--gw-color-focus); } /* Forced colors drop box shadows, so the focused item takes an outline instead */ @media (forced-colors: active) { .item:focus-visible { outline: var(--gw-focus-width) solid Highlight; outline-offset: calc(var(--gw-focus-width) * -1); } } .item:disabled { color: var(--gw-color-text-disabled); cursor: not-allowed; background: transparent; } .action { font-weight: var(--gw-font-weight-strong); color: var(--gw-color-accent); } /* Holds the tick's place on every choice, so the labels line up */ .tick { flex: none; width: var(--gw-icon-size); height: var(--gw-icon-size); color: var(--gw-color-accent); } .item[aria-checked=\"false\"] .tick { visibility: hidden; } .item[role=\"menuitemcheckbox\"] .box { flex: none; color: var(--gw-color-text-secondary); } .item[role=\"menuitemcheckbox\"][aria-checked=\"true\"] .box { color: var(--gw-color-accent); } .group { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .group:not(:first-child) { padding-block-start: var(--gw-space-1); margin-block-start: var(--gw-space-0-5); border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .group-heading { padding: var(--gw-space-1) var(--gw-space-3) 0; margin: 0; font-size: var(--gw-font-size-xs); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-secondary); } .separator { flex: none; height: 0; margin: var(--gw-space-0-5) calc(-1 * var(--gw-space-1)); border: 0; border-block-start: max(var(--gw-border-width), 1px) solid var(--gw-color-border-normal); } .text { display: flex; flex-direction: column; gap: var(--gw-space-0-5); } .description { font-size: var(--gw-font-size-xs); color: var(--gw-color-text-secondary); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -17670,6 +17880,24 @@
             },
             {
               "kind": "field",
+              "name": "sheetBelow",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport width in pixels below which the menu is a bottom sheet.",
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which the menu is a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
+            },
+            {
+              "kind": "field",
               "name": "#trigger",
               "privacy": "private",
               "readonly": true
@@ -17728,6 +17956,12 @@
               "name": "#buttons",
               "privacy": "private",
               "description": "The enabled items then actions, in the order arrow keys move through them.",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#onBeforeToggle",
+              "privacy": "private",
               "readonly": true
             },
             {
@@ -18243,6 +18477,20 @@
               },
               "description": "Shows a spinning ring in the icon's place and disables the trigger, while a chosen action runs.",
               "name": "loading"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport width in pixels below which the menu is a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
+              "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which the menu is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             }
           ],
           "superclass": {
@@ -21453,7 +21701,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. Below\n`sheet-below`, 600px wide by default, it's a bottom sheet. Opened without a\nbutton, such as after a save, it sits in the middle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. Open it with `show(anchor)`. It focuses the close button, or the\nfirst element in its content with `autofocus`, such as a field it's opened\nto fill in. Put buttons in the `actions` slot: a\nclick on one with a `value` closes it with that value, and fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
+          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. On a\nnarrow or short screen, under 600px wide or 500px tall, it's a bottom\nsheet. Opened without a button, such as after a save, it sits in the\nmiddle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. Open it with `show(anchor)`. It focuses the close button, or the\nfirst element in its content with `autofocus`, such as a field it's opened\nto fill in. Put buttons in the `actions` slot: a\nclick on one with a `value` closes it with that value, and fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
           "name": "GwPopover",
           "cssProperties": [
             {
@@ -21491,6 +21739,14 @@
             {
               "description": "The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.",
               "name": "--gw-popover-backdrop"
+            },
+            {
+              "description": "The widest it grows as a bottom sheet, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest it grows as a bottom sheet, its content scrolling past that. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             },
             {
               "description": "Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.",
@@ -21577,7 +21833,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ heading: {}, confirm: { type: \"boolean\" }, fit: { type: \"boolean\", reflect: true }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
+              "default": "{ heading: {}, confirm: { type: \"boolean\" }, fit: { type: \"boolean\", reflect: true }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, closeLabel: { attribute: \"close-label\" }, discardQuestion: { attribute: \"discard-question\" }, keepLabel: { attribute: \"keep-label\" }, discardLabel: { attribute: \"discard-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21590,7 +21846,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-popover-padding, var(--gw-space-4)); margin: 0; color: var(--gw-color-text-primary); background: var( --gw-popover-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-popover-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-popover-radius, var(--gw-radius-panel)); box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l)); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } /* As wide as its content needs, from its usual width up to the window's, so a wide control never scrolls sideways in it */ :host([fit]) [popover]:not([data-placement=\"sheet\"]) { width: max-content; min-width: min( var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px) ); max-width: calc(100vw - 2 * ${gap}px); } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } /* A bottom sheet on narrow screens, sliding up from the edge */ [data-placement=\"sheet\"] { inset: auto 0 0; width: 100%; max-width: none; padding-block-end: calc( var(--gw-popover-padding, var(--gw-space-4)) + env(safe-area-inset-bottom) ); border-end-start-radius: 0; border-end-end-radius: 0; scale: 1; translate: 0 100%; } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-popover-close-scale, 0.8); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
+              "default": "[ base, dismissalStyles, css` [popover] { position: fixed; inset: unset; box-sizing: border-box; width: min(var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px)); /* Never past the window, scrolling within it; placed popovers get the room on their side of the button */ max-height: calc(100dvh - 2 * ${gap}px); overflow-y: auto; overscroll-behavior: contain; padding: var(--gw-popover-padding, var(--gw-space-4)); margin: 0; color: var(--gw-color-text-primary); background: var( --gw-popover-background, var(--gw-color-surface-overlay) ); border: max(var(--gw-border-width), 1px) solid var(--gw-popover-border-color, var(--gw-color-border-normal)); border-radius: var(--gw-popover-radius, var(--gw-radius-panel)); box-shadow: var(--gw-popover-shadow, var(--gw-shadow-l)); opacity: 0; scale: 0.96; transition: opacity var(--gw-motion-fast) var(--gw-motion-easing), scale var(--gw-motion-normal) var(--gw-motion-easing), translate var(--gw-motion-normal) var(--gw-motion-easing), display var(--gw-motion-normal) allow-discrete, overlay var(--gw-motion-normal) allow-discrete; } /* As wide as its content needs, from its usual width up to the window's, so a wide control never scrolls sideways in it */ :host([fit]) [popover]:not([data-placement=\"sheet\"]) { width: max-content; min-width: min( var(--gw-popover-width, 20rem), calc(100vw - 2 * ${gap}px) ); max-width: calc(100vw - 2 * ${gap}px); } [popover]:popover-open { opacity: 1; scale: 1; } @starting-style { [popover]:popover-open { opacity: 0; scale: 0.96; } } /* Grows from the corner nearest the button */ [data-placement=\"below\"] { transform-origin: top right; } [data-placement=\"above\"] { transform-origin: bottom right; } [data-placement=\"below\"][data-side=\"start\"] { transform-origin: top left; } [data-placement=\"above\"][data-side=\"start\"] { transform-origin: bottom left; } [data-placement=\"center\"] { inset: 0; margin: auto; height: fit-content; } [data-placement=\"center\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } /* A bottom sheet on narrow or short screens, sliding up from the edge */ [data-placement=\"sheet\"] { ${sheetLayout} padding-block-end: calc( var(--gw-popover-padding, var(--gw-space-4)) + env(safe-area-inset-bottom) ); } [data-placement=\"sheet\"]:popover-open { translate: 0 0; } @starting-style { [data-placement=\"sheet\"]:popover-open { translate: 0 100%; } } [data-placement=\"sheet\"]::backdrop { background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%)); } header { display: flex; gap: var(--gw-space-2); align-items: flex-start; margin: calc(var(--gw-space-2) * -1) calc(var(--gw-space-2) * -1) var(--gw-space-2) 0; } header .content { flex: 1; min-width: 0; padding-block-start: var(--gw-space-2); } h2 { margin: 0 0 var(--gw-space-2); font-size: var(--gw-font-size-m); font-weight: var(--gw-font-weight-strong); color: var(--gw-color-text-strong); } .close { --gw-button-scale: var(--gw-popover-close-scale, 0.8); } .body { font-size: var(--gw-font-size-s); } ::slotted(p) { margin: 0; } footer { display: flex; flex-wrap: wrap; gap: var(--gw-space-2); justify-content: flex-end; margin-block-start: var(--gw-space-4); } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -21628,7 +21884,16 @@
                 "text": "number"
               },
               "description": "The viewport width in pixels below which it's a bottom sheet.",
-              "default": "600"
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which it's a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
             },
             {
               "kind": "field",
@@ -22137,8 +22402,15 @@
               "type": {
                 "text": "number"
               },
-              "description": "The viewport width in pixels below which it's a bottom sheet; `0` keeps it by its button. Defaults to `600`.",
+              "description": "Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
               "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             },
             {
               "type": {
@@ -24458,7 +24730,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A labeled select whose list opens under it. Long lists get a search field,\nfocused as the list opens, and only the options in view are rendered. Move\nwith the arrow keys and pick with Enter. Below `sheet-below`, 600px wide by\ndefault, the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
+          "description": "A labeled select whose list opens under it. Long lists get a search field,\nfocused as the list opens, and only the options in view are rendered. Move\nwith the arrow keys and pick with Enter. On a narrow or short screen,\nunder 600px wide or 500px tall, the list is a bottom sheet.\n\nPass `options`, or write `<option>` children (in `<optgroup>`s for\ngroups, with `data-icon`, `data-swatch` and `data-description`), which it\nreads once when it first connects. A hidden input carries the value in\nforms, and it fires `change` when the value changes.\n\nWith `multiple` it picks several: each pick toggles an option in `values`\nand the list stays open, the trigger shows the first choice and how many\nmore, and a Clear button under the list empties it. A hidden input per\nvalue carries them in forms.",
           "name": "GwSelect",
           "cssProperties": [
             {
@@ -24470,12 +24742,20 @@
               "name": "--gw-control-scale"
             },
             {
-              "description": "The tallest the list grows as a bottom sheet on narrow screens. Defaults to `60vh`.",
+              "description": "The tallest the list grows as a bottom sheet. Defaults to `60vh`.",
               "name": "--gw-select-sheet-height"
             },
             {
               "description": "The backdrop behind the sheet. Defaults to `rgb(0 0 0 / 40%)`.",
               "name": "--gw-select-backdrop"
+            },
+            {
+              "description": "The widest the sheet grows, centered. Defaults to `40rem`.",
+              "name": "--gw-adaptive-sheet-width"
+            },
+            {
+              "description": "The tallest the whole sheet grows, the list scrolling within it. Defaults to `85dvh`.",
+              "name": "--gw-adaptive-sheet-height"
             },
             {
               "description": "The Clear button's height with `multiple`. Defaults to `2.5rem`.",
@@ -24494,7 +24774,7 @@
                 "text": "Properties"
               },
               "static": true,
-              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, clearLabel: { attribute: \"clear-label\" }, }",
+              "default": "{ label: {}, name: {}, value: {}, multiple: { type: \"boolean\", reflect: true }, values: { type: \"json\" }, hint: {}, info: {}, infoLabel: { attribute: \"info-label\" }, placeholder: {}, search: {}, searchFrom: { type: \"number\", attribute: \"search-from\" }, searchLabel: { attribute: \"search-label\" }, noMatchLabel: { attribute: \"no-match-label\" }, sheetBelow: { type: \"number\", attribute: \"sheet-below\" }, sheetBelowHeight: { type: \"number\", attribute: \"sheet-below-height\" }, disabled: { type: \"boolean\" }, open: { type: \"boolean\", reflect: true }, options: { type: \"json\" }, labelHidden: { type: \"boolean\", attribute: \"label-hidden\" }, inlineLabel: { type: \"boolean\", attribute: \"inline-label\", reflect: true }, size: { reflect: true }, clearLabel: { attribute: \"clear-label\" }, }",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
@@ -24613,7 +24893,16 @@
                 "text": "number"
               },
               "description": "The viewport width in pixels below which the list is a bottom sheet.",
-              "default": "600"
+              "default": "defaultSheetBelow"
+            },
+            {
+              "kind": "field",
+              "name": "sheetBelowHeight",
+              "type": {
+                "text": "number"
+              },
+              "description": "The viewport height in pixels below which the list is a bottom sheet.",
+              "default": "defaultSheetBelowHeight"
             },
             {
               "kind": "field",
@@ -24754,6 +25043,11 @@
               "kind": "method",
               "name": "show",
               "description": "Opens the list, such as from a keyboard shortcut."
+            },
+            {
+              "kind": "method",
+              "name": "#asSheet",
+              "privacy": "private"
             },
             {
               "kind": "method",
@@ -25243,8 +25537,15 @@
               "type": {
                 "text": "number"
               },
-              "description": "The viewport width in pixels below which the list is a bottom sheet; `0` keeps it under the field. Defaults to `600`.",
+              "description": "Overrides the viewport width in pixels below which the list is a bottom sheet; `0` turns the width rule off. Defaults to `600`.",
               "name": "sheet-below"
+            },
+            {
+              "type": {
+                "text": "number"
+              },
+              "description": "Overrides the viewport height in pixels below which the list is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.",
+              "name": "sheet-below-height"
             },
             {
               "type": {
@@ -32609,6 +32910,14 @@
           "declaration": {
             "name": "*",
             "module": "src/placement.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/adaptive.js"
           }
         },
         {

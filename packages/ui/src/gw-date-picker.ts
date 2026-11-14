@@ -5,6 +5,11 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+} from "./adaptive.js";
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
@@ -81,7 +86,8 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
  * A labeled field that shows the chosen day, such as "Wed, 11 Nov 2026", and
  * opens a `gw-calendar` under it to pick another. The calendar takes focus as
  * it opens; picking a day or pressing Esc closes it and returns focus to the
- * field. Arrow Down or Up on the field opens it too.
+ * field. Arrow Down or Up on the field opens it too. On a narrow or short
+ * screen, under 600px wide or 500px tall, the calendar is a bottom sheet.
  *
  * The value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and
  * it fires `change` when it changes. `min` and `max` bound the days that can
@@ -118,12 +124,17 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
  * @attr {boolean} presets - Shows shortcut buttons under the calendar, such as Today.
  * @attr {DatePreset[]} preset-options - The shortcuts, as a JSON array of `{ label, days?, weeks?, months?, value? }`, relative to today (negative for the past) or a fixed `value`. Defaults to Yesterday, Today and Tomorrow. Ones outside `min` and `max`, or on a disabled unmarked day, are disabled.
  * @attr {string} presets-label - The shortcut group's name for assistive technology. Defaults to `Shortcuts`.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which the calendar is a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which the calendar is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {"xs"|"small"|"medium"|"large"|"xl"} size - The field's size, 40px tall at medium. Defaults to `medium`.
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
  * @cssprop --gw-field-info-size - The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.
  * @cssprop --gw-calendar-day-size - Each day's width and height in the calendar. Defaults to `2.5rem`.
+ * @cssprop --gw-date-picker-backdrop - The backdrop behind the calendar as a bottom sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-adaptive-sheet-width - The widest the sheet grows, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest the sheet grows, the calendar scrolling within it. Defaults to `85dvh`.
  *
  * @fires {Event} change - When a day is picked, with it in `value`.
  * @fires {CustomEvent<{ month: string }>} month - When the calendar moves to another month, with it as `YYYY-MM` in `detail`, also in `month`.
@@ -156,6 +167,8 @@ export class GwDatePicker extends LightElement {
     presets: { type: "boolean" },
     presetOptions: { type: "json", attribute: "preset-options" },
     presetsLabel: { attribute: "presets-label" },
+    sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     size: { reflect: true },
   } as const;
 
@@ -187,6 +200,10 @@ export class GwDatePicker extends LightElement {
   /** The shortcuts `presets` shows, Yesterday, Today and Tomorrow by default. */
   declare presetOptions: readonly DatePreset[];
   declare presetsLabel: string;
+  /** The viewport width in pixels below which the calendar is a bottom sheet. */
+  declare sheetBelow: number;
+  /** The viewport height in pixels below which the calendar is a bottom sheet. */
+  declare sheetBelowHeight: number;
   declare size: "xs" | "small" | "medium" | "large" | "xl";
 
   readonly #id = fieldId();
@@ -273,6 +290,8 @@ export class GwDatePicker extends LightElement {
     this.presets = false;
     this.presetOptions = defaultDatePresets;
     this.presetsLabel = "Shortcuts";
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.size = "medium";
   }
 
@@ -282,6 +301,7 @@ export class GwDatePicker extends LightElement {
 
     if (parseDay(this.value) !== undefined) this.month = this.value.slice(0, 7);
 
+    this.#popup.dataset.placement = this.#asSheet() ? "sheet" : "below";
     this.#popup.showPopover();
   }
 
@@ -289,8 +309,27 @@ export class GwDatePicker extends LightElement {
     if (this.#popup.matches(":popover-open")) this.#popup.hidePopover();
   }
 
+  #asSheet() {
+    return opensAsSheet({
+      below: this.sheetBelow,
+      belowHeight: this.sheetBelowHeight,
+    });
+  }
+
   readonly #position = () => {
-    placeBeside(this.#popup, this.#trigger, { gap });
+    const popup = this.#popup;
+
+    popup.style.maxHeight = "";
+
+    if (this.#asSheet()) {
+      popup.dataset.placement = "sheet";
+      popup.style.top = "";
+      popup.style.left = "";
+
+      return;
+    }
+
+    placeBeside(popup, this.#trigger, { gap });
   };
 
   readonly #onOutside = (event: PointerEvent) => {

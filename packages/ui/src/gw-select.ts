@@ -4,6 +4,11 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+} from "./adaptive.js";
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
@@ -27,8 +32,8 @@ const chevronIcon =
 /**
  * A labeled select whose list opens under it. Long lists get a search field,
  * focused as the list opens, and only the options in view are rendered. Move
- * with the arrow keys and pick with Enter. Below `sheet-below`, 600px wide by
- * default, the list is a bottom sheet.
+ * with the arrow keys and pick with Enter. On a narrow or short screen,
+ * under 600px wide or 500px tall, the list is a bottom sheet.
  *
  * Pass `options`, or write `<option>` children (in `<optgroup>`s for
  * groups, with `data-icon`, `data-swatch` and `data-description`), which it
@@ -56,7 +61,8 @@ const chevronIcon =
  * @attr {number} search-from - How many options `search="auto"` adds a search field from. Defaults to `7`.
  * @attr {string} search-label - The search field's placeholder, for an app in another language. Defaults to `Search`.
  * @attr {string} no-match-label - What the list says when the search matches nothing. Defaults to `No matches`.
- * @attr {number} sheet-below - The viewport width in pixels below which the list is a bottom sheet; `0` keeps it under the field. Defaults to `600`.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which the list is a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which the list is a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {boolean} disabled - Disables the field.
  * @attr {boolean} open - Whether the list shows.
  * @attr {OptionItem[]} options - The options, as JSON.
@@ -67,8 +73,10 @@ const chevronIcon =
  *
  * @cssprop --gw-field-scale - Scales the field, around 1 for medium.
  * @cssprop --gw-control-scale - Scales its height with the theme's density. The theme sets it.
- * @cssprop --gw-select-sheet-height - The tallest the list grows as a bottom sheet on narrow screens. Defaults to `60vh`.
+ * @cssprop --gw-select-sheet-height - The tallest the list grows as a bottom sheet. Defaults to `60vh`.
  * @cssprop --gw-select-backdrop - The backdrop behind the sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-adaptive-sheet-width - The widest the sheet grows, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest the whole sheet grows, the list scrolling within it. Defaults to `85dvh`.
  * @cssprop --gw-select-clear-height - The Clear button's height with `multiple`. Defaults to `2.5rem`.
  * @cssprop --gw-field-info-size - The (i) button by the label that opens `info`, with its icon two thirds of it. Defaults to `1.5rem`.
  *
@@ -90,6 +98,7 @@ export class GwSelect extends LightElement {
     searchLabel: { attribute: "search-label" },
     noMatchLabel: { attribute: "no-match-label" },
     sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     disabled: { type: "boolean" },
     open: { type: "boolean", reflect: true },
     options: { type: "json" },
@@ -116,6 +125,8 @@ export class GwSelect extends LightElement {
   declare noMatchLabel: string;
   /** The viewport width in pixels below which the list is a bottom sheet. */
   declare sheetBelow: number;
+  /** The viewport height in pixels below which the list is a bottom sheet. */
+  declare sheetBelowHeight: number;
   declare disabled: boolean;
   declare open: boolean;
   declare options: readonly OptionItem[];
@@ -195,7 +206,8 @@ export class GwSelect extends LightElement {
     this.searchFrom = 7;
     this.searchLabel = "Search";
     this.noMatchLabel = "No matches";
-    this.sheetBelow = 600;
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.disabled = false;
     this.open = false;
     this.options = [];
@@ -209,9 +221,15 @@ export class GwSelect extends LightElement {
   show() {
     if (this.disabled || this.#popup.matches(":popover-open")) return;
 
-    this.#popup.dataset.placement =
-      window.innerWidth < this.sheetBelow ? "sheet" : "below";
+    this.#popup.dataset.placement = this.#asSheet() ? "sheet" : "below";
     this.#popup.showPopover();
+  }
+
+  #asSheet() {
+    return opensAsSheet({
+      below: this.sheetBelow,
+      belowHeight: this.sheetBelowHeight,
+    });
   }
 
   close() {
@@ -266,10 +284,14 @@ export class GwSelect extends LightElement {
   readonly #position = () => {
     const popup = this.#popup;
 
-    if (popup.dataset.placement === "sheet") {
+    // Follows the window as it turns or resizes, switching between a sheet
+    // and a list under the field
+    if (this.#asSheet()) {
+      popup.dataset.placement = "sheet";
       popup.style.top = "";
       popup.style.left = "";
       popup.style.width = "";
+      this.#list.style.removeProperty("--gw-option-list-height");
 
       return;
     }

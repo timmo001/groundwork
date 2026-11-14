@@ -29,6 +29,8 @@ export * from "./keys.js";
 
 export * from "./placement.js";
 
+export * from "./adaptive.js";
+
 export * from "./swipe.js";
 
 export * from "./below.js";

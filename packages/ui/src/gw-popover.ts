@@ -4,6 +4,12 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+  sheetLayout,
+} from "./adaptive.js";
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
 import type {} from "./gw-button.js";
@@ -18,9 +24,10 @@ const closeIcon =
 
 /**
  * A confirmation, rename or small form that opens next to the button that
- * asked for it, rather than as a dialog in the middle of the screen. Below
- * `sheet-below`, 600px wide by default, it's a bottom sheet. Opened without a
- * button, such as after a save, it sits in the middle like a dialog.
+ * asked for it, rather than as a dialog in the middle of the screen. On a
+ * narrow or short screen, under 600px wide or 500px tall, it's a bottom
+ * sheet. Opened without a button, such as after a save, it sits in the
+ * middle like a dialog.
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
  * outside. Open it with `show(anchor)`. It focuses the close button, or the
@@ -35,7 +42,8 @@ const closeIcon =
  * @attr {string} heading - The heading beside the close button.
  * @attr {boolean} confirm - Makes it an `alertdialog`, for a question that needs an answer.
  * @attr {boolean} fit - Sizes it to its content beside a button or in the middle: at least `--gw-popover-width`, and no wider than the window, so a wide control inside never scrolls sideways.
- * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it by its button. Defaults to `600`.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {string} close-label - The close button's name, for an app in another language. Defaults to `Close`.
  * @attr {string} discard-question - The question asked before closing with edits, for an app in another language. Defaults to `Discard your changes?`.
  * @attr {string} keep-label - The button that goes back to editing. Defaults to `Keep editing`.
@@ -65,6 +73,8 @@ const closeIcon =
  * @cssprop --gw-popover-radius - The corners. Defaults to `--gw-radius-panel`.
  * @cssprop --gw-popover-shadow - The shadow. Defaults to `--gw-shadow-l`.
  * @cssprop --gw-popover-backdrop - The backdrop behind a centered popover or sheet. Defaults to `rgb(0 0 0 / 40%)`.
+ * @cssprop --gw-adaptive-sheet-width - The widest it grows as a bottom sheet, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest it grows as a bottom sheet, its content scrolling past that. Defaults to `85dvh`.
  * @cssprop --gw-popover-scrollbar-size - Its scrollbars' thickness. Defaults to `--gw-scrollbar-inner-size`, `0.25rem`.
  * @cssprop --gw-popover-scrollbar-radius - Its scrollbar thumbs' corners. Defaults to `--gw-scrollbar-inner-radius`, the thickness, fully round.
  * @cssprop --gw-popover-scrollbar-thumb - Its scrollbar thumbs' fill. Defaults to `--gw-scrollbar-inner-thumb`.
@@ -79,6 +89,7 @@ export class GwPopover extends GwElement {
     confirm: { type: "boolean" },
     fit: { type: "boolean", reflect: true },
     sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     closeLabel: { attribute: "close-label" },
     discardQuestion: { attribute: "discard-question" },
     keepLabel: { attribute: "keep-label" },
@@ -170,19 +181,14 @@ export class GwPopover extends GwElement {
         background: var(--gw-popover-backdrop, rgb(0 0 0 / 40%));
       }
 
-      /* A bottom sheet on narrow screens, sliding up from the edge */
+      /* A bottom sheet on narrow or short screens, sliding up from the
+         edge */
       [data-placement="sheet"] {
-        inset: auto 0 0;
-        width: 100%;
-        max-width: none;
+        ${sheetLayout}
         padding-block-end: calc(
           var(--gw-popover-padding, var(--gw-space-4)) +
             env(safe-area-inset-bottom)
         );
-        border-end-start-radius: 0;
-        border-end-end-radius: 0;
-        scale: 1;
-        translate: 0 100%;
       }
 
       [data-placement="sheet"]:popover-open {
@@ -248,6 +254,8 @@ export class GwPopover extends GwElement {
   declare fit: boolean;
   /** The viewport width in pixels below which it's a bottom sheet. */
   declare sheetBelow: number;
+  /** The viewport height in pixels below which it's a bottom sheet. */
+  declare sheetBelowHeight: number;
   /** The close button's name, for an app in another language. */
   declare closeLabel: string;
   declare discardQuestion: string;
@@ -308,7 +316,8 @@ export class GwPopover extends GwElement {
     this.heading = "";
     this.confirm = false;
     this.fit = false;
-    this.sheetBelow = 600;
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.closeLabel = "Close";
     this.discardQuestion = "Discard your changes?";
     this.keepLabel = "Keep editing";
@@ -356,7 +365,14 @@ export class GwPopover extends GwElement {
   };
 
   #placementFor(anchor: Element | undefined) {
-    if (window.innerWidth < this.sheetBelow) return "sheet";
+    if (
+      opensAsSheet({
+        below: this.sheetBelow,
+        belowHeight: this.sheetBelowHeight,
+      })
+    ) {
+      return "sheet";
+    }
 
     return anchor === undefined ? "center" : "below";
   }

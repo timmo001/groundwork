@@ -4,6 +4,12 @@
  *
  * @module
  */
+import {
+  defaultSheetBelow,
+  defaultSheetBelowHeight,
+  opensAsSheet,
+  sheetLayout,
+} from "./adaptive.js";
 import { GwElement, css, h } from "./element.js";
 import type {} from "./gw-option-list.js";
 import type { OptionItem } from "./gw-option-list.js";
@@ -11,11 +17,11 @@ import { base } from "./styles.js";
 
 /**
  * A command menu on Cmd+K or Ctrl+K: a searchable list of commands in a
- * modal near the top of the page, or a bottom sheet below `sheet-below`,
- * 600px wide by default. Picking one closes the menu and fires `pick` with
- * its value. Esc or a click outside closes it. It won't open over another
- * dialog, so only one overlay shows at a time. Set `shortcut="none"` to open
- * it only with `show()`.
+ * modal near the top of the page, or a bottom sheet on a narrow or short
+ * screen, under 600px wide or 500px tall. Picking one closes the menu and
+ * fires `pick` with its value. Esc or a click outside closes it. It won't
+ * open over another dialog, so only one overlay shows at a time. Set
+ * `shortcut="none"` to open it only with `show()`.
  *
  * @element gw-command-menu
  * @summary A searchable list of commands on Cmd+K or Ctrl+K.
@@ -31,7 +37,8 @@ import { base } from "./styles.js";
  * @attr {string} close-hint - The hint after Esc. Defaults to `to close`.
  * @attr {string} pick-key - The name of the key that picks, for a keyboard in another language. Defaults to `Enter`.
  * @attr {string} close-key - The name of the key that closes. Defaults to `Esc`.
- * @attr {number} sheet-below - The viewport width in pixels below which it's a bottom sheet; `0` keeps it a modal. Defaults to `600`.
+ * @attr {number} sheet-below - Overrides the viewport width in pixels below which it's a bottom sheet; `0` turns the width rule off. Defaults to `600`.
+ * @attr {number} sheet-below-height - Overrides the viewport height in pixels below which it's a bottom sheet, such as a phone on its side; `0` turns the height rule off. Defaults to `500`.
  * @attr {boolean} open - Whether it shows.
  *
  * @csspart dialog - The menu's surface.
@@ -45,6 +52,8 @@ import { base } from "./styles.js";
  * @cssprop --gw-command-menu-height - The tallest it grows. Defaults to `70vh`.
  * @cssprop --gw-command-menu-list-height - The tallest the list grows. Defaults to `min(24rem, 56vh)`.
  * @cssprop --gw-command-menu-sheet-list-height - The tallest the list grows as a bottom sheet. Defaults to `60vh`.
+ * @cssprop --gw-adaptive-sheet-width - The widest it grows as a bottom sheet, centered. Defaults to `40rem`.
+ * @cssprop --gw-adaptive-sheet-height - The tallest the whole sheet grows, the list scrolling within it. Defaults to `85dvh`.
  * @cssprop --gw-command-menu-background - The surface. Defaults to `--gw-color-surface-overlay`.
  * @cssprop --gw-command-menu-border-color - The border. Defaults to `--gw-color-border-loud`.
  * @cssprop --gw-command-menu-radius - The corners. Defaults to `--gw-radius-panel`.
@@ -67,6 +76,7 @@ export class GwCommandMenu extends GwElement {
     pickKey: { attribute: "pick-key" },
     closeKey: { attribute: "close-key" },
     sheetBelow: { type: "number", attribute: "sheet-below" },
+    sheetBelowHeight: { type: "number", attribute: "sheet-below-height" },
     open: { type: "boolean", reflect: true },
   } as const;
 
@@ -138,18 +148,15 @@ export class GwCommandMenu extends GwElement {
       }
 
       dialog[data-placement="sheet"] {
-        inset: auto 0 0;
-        width: 100%;
-        max-width: none;
+        ${sheetLayout}
         padding-block-end: env(safe-area-inset-bottom);
-        border-end-start-radius: 0;
-        border-end-end-radius: 0;
-        scale: 1;
-        translate: 0 100%;
         --gw-option-list-height: var(--gw-command-menu-sheet-list-height, 60vh);
       }
 
+      /* The list shrinks to the sheet's height and scrolls */
       dialog[data-placement="sheet"][open] {
+        display: flex;
+        flex-direction: column;
         opacity: 1;
         translate: 0 0;
       }
@@ -204,6 +211,8 @@ export class GwCommandMenu extends GwElement {
   declare closeKey: string;
   /** The viewport width in pixels below which it's a bottom sheet. */
   declare sheetBelow: number;
+  /** The viewport height in pixels below which it's a bottom sheet. */
+  declare sheetBelowHeight: number;
   declare open: boolean;
 
   readonly #list = h("gw-option-list", { search: true, part: "list" });
@@ -252,7 +261,8 @@ export class GwCommandMenu extends GwElement {
     this.closeHint = "to close";
     this.pickKey = "Enter";
     this.closeKey = "Esc";
-    this.sheetBelow = 600;
+    this.sheetBelow = defaultSheetBelow;
+    this.sheetBelowHeight = defaultSheetBelowHeight;
     this.open = false;
   }
 
@@ -354,8 +364,12 @@ export class GwCommandMenu extends GwElement {
     dialog.setAttribute("aria-label", this.label);
 
     if (this.open && !dialog.open) {
-      dialog.dataset.placement =
-        window.innerWidth < this.sheetBelow ? "sheet" : "center";
+      dialog.dataset.placement = opensAsSheet({
+        below: this.sheetBelow,
+        belowHeight: this.sheetBelowHeight,
+      })
+        ? "sheet"
+        : "center";
       dialog.showModal();
       list.reset();
       document.dispatchEvent(new Event("gw-dialog-open"));
