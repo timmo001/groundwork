@@ -5,7 +5,13 @@
  *
  * @module
  */
-import { BoxRenderable, TextRenderable, fg, t } from "@opentui/core";
+import {
+  BoxRenderable,
+  InputRenderableEvents,
+  TextRenderable,
+  fg,
+  t,
+} from "@opentui/core";
 import type { CliRenderer, KeyEvent, Renderable } from "@opentui/core";
 import {
   Button,
@@ -76,8 +82,11 @@ export class ControlsView {
       id: "controls-name",
       theme,
       placeholder: "Your name",
-      onSubmit: () => this.report(`Submitted "${name.value}"`),
     });
+
+    name.on(InputRenderableEvents.ENTER, () =>
+      this.report(`Submitted "${name.value}"`),
+    );
 
     const mode = new RadioGroup(renderer, {
       id: "controls-mode",
