@@ -46,7 +46,7 @@ Every Groundwork control does this: buttons, menu buttons, toggles, sliders, che
 - **Toggle options, calendar days and the sections of a control group** sit side by side, so each is at least `--gw-target-min` across.
 - **Checkboxes and switches** are at least `--gw-target-min` tall, so ones stacked in a list don't overlap.
 - **A table's column heading** is its sort button's hit area, and it's at least `--gw-target-min` tall, so a press never lands on the heading beside it or the first row.
-- **A row's gap** is at least `--gw-target-min` less `2rem`, 12px, so two 32px buttons' hit areas meet without overlapping. `--gw-row-target-gap` changes it on `gw-row`, and `0px` turns it off. A code block's toolbar and a banner make room for their small buttons the same way.
+- **A row's gap** is at least `--gw-target-min` less `2rem`, 12px, so two 32px buttons' hit areas meet without overlapping. `--gw-row-target-gap` changes it on `gw-row`, and `0px` turns it off. A row with `scroll` leaves the same room above and below its children, so its track doesn't cut their hit areas off. A code block's toolbar and a banner make room for their small buttons the same way.
 
 An app that wants Material's 48px sets `--gw-target-min: 3rem` under `(any-pointer: coarse)`. An app's own small control reaches the token with a hit area of its own, or with `targetArea(selector)` from `@timmo001/groundwork-ui` in a shadow root:
 

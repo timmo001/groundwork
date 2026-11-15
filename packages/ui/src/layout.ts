@@ -175,6 +175,15 @@ const scrolling = (host: string) => `
     scrollbar-width: none;
     padding: var(--_gw-row-ring);
     margin: calc(-1 * var(--_gw-row-ring));
+    /* Room above and below for a small control's hit area too, which the
+       track would otherwise clip on a touch screen */
+    padding-block: max(
+      var(--_gw-row-ring),
+      (var(--gw-target-min, 0px) - 2rem) / 2
+    );
+    margin-block: calc(
+      -1 * max(var(--_gw-row-ring), (var(--gw-target-min, 0px) - 2rem) / 2)
+    );
     scroll-padding-inline: calc(var(--_gw-row-cover) + var(--_gw-row-fade));
   }
 
