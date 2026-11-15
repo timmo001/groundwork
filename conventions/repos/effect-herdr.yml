@@ -1,0 +1,6 @@
+---
+repo: timmo001/effect-herdr
+kind: library
+renovate:
+  - GitHub Actions
+  - JavaScript
