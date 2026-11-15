@@ -137,7 +137,7 @@ const parsed = parseTheme(await readFile("theme.json", "utf8"));
 
 if (parsed._tag === "Failure") throw new Error(String(parsed.failure));
 
-const { theme, checks } = runtimeTheme(parsed.success);
+const { theme, css: tokens, checks } = runtimeTheme(parsed.success);
 const misses = checks.filter((check) => !check.passes);
 
 if (misses.length > 0) throw new Error(`Contrast misses: ${misses.length}`);
@@ -148,13 +148,19 @@ const to = css.indexOf(end);
 
 if (from === -1 || to < from) throw new Error("theme.css has no markers");
 
-const rendered = `${css.slice(0, from + start.length)}\n${blumeThemeCss(theme)}\n${css.slice(to)}`;
+const rendered = `${css.slice(0, from + start.length)}\n${blumeThemeCss(theme)}\n${tokens}\n${css.slice(to)}`;
 
 if (rendered !== css) await writeFile("theme.css", rendered);
 ```
 
 Blume type-checks site scripts without Bun's types, so use `node:fs` rather
 than `Bun.file`.
+
+`blumeThemeCss` colors Blume's own page. `runtimeTheme`'s `css` is the
+Groundwork tokens under `data-gw-theme` set to the theme's id, which the
+theme picker sets on itself, so its `gw-select` and `gw-segmented` find
+their surfaces. Without it, a site whose theme isn't one of Groundwork's
+gets a picker whose dropdown has no background.
 
 To offer an app's own theme in the theme picker beside Groundwork's, write
 `blumeThemesCss([theme])` between the markers as well. It puts the theme's
@@ -171,27 +177,26 @@ wrapper component. `all.css` has the core and optional themes.
 @import "@timmo001/docs-kit/blume/themes/all.css";
 ```
 
-List the site's own theme first, then any other Groundwork themes, then the
-optional ones. The choices from `@timmo001/groundwork-tokens/choices` carry
-each optional theme's `family`, which groups it in the select, and `mode` for
-one that comes in one scheme only, such as Catppuccin Latte. Picking that
-theme moves the page into its scheme, and the other modes can't be picked
-while it's in use. Themes without a family go under `group`, which defaults
-to Groundwork. From seven themes the select has a search field, which also
-finds themes by family, or by `light` or `dark`.
+Every Groundwork picker lists themes the same way: the site's own theme first,
+alone with no heading, then Groundwork's core themes under Groundwork, then
+the optional ones under their families. `themeChoices` from
+`@timmo001/groundwork-tokens/choices` gives them in that order, from the
+site's theme: a Groundwork theme as `{ id }`, which leaves the Groundwork group, or a
+choice of the site's own. The choices carry each optional theme's `family`,
+which groups it in the select, and `mode` for one that comes in one scheme
+only, such as Catppuccin Latte. Picking that theme moves the page into its
+scheme, and the other modes can't be picked while it's in use. An empty
+`family` lists a theme with no heading, and themes without one go under
+`group`, which defaults to Groundwork. From seven themes the select has a
+search field, which also finds themes by family, or by `light` or `dark`.
 
 ```astro
 ---
-import {
-  coreThemeChoices,
-  optionalThemeChoices,
-} from "@timmo001/groundwork-tokens/choices";
+import { themeChoices } from "@timmo001/groundwork-tokens/choices";
 import HeaderSearch from "@timmo001/docs-kit/blume/header-search.astro";
 
-const themes = [
-  ...coreThemeChoices.filter((theme) => theme.id === "bridge"),
-  ...optionalThemeChoices,
-];
+// Or a theme of the site's own: themeChoices({ id: "dotfiles", name: "Dotfiles" })
+const themes = themeChoices({ id: "bridge" });
 ---
 
 <HeaderSearch {...Astro.props} themes={themes} defaultTheme="bridge" />

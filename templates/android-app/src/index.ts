@@ -15,10 +15,9 @@ import "@timmo001/groundwork-ui";
 import "@timmo001/groundwork-demo/web";
 import { connectMobile, ShellShare } from "@timmo001/groundwork-mobile/view";
 import {
-  coreThemeChoices,
   customThemeId,
-  optionalThemeChoices,
   pageTheme,
+  themeChoices,
   themeOptions as pickerOptions,
   type ThemeMode,
 } from "@timmo001/groundwork-tokens/page";
@@ -30,13 +29,9 @@ import { themeOptions } from "./theme.ts";
 
 const modes: readonly ThemeMode[] = ["auto", "light", "dark", "darker"];
 
-// The app's own theme first, then the other core themes, then the optional
-// ones by family. Trim or extend the list to suit the app
-const themes = [
-  ...coreThemeChoices.filter(({ id }) => id === themeOptions.defaultTheme),
-  ...coreThemeChoices.filter(({ id }) => id !== themeOptions.defaultTheme),
-  ...optionalThemeChoices,
-];
+// The app's own theme first with no heading, then the other core themes
+// under Groundwork, then the optional ones by family
+const themes = themeChoices({ id: themeOptions.defaultTheme });
 
 const page = pageTheme({ ...themeOptions, themes });
 const picker = document.querySelector("gw-theme-picker");

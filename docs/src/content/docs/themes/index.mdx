@@ -16,7 +16,7 @@ Most apps and docs sites start from one theme and build from there. That theme i
 - A theme from elsewhere, written as a theme document.
 - The app's own, written from scratch or starting from another theme, as [Writing a theme](/themes/writing-a-theme) shows. It lives in the app, not in Groundwork's set.
 
-Its theme picker lists that theme first, then any other Groundwork themes it offers, then the optional ones by family. The list is the app's to shape: it can leave groups out or add its own. A theme the visitor imports, or the desktop's Omarchy theme, is offered beside them where it makes sense, but never the default.
+Every theme picker lists themes the same way: that theme first, alone with no heading, then Groundwork's core themes under Groundwork, then the optional ones under their families. `themeChoices` gives the list in that order, so an app doesn't build it by hand. The app can still trim it or add groups of its own. A theme the visitor imports, or the desktop's Omarchy theme, is offered beside them where it makes sense, but never the default.
 
 <ThemeGrid />
 
@@ -51,18 +51,11 @@ See [Building every target](/themes/writing-a-theme#building-every-target) for t
 `pageTheme` from `@timmo001/groundwork-tokens/page` runs a page's theme and mode for it: it keeps the visitor's pick in local storage, sets the attributes on `<html>`, imports their own theme or an Omarchy `colors.toml` under the id `custom`, and registers the [theme tools](/agents#theme-tools) where the browser offers WebMCP. The solver and the tools load only when a custom theme or an agent needs them, so a page that only switches built-in themes stays small. Pair it with a [theme picker](/components/actions/#theme-picker).
 
 ```ts
-import {
-  coreThemeChoices,
-  optionalThemeChoices,
-  pageTheme,
-  themeOptions,
-} from "@timmo001/groundwork-tokens/page";
+import { pageTheme, themeChoices, themeOptions } from "@timmo001/groundwork-tokens/page";
 
-// The site's own theme first, then the optional ones by family
-const themes = [
-  ...coreThemeChoices.filter((theme) => theme.id === "base"),
-  ...optionalThemeChoices,
-];
+// The site's own theme first with no heading, then the other core themes,
+// then the optional ones by family
+const themes = themeChoices({ id: "base" });
 
 const page = pageTheme({
   key: "my-site:theme",
@@ -76,7 +69,7 @@ page.setMode("darker");
 const result = await page.importTheme(colorsToml);
 ```
 
-`themeOptions` turns the choices into the picker's options, in the order given, grouped by family, with the rest under Groundwork. A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too. An app with theme documents and no built CSS passes them as `appThemes` instead: each is offered after `themes` under its own id, solved on load with the app's tones, and its CSS cached so the boot script applies a picked one before the first paint. `themeChoice(document)` gives a document's choice, for the picker's options. The visitor's imported theme keeps its own `custom` slot, apart from the app's.
+`themeOptions` turns the choices into the picker's options, in the order given, grouped by family, with the rest under Groundwork; an empty family leaves a theme with no heading. `themeChoices` gives every theme in the order each Groundwork picker lists them: the app's own theme first with no heading, then Groundwork's core themes under Groundwork, then the optional ones under their families. Pass it a Groundwork theme as `{ id: "bridge" }`, which leaves the Groundwork group, or a choice of the app's own. A site with its own theme adds it to `themes` with its CSS on the page, and passes `documents` returning the full theme documents so an agent can pick it too. An app with theme documents and no built CSS passes them as `appThemes` instead: each is offered after `themes` under its own id, solved on load with the app's tones, and its CSS cached so the boot script applies a picked one before the first paint. `themeChoice(document)` gives a document's choice, for the picker's options. The visitor's imported theme keeps its own `custom` slot, apart from the app's.
 
 A theme with only one mode, such as Catppuccin Latte or Mocha, takes `mode: "light"` or `mode: "dark"` in its choice. While it's picked, the page stays in that scheme: picking Latte while the page is dark moves it to light, and dark, Darker and Auto can't be set until another theme is picked. `state().only` names that scheme, for the picker's `scheme`, which disables the other modes. `state().scheme` says which side is in use.
 

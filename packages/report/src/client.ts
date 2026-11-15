@@ -9,9 +9,8 @@
  */
 import "@timmo001/groundwork-ui";
 import {
-  coreThemeChoices,
-  optionalThemeChoices,
   pageTheme,
+  themeChoices,
   themeOptions,
   type ThemeChoice,
   type ThemeMode,
@@ -43,7 +42,7 @@ const desktopChoices: readonly ThemeChoice[] = desktop.map(
 
 const page = pageTheme({
   key: config.key,
-  themes: [...coreThemeChoices, ...optionalThemeChoices, ...desktopChoices],
+  themes: [...themeChoices(), ...desktopChoices],
   defaultTheme: config.defaultTheme,
 });
 
@@ -97,13 +96,10 @@ page.subscribe((state) => applyDesktop(state.theme));
 const picker = document.querySelector("gw-theme-picker");
 
 if (picker !== null) {
-  // The report's own theme first, then the other core themes, then the
-  // optional ones grouped by the palette they come from, such as Catppuccin
-  const builtIn = themeOptions([
-    ...coreThemeChoices.filter(({ id }) => id === config.defaultTheme),
-    ...coreThemeChoices.filter(({ id }) => id !== config.defaultTheme),
-    ...optionalThemeChoices,
-  ]);
+  // The report's own theme first with no heading, then the other core
+  // themes, then the optional ones grouped by the palette they come from,
+  // such as Catppuccin
+  const builtIn = themeOptions(themeChoices({ id: config.defaultTheme }));
 
   const render = () => {
     const { mode, theme, only, omarchy } = page.state();

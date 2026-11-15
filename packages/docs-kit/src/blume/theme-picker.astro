@@ -9,7 +9,8 @@
  * Groundwork theme tokens imported here.
  *
  * Themes are listed in the order given, under their `family`, or `group` for
- * those without one. A theme with one `mode`, such as Catppuccin Latte, keeps
+ * those without one. An empty `family` lists a theme with no heading, as
+ * `themeChoices` does for the site's own. A theme with one `mode`, such as Catppuccin Latte, keeps
  * the page in that scheme while it's picked, and the other modes can't be
  * picked.
  */
@@ -17,14 +18,19 @@ import "@timmo001/groundwork-tokens/themes.css";
 
 interface Props {
   /**
-   * Themes to offer, in order: usually the site's own theme, then any other
-   * Groundwork themes, then the optional ones. Leave out to offer the mode
-   * only.
+   * Themes to offer, in order. `themeChoices` from
+   * `@timmo001/groundwork-tokens/page` gives them as every Groundwork picker
+   * lists them: the site's own theme first with no heading, then
+   * Groundwork's core themes, then the optional ones. Leave out to offer the
+   * mode only.
    */
   themes?: readonly {
     id: string;
     name: string;
-    /** The palette an optional theme comes from, such as `Catppuccin`. */
+    /**
+     * The heading it's listed under: the palette an optional theme comes
+     * from, such as `Catppuccin`. Empty lists it with no heading.
+     */
     family?: string | undefined;
     /** The one scheme a theme covers, such as `light` for Catppuccin Latte. */
     mode?: "light" | "dark" | undefined;
@@ -57,7 +63,7 @@ const {
   unavailableHint = "{mode} isn't available: this theme is {scheme} only",
 } = Astro.props;
 
-const grouped = themes.some((theme) => theme.family !== undefined);
+const grouped = themes.some((theme) => theme.family !== undefined && theme.family !== "");
 
 /** Each one-scheme theme's scheme, by id. */
 const only = Object.fromEntries(
@@ -150,8 +156,9 @@ const modes = [
           themes.map((theme) => ({
             value: theme.id,
             label: theme.name,
-            // Headings only once there's more than one group
-            group: grouped ? (theme.family ?? group) : undefined,
+            // Headings only once there's more than one group. An empty
+            // family, as the site's own theme has, goes without one
+            group: grouped && theme.family !== "" ? (theme.family ?? group) : undefined,
             // So a search for light or dark finds the themes that have it
             keywords: theme.mode === undefined ? ["light", "dark"] : [theme.mode],
           })),

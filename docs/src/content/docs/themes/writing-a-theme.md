@@ -6,7 +6,7 @@ description: The theme document format, checked against a Schema so an agent can
 A theme is one JSON document, checked against the Schema in `packages/tokens/src/schema.ts`. An app's own theme lives in the app, as a file beside its code. Decode it with `parseTheme` from `@timmo001/groundwork-tokens/runtime`, then:
 
 - On a page, `runtimeTheme` solves it into CSS and checks its contrast, as [Your own theme](/themes#your-own-theme) shows. List it in `pageTheme`'s `themes` with that CSS on the page.
-- On a docs site, `blumeThemeCss` turns the solved theme into Blume's tokens, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows.
+- On a docs site, `blumeThemeCss` turns the solved theme into Blume's tokens, and `runtimeTheme`'s `css` gives the theme picker's controls the Groundwork tokens, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows.
 - In a TUI, `hexModes` gives each mode's terminal roles, and `fromRoles` from `@timmo001/groundwork-tui` places them.
 - For every target at once, at build time, see [Building every target](#building-every-target).
 

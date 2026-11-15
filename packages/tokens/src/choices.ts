@@ -57,7 +57,11 @@ export interface ThemeChoice {
   readonly id: string;
   readonly name: string;
   readonly mode?: ThemeScheme | undefined;
-  /** The palette an optional theme comes from, such as `Catppuccin`. */
+  /**
+   * The heading a picker lists it under: the palette an optional theme comes
+   * from, such as `Catppuccin`. Empty lists it with no heading, as an app's
+   * own theme is.
+   */
   readonly family?: string | undefined;
 }
 
@@ -84,11 +88,9 @@ export interface ThemeOption {
 
 /**
  * Choices as a picker's options, grouped: a choice's `family`, or `group`
- * for those without one, such as an app's name for its own themes. An empty
- * `group` leaves those ungrouped. Each carries the schemes it covers as
- * search keywords. Order the choices as the picker should list them,
- * usually the app's own theme, then the other core themes, then the optional
- * ones.
+ * for those without one. An empty `group` leaves those ungrouped. Each
+ * carries the schemes it covers as search keywords. `themeChoices` gives the
+ * choices in the order every picker lists them.
  */
 export const themeOptions = (
   choices: readonly ThemeChoice[],
@@ -154,6 +156,35 @@ export const optionalThemeChoices: readonly ThemeChoice[] =
           ? "light"
           : "dark",
   }));
+
+/**
+ * An app's or site's own theme, for {@link themeChoices}: a Groundwork
+ * theme's id, such as `{ id: "bridge" }`, or a choice of the app's own.
+ */
+export type OwnTheme = Pick<ThemeChoice, "id"> & Partial<ThemeChoice>;
+
+/**
+ * Every theme to offer, in the order and groups every Groundwork picker
+ * lists them: the app's own theme first, alone with no heading, then
+ * Groundwork's core themes under `Groundwork`, then the optional ones under
+ * their families. A Groundwork theme given as `own` leaves the group it
+ * would be in otherwise. Without one, the core themes come first.
+ */
+export const themeChoices = (own?: OwnTheme): ThemeChoice[] => {
+  const builtIn = [...coreThemeChoices, ...optionalThemeChoices];
+
+  if (own === undefined) return builtIn;
+
+  const choice = builtIn.find(({ id }) => id === own.id) ?? {
+    name: own.id,
+    ...own,
+  };
+
+  return [
+    { ...choice, family: "" },
+    ...builtIn.filter(({ id }) => id !== own.id),
+  ];
+};
 
 /** What the page's pick starts on, and where it's kept. */
 export interface ThemeBootOptions {

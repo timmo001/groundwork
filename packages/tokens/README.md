@@ -86,9 +86,13 @@ CLI that writes a page. The `page` export re-exports it beside `pageTheme`:
 
 ```ts
 import {
-  optionalThemeChoices,
   themeBootScript,
+  themeChoices,
 } from "@timmo001/groundwork-tokens/choices";
+
+// The app's own theme first with no heading, then the core themes under
+// Groundwork, then the optional ones under their families
+const themes = themeChoices({ id: "bridge" });
 ```
 
 The themes, their roles and contrast targets are documented at

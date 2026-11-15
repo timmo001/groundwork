@@ -40,7 +40,7 @@ An Omarchy `colors.toml` maps with `omarchyTheme` from `@timmo001/groundwork-tok
 
 ## 4. Offer the themes
 
-- List the app's own theme first, then any other Groundwork themes it offers, then the optional ones by family. The list is the app's to shape: leave groups out or add its own.
+- Every Groundwork picker lists themes the same way: the app's own theme first, alone with no heading, then Groundwork's core themes under Groundwork, then the optional ones under their families. `themeChoices` from `@timmo001/groundwork-tokens/page` (or `/choices`) gives that list from the app's theme: a Groundwork theme as `{ id: "bridge" }`, or a choice of the app's own, such as `themeChoice(document)`. An app can still trim the list or add groups of its own after it.
 - On a page, pass the choices to `pageTheme` and build the picker's options with `themeOptions` from `@timmo001/groundwork-tokens/page`. Set the picker's `scheme` from `state().only`, so a one-scheme theme's other modes can't be picked.
 - On a docs site, pass the same choices to docs-kit's `HeaderSearch`, as the docs-kit README shows.
 - A theme the visitor imports, or the desktop's Omarchy theme, is offered where it makes sense, never the default. TUIs are the exception: they follow the terminal's Omarchy theme until `GW_THEME` says otherwise.
