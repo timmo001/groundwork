@@ -4,6 +4,7 @@ kind: personal
 skip:
   docs-site: Reusable workflows their README covers
   agent-surface: No CLI
+  ci: It's the shared workflows, and its CI uses them through $/ self-references
 renovate:
   - GitHub Actions
   - JavaScript

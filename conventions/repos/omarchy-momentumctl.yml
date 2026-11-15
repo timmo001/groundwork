@@ -1,5 +1,7 @@
 ---
 repo: timmo001/omarchy-momentumctl
 kind: shared
+skip:
+  theme: A CLI and Omarchy panel with no web UI to theme, so the docs stay on Base
 renovate:
   - GitHub Actions
