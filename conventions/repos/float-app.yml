@@ -1,6 +1,8 @@
 ---
 repo: timmo001/float-app
 kind: personal
+skip:
+  theme: A Hyprland CLI with no web UI to theme, so the docs stay on Base
 renovate:
   - GitHub Actions
   - JavaScript
