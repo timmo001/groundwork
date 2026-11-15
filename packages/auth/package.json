@@ -1,6 +1,6 @@
 {
   "name": "@timmo001/groundwork-auth",
-  "version": "0.47.0",
+  "version": "0.48.0",
   "description": "Groundwork's client keys: making, checking and hashing a key, the client record a service keeps, and the exchange from one shared token",
   "license": "Apache-2.0",
   "type": "module",
