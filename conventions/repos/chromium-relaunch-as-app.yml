@@ -1,6 +1,9 @@
 ---
 repo: timmo001/chromium-relaunch-as-app
 kind: personal
+skip:
+  docs-site: A small browser helper its README covers
+  agent-surface: A browser helper, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

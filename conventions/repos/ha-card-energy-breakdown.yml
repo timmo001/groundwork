@@ -1,6 +1,9 @@
 ---
 repo: timmo001/ha-card-energy-breakdown
 kind: community
+skip:
+  docs-site: HACS shows its README
+  agent-surface: A Home Assistant card, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

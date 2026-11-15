@@ -1,6 +1,9 @@
 ---
 repo: timmo001/skills
 kind: personal
+skip:
+  docs-site: skills.sh shows each skill
+  agent-surface: It's the skills repository
 renovate:
   - GitHub Actions
   - JavaScript

@@ -1,6 +1,9 @@
 ---
 repo: timmo001/ha-dashboard-maintenance
 kind: community
+skip:
+  docs-site: HACS shows its README
+  agent-surface: A Home Assistant dashboard, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

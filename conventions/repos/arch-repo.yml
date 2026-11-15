@@ -1,5 +1,8 @@
 ---
 repo: timmo001/arch-repo
 kind: personal
+skip:
+  docs-site: A package repository its README covers
+  agent-surface: No CLI
 renovate:
   - GitHub Actions

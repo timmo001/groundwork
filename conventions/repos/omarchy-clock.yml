@@ -1,5 +1,8 @@
 ---
 repo: timmo001/omarchy-clock
 kind: shared
+skip:
+  docs-site: A bar widget its README covers
+  agent-surface: A bar widget, with no CLI
 renovate:
   - GitHub Actions

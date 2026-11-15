@@ -1,6 +1,9 @@
 ---
 repo: timmo001/site-defluffer
 kind: personal
+skip:
+  docs-site: A browser extension its README covers
+  agent-surface: A browser extension, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

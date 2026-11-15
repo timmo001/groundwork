@@ -1,6 +1,9 @@
 ---
 repo: timmo001/herdr-mascot
 kind: personal
+skip:
+  docs-site: A Herdr plugin its README covers
+  agent-surface: A Herdr plugin, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

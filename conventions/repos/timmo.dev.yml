@@ -1,6 +1,9 @@
 ---
 repo: timmo001/timmo.dev
 kind: personal
+skip:
+  docs-site: It's a site itself
+  agent-surface: A website, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

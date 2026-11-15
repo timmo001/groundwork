@@ -1,6 +1,8 @@
 ---
 repo: timmo001/dotfiles
 kind: personal
+skip:
+  agent-surface: dot's skills are published from timmo001/skills
 renovate:
   - GitHub Actions
   - JavaScript

@@ -1,6 +1,9 @@
 ---
 repo: timmo001/app-opencode
 kind: personal
+skip:
+  docs-site: Home Assistant shows its DOCS.md
+  agent-surface: Runs OpenCode, which has its own
 renovate:
   - GitHub Actions
   - JavaScript

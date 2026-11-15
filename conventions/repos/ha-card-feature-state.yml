@@ -1,6 +1,9 @@
 ---
 repo: timmo001/ha-card-feature-state
 kind: community
+skip:
+  docs-site: HACS shows its README
+  agent-surface: A Home Assistant card feature, with no CLI
 renovate:
   - GitHub Actions
   - JavaScript

@@ -1,6 +1,8 @@
 ---
 repo: timmo001/effect-herdr
 kind: library
+skip:
+  docs-site: A library its README covers
 renovate:
   - GitHub Actions
   - JavaScript

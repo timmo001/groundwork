@@ -1,6 +1,9 @@
 ---
 repo: timmo001/workflows
 kind: personal
+skip:
+  docs-site: Reusable workflows their README covers
+  agent-surface: No CLI
 renovate:
   - GitHub Actions
   - JavaScript

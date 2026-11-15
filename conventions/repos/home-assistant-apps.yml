@@ -1,5 +1,8 @@
 ---
 repo: timmo001/home-assistant-apps
 kind: personal
+skip:
+  docs-site: Home Assistant shows each app's DOCS.md
+  agent-surface: No CLI
 renovate:
   - GitHub Actions
