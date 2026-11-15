@@ -43,7 +43,9 @@ its default, never one locked for every app. Follow
 ## Rollout
 
 Changes made here reach their consumers by the end of the session, with no
-go-ahead needed. Before the session ends, once `mise run check` passes:
+go-ahead needed. This repository doesn't take reviews: don't open a
+Plannotator diff review or ask for sign-off on a change. Before the session
+ends, once `mise run check` passes:
 
 1. Commit the session's own changes through `dot git commit`, leaving other
    sessions' work alone, and push.
