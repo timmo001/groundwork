@@ -236,6 +236,15 @@ Set `columns` and `rows` as properties in code, and a column can take functions:
 
 The search field is a [`gw-input`](/components/inputs#input), the `search` part, so it looks and behaves as every field does; `--gw-table-search-scale` sizes it (`0.9`), and `--gw-table-search-width` and `--gw-table-search-max-width` set how wide it starts and grows (`14rem` and `24rem`). The group counts are `gw-chip`s, the `group-count` part, sized with `--gw-table-count-scale`. Style the rest through the `toolbar`, `header`, `sort`, `sort-icon`, `row`, `cell`, `group`, `group-toggle`, `group-chevron`, `group-label`, `none`, `skeleton-row` and `skeleton` parts, with `--gw-table-header-height` (`2.5rem`) and `--gw-table-sort-icon-size` (`0.875rem`) for the header row. A `contained` table draws its own scrollbar thumb over the rows, the `scrollbar-thumb` part, so the header and group headings run its full width; its track starts under them, and it can be dragged. It takes the same `--gw-table-scrollbar-*` and `--gw-scrollbar-inner-*` properties as every component's scrollbars ([Scrollbars](/components#scrollbars)). Browsers without WebKit scrollbar styling, such as Firefox, keep their own thin scrollbar.
 
+`--gw-table-min-height` sets the least height a table's frame takes, with no floor by default. The rows keep their own height and the space past the last one stays blank under it, so a table with a few rows doesn't jump as more come, and grows from there up to `--gw-table-max-height` when it's `contained`:
+
+```css
+/* About four rows of one line under the header */
+gw-table {
+  --gw-table-min-height: 12rem;
+}
+```
+
 ```ts
 table.columns = [
   { id: "name", header: "Job", wide: true, cell: (job) => link(job) },

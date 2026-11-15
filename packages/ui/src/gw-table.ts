@@ -207,6 +207,7 @@ type Shown =
  * @csspart scrollbar-thumb - A `contained` table's scrollbar thumb, drawn over the rows so the header and group headings run its full width.
  *
  * @cssprop --gw-table-max-height - How tall a `contained` table grows before it scrolls. Defaults to `70vh`.
+ * @cssprop --gw-table-min-height - The least height its frame takes, with the space past the last row left blank under it, such as about four rows' height so a short table doesn't jump as rows come. Defaults to `auto`, no floor.
  * @cssprop --gw-table-count-scale - Scales the group count chips, around 1 for medium. Defaults to `0.8`, small.
  * @cssprop --gw-table-search-scale - Scales the search field, as `--gw-field-scale` does a `gw-input`. Defaults to `0.9`.
  * @cssprop --gw-table-search-width - The search field's starting width, before it grows into the toolbar. Defaults to `14rem`.
@@ -280,6 +281,7 @@ export class GwTable extends GwElement {
       }
 
       .scroller {
+        min-height: var(--gw-table-min-height, auto);
         overflow-x: auto;
         overscroll-behavior-x: contain;
         background: var(--gw-color-surface-raised);
