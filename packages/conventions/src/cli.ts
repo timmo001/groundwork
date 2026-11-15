@@ -333,8 +333,10 @@ const setupCommand = Command.make(
     );
 
     if (missing > 0) {
-      return yield* new ConventionsError({
-        message: `${missing} Setup steps missing`,
+      yield* Console.error(`✗ ${missing} Setup steps missing`);
+
+      yield* Effect.sync(() => {
+        process.exitCode = 1;
       });
     }
   }),
