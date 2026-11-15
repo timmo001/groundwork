@@ -33,6 +33,20 @@ export const statuses = [
 export type Status = (typeof statuses)[number];
 
 /**
+ * The role each chart series color starts from, `chart-1` first: the accent,
+ * then the status colors, ordered so neighboring series differ in hue. A
+ * theme can set any `chart-N` itself.
+ */
+export const chartSources = [
+  "accent",
+  "warning",
+  "success",
+  "important",
+  "danger",
+  "info",
+] as const;
+
+/**
  * GitHub's Markdown alert colors in dark (note, tip, important, warning and
  * caution), which give each status its hue and chroma.
  */
@@ -345,14 +359,36 @@ const mappedStyle = (base: Style): Style => ({
 
 /** A mode's roles with the theme's own colors for some of them set as they are. */
 const withOverrides = (roles: Roles, overrides: RoleOverrides | undefined) =>
-  overrides === undefined
-    ? roles
-    : {
-        ...roles,
-        ...Object.fromEntries(
-          Object.entries(overrides).map(([role, hex]) => [role, fromHex(hex)]),
-        ),
-      };
+  withChart(
+    overrides === undefined
+      ? roles
+      : {
+          ...roles,
+          ...Object.fromEntries(
+            Object.entries(overrides).map(([role, hex]) => [
+              role,
+              fromHex(hex),
+            ]),
+          ),
+        },
+  );
+
+/**
+ * A mode's roles with the chart series colors its own overrides don't set,
+ * from their sources after the overrides, so a theme's own accent leads.
+ */
+const withChart = (roles: Roles) =>
+  ({
+    ...roles,
+    ...Object.fromEntries(
+      chartSources.flatMap((source, at) => {
+        const color = roles[source];
+        const role = `chart-${at + 1}`;
+
+        return color === undefined || role in roles ? [] : [[role, color]];
+      }),
+    ),
+  }) satisfies Roles;
 
 /**
  * Resolve a theme into roles. Mapped themes take `baseStyle`, Base's style,
@@ -366,10 +402,10 @@ export const resolve = (theme: Theme, baseStyle: Style): ResolvedTheme => {
     const dark = theme.mode === "dark" ? theme.palette : theme.otherPalette;
     const modes: Partial<Record<Mode, Roles>> = {};
 
-    if (light !== undefined) modes.light = mappedRoles(light, false);
+    if (light !== undefined) modes.light = withChart(mappedRoles(light, false));
 
     if (dark !== undefined) {
-      const roles = mappedRoles(dark, true);
+      const roles = withChart(mappedRoles(dark, true));
 
       modes.dark = roles;
       modes.darker = darker(roles);

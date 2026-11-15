@@ -47,7 +47,13 @@ export const opentuiThemes = {
       "border-warning": "#8a610073",
       "danger": "#ab4944",
       "fill-danger-quiet": "#ab494424",
-      "border-danger": "#ab494473"
+      "border-danger": "#ab494473",
+      "chart-1": "#1e1f21",
+      "chart-2": "#8a6100",
+      "chart-3": "#16783a",
+      "chart-4": "#7957ac",
+      "chart-5": "#ab4944",
+      "chart-6": "#276baa"
     },
     "dark": {
       "surface-lower": "#0e1015",
@@ -94,7 +100,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#e6e8eb",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#0a0d12",
@@ -141,7 +153,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#e6e8eb",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "glazing": {
@@ -190,7 +208,13 @@ export const opentuiThemes = {
       "border-warning": "#8a600073",
       "danger": "#ab4944",
       "fill-danger-quiet": "#ab494424",
-      "border-danger": "#ab494473"
+      "border-danger": "#ab494473",
+      "chart-1": "#4063b0",
+      "chart-2": "#8a6000",
+      "chart-3": "#167839",
+      "chart-4": "#7957ac",
+      "chart-5": "#ab4944",
+      "chart-6": "#276baa"
     },
     "dark": {
       "surface-lower": "#0e0f1b",
@@ -237,7 +261,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#749bee",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#0b0c17",
@@ -284,7 +314,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#749bee",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "survey": {
@@ -333,7 +369,13 @@ export const opentuiThemes = {
       "border-warning": "#8a600073",
       "danger": "#ab4944",
       "fill-danger-quiet": "#ab494424",
-      "border-danger": "#ab494473"
+      "border-danger": "#ab494473",
+      "chart-1": "#ab3a79",
+      "chart-2": "#8a6000",
+      "chart-3": "#147739",
+      "chart-4": "#7957ac",
+      "chart-5": "#ab4944",
+      "chart-6": "#276baa"
     },
     "dark": {
       "surface-lower": "#0f1014",
@@ -380,7 +422,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#ea74b1",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#0b0d11",
@@ -427,7 +475,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#ea74b1",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "slate": {
@@ -476,7 +530,13 @@ export const opentuiThemes = {
       "border-warning": "#8a600073",
       "danger": "#ab4943",
       "fill-danger-quiet": "#ab494324",
-      "border-danger": "#ab494373"
+      "border-danger": "#ab494373",
+      "chart-1": "#7e539d",
+      "chart-2": "#8a6000",
+      "chart-3": "#147739",
+      "chart-4": "#7857ac",
+      "chart-5": "#ab4943",
+      "chart-6": "#276ba9"
     },
     "dark": {
       "surface-lower": "#140e17",
@@ -523,7 +583,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#b78ad8",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#110a13",
@@ -570,7 +636,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#b78ad8",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "bridge": {
@@ -619,7 +691,13 @@ export const opentuiThemes = {
       "border-warning": "#8a600073",
       "danger": "#ab4944",
       "fill-danger-quiet": "#ab494424",
-      "border-danger": "#ab494473"
+      "border-danger": "#ab494473",
+      "chart-1": "#7152bb",
+      "chart-2": "#8a6000",
+      "chart-3": "#157839",
+      "chart-4": "#7957ac",
+      "chart-5": "#ab4944",
+      "chart-6": "#276baa"
     },
     "dark": {
       "surface-lower": "#101014",
@@ -666,7 +744,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#a78bfa",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#0d0d11",
@@ -713,7 +797,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#a78bfa",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "snag": {
@@ -762,7 +852,13 @@ export const opentuiThemes = {
       "border-warning": "#8a600073",
       "danger": "#ab4944",
       "fill-danger-quiet": "#ab494424",
-      "border-danger": "#ab494473"
+      "border-danger": "#ab494473",
+      "chart-1": "#8a5c00",
+      "chart-2": "#8a6000",
+      "chart-3": "#147839",
+      "chart-4": "#7957ac",
+      "chart-5": "#ab4944",
+      "chart-6": "#276baa"
     },
     "dark": {
       "surface-lower": "#101012",
@@ -809,7 +905,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#c99137",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     },
     "darker": {
       "surface-lower": "#0d0d0f",
@@ -856,7 +958,13 @@ export const opentuiThemes = {
       "border-warning": "#c4902773",
       "danger": "#e47c74",
       "fill-danger-quiet": "#e47c7424",
-      "border-danger": "#e47c7473"
+      "border-danger": "#e47c7473",
+      "chart-1": "#c99137",
+      "chart-2": "#c49027",
+      "chart-3": "#52ab69",
+      "chart-4": "#aa89e2",
+      "chart-5": "#e47c74",
+      "chart-6": "#5b9ee0"
     }
   },
   "catppuccin-frappe": {
@@ -905,7 +1013,13 @@ export const opentuiThemes = {
       "border-warning": "#e5c89073",
       "danger": "#e78284",
       "fill-danger-quiet": "#e7828424",
-      "border-danger": "#e7828473"
+      "border-danger": "#e7828473",
+      "chart-1": "#ca9ee6",
+      "chart-2": "#e5c890",
+      "chart-3": "#a6d189",
+      "chart-4": "#ca9ee6",
+      "chart-5": "#e78284",
+      "chart-6": "#8caaee"
     },
     "darker": {
       "surface-lower": "#191b29",
@@ -952,7 +1066,13 @@ export const opentuiThemes = {
       "border-warning": "#e5c89073",
       "danger": "#e78284",
       "fill-danger-quiet": "#e7828424",
-      "border-danger": "#e7828473"
+      "border-danger": "#e7828473",
+      "chart-1": "#ca9ee6",
+      "chart-2": "#e5c890",
+      "chart-3": "#a6d189",
+      "chart-4": "#ca9ee6",
+      "chart-5": "#e78284",
+      "chart-6": "#8caaee"
     }
   },
   "catppuccin-latte": {
@@ -1001,7 +1121,13 @@ export const opentuiThemes = {
       "border-warning": "#df8e1d73",
       "danger": "#d20f39",
       "fill-danger-quiet": "#d20f3924",
-      "border-danger": "#d20f3973"
+      "border-danger": "#d20f3973",
+      "chart-1": "#8839ef",
+      "chart-2": "#df8e1d",
+      "chart-3": "#40a02b",
+      "chart-4": "#8839ef",
+      "chart-5": "#d20f39",
+      "chart-6": "#1e66f5"
     }
   },
   "catppuccin-macchiato": {
@@ -1050,7 +1176,13 @@ export const opentuiThemes = {
       "border-warning": "#eed49f73",
       "danger": "#ed8796",
       "fill-danger-quiet": "#ed879624",
-      "border-danger": "#ed879673"
+      "border-danger": "#ed879673",
+      "chart-1": "#c6a0f6",
+      "chart-2": "#eed49f",
+      "chart-3": "#a6da95",
+      "chart-4": "#c6a0f6",
+      "chart-5": "#ed8796",
+      "chart-6": "#8aadf4"
     },
     "darker": {
       "surface-lower": "#0e0f1b",
@@ -1097,7 +1229,13 @@ export const opentuiThemes = {
       "border-warning": "#eed49f73",
       "danger": "#ed8796",
       "fill-danger-quiet": "#ed879624",
-      "border-danger": "#ed879673"
+      "border-danger": "#ed879673",
+      "chart-1": "#c6a0f6",
+      "chart-2": "#eed49f",
+      "chart-3": "#a6da95",
+      "chart-4": "#c6a0f6",
+      "chart-5": "#ed8796",
+      "chart-6": "#8aadf4"
     }
   },
   "catppuccin-mocha": {
@@ -1146,7 +1284,13 @@ export const opentuiThemes = {
       "border-warning": "#f9e2af73",
       "danger": "#f38ba8",
       "fill-danger-quiet": "#f38ba824",
-      "border-danger": "#f38ba873"
+      "border-danger": "#f38ba873",
+      "chart-1": "#cba6f7",
+      "chart-2": "#f9e2af",
+      "chart-3": "#a6e3a1",
+      "chart-4": "#cba6f7",
+      "chart-5": "#f38ba8",
+      "chart-6": "#89b4fa"
     },
     "darker": {
       "surface-lower": "#080811",
@@ -1193,7 +1337,13 @@ export const opentuiThemes = {
       "border-warning": "#f9e2af73",
       "danger": "#f38ba8",
       "fill-danger-quiet": "#f38ba824",
-      "border-danger": "#f38ba873"
+      "border-danger": "#f38ba873",
+      "chart-1": "#cba6f7",
+      "chart-2": "#f9e2af",
+      "chart-3": "#a6e3a1",
+      "chart-4": "#cba6f7",
+      "chart-5": "#f38ba8",
+      "chart-6": "#89b4fa"
     }
   },
   "github": {
@@ -1242,7 +1392,13 @@ export const opentuiThemes = {
       "border-warning": "#9a670073",
       "danger": "#cf222e",
       "fill-danger-quiet": "#cf222e24",
-      "border-danger": "#cf222e73"
+      "border-danger": "#cf222e73",
+      "chart-1": "#0969da",
+      "chart-2": "#9a6700",
+      "chart-3": "#1a7f37",
+      "chart-4": "#8250df",
+      "chart-5": "#cf222e",
+      "chart-6": "#0969da"
     },
     "dark": {
       "surface-lower": "#010409",
@@ -1289,7 +1445,13 @@ export const opentuiThemes = {
       "border-warning": "#d2992273",
       "danger": "#f85149",
       "fill-danger-quiet": "#f8514924",
-      "border-danger": "#f8514973"
+      "border-danger": "#f8514973",
+      "chart-1": "#2f81f7",
+      "chart-2": "#d29922",
+      "chart-3": "#3fb950",
+      "chart-4": "#bc8cff",
+      "chart-5": "#f85149",
+      "chart-6": "#2f81f7"
     },
     "darker": {
       "surface-lower": "#000103",
@@ -1336,7 +1498,13 @@ export const opentuiThemes = {
       "border-warning": "#d2992273",
       "danger": "#f85149",
       "fill-danger-quiet": "#f8514924",
-      "border-danger": "#f8514973"
+      "border-danger": "#f8514973",
+      "chart-1": "#2f81f7",
+      "chart-2": "#d29922",
+      "chart-3": "#3fb950",
+      "chart-4": "#bc8cff",
+      "chart-5": "#f85149",
+      "chart-6": "#2f81f7"
     }
   },
   "github-dimmed": {
@@ -1385,7 +1553,13 @@ export const opentuiThemes = {
       "border-warning": "#9a670073",
       "danger": "#cf222e",
       "fill-danger-quiet": "#cf222e24",
-      "border-danger": "#cf222e73"
+      "border-danger": "#cf222e73",
+      "chart-1": "#0969da",
+      "chart-2": "#9a6700",
+      "chart-3": "#1a7f37",
+      "chart-4": "#8250df",
+      "chart-5": "#cf222e",
+      "chart-6": "#0969da"
     },
     "dark": {
       "surface-lower": "#1c2128",
@@ -1432,7 +1606,13 @@ export const opentuiThemes = {
       "border-warning": "#c6902673",
       "danger": "#e5534b",
       "fill-danger-quiet": "#e5534b24",
-      "border-danger": "#e5534b73"
+      "border-danger": "#e5534b73",
+      "chart-1": "#539bf5",
+      "chart-2": "#c69026",
+      "chart-3": "#57ab5a",
+      "chart-4": "#b083f0",
+      "chart-5": "#e5534b",
+      "chart-6": "#539bf5"
     },
     "darker": {
       "surface-lower": "#12171d",
@@ -1479,7 +1659,13 @@ export const opentuiThemes = {
       "border-warning": "#c6902673",
       "danger": "#e5534b",
       "fill-danger-quiet": "#e5534b24",
-      "border-danger": "#e5534b73"
+      "border-danger": "#e5534b73",
+      "chart-1": "#539bf5",
+      "chart-2": "#c69026",
+      "chart-3": "#57ab5a",
+      "chart-4": "#b083f0",
+      "chart-5": "#e5534b",
+      "chart-6": "#539bf5"
     }
   },
   "github-high-contrast": {
@@ -1528,7 +1714,13 @@ export const opentuiThemes = {
       "border-warning": "#74450073",
       "danger": "#a0111f",
       "fill-danger-quiet": "#a0111f24",
-      "border-danger": "#a0111f73"
+      "border-danger": "#a0111f73",
+      "chart-1": "#0349b4",
+      "chart-2": "#744500",
+      "chart-3": "#055d20",
+      "chart-4": "#622cbc",
+      "chart-5": "#a0111f",
+      "chart-6": "#0349b4"
     },
     "dark": {
       "surface-lower": "#010409",
@@ -1575,7 +1767,13 @@ export const opentuiThemes = {
       "border-warning": "#f0b72f73",
       "danger": "#ff6a69",
       "fill-danger-quiet": "#ff6a6924",
-      "border-danger": "#ff6a6973"
+      "border-danger": "#ff6a6973",
+      "chart-1": "#71b7ff",
+      "chart-2": "#f0b72f",
+      "chart-3": "#26cd4d",
+      "chart-4": "#cb9eff",
+      "chart-5": "#ff6a69",
+      "chart-6": "#71b7ff"
     },
     "darker": {
       "surface-lower": "#000103",
@@ -1622,7 +1820,13 @@ export const opentuiThemes = {
       "border-warning": "#f0b72f73",
       "danger": "#ff6a69",
       "fill-danger-quiet": "#ff6a6924",
-      "border-danger": "#ff6a6973"
+      "border-danger": "#ff6a6973",
+      "chart-1": "#71b7ff",
+      "chart-2": "#f0b72f",
+      "chart-3": "#26cd4d",
+      "chart-4": "#cb9eff",
+      "chart-5": "#ff6a69",
+      "chart-6": "#71b7ff"
     }
   },
   "tokyo-night": {
@@ -1671,7 +1875,13 @@ export const opentuiThemes = {
       "border-warning": "#8c6c3e73",
       "danger": "#f52a65",
       "fill-danger-quiet": "#f52a6524",
-      "border-danger": "#f52a6573"
+      "border-danger": "#f52a6573",
+      "chart-1": "#2e7de9",
+      "chart-2": "#8c6c3e",
+      "chart-3": "#587539",
+      "chart-4": "#9854f1",
+      "chart-5": "#f52a65",
+      "chart-6": "#2e7de9"
     },
     "dark": {
       "surface-lower": "#16161e",
@@ -1718,7 +1928,13 @@ export const opentuiThemes = {
       "border-warning": "#e0af6873",
       "danger": "#f7768e",
       "fill-danger-quiet": "#f7768e24",
-      "border-danger": "#f7768e73"
+      "border-danger": "#f7768e73",
+      "chart-1": "#7aa2f7",
+      "chart-2": "#e0af68",
+      "chart-3": "#9ece6a",
+      "chart-4": "#bb9af7",
+      "chart-5": "#f7768e",
+      "chart-6": "#7aa2f7"
     },
     "darker": {
       "surface-lower": "#0c0c14",
@@ -1765,7 +1981,13 @@ export const opentuiThemes = {
       "border-warning": "#e0af6873",
       "danger": "#f7768e",
       "fill-danger-quiet": "#f7768e24",
-      "border-danger": "#f7768e73"
+      "border-danger": "#f7768e73",
+      "chart-1": "#7aa2f7",
+      "chart-2": "#e0af68",
+      "chart-3": "#9ece6a",
+      "chart-4": "#bb9af7",
+      "chart-5": "#f7768e",
+      "chart-6": "#7aa2f7"
     }
   },
   "tokyo-night-moon": {
@@ -1814,7 +2036,13 @@ export const opentuiThemes = {
       "border-warning": "#8c6c3e73",
       "danger": "#f52a65",
       "fill-danger-quiet": "#f52a6524",
-      "border-danger": "#f52a6573"
+      "border-danger": "#f52a6573",
+      "chart-1": "#2e7de9",
+      "chart-2": "#8c6c3e",
+      "chart-3": "#587539",
+      "chart-4": "#9854f1",
+      "chart-5": "#f52a65",
+      "chart-6": "#2e7de9"
     },
     "dark": {
       "surface-lower": "#1e2030",
@@ -1861,7 +2089,13 @@ export const opentuiThemes = {
       "border-warning": "#ffc77773",
       "danger": "#ff757f",
       "fill-danger-quiet": "#ff757f24",
-      "border-danger": "#ff757f73"
+      "border-danger": "#ff757f73",
+      "chart-1": "#82aaff",
+      "chart-2": "#ffc777",
+      "chart-3": "#c3e88d",
+      "chart-4": "#c099ff",
+      "chart-5": "#ff757f",
+      "chart-6": "#82aaff"
     },
     "darker": {
       "surface-lower": "#141525",
@@ -1908,7 +2142,13 @@ export const opentuiThemes = {
       "border-warning": "#ffc77773",
       "danger": "#ff757f",
       "fill-danger-quiet": "#ff757f24",
-      "border-danger": "#ff757f73"
+      "border-danger": "#ff757f73",
+      "chart-1": "#82aaff",
+      "chart-2": "#ffc777",
+      "chart-3": "#c3e88d",
+      "chart-4": "#c099ff",
+      "chart-5": "#ff757f",
+      "chart-6": "#82aaff"
     }
   },
   "tokyo-night-storm": {
@@ -1957,7 +2197,13 @@ export const opentuiThemes = {
       "border-warning": "#8c6c3e73",
       "danger": "#f52a65",
       "fill-danger-quiet": "#f52a6524",
-      "border-danger": "#f52a6573"
+      "border-danger": "#f52a6573",
+      "chart-1": "#2e7de9",
+      "chart-2": "#8c6c3e",
+      "chart-3": "#587539",
+      "chart-4": "#9854f1",
+      "chart-5": "#f52a65",
+      "chart-6": "#2e7de9"
     },
     "dark": {
       "surface-lower": "#1f2335",
@@ -2004,7 +2250,13 @@ export const opentuiThemes = {
       "border-warning": "#e0af6873",
       "danger": "#f7768e",
       "fill-danger-quiet": "#f7768e24",
-      "border-danger": "#f7768e73"
+      "border-danger": "#f7768e73",
+      "chart-1": "#7aa2f7",
+      "chart-2": "#e0af68",
+      "chart-3": "#9ece6a",
+      "chart-4": "#bb9af7",
+      "chart-5": "#f7768e",
+      "chart-6": "#7aa2f7"
     },
     "darker": {
       "surface-lower": "#15182a",
@@ -2051,7 +2303,13 @@ export const opentuiThemes = {
       "border-warning": "#e0af6873",
       "danger": "#f7768e",
       "fill-danger-quiet": "#f7768e24",
-      "border-danger": "#f7768e73"
+      "border-danger": "#f7768e73",
+      "chart-1": "#7aa2f7",
+      "chart-2": "#e0af68",
+      "chart-3": "#9ece6a",
+      "chart-4": "#bb9af7",
+      "chart-5": "#f7768e",
+      "chart-6": "#7aa2f7"
     }
   }
 } as const;

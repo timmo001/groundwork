@@ -186,6 +186,12 @@ export const roleNames = [
   "danger",
   "fill-danger-quiet",
   "border-danger",
+  "chart-1",
+  "chart-2",
+  "chart-3",
+  "chart-4",
+  "chart-5",
+  "chart-6",
 ] as const;
 
 export const RoleName = Schema.Literals(roleNames);

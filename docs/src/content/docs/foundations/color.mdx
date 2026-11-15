@@ -70,3 +70,18 @@ GitHub's Markdown alert set, so each has its own color, mapped onto the feedback
 | Caution | `danger` | Red |
 
 <ThemePreview theme="base" compact={false} />
+
+## Chart colors
+
+`--gw-color-chart-1` to `--gw-color-chart-6` color a chart's series, in order. They start as the accent and then the status colors, ordered so neighboring series differ in hue, so they meet the same contrast targets in every theme:
+
+| Role | Starts as |
+| --- | --- |
+| `chart-1` | `accent` |
+| `chart-2` | `warning` |
+| `chart-3` | `success` |
+| `chart-4` | `important` |
+| `chart-5` | `danger` |
+| `chart-6` | `info` |
+
+A theme sets any of them to its own color under `roles`, as it would any other role, and `chart-1` follows a theme's own `accent`. A chart with more than six series repeats them with a pattern or a dash, rather than adding colors.
