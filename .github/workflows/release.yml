@@ -1,8 +1,8 @@
 ---
-# Publishes @timmo001/groundwork-tokens, -ui, -tui, -report, -pwa, -mobile and
-# -desktop to npm, and @timmo001/docs-kit to npm and JSR, when a GitHub release
-# is published, with the tool versions mise pins. All share one version, the
-# release tag.
+# Publishes @timmo001/groundwork-tokens, -ui, -tui, -report, -pwa, -mobile,
+# -auth and -desktop to npm, and @timmo001/docs-kit to npm and JSR, when a
+# GitHub release is published, with the tool versions mise pins. All share one
+# version, the release tag.
 name: Release
 
 on:
@@ -116,6 +116,18 @@ jobs:
       bun-version: ${{ needs.tools.outputs.bun }}
       node-version: ${{ needs.tools.outputs.node }}
       package-path: packages/mobile
+      build-command: "true"
+
+  npm-auth:
+    needs: tools
+    permissions:
+      contents: read
+      id-token: write
+    uses: timmo001/workflows/.github/workflows/publish-npm-package.yml@13dce11f125107b83ea662167f1091d070dcd359 # 20261114.0
+    with:
+      bun-version: ${{ needs.tools.outputs.bun }}
+      node-version: ${{ needs.tools.outputs.node }}
+      package-path: packages/auth
       build-command: "true"
 
   # desktop depends on tokens and ui at the same version, so it waits for them

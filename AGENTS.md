@@ -50,7 +50,7 @@ ends, once `mise run check` passes:
 1. Commit the session's own changes through `dot git commit`, leaving other
    sessions' work alone, and push.
 2. When `packages/tokens`, `packages/ui`, `packages/tui`, `packages/report`,
-   `packages/pwa`, `packages/mobile`, `packages/desktop` or
+   `packages/pwa`, `packages/mobile`, `packages/auth`, `packages/desktop` or
    `packages/docs-kit` changed, release
    them together with the `groundwork-release` skill, which bumps the shared
    version and publishes it. Upkeep rolls each release out to its consumers.

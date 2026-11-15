@@ -1,0 +1,48 @@
+{
+  "name": "@timmo001/groundwork-auth",
+  "version": "0.46.0",
+  "description": "Groundwork's client keys: making, checking and hashing a key, the client record a service keeps, and the exchange from one shared token",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/key.ts",
+    "./client": "./src/client.ts",
+    "./test-vectors.json": "./test-vectors.json"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.ts",
+    "test-vectors.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/timmo001/groundwork.git",
+    "directory": "packages/auth"
+  },
+  "scripts": {
+    "check": "bun run --parallel --no-exit-on-error lint typecheck format:check",
+    "test": "bun test",
+    "lint": "oxlint .",
+    "typecheck": "tsc",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "effect": "4.1.4"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.93.0",
+    "@timmo001/oxlint-rules": "0.6.5",
+    "@types/bun": "1.4.4",
+    "oxlint": "1.93.0",
+    "oxlint-tsgolint": "7.0.2007",
+    "prettier": "3.10.1",
+    "typescript": "7.0.2"
+  }
+}

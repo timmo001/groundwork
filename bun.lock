@@ -43,6 +43,22 @@
         "wrangler": "4.162.0",
       },
     },
+    "packages/auth": {
+      "name": "@timmo001/groundwork-auth",
+      "version": "0.46.0",
+      "dependencies": {
+        "effect": "4.1.4",
+      },
+      "devDependencies": {
+        "@oxlint/plugins": "1.93.0",
+        "@timmo001/oxlint-rules": "0.6.5",
+        "@types/bun": "1.4.4",
+        "oxlint": "1.93.0",
+        "oxlint-tsgolint": "7.0.2007",
+        "prettier": "3.10.1",
+        "typescript": "7.0.2",
+      },
+    },
     "packages/conventions": {
       "name": "@timmo001/groundwork-conventions",
       "dependencies": {
@@ -1097,6 +1113,8 @@
     "@tanstack/virtual-core": ["@tanstack/virtual-core@3.19.11", "", {}, "sha512-/5iHb0RHBvj8Di59FDs4ESNm45jls33aZAi4zccVXZjc/6ZvwQP6nzEYeT6weXjTf9E6/vrp2JhYWRyO+ZP13A=="],
 
     "@timmo001/docs-kit": ["@timmo001/docs-kit@workspace:packages/docs-kit"],
+
+    "@timmo001/groundwork-auth": ["@timmo001/groundwork-auth@workspace:packages/auth"],
 
     "@timmo001/groundwork-conventions": ["@timmo001/groundwork-conventions@workspace:packages/conventions"],
 

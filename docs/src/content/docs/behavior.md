@@ -156,7 +156,7 @@ Sources: [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) on device codes (§5
 
 ## Client keys
 
-How a client proves who it is to a service: Home Assistant, a phone, a CLI, a web client or a script. Every client has a key of its own, so removing one stops only that client. The TypeScript pieces will be in `@timmo001/groundwork-auth`. A service in another language follows this section and the shared test cases, which are sample keys with their checksums and hashes.
+How a client proves who it is to a service: Home Assistant, a phone, a CLI, a web client or a script. Every client has a key of its own, so removing one stops only that client. The TypeScript pieces are in `@timmo001/groundwork-auth`: `generateKey`, `parseKey`, `hashKey` and `findByKey` in `.`, and the `ClientRecord`, `NewKey`, `KeyExchangeRequest` and `SocketAuth` Schemas in `./client`. A service in another language follows this section and the shared [test vectors](https://github.com/timmo001/groundwork/blob/main/packages/auth/test-vectors.json), which are sample keys with their checksums and hashes, and keys it must turn away.
 
 - **Two ways to get one, same result.** [Pair](#pairing) with a one-time code, or make a key by hand in the service's web UI or CLI for something that can't scan or open a link. A key made by hand shows once, in a [`gw-copy`](/components/display#copy), and never again.
 - **Named and listed.** Each key belongs to a client with a name (Home Assistant, Pixel 9, CLI on desk), its kind, when it was made and when it was last used. The service lists them under [Devices](#devices), where Remove ends a key at once.
