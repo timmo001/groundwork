@@ -181,6 +181,7 @@ How a client proves who it is to a service: Home Assistant, a phone, a CLI, a we
 - **A header wherever one can go.** `Authorization: Bearer <key>` on every request.
 - **WebSockets: the first message.** A browser can't set headers on a WebSocket, so the client sends `{ "type": "auth", "key": "<key>" }` as its first message, and the service closes the socket if that's not right.
 - **Media: a short-lived signed URL.** An `<img>`, `<video>` or download link can't send a header either. The client asks the service, with its key, to sign the path, and the URL carries that signature with an expiry of a few minutes rather than the key.
+- **A client that only takes a URL: `?key=<key>`.** Some clients have nowhere to put a header or a first message, such as Home Assistant's MCP integration set up by hand, which takes only a server URL. The key goes in the URL's query only on the routes those clients use, such as an MCP endpoint, and every other route turns it away. The service never logs that URL or its query, and [Devices](#devices) shows which keys came in through a URL, so the person knows which to remove if a URL leaks. It's an exception: a client that can send a header does.
 
 ### The owner key
 
