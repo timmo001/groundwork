@@ -62,7 +62,7 @@ npx skills add timmo001/<repo> --skill <tool>
 
 - One status source per system, as `dot updates status --json` is for updates. The bar widget, the OpenCode footer, the CLI and the panel all read it, so each shows the same counts.
 - The bar counts what needs you, and hides in quiet hours.
-- Avoid toasts. Show an outcome where it happened (the button, a popover from it, or the page), app-wide state in a slim bar, and anything that needs you as a notification. A toast never has an action. Nothing for green runs.
+- Avoid toasts. Show an outcome where it happened (the button, such as a [`gw-action-button`](/components/actions#action-button), a popover from it, or the page), app-wide state in a slim bar, and anything that needs you as a notification. A toast never has an action. Nothing for green runs.
 
 ## Notifications
 
@@ -114,6 +114,25 @@ The service's own page, on a laptop or a phone already paired, shows the code th
 
 `gw-pairing` is all of this, given the app's function that makes a code and one that waits for it to be used.
 
+### The service's side
+
+The service has two routes for pairing: one that makes a code, for its own page, and `POST pair`, for the device.
+
+- **Making a code.** Only someone the service already trusts makes a code: the owner's page or CLI, sending its own key. The route is the service's own, such as `POST api/pair/code`, since only its own page calls it. It answers a `PairingCode`, `{ code, link, expires }`, with the link from `pairingUrl` and `expires` as an ISO date, and `gw-pairing` takes it as it is. A new code ends the one before it.
+- **Waiting for it.** The page learns the code was used however suits the service, such as an event on a stream it already has, or polling the devices list. That's `gw-pairing`'s `wait`, which resolves with the device's name.
+- **Taking a code.** `POST pair` needs no key, since the code is the credential. The body is a `PairingRequest`: the code and the client, `{ id, name, platform }`. The service runs the code through `normalizePairingCode`, compares it in constant time, and forgets it once it's used.
+
+| Answer | When |
+| --- | --- |
+| `200` with a `Pairing` | The code is right and still open: `{ token, service: { id, name } }` |
+| `400` | The body isn't a `PairingRequest` |
+| `401` | The code is wrong, used or expired, with the same answer for each, so a guesser learns nothing |
+| `429` with `Retry-After` | The service is in its [lockout](#security) after repeated wrong codes |
+
+- **Keeping the client.** The service makes the client's key and keeps it as [Security](#security) says, beside the client's `id`, name and platform, and lists it under [Devices](#devices). A client that pairs again with the same `id` replaces its old key rather than adding a second device.
+
+`PairingCode`, `PairingRequest` and `Pairing` in `./pairing` are the bodies as Schemas, so a service on Effect checks them the same way the app does. A service in another language follows the table above.
+
 ### Entering a code
 
 The device that pairs has one field that takes either a pasted link or a typed code, so nobody has to know which they have. It ignores case, spaces and dashes, so `4f9c 82kd` is `4F9C82KD`, and a bare code pairs with the service the app already knows. `parsePairingInput(text, service)` reads both; `normalizePairingCode` is the typed part alone.
@@ -130,10 +149,55 @@ The service lists every paired device: its name and kind, when it paired, when i
 - **Short expiry.** Five minutes: long enough to fetch a phone and scan, short enough that a code someone saw over a shoulder or in a screenshot has gone.
 - **Lockout.** After repeated wrong codes, such as 10 in 5 minutes, the service stops taking codes for a while and drops the open ones, counted on the service rather than per address, so a guesser can't spread out. With 40 bits and a lockout, guessing a live code is out of reach.
 - **Nothing secret in logs.** Codes, links that carry them and keys never go in a log, an error or analytics. A fragment link never reaches the server's request log, and the app takes it out of the address bar once it's read.
-- **One key per client, stored hashed.** Each device gets its own key, at least 256 bits from a CSPRNG, sent as a Bearer token. The service keeps only its SHA-256 hash, compares in constant time, and shows a key once, if a person ever needs to see it.
+- **One key per client, stored hashed.** Each device gets its own key, as [Client keys](#client-keys) sets out.
 - **Show what's being paired.** The paired state names the device, so the person who made the code sees whether the one they meant used it.
 
 Sources: [RFC 8628](https://www.rfc-editor.org/rfc/rfc8628) on device codes (§5.1 brute forcing, §5.4 phishing and lifetime, §6.1 characters and dashes), OWASP's [Forgot Password](https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html) (single-use expiring tokens), [Authentication](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#account-lockout) (lockout) and [Logging](https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html#data-to-exclude) (what to leave out) cheat sheets, DENSO WAVE on the [QR quiet zone](https://www.qrcode.com/en/howto/code.html) (ISO/IEC 18004), and ML Kit's [barcode scanning](https://developers.google.com/ml-kit/vision/barcode-scanning/android#input-image-guidelines) guidance on module size.
+
+## Client keys
+
+How a client proves who it is to a service: Home Assistant, a phone, a CLI, a web client or a script. Every client has a key of its own, so removing one stops only that client. The TypeScript pieces will be in `@timmo001/groundwork-auth`. A service in another language follows this section and the shared test cases, which are sample keys with their checksums and hashes.
+
+- **Two ways to get one, same result.** [Pair](#pairing) with a one-time code, or make a key by hand in the service's web UI or CLI for something that can't scan or open a link. A key made by hand shows once, in a [`gw-copy`](/components/display#copy), and never again.
+- **Named and listed.** Each key belongs to a client with a name (Home Assistant, Pixel 9, CLI on desk), its kind, when it was made and when it was last used. The service lists them under [Devices](#devices), where Remove ends a key at once.
+- **All or nothing, to start.** A key can do anything its service does. Each record keeps `scopes: ["all"]`, so a service that later needs read-only or control-only keys adds scope names without changing the record or reissuing keys.
+
+### The key
+
+`<service>_<kind>_<random><checksum>`, such as `kestrel_key_…`:
+
+- **The prefix** names the service and the kind of key, so a leaked key says where it's from and a secret scanner can match it.
+- **The random part** is 43 base62 characters from a CSPRNG, which is 256 bits.
+- **The checksum** is the CRC32 of everything before it, as 6 base62 characters. A client or scanner can then reject a mistyped or truncated key without asking the service.
+
+### Keeping and checking keys
+
+- **Only a hash.** The service keeps the SHA-256 of each key, never the key. A slow password hash such as Argon2 is for guessable passwords; a key with 256 random bits can't be guessed, so one round of SHA-256 is enough. The file holding the hashes is readable only by the service's user.
+- **Constant time.** It finds a key by its hash and compares in constant time. A key with a bad checksum is turned away before any lookup.
+- **Never logged.** Keys never go in a log, an error or analytics, as with [pairing codes](#security).
+
+### Sending a key
+
+- **A header wherever one can go.** `Authorization: Bearer <key>` on every request.
+- **WebSockets: the first message.** A browser can't set headers on a WebSocket, so the client sends `{ "type": "auth", "key": "<key>" }` as its first message, and the service closes the socket if that's not right.
+- **Media: a short-lived signed URL.** An `<img>`, `<video>` or download link can't send a header either. The client asks the service, with its key, to sign the path, and the URL carries that signature with an expiry of a few minutes rather than the key.
+
+### The owner key
+
+- **On first start**, the service writes an owner key to a file only its user can read and prints where it is. That key makes the first others, through the web UI or the CLI.
+- **Getting back in.** If every key is removed, a CLI command on the host makes a new owner key. It works only on the host, as the service's user, so it needs no key of its own.
+
+### Moving from one shared token
+
+A service that had one token for every client moves to keys in a single release, following [only the latest version](/principles):
+
+1. **The release that adds keys** accepts the old token in one place only: `POST keys/exchange`, which trades it for the calling client's own key, `{ key, client }`. Every other route takes keys only.
+2. **Clients update in step.** Each client's matching release calls the exchange once, keeps its new key and signs in again with it. A client the person has to sign in again says so.
+3. **The next release** removes the exchange and the old token, as soon as the clients that needed it have shipped.
+
+A service with clients it doesn't release itself, such as a Home Assistant integration, waits only for that client's next release, then drops the old token straight after.
+
+Sources: [RFC 6750](https://datatracker.ietf.org/doc/html/rfc6750) (Bearer tokens, and §5.3 on keeping them out of URLs), GitHub's [token formats](https://github.blog/engineering/platform-security/behind-githubs-new-authentication-token-formats/) (prefixes, base62 and a CRC32 checksum), OWASP's [Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) (slow hashes are for passwords) and [Secrets Management](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html) cheat sheets, and Home Assistant's [WebSocket API](https://developers.home-assistant.io/docs/api/websocket/#authentication-phase) (authentication as the first message).
 
 ## Interfaces
 

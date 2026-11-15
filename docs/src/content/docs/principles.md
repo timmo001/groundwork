@@ -15,6 +15,8 @@ description: The rules every part of Groundwork follows, from data-first themes 
 10. **Fast by default.** Long content is windowed, folds draw when they open, and [view state](/behavior#view-state) is kept, all inside the components, so an app stays quick as it grows without asking for it.
 11. **Agents read and use it.** Every page is in llms.txt and the docs MCP, every job has a skill, and every system has an agent surface.
 12. **Fluid.** No versions or releases for the design itself. The base moves with the apps that follow it, apps pin a commit, and the update system carries changes to them.
+13. **The system, in any language.** Groundwork is the rules, the data and the contracts; its TypeScript packages are one way to follow them. A service or app in another language, such as Go, follows the same pages and shared test cases, and builds its own pieces from them until a second project in that language makes sharing them worthwhile.
+14. **Only the latest version.** Each app supports only its latest release, and clients only the latest service. A change that breaks clients ships with its migration in the same release (signing clients in again where needed) and drops the old way as soon as the clients that need it have updated, rather than carrying both.
 
 ## Interfaces
 
