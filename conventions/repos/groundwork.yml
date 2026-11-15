@@ -1,6 +1,7 @@
 ---
 repo: timmo001/groundwork
 kind: personal
+theme: base
 renovate:
   - GitHub Actions
   - JavaScript

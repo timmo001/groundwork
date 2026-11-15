@@ -65,6 +65,12 @@ export const Repo = Schema.Struct({
   areas: Schema.optionalKey(Schema.Array(Label)),
   /** Labels outside the manifest the label job leaves alone, such as ones automation uses. */
   keep: Schema.optionalKey(Schema.Array(Schema.String)),
+  /**
+   * The theme the owner picked for the repository's app and docs site, such
+   * as `bridge` or the app's own. Until it's set, a docs site on Base reads
+   * as a Setup step still to do.
+   */
+  theme: Schema.optionalKey(Schema.String),
 });
 
 export interface Repo extends Schema.Schema.Type<typeof Repo> {}

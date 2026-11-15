@@ -1,7 +1,8 @@
 #!/usr/bin/env bun
 /**
  * The conventions CLI: generates and checks the label manifest and each
- * repository's labels from the data in `conventions/`.
+ * repository's labels from the data in `conventions/`, and lists what
+ * repository checkouts are missing from the Setup page.
  *
  * @module
  */
@@ -18,6 +19,7 @@ import {
 import { Argument, Command, Flag } from "effect/cli";
 import { check, labelsFor, setsFor, type Manifest } from "./resolve.ts";
 import { KindsDocument, LabelsDocument, Repo } from "./schema.ts";
+import { checkSetup } from "./setup.ts";
 
 class ConventionsError extends Schema.TaggedError<ConventionsError>()(
   "ConventionsError",
@@ -281,8 +283,74 @@ const labelsCommand = Command.make(
   ),
 );
 
+const setupCommand = Command.make(
+  "setup",
+  {
+    directories: Argument.String("directory").pipe(
+      Argument.withDescription(
+        "A repository checkout to check; defaults to the current directory",
+      ),
+      Argument.atLeast(0),
+    ),
+    json: Flag.Boolean("json").pipe(
+      Flag.withDescription("Print the findings as a JSON array"),
+      Flag.withDefault(false),
+    ),
+    repos: reposFlag,
+    conventions: conventionsFlag,
+  },
+  Effect.fn("setup")(function* ({ directories, json, repos, conventions }) {
+    const path = yield* Path.Path;
+    const manifest = yield* loadManifest(repos, { local: true, conventions });
+
+    const targets = (directories.length > 0 ? directories : ["."]).map(
+      (directory) => path.resolve(directory),
+    );
+
+    const reports = yield* Effect.forEach(targets, (directory) =>
+      checkSetup(manifest, directory),
+    );
+
+    if (json) {
+      yield* Console.log(JSON.stringify(reports, null, 2));
+    } else {
+      for (const report of reports) {
+        yield* Console.log(
+          report.findings.length === 0
+            ? `✓ ${report.repo}: nothing missing`
+            : `${report.repo} (${report.directory})`,
+        );
+
+        for (const item of report.findings) {
+          yield* Console.log(`  ✗ ${item.missing}: ${item.step}`);
+        }
+      }
+    }
+
+    const missing = reports.reduce(
+      (total, report) => total + report.findings.length,
+      0,
+    );
+
+    if (missing > 0) {
+      return yield* new ConventionsError({
+        message: `${missing} Setup steps missing`,
+      });
+    }
+  }),
+).pipe(
+  Command.withDescription(
+    "List what repository checkouts are missing from the Setup page",
+  ),
+);
+
 Command.make("conventions").pipe(
-  Command.withSubcommands([checkCommand, genCommand, labelsCommand]),
+  Command.withSubcommands([
+    checkCommand,
+    genCommand,
+    labelsCommand,
+    setupCommand,
+  ]),
   Command.run({ version: "0.0.0" }),
   Effect.provide(NodeServices.layer),
   NodeRuntime.runMain,

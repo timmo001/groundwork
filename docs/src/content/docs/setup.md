@@ -3,7 +3,7 @@ title: Setup
 description: Setting up a new repository on Groundwork, in order, from creating it to its docs site, agent surface and theme.
 ---
 
-Every new repository goes through the same steps, in this order. Each step names the page or tool that has the detail. The `groundwork-setup` skill walks an agent through them and checks each one off.
+Every new repository goes through the same steps, in this order. Each step names the page or tool that has the detail. The `groundwork-setup` skill walks an agent through them and checks each one off, and `mise run setup:check -- <dir>` in Groundwork lists what a checkout is still missing, as [Conventions](/conventions#checking-a-repository-against-setup) describes.
 
 Keep a checklist of these steps on the repository's tracking issue, ticking each off with a link to its commit, so what's left is always visible.
 
@@ -41,6 +41,15 @@ Only libraries that other repositories consume publish. Apps ship as binaries an
 - npm and JSR, with trusted publishing and provenance from GitHub Actions. The `npm-jsr-first-publish` skill sets up a new name.
 - An Apache 2.0 license, its own README for the npm and JSR pages, and `repository.directory` pointing at its folder.
 - `effect` and other shared libraries as caret `peerDependencies`, with the exact pin in `devDependencies`.
+
+### Several surfaces
+
+One repository can hold a whole product: a server, a web client, an Android app, a Home Assistant frontend, an Omarchy plugin, connectors in other languages and the docs. Each is a surface, in its own folder, and the steps still apply to the repository once:
+
+- **An area for each.** Each surface gets an [area label](/conventions/repositories) in the repository's conventions file, such as `Web Client` or `Omarchy Plugin`, so issues and pull requests say which one they touch.
+- **CI for each.** Each surface has its own workflow that runs only when its folder changes (`paths:`), plus the files it shares, such as `mise.toml` and the lockfile. A change to the Android app doesn't wait on the Go build, and the ruleset requires each surface's checks.
+- **Mirrors for what installs from its own repository.** Where a surface must live in a repository of its own to be installed, such as an Omarchy plugin or a HACS frontend, a workflow publishes it there from this one on release. The mirror is generated: it says so in its README, takes no pull requests, and every change goes through the main repository.
+- **One docs site,** with a section per surface, and one tracking issue with sub-issues per surface.
 
 ### Android app
 
@@ -142,13 +151,13 @@ One status source per system, read by the CLI, the bar and any panel, and notifi
 
 ## 9. Theme
 
-Each app starts from one theme, as [Choosing an app's themes](/themes#choosing-an-apps-themes) sets out: a core theme, an [optional theme](/themes/optional), one from elsewhere, or the app's own, kept in the app rather than added to Groundwork's set. Its picker lists that theme first, then any other Groundwork themes and the optional ones it offers. Users can bring [their own theme](/themes#your-own-theme) at runtime, offered beside the rest but never the default. The `groundwork-themes` skill walks an agent through it.
+Each app starts from one theme, as [Choosing an app's themes](/themes#choosing-an-apps-themes) sets out: a core theme, an [optional theme](/themes/optional), one from elsewhere, or the app's own, kept in the app rather than added to Groundwork's set. Its picker lists that theme first with no heading, then Groundwork's core themes under Groundwork, then the optional ones under their families, as `themeChoices` gives them. Users can bring [their own theme](/themes#your-own-theme) at runtime, offered beside the rest but never the default. The `groundwork-themes` skill walks an agent through it.
 
 The owner picks the starting theme, which others the app offers, whether users can upload their own, and its [icon set](/foundations/iconography). These are the owner's choices, along with the fonts and the logo's colors, so an agent asks for each one rather than choosing.
 
 An app that can't switch themes yet, such as one with no UI or no `pageTheme`, plans this for later instead: an issue for choosing the themes on offer, uploads and the icon set, linked from the tracking issue, with the docs site on a single theme until then. Once the choices are made, switch everything that showed Base:
 
-- **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts. docs-kit only has Groundwork's own themes, so a site for an app with its own theme renders that theme's stylesheet with `blumeThemeCss` from a site script that writes it into `theme.css`, as the docs-kit README shows.
+- **Docs site:** import the default theme's docs-kit stylesheet in `theme.css` in place of Base's, then `all.css`. Pass the themes on offer to `HeaderSearch` so readers can pick, as the [docs-kit README](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit#readme) shows, and load each theme's fonts. docs-kit only has Groundwork's own themes, so a site for an app with its own theme renders that theme's stylesheet with `blumeThemeCss` from a site script that writes it into `theme.css`, with `runtimeTheme`'s token CSS beside it so the theme picker's controls have their surfaces, as the docs-kit README shows.
 - **App:** offer the same themes with [`pageTheme`](/themes#on-a-page) and a [theme picker](/components/actions/#theme-picker), including importing your own theme.
 - **Brand images:** set the default theme's background and accent in `scripts/brand-images.ts` and run `bun run brand`. Then upload the new social preview in the repository's settings, since GitHub doesn't read it from the repository.
 

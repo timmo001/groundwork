@@ -71,6 +71,10 @@ The conventions are data in [`conventions/`](https://github.com/timmo001/groundw
 
 - `kinds.yml`: the four kinds.
 - `labels.yml`: the [label sets](/conventions/labels).
-- `repos/`: a file per repository with its kind, opt-in label sets and areas. See [Repositories](/conventions/repositories).
+- `repos/`: a file per repository with its kind, opt-in label sets and areas, and its `theme` once the owner has picked one. See [Repositories](/conventions/repositories).
 
 Repositories that aren't public keep their files in `$XDG_CONFIG_HOME/groundwork/conventions/repos`, which the tools read alongside. `mise run check` checks every file: label names, descriptions, and that every color in a repository is distinct in OKLab. `bun run src/cli.ts labels <owner/repo>` in `packages/conventions` prints the labels a repository should have, for the label job to apply, and `--all` prints every repository's. An organization with its own kinds and label sets passes `--conventions <dir>` to `check` and `labels`, pointing at a directory with its own `kinds.yml`, `labels.yml` and `repos/`.
+
+## Checking a repository against Setup
+
+`mise run setup:check -- <dir>...` lists what each repository checkout is missing from the [Setup](/setup) page, each with a link to its step: the kind file, `mise.lock`, Prettier, hk, `AGENTS.md`, the agent permissions, CI from the shared workflows, Renovate, a docs-kit site, the agent surface, and a theme picked. It reads only the checkout's files, so it runs offline, and it fails while anything is missing. `--json` prints the findings for a job, such as one that opens an issue per repository. A Library skips the agent surface and the theme, since it follows the apps that use it.

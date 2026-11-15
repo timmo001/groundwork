@@ -87,6 +87,11 @@ depends = ["install"]
 dir = "packages/conventions"
 run = "bun run check"
 
+[tasks."setup:check"]
+description = "List what repository checkouts are missing from the Setup page: mise run setup:check -- <dir>... [--json]"
+depends = ["install"]
+run = "bun run packages/conventions/src/cli.ts setup"
+
 [tasks.contrast]
 description = "Check every core theme meets its contrast targets"
 depends = ["install"]

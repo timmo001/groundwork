@@ -516,6 +516,18 @@
       "labels": 28
     },
     {
+      "repo": "timmo001/effect-herdr",
+      "kind": "library",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
       "repo": "timmo001/float-app",
       "kind": "personal",
       "discussions": false,
@@ -685,6 +697,68 @@
       ],
       "areas": [],
       "labels": 27
+    },
+    {
+      "repo": "timmo001/kestrel",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution",
+        "os"
+      ],
+      "areas": [
+        {
+          "name": "Core",
+          "description": "Related to what every source shares, its shapes, errors and the Source interface",
+          "color": "1e3a8a"
+        },
+        {
+          "name": "Source: Raysharp",
+          "description": "Related to Raysharp-made recorders and their control protocol",
+          "color": "4f46e5",
+          "aliases": [
+            "Protocol"
+          ]
+        },
+        {
+          "name": "Source: Reolink",
+          "description": "Related to Reolink cameras",
+          "color": "6366f1"
+        },
+        {
+          "name": "Source: Bambu Lab",
+          "description": "Related to the camera in Bambu Lab printers",
+          "color": "3730a3"
+        },
+        {
+          "name": "Source: Stream",
+          "description": "Related to cameras added from a stream address",
+          "color": "a5b4fc"
+        },
+        {
+          "name": "Server",
+          "description": "Related to the server between the sources and the clients",
+          "color": "a16207"
+        },
+        {
+          "name": "Web",
+          "description": "Related to the web client",
+          "color": "006b75"
+        },
+        {
+          "name": "CLI",
+          "description": "Related to the kestrel CLI and its Code Mode and MCP surface",
+          "color": "d946ef"
+        },
+        {
+          "name": "Video",
+          "description": "Related to live and recorded video through go2rtc",
+          "color": "ea580c"
+        }
+      ],
+      "labels": 42
     },
     {
       "repo": "timmo001/notes",
