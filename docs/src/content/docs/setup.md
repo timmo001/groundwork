@@ -17,11 +17,11 @@ Keep a checklist of these steps on the repository's tracking issue, ticking each
 ## 2. Tools and workspace
 
 - Pin every tool with mise, including Bun and the linters, and commit `mise.lock`.
-- Bun, with the [package layout](#package-layout) that fits the repository. Pin every dependency to an exact version (`bun add -E`).
+- Bun, with the [package layout](#package-layout) that fits the repository. Pin every dependency to an exact version (`bun add -E`). A repository already on another package manager, such as pnpm, keeps it and pins it with mise instead.
 - Effect v4 for the code, following [Effect](/effect).
 - The shared Oxlint preset from `@timmo001/oxlint-rules`, with type-aware rules and type checking on, in each package.
 - Prettier for formatting. It skips `AGENTS.md`, synced skills, lockfiles and generated output.
-- hk hooks running the shared Markdown, YAML, Actions and shell lints before a push.
+- hk hooks running the shared Markdown, YAML, Actions and shell lints before a push. A `.markdownlint-cli2.jsonc` sets the repository's Markdown rules, usually with `MD013` (line length) off, and `MD033` allowing the HTML its README uses, such as `img`.
 - mise tasks for `format`, `check`, `test` and `build`, with dev servers as `serve:*` tasks through Pitchfork, each at `https://<daemon>.<repo>.localhost`.
 
 ### Package layout
