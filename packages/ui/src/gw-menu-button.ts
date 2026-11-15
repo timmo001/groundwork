@@ -63,7 +63,8 @@ const boxEmpty =
 
 /**
  * A button that opens a menu on the Popover API, so it shows in the top
- * layer and closes on Esc or a click outside. A clear scrim covers the page
+ * layer and closes on Esc, a click outside, or Tab, which moves on from it.
+ * A clear scrim covers the page
  * while it's open, so that click only closes it, and nothing beneath reacts.
  * Set `items`; arrow keys, Home and End move between them, and choosing one
  * fires `select` with its `value` and closes the menu.
@@ -735,6 +736,13 @@ export class GwMenuButton extends GwElement {
     if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
+      this.#close();
+
+      return;
+    }
+
+    // Tab leaves a menu: it closes, and the focus moves on from the button
+    if (event.key === "Tab") {
       this.#close();
 
       return;
