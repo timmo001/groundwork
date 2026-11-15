@@ -31,6 +31,12 @@
       "files": ["qml/SectionHeading.qml"]
     },
     {
+      "name": "status-colors",
+      "kind": "qml",
+      "description": "Ok, running, warning, failed and muted colors that follow the Omarchy or Groundwork theme",
+      "files": ["qml/StatusColors.qml"]
+    },
+    {
       "name": "themes-css",
       "kind": "tokens",
       "description": "Every theme as CSS variables",
@@ -122,6 +128,13 @@
       "needs": ["ui-base"]
     },
     {
+      "name": "gw-install-banner",
+      "kind": "element",
+      "description": "The offer to install a web app, as a banner with Install and Not now, until it's turned down once",
+      "files": ["packages/ui/src/gw-install-banner.ts"],
+      "needs": ["ui-base", "gw-banner", "gw-button"]
+    },
+    {
       "name": "gw-notification",
       "kind": "element",
       "description": "gw-notification and gw-notification-center, which keep what needs a decision until it's dealt with",
@@ -144,6 +157,13 @@
       "description": "A native button or link, with a color variant and an accent, filled, outlined or plain appearance",
       "files": ["packages/ui/src/gw-button.ts"],
       "needs": ["ui-base"]
+    },
+    {
+      "name": "gw-action-button",
+      "kind": "element",
+      "description": "A button that runs an action and shows how it went where it was pressed: a spinner, then a check or why it failed",
+      "files": ["packages/ui/src/gw-action-button.ts", "packages/ui/src/copy.ts"],
+      "needs": ["ui-base", "gw-button"]
     },
     {
       "name": "gw-card",

@@ -51,6 +51,8 @@ export * from "./dirty.js";
 
 export * from "./gw-alert.js";
 
+export * from "./gw-action-button.js";
+
 export * from "./gw-app-bar.js";
 
 export * from "./gw-badge.js";
@@ -98,6 +100,8 @@ export * from "./gw-fade-in.js";
 export * from "./gw-gauge.js";
 
 export * from "./gw-input.js";
+
+export * from "./gw-install-banner.js";
 
 export * from "./gw-key-list.js";
 

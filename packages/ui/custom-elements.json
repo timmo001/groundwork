@@ -1805,6 +1805,663 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/gw-action-button.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "A button that runs `action` and shows its outcome in place, so nothing\nneeds a toast. While it runs the button shows its spinning ring and\nignores presses. Once it's worked the icon turns to a check and the text\nto `done-label` for a moment, and a status announces it. When it fails,\nwhy shows under the button as an alert until the next press: the\nrejection's `message` when it's an `Error` with one, or `failed-label`.\n\nSet `quiet` where the page gathers failures in one place instead, such as\na `gw-alert` over several actions, and listen for `failed`.",
+          "name": "GwActionButton",
+          "cssParts": [
+            {
+              "description": "The `gw-button`.",
+              "name": "button"
+            },
+            {
+              "description": "Why it failed, under the button.",
+              "name": "error"
+            }
+          ],
+          "slots": [
+            {
+              "description": "The button's text.",
+              "name": ""
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ variant: { reflect: true }, appearance: { reflect: true }, size: { reflect: true }, icon: {}, labels: {}, label: {}, disabled: { type: \"boolean\", reflect: true }, quiet: { type: \"boolean\", reflect: true }, doneLabel: { attribute: \"done-label\" }, failedLabel: { attribute: \"failed-label\" }, action: { attribute: false }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\", delegatesFocus: true, }",
+              "description": "Focusing the element focuses its button.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: inline-flex; flex-direction: column; gap: var(--gw-space-1); align-items: flex-start; max-width: 100%; } .error { font-size: var(--gw-font-size-s); color: var(--gw-color-danger); overflow-wrap: anywhere; } .status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "variant",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"brand\""
+            },
+            {
+              "kind": "field",
+              "name": "appearance",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"accent\""
+            },
+            {
+              "kind": "field",
+              "name": "size",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"medium\""
+            },
+            {
+              "kind": "field",
+              "name": "icon",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "labels",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"show\""
+            },
+            {
+              "kind": "field",
+              "name": "label",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "disabled",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "quiet",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "doneLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Done\""
+            },
+            {
+              "kind": "field",
+              "name": "failedLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"That didn't work\""
+            },
+            {
+              "kind": "field",
+              "name": "action",
+              "type": {
+                "text": "Action | undefined"
+              },
+              "description": "What a press runs.",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "#text",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#done",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#button",
+              "privacy": "private",
+              "type": {
+                "text": "GwButton"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#error",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLDivElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#status",
+              "privacy": "private",
+              "type": {
+                "text": "HTMLSpanElement"
+              },
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#running",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#succeeded",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "#failure",
+              "privacy": "private",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"\""
+            },
+            {
+              "kind": "field",
+              "name": "#timer",
+              "privacy": "private",
+              "type": {
+                "text": "ReturnType<typeof setTimeout> | undefined"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "run",
+              "description": "Runs the action, as a press does, and resolves with whether it worked."
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "done",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When the action has worked."
+            },
+            {
+              "name": "failed",
+              "type": {
+                "text": "CustomEvent<{ message: string }>"
+              },
+              "description": "When the action has failed, with why."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "\"brand\"|\"neutral\"|\"info\"|\"success\"|\"warning\"|\"danger\""
+              },
+              "description": "The button's color, as `gw-button`'s. Defaults to `brand`.",
+              "name": "variant"
+            },
+            {
+              "type": {
+                "text": "\"accent\"|\"filled\"|\"outlined\"|\"plain\""
+              },
+              "description": "How the color is applied, as `gw-button`'s. Defaults to `accent`.",
+              "name": "appearance"
+            },
+            {
+              "type": {
+                "text": "\"xs\"|\"small\"|\"medium\"|\"large\"|\"xl\""
+              },
+              "description": "The button's size, as `gw-button`'s. Defaults to `medium`.",
+              "name": "size"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "SVG path data for an icon before the text.",
+              "name": "icon"
+            },
+            {
+              "type": {
+                "text": "\"show\"|\"hide\"|\"auto\""
+              },
+              "description": "Whether the text shows beside the icon, as `gw-button`'s. Defaults to `show`.",
+              "name": "labels"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The accessible name, when the text alone isn't enough.",
+              "name": "label"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Disables the button. It's disabled too until it has an `action`.",
+              "name": "disabled"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Leaves out why it failed, for a page that shows that elsewhere.",
+              "name": "quiet"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What the button says and the status announces once it's worked. Defaults to `Done`.",
+              "name": "done-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "Why it failed, when the rejection doesn't say. Defaults to `That didn't work`.",
+              "name": "failed-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-action-button",
+          "customElement": true,
+          "summary": "A button that runs an action and shows how it went where it was pressed."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwActionButton",
+          "declaration": {
+            "name": "GwActionButton",
+            "module": "src/gw-action-button.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-alert.ts",
       "declarations": [
         {
@@ -18448,6 +19105,577 @@
           "declaration": {
             "name": "GwInput",
             "module": "src/gw-input.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/gw-install-banner.ts",
+      "declarations": [
+        {
+          "kind": "class",
+          "description": "Offers to install the app while the browser can, until it's turned down\nonce, with Not now or in the browser's own prompt. The turn down is kept\nunder `storage-key`, so it stays down across visits. Give it `pwa`, the\npage's `connectPwa` result, and it opens and closes by itself as the\nbrowser offers a prompt and takes it back. Only Chromium browsers offer\none, so elsewhere it stays closed.\n\nPut it where a `gw-banner` goes, above the app's content. Keep an Install\nbutton in the app's Settings too, as the only place left to install from\nonce the banner's turned down. Set `held` to keep it back for a while,\nsuch as during a pairing.",
+          "name": "GwInstallBanner",
+          "cssParts": [
+            {
+              "description": "The `gw-banner`.",
+              "name": "banner"
+            },
+            {
+              "description": "The Install button, a `gw-button`.",
+              "name": "install"
+            },
+            {
+              "description": "The Not now button, a `gw-button`.",
+              "name": "dismiss"
+            }
+          ],
+          "slots": [
+            {
+              "description": "What it says, in place of `message`.",
+              "name": ""
+            },
+            {
+              "description": "An icon before it.",
+              "name": "icon"
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "properties",
+              "type": {
+                "text": "Properties"
+              },
+              "static": true,
+              "default": "{ storageKey: { attribute: \"storage-key\" }, held: { type: \"boolean\", reflect: true }, tone: {}, message: {}, installLabel: { attribute: \"install-label\" }, dismissLabel: { attribute: \"dismiss-label\" }, pwa: { attribute: false }, }",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "styles",
+              "type": {
+                "text": "readonly CSSStyleSheet[]"
+              },
+              "static": true,
+              "default": "[ base, css` :host { display: block; } `, ]",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "storageKey",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"gw:install-dismissed\""
+            },
+            {
+              "kind": "field",
+              "name": "held",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false"
+            },
+            {
+              "kind": "field",
+              "name": "tone",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"info\""
+            },
+            {
+              "kind": "field",
+              "name": "message",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Install this app to open it from your home screen.\""
+            },
+            {
+              "kind": "field",
+              "name": "installLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Install\""
+            },
+            {
+              "kind": "field",
+              "name": "dismissLabel",
+              "type": {
+                "text": "string"
+              },
+              "default": "\"Not now\""
+            },
+            {
+              "kind": "field",
+              "name": "pwa",
+              "type": {
+                "text": "InstallSource | undefined"
+              },
+              "description": "The page's PWA connection, which the install is offered through.",
+              "default": "undefined"
+            },
+            {
+              "kind": "field",
+              "name": "#message",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#install",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#dismiss",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#banner",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "#show",
+              "privacy": "private",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "dismissed",
+              "description": "Whether it's been turned down here before.",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "install",
+              "return": {
+                "type": {
+                  "text": "Promise<InstallOutcome>"
+                }
+              },
+              "description": "Shows the browser's install prompt, which only a tap or click may do."
+            },
+            {
+              "kind": "method",
+              "name": "dismiss",
+              "description": "Turns it down, and keeps it down under `storage-key`."
+            },
+            {
+              "kind": "method",
+              "name": "create",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "root",
+                  "type": {
+                    "text": "ShadowRoot"
+                  }
+                }
+              ],
+              "description": "Builds the shadow root's content once, on first connection.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "update",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "_changed",
+                  "type": {
+                    "text": "ReadonlySet<string>"
+                  }
+                }
+              ],
+              "description": "Sets what the changed properties affect.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadow",
+              "type": {
+                "text": "boolean"
+              },
+              "static": true,
+              "default": "true",
+              "description": "Whether to attach a shadow root. Light DOM elements set this false.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "shadowRootOptions",
+              "type": {
+                "text": "ShadowRootInit"
+              },
+              "static": true,
+              "default": "{ mode: \"open\" }",
+              "description": "How the shadow root is attached.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "define",
+              "static": true,
+              "parameters": [
+                {
+                  "name": "tag",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "Adds the property accessors, then defines the element. A tag another\nclass already holds is left to it, with a console warning.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#values",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#defaults",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, PropertyValue>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#changed",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#unreflected",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Set<string>()",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#created",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#queued",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#pending",
+              "privacy": "private",
+              "type": {
+                "text": "Promise<void> | undefined"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#reflecting",
+              "privacy": "private",
+              "type": {
+                "text": "boolean"
+              },
+              "default": "false",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#resolveUpdated",
+              "privacy": "private",
+              "type": {
+                "text": "() => void"
+              },
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#updated",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Promise<void>((resolve) => { this.#resolveUpdated = resolve; })",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "renderRoot",
+              "type": {
+                "text": "ShadowRoot | HTMLElement"
+              },
+              "readonly": true,
+              "description": "The shadow root, or the element itself for a light DOM element.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#own",
+              "privacy": "private",
+              "type": {
+                "text": "typeof GwElement"
+              },
+              "readonly": true,
+              "description": "The element's own class, for its static properties and styles.",
+              "default": "new.target",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "#early",
+              "privacy": "private",
+              "readonly": true,
+              "default": "new Map<string, unknown>()",
+              "description": "Properties set before the element upgraded, such as by a template that\nrenders it before its module loads. They sit on the instance, where the\nsubclass's constructor defaults would overwrite them, so they're taken\noff here and set through the accessors once it connects.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "field",
+              "name": "updateComplete",
+              "description": "Resolves once the pending update has run, or the first one before it connects.",
+              "readonly": true,
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "defaultOf",
+              "privacy": "protected",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                }
+              ],
+              "description": "The value a property returns to when its attribute is removed. Defaults\nto the value it was given in the constructor.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "requestUpdate",
+              "parameters": [
+                {
+                  "name": "names",
+                  "type": {
+                    "text": "readonly string[]"
+                  }
+                }
+              ],
+              "description": "Asks for an update with the given properties marked as changed.",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#flush",
+              "privacy": "private",
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            },
+            {
+              "kind": "method",
+              "name": "#setProperty",
+              "privacy": "private",
+              "parameters": [
+                {
+                  "name": "name",
+                  "type": {
+                    "text": "string"
+                  }
+                },
+                {
+                  "name": "options",
+                  "type": {
+                    "text": "PropertyOptions"
+                  }
+                },
+                {
+                  "name": "value",
+                  "type": {
+                    "text": "PropertyValue"
+                  }
+                }
+              ],
+              "inheritedFrom": {
+                "name": "GwElement",
+                "module": "src/element.ts"
+              }
+            }
+          ],
+          "events": [
+            {
+              "name": "install",
+              "type": {
+                "text": "CustomEvent<{ outcome: \"accepted\" | \"dismissed\" | \"unavailable\" }>"
+              },
+              "description": "When the browser's prompt is answered."
+            },
+            {
+              "name": "dismiss",
+              "type": {
+                "text": "Event"
+              },
+              "description": "When it's turned down, with Not now or in the browser's prompt."
+            }
+          ],
+          "attributes": [
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The `localStorage` key the turn down is kept under. Defaults to `gw:install-dismissed`.",
+              "name": "storage-key"
+            },
+            {
+              "type": {
+                "text": "boolean"
+              },
+              "description": "Keeps it closed while set.",
+              "name": "held"
+            },
+            {
+              "type": {
+                "text": "\"neutral\"|\"accent\"|\"info\"|\"success\"|\"warning\"|\"danger\"|\"important\""
+              },
+              "description": "The banner's color. Defaults to `info`.",
+              "name": "tone"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "What it says, unless the default slot has something. Defaults to `Install this app to open it from your home screen.`",
+              "name": "message"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Install button's text. Defaults to `Install`.",
+              "name": "install-label"
+            },
+            {
+              "type": {
+                "text": "string"
+              },
+              "description": "The Not now button's text. Defaults to `Not now`.",
+              "name": "dismiss-label"
+            }
+          ],
+          "superclass": {
+            "name": "GwElement",
+            "module": "/src/element.js"
+          },
+          "tagName": "gw-install-banner",
+          "customElement": true,
+          "summary": "The offer to install a web app, until it's turned down once."
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "GwInstallBanner",
+          "declaration": {
+            "name": "GwInstallBanner",
+            "module": "src/gw-install-banner.ts"
           }
         }
       ]
@@ -38181,6 +39409,14 @@
           "name": "*",
           "declaration": {
             "name": "*",
+            "module": "src/gw-action-button.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
             "module": "src/gw-app-bar.js"
           }
         },
@@ -38366,6 +39602,14 @@
           "declaration": {
             "name": "*",
             "module": "src/gw-input.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/gw-install-banner.js"
           }
         },
         {
@@ -41740,6 +42984,12 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/define/gw-action-button.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/define/gw-alert.ts",
       "declarations": [],
       "exports": []
@@ -41885,6 +43135,12 @@
     {
       "kind": "javascript-module",
       "path": "src/define/gw-input.ts",
+      "declarations": [],
+      "exports": []
+    },
+    {
+      "kind": "javascript-module",
+      "path": "src/define/gw-install-banner.ts",
       "declarations": [],
       "exports": []
     },

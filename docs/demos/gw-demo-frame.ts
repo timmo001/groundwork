@@ -18,6 +18,8 @@ import {
   withViewTransition,
 } from "@timmo001/groundwork-ui";
 import { Predicate } from "effect";
+import { fillSampleActions } from "./action-samples.ts";
+import { fillSampleInstallBanners } from "./install-samples.ts";
 import { fillSamplePairings } from "./pairing-samples.ts";
 import { fillSampleTables } from "./table-samples.ts";
 
@@ -62,6 +64,10 @@ const shownValue = (event: Event, source: HTMLElement) => {
     return detail.name;
   }
 
+  if (Predicate.hasProperty(detail, "outcome") && Predicate.isString(detail.outcome)) {
+    return detail.outcome;
+  }
+
   if (
     Predicate.hasProperty(source, "value") &&
     (Predicate.isString(source.value) || Predicate.isNumber(source.value))
@@ -89,7 +95,10 @@ const shownValue = (event: Event, source: HTMLElement) => {
  * opens or closes that banner, one with `data-toast`
  * shows a toast in the frame's `gw-toaster`, a `gw-table` with `data-sample`
  * gets sample rows (`table-samples.ts`), a `gw-pairing` with `data-sample`
- * gets a stand-in service (`pairing-samples.ts`), and the last `change`,
+ * gets a stand-in service (`pairing-samples.ts`), a `gw-install-banner` with
+ * `data-sample` gets a stand-in browser (`install-samples.ts`), a
+ * `gw-action-button` with `data-sample` gets a stand-in action
+ * (`action-samples.ts`), and the last `change`,
  * `select` or `close` event is shown in the toolbar.
  */
 export class GwDemoFrame extends GwElement {
@@ -256,6 +265,8 @@ export class GwDemoFrame extends GwElement {
       "expired",
       "paired",
       "done",
+      "install",
+      "dismiss",
     ]) {
       this.addEventListener(type, (event) => {
         const source = event.target;
@@ -326,6 +337,8 @@ export class GwDemoFrame extends GwElement {
       this.event = `more: page ${page} loaded`;
     });
     fillSamplePairings(this);
+    fillSampleInstallBanners(this);
+    fillSampleActions(this);
 
     this.#select.options = tokens.themes.map((theme) => ({
       value: theme.id,

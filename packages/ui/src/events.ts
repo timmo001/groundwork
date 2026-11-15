@@ -2,6 +2,10 @@
 
 /** The events each `gw-` element fires, by tag. `on()` reads it. */
 export interface GwEventMap {
+  "gw-action-button": {
+    done: Event;
+    failed: CustomEvent<{ message: string }>;
+  };
   "gw-app-bar": {
     toggle: Event;
   };
@@ -31,6 +35,10 @@ export interface GwEventMap {
   "gw-filter": {
     change: Event;
     toggle: Event;
+  };
+  "gw-install-banner": {
+    install: CustomEvent<{ outcome: "accepted" | "dismissed" | "unavailable" }>;
+    dismiss: Event;
   };
   "gw-list": {
     change: Event;

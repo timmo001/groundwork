@@ -3,6 +3,7 @@
  *
  * @module
  */
+import "./gw-action-button.js";
 import "./gw-alert.js";
 import "./gw-app-bar.js";
 import "./gw-badge.js";
@@ -28,6 +29,7 @@ import "./gw-fade-in.js";
 import "./gw-filter.js";
 import "./gw-gauge.js";
 import "./gw-input.js";
+import "./gw-install-banner.js";
 import "./gw-key-list.js";
 import "./gw-list.js";
 import "./gw-markdown.js";
