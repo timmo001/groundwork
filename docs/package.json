@@ -40,6 +40,7 @@
     "sharp": "0.35.5"
   },
   "devDependencies": {
+    "@emnapi/runtime": "1.11.3",
     "@oxlint/plugins": "1.93.0",
     "@playwright/test": "1.65.1",
     "@timmo001/oxlint-rules": "0.6.5",
