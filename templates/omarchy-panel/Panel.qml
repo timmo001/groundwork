@@ -28,6 +28,10 @@ Panel {
   readonly property string contentFontFamily: bar ? bar.fontFamily : Style.font.family
   readonly property int pendingCount: items.filter(function(item) { return item.pending }).length
 
+  // The Omarchy theme's status colors, or a Groundwork theme's with
+  // `roles: Themes.themes.base.dark`
+  readonly property StatusColors status: StatusColors {}
+
   readonly property var rows: {
     var result = [
       { key: "action:restart", kind: "action", section: "actions", action: "restart", icon: "󰜉", primaryText: "Restart the system", secondaryText: "" },
@@ -178,7 +182,8 @@ Panel {
                     Text {
                       width: Style.space(22)
                       text: row.modelData.kind === "action" ? row.modelData.icon : (row.pending ? "󰚰" : "󰄬")
-                      color: row.pending ? (root.bar ? root.bar.urgent : Commons.Color.urgent) : root.contentForeground
+                      color: row.modelData.kind === "action" ? root.contentForeground
+                        : (row.pending ? root.status.warning : root.status.ok)
                       font.family: root.contentFontFamily
                       font.pixelSize: Style.font.icon
                       horizontalAlignment: Text.AlignHCenter

@@ -53,3 +53,28 @@ Read-only monospace output, such as a log or a command's result, that scrolls on
 ## Colors and fonts
 
 Every component takes `foreground` and `fontFamily`, defaulting to the Omarchy theme's, so a panel passes its own once and each piece follows. `Themes.qml` from the [tokens](/targets) has every Groundwork theme's colors for a panel that offers them.
+
+## StatusColors
+
+The colors a bar widget or panel shows a state in, so each one doesn't pick its own:
+
+| Property | Omarchy theme | Groundwork theme role |
+| --- | --- | --- |
+| `ok` | `green` | `success` |
+| `running` | `blue` | `info` |
+| `warning` | `yellow` | `warning` |
+| `failed` | `urgent`, its `red` | `danger` |
+| `muted` | `muted` | `text-secondary` |
+
+By default they follow the Omarchy theme, read from its `colors.toml` (`color2`, `color4` and `color3` where it has no names) and read again when the theme changes. Set `roles` to a Groundwork theme's mode from `Themes.qml` to use its colors instead. Any one can be set on its own, such as `running` to `warning` for CI that shows in-progress runs in yellow:
+
+```qml
+readonly property StatusColors status: StatusColors {
+  roles: root.groundworkTheme ? Themes.themes[root.groundworkTheme].dark : ({})
+}
+
+Text {
+  text: "󰄬"
+  color: root.status.ok
+}
+```
