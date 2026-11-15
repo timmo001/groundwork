@@ -83,6 +83,9 @@ for (const route of routes) {
   test.describe(route, () => {
     for (const theme of themes) {
       test(theme.name, async ({ page }, info) => {
+        // Three loads and full-page screenshots, which on the longest pages
+        // run past the default 30s while every worker is busy
+        test.slow();
         await page.goto(route);
         await settle(page);
 

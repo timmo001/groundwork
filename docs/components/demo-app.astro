@@ -15,3 +15,17 @@ import Demo from "./demo.astro";
   // Only the Demo page runs the demo app, so it loads it alone.
   import "@timmo001/groundwork-demo/web";
 </script>
+
+<style>
+  /* The app renders its parts from script, so keep the room they take on the
+     fixture data until then, and the text below doesn't move */
+  gw-demo-app:not(:defined) {
+    min-height: 30.5rem;
+  }
+
+  @media (max-width: 40rem) {
+    gw-demo-app:not(:defined) {
+      min-height: 41rem;
+    }
+  }
+</style>
