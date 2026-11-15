@@ -11,6 +11,7 @@ import {
   sheetQuery,
 } from "./adaptive.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { trapTab } from "./focus-trap.js";
 import type {} from "./gw-button.js";
 import { Scrim } from "./scrim.js";
 import { base } from "./styles.js";
@@ -35,7 +36,8 @@ type Side = keyof typeof chevrons;
  * It's on the Popover API, in the top layer, and closes on Esc, a click
  * outside or its close button, whose chevron points the way it leaves. A
  * clear scrim covers the page while it's open, so a click outside only
- * closes it, and nothing beneath reacts. Open it with `show()`, or
+ * closes it, and nothing beneath reacts; Tab and Shift+Tab stay inside it,
+ * wrapping at the ends. Open it with `show()`, or
  * `toggle()` from the button that opens it. Its content scrolls under a
  * header with the heading and an `actions` slot, such as a Clear button.
  *
@@ -261,6 +263,7 @@ export class GwSheet extends GwElement {
     {
       popover: "manual",
       role: "dialog",
+      "aria-modal": "true",
       tabindex: "-1",
       part: "surface",
     },
@@ -363,7 +366,11 @@ export class GwSheet extends GwElement {
   protected override create(root: ShadowRoot) {
     this.#surface.addEventListener("toggle", this.#onToggle);
     this.#surface.addEventListener("keydown", (event) => {
-      if (event.key !== "Escape") return;
+      if (event.key !== "Escape") {
+        trapTab(event, this.#surface);
+
+        return;
+      }
 
       event.preventDefault();
       event.stopPropagation();

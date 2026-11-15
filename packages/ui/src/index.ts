@@ -41,6 +41,8 @@ export * from "./scroll-buttons.js";
 
 export * from "./scrim.js";
 
+export * from "./focus-trap.js";
+
 export * from "./below.js";
 
 export * from "./storage.js";

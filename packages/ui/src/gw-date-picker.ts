@@ -13,6 +13,7 @@ import {
 import { h, setAttribute } from "./element.js";
 import { FieldInfo } from "./field-info.js";
 import { LightElement, fieldId } from "./fields.js";
+import { trapTab } from "./focus-trap.js";
 import type {} from "./gw-calendar.js";
 import { parseDay, toDayString } from "./gw-calendar.js";
 import type {} from "./gw-button.js";
@@ -87,7 +88,8 @@ const defaultFormat: Intl.DateTimeFormatOptions = {
  * A labeled field that shows the chosen day, such as "Wed, 11 Nov 2026", and
  * opens a `gw-calendar` under it to pick another. The calendar takes focus as
  * it opens; picking a day or pressing Esc closes it and returns focus to the
- * field. Arrow Down or Up on the field opens it too. On a narrow or short
+ * field, and Tab moves around it, wrapping at the ends. Arrow Down or Up on
+ * the field opens it too. On a narrow or short
  * screen, under 600px wide or 500px tall, the calendar is a bottom sheet.
  * While it's open, a clear scrim (`.gw-scrim`) covers the page, so a click
  * outside only closes it, and nothing beneath reacts.
@@ -260,6 +262,7 @@ export class GwDatePicker extends LightElement {
       class: "gw-date-picker-popup",
       popover: "manual",
       role: "dialog",
+      "aria-modal": "true",
       "aria-labelledby": `${this.#id}-label`,
     },
     this.#calendar,
@@ -394,10 +397,12 @@ export class GwDatePicker extends LightElement {
         event.stopPropagation();
         this.close();
         this.#trigger.focus();
+      } else {
+        trapTab(event, this.#popup);
       }
     });
-    // Tabbing out of the calendar closes it, so it never stays open behind
-    // the focus
+    // Tab stays inside, but focus moved out any other way closes it, so it
+    // never stays open behind the focus
     this.#popup.addEventListener("focusout", (event) => {
       if (
         event.relatedTarget instanceof Node &&

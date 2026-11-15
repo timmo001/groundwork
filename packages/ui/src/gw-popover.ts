@@ -12,6 +12,7 @@ import {
 } from "./adaptive.js";
 import { Dismissal, dismissalStyles } from "./dismiss.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { trapTab } from "./focus-trap.js";
 import type {} from "./gw-button.js";
 import { placeBeside } from "./placement.js";
 import { Scrim } from "./scrim.js";
@@ -32,8 +33,9 @@ const closeIcon =
  *
  * It's on the Popover API, in the top layer, and closes on Esc or a click
  * outside. A clear scrim covers the page while it's open, so that click only
- * closes it, and nothing beneath reacts. Open it with `show(anchor)`, or
- * `toggle(anchor)` from a key that also closes it. It
+ * closes it, and nothing beneath reacts; Tab and Shift+Tab stay inside it,
+ * wrapping at the ends, so it's a modal dialog to the keyboard too. Open it
+ * with `show(anchor)`, or `toggle(anchor)` from a key that also closes it. It
  * focuses the close button, or the first element in its content with
  * `autofocus`, such as a field it's opened to fill in. Put buttons in the
  * `actions` slot: a click on one with a `value` closes it with that value,
@@ -299,6 +301,7 @@ export class GwPopover extends GwElement {
     "div",
     {
       popover: "manual",
+      "aria-modal": "true",
       tabindex: "-1",
       "data-placement": "center",
       part: "surface",
@@ -387,9 +390,14 @@ export class GwPopover extends GwElement {
     else this.show(anchor);
   }
 
-  // Esc closes it at once, unless there are changes: then it asks first
+  // Esc closes it at once, unless there are changes: then it asks first.
+  // Tab stays inside, as the scrim keeps the pointer in
   readonly #onKeydown = (event: KeyboardEvent) => {
-    if (event.key !== "Escape") return;
+    if (event.key !== "Escape") {
+      trapTab(event, this.#popover);
+
+      return;
+    }
 
     event.preventDefault();
     event.stopPropagation();

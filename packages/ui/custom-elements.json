@@ -1744,6 +1744,67 @@
     },
     {
       "kind": "javascript-module",
+      "path": "src/focus-trap.ts",
+      "declarations": [
+        {
+          "kind": "function",
+          "name": "tabbables",
+          "return": {
+            "type": {
+              "text": "HTMLElement[]"
+            }
+          },
+          "parameters": [
+            {
+              "name": "root",
+              "type": {
+                "text": "Element"
+              }
+            }
+          ],
+          "description": "What Tab stops on inside `root`, in order: through open shadow roots, and\nthrough slots to what's slotted into them, skipping anything disabled,\nhidden or inert. Positive `tabindex` values count in place."
+        },
+        {
+          "kind": "function",
+          "name": "trapTab",
+          "parameters": [
+            {
+              "name": "event",
+              "type": {
+                "text": "KeyboardEvent"
+              }
+            },
+            {
+              "name": "surface",
+              "type": {
+                "text": "HTMLElement"
+              }
+            }
+          ],
+          "description": "Keeps Tab and Shift+Tab within `surface`, a modal overlay, from its\n`keydown` listener: past the last stop, Tab goes back to the first, and\nShift+Tab from the first, or from the surface itself, to the last. With\nnothing to stop on, the focus stays on the surface. Any other key, or a\nTab between two stops, it leaves to the browser. Returns whether it moved\nthe focus.\n\n```ts\nsurface.addEventListener(\"keydown\", (event) => {\n  if (event.key === \"Escape\") close();\n  else trapTab(event, surface);\n});\n```"
+        }
+      ],
+      "exports": [
+        {
+          "kind": "js",
+          "name": "tabbables",
+          "declaration": {
+            "name": "tabbables",
+            "module": "src/focus-trap.ts"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "trapTab",
+          "declaration": {
+            "name": "trapTab",
+            "module": "src/focus-trap.ts"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
       "path": "src/gw-alert.ts",
       "declarations": [
         {
@@ -11305,7 +11366,7 @@
         },
         {
           "kind": "class",
-          "description": "A labeled field that shows the chosen day, such as \"Wed, 11 Nov 2026\", and\nopens a `gw-calendar` under it to pick another. The calendar takes focus as\nit opens; picking a day or pressing Esc closes it and returns focus to the\nfield. Arrow Down or Up on the field opens it too. On a narrow or short\nscreen, under 600px wide or 500px tall, the calendar is a bottom sheet.\nWhile it's open, a clear scrim (`.gw-scrim`) covers the page, so a click\noutside only closes it, and nothing beneath reacts.\n\nThe value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and\nit fires `change` when it changes. `min` and `max` bound the days that can\nbe picked, `marked` makes days stand out, and `unmarked` dims or disables\nthe rest. It fires `month` as the calendar moves between months, so a\npage can load that month's `marked` days.",
+          "description": "A labeled field that shows the chosen day, such as \"Wed, 11 Nov 2026\", and\nopens a `gw-calendar` under it to pick another. The calendar takes focus as\nit opens; picking a day or pressing Esc closes it and returns focus to the\nfield, and Tab moves around it, wrapping at the ends. Arrow Down or Up on\nthe field opens it too. On a narrow or short\nscreen, under 600px wide or 500px tall, the calendar is a bottom sheet.\nWhile it's open, a clear scrim (`.gw-scrim`) covers the page, so a click\noutside only closes it, and nothing beneath reacts.\n\nThe value is a `YYYY-MM-DD` day, carried in forms by a hidden input, and\nit fires `change` when it changes. `min` and `max` bound the days that can\nbe picked, `marked` makes days stand out, and `unmarked` dims or disables\nthe rest. It fires `month` as the calendar moves between months, so a\npage can load that month's `marked` days.",
           "name": "GwDatePicker",
           "cssProperties": [
             {
@@ -20074,7 +20135,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc or a click outside. A clear scrim covers the page\nwhile it's open, so that click only closes it, and nothing beneath reacts.\nSet `items`; arrow keys, Home and End move between them, and choosing one\nfires `select` with its `value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them; style them through the `menu`, `item` and other parts.\n\nOn a narrow or short screen, under 600px wide or 500px tall, the menu is a\nbottom sheet.",
+          "description": "A button that opens a menu on the Popover API, so it shows in the top\nlayer and closes on Esc, a click outside, or Tab, which moves on from it.\nA clear scrim covers the page\nwhile it's open, so that click only closes it, and nothing beneath reacts.\nSet `items`; arrow keys, Home and End move between them, and choosing one\nfires `select` with its `value` and closes the menu.\n\nContextual actions, such as \"Add a schedule\", go in `actions`: they stay\nbelow the items as the list scrolls, so they're found without scrolling to\nthe end, and with no items the menu says `empty` above them.\n\nFor a menu of choices, such as sort and order, give each item `checked`:\nthe picked one shows a tick, and `separator` starts the next group.\nItems with `checkbox` toggle instead, firing `check` and keeping the menu\nopen, and `group` lists items under a heading.\n\nItems render inside the component, so a page's own button styles can't\nreach them; style them through the `menu`, `item` and other parts.\n\nOn a narrow or short screen, under 600px wide or 500px tall, the menu is a\nbottom sheet.",
           "name": "GwMenuButton",
           "cssProperties": [
             {
@@ -25099,7 +25160,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. On a\nnarrow or short screen, under 600px wide or 500px tall, it's a bottom\nsheet. Opened without a button, such as after a save, it sits in the\nmiddle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. A clear scrim covers the page while it's open, so that click only\ncloses it, and nothing beneath reacts. Open it with `show(anchor)`, or\n`toggle(anchor)` from a key that also closes it. It\nfocuses the close button, or the first element in its content with\n`autofocus`, such as a field it's opened to fill in. Put buttons in the\n`actions` slot: a click on one with a `value` closes it with that value,\nand fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
+          "description": "A confirmation, rename or small form that opens next to the button that\nasked for it, rather than as a dialog in the middle of the screen. On a\nnarrow or short screen, under 600px wide or 500px tall, it's a bottom\nsheet. Opened without a button, such as after a save, it sits in the\nmiddle like a dialog.\n\nIt's on the Popover API, in the top layer, and closes on Esc or a click\noutside. A clear scrim covers the page while it's open, so that click only\ncloses it, and nothing beneath reacts; Tab and Shift+Tab stay inside it,\nwrapping at the ends, so it's a modal dialog to the keyboard too. Open it\nwith `show(anchor)`, or `toggle(anchor)` from a key that also closes it. It\nfocuses the close button, or the first element in its content with\n`autofocus`, such as a field it's opened to fill in. Put buttons in the\n`actions` slot: a click on one with a `value` closes it with that value,\nand fires `close`.\n`confirm` makes it an `alertdialog`, for a question that needs an answer.",
           "name": "GwPopover",
           "cssProperties": [
             {
@@ -30365,7 +30426,7 @@
       "declarations": [
         {
           "kind": "class",
-          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes up from the bottom where popups open as bottom\nsheets, under 600px wide or 500px tall (`opensAsSheet`), so a phone on its\nside gets one too, and from the start edge, full height, everywhere else.\n`wide-side=\"end\"` brings it from the end edge there instead.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. A\nclear scrim covers the page while it's open, so a click outside only\ncloses it, and nothing beneath reacts. Open it with `show()`, or\n`toggle()` from the button that opens it. Its content scrolls under a\nheader with the heading and an `actions` slot, such as a Clear button.",
+          "description": "A panel of filters, settings or details that slides in from an edge of the\nscreen over the page, rather than taking a place in its layout. With\n`side=\"auto\"` it comes up from the bottom where popups open as bottom\nsheets, under 600px wide or 500px tall (`opensAsSheet`), so a phone on its\nside gets one too, and from the start edge, full height, everywhere else.\n`wide-side=\"end\"` brings it from the end edge there instead.\n\nIt's on the Popover API, in the top layer, and closes on Esc, a click\noutside or its close button, whose chevron points the way it leaves. A\nclear scrim covers the page while it's open, so a click outside only\ncloses it, and nothing beneath reacts; Tab and Shift+Tab stay inside it,\nwrapping at the ends. Open it with `show()`, or\n`toggle()` from the button that opens it. Its content scrolls under a\nheader with the heading and an `actions` slot, such as a Clear button.",
           "name": "GwSheet",
           "cssProperties": [
             {
@@ -38073,6 +38134,14 @@
           "declaration": {
             "name": "*",
             "module": "src/scrim.js"
+          }
+        },
+        {
+          "kind": "js",
+          "name": "*",
+          "declaration": {
+            "name": "*",
+            "module": "src/focus-trap.js"
           }
         },
         {

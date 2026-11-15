@@ -61,7 +61,7 @@ An `input` or `change` event from the content marks it changed, and `show()` cle
 
 ## Clicks outside
 
-A click or tap outside an open overlay only closes it. Nothing on the page beneath reacts until the overlay has gone, with no hover, focus or press, so the click that closes a sheet never also presses the button under it. That includes the button that opened it: a press on it while the overlay is open only closes the overlay, rather than closing it and opening it again. Focus stays in the overlay until it closes, then goes back to where it was. That holds for the [popover](#popover), [sheet](#sheet), the [menu button's](/components/actions#menu-button) menu, the [select's](/components/inputs#select) list, the [date picker's](/components/inputs#date-picker) calendar and the [app bar's](/components/layout#app-bar) nav menu, as it does for the modal [dialog](#dialog) and [command menu](#command-menu). No overlay lets a press through to what's beneath.
+A click or tap outside an open overlay only closes it. Nothing on the page beneath reacts until the overlay has gone, with no hover, focus or press, so the click that closes a sheet never also presses the button under it. That includes the button that opened it: a press on it while the overlay is open only closes the overlay, rather than closing it and opening it again. Focus stays in the overlay until it closes, as [The keyboard](#the-keyboard) sets out, then goes back to where it was. That holds for the [popover](#popover), [sheet](#sheet), the [menu button's](/components/actions#menu-button) menu, the [select's](/components/inputs#select) list, the [date picker's](/components/inputs#date-picker) calendar and the [app bar's](/components/layout#app-bar) nav menu, as it does for the modal [dialog](#dialog) and [command menu](#command-menu). No overlay lets a press through to what's beneath.
 
 Each lays a clear scrim over the page while it's open, under itself, and the scrim takes the click. Style it with the `scrim` part, or `.gw-scrim` in the select and date picker, which are in light DOM. An app's own popup does the same with `Scrim`, exported from `@timmo001/groundwork-ui`: put its element before the popup, show it just before the popup so the popup sits over it, and hide it once the popup closes.
 
@@ -75,8 +75,24 @@ popup.addEventListener("toggle", (event) => {
   if (event.newState === "closed") scrim.hide();
 });
 
-scrim.show();
-popup.showPopover();
+```
+
+## The keyboard
+
+The keyboard is held the same way the pointer is. The [popover](#popover), [sheet](#sheet) and [date picker's](/components/inputs#date-picker) calendar are modal dialogs (`aria-modal="true"`): while one is open, Tab and Shift+Tab move only through what's in it, wrapping from the last control to the first and back, and Esc closes it. The page behind never takes the focus, so Esc always reaches the overlay. The [dialog](#dialog) and [command menu](#command-menu) get the same from the browser's modal `<dialog>`.
+
+A menu and a list are not dialogs, so Tab leaves them instead, as menus and selects do everywhere: it closes the [menu button's](/components/actions#menu-button) menu or the [select's](/components/inputs#select) list, and the focus moves on from its button.
+
+An app's own modal popup keeps Tab inside it with `trapTab`, exported from `@timmo001/groundwork-ui`, called from the popup's `keydown` listener. It wraps at the ends and leaves every other key and Tab press alone. `tabbables(element)` lists what Tab stops on inside an element, through shadow roots and slots.
+
+```ts
+import { trapTab } from "@timmo001/groundwork-ui";
+
+popup.setAttribute("aria-modal", "true");
+popup.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") popup.hidePopover();
+  else trapTab(event, popup);
+});
 ```
 
 ## Full screen
