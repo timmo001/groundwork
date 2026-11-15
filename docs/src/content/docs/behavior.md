@@ -378,7 +378,7 @@ In full screen, or on a phone on its side, a player's controls sit over its pict
 - **Keep clear of the screen's edges.** Everything that can be pressed stays out of a phone's rounded corners and the middle of its sides, where a punch hole or notch sits in landscape: an inline margin of `--gw-safe-inline`, at least `1.5rem` or the safe area where that's wider, and `--gw-safe-bottom` under the bar and the handle. [A phone on its side](/foundations/layout#a-phone-on-its-side) has the tokens and the viewport setting they need.
 - **Turning a phone on its side** goes full screen, and turning it back upright leaves.
 
-`overlayControls(bar, options?)` from `@timmo001/groundwork-ui` does all of this. It puts `bar` over the bottom of `stage` (its parent by default) while the phone is on its side (`sidewaysQuery`) or the player is in full screen, and under it otherwise. It marks the stage `data-overlay` and the bar `data-over`, and `data-hidden` while the bar is away, for an app's own styles. A [control bar](/components/actions#control-bar) gets `expandable` while it's over the picture, so only its first row shows until its tab opens the rest. It returns a function that stops it and puts the bar back.
+`overlayControls(bar, options?)` from `@timmo001/groundwork-ui` does all of this. It puts `bar` over the bottom of `stage` (its parent by default) while the phone is on its side (`sidewaysQuery`) or the player is in full screen, and under it otherwise. It marks the stage `data-overlay` and the bar `data-over`, and `data-hidden` while the bar is away, for an app's own styles. The stage also gets `--gw-overlay-controls-height`: the bar's visible height while it's over the picture and showing, following a finger pulling it down, and `0px` while it's hidden or under the picture. A [control bar](/components/actions#control-bar) gets `expandable` while it's over the picture, so only its first row shows until its tab opens the rest. It returns a function that stops it and puts the bar back.
 
 ```ts
 import { overlayControls } from "@timmo001/groundwork-ui";
@@ -413,6 +413,16 @@ The handle is a `gw-button` with the `gw-overlay-handle` class, and `--gw-overla
 #### Text over media
 
 A name or a caption over a picture never hides it. On a large tile it sits in a corner, on a dark band that reads over any picture. On a tile too small for that, under 200px wide as a container query on the tile, it shrinks to a small chip on one line in the corner, and fades with the controls when they hide. The picture comes first; a name that matters goes beside or under it instead.
+
+Text along the bottom of a picture, such as a note on a recording, sits just above the controls while they're over it, and moves down when they go:
+
+```css
+.note {
+  inset-block-end: var(--gw-overlay-controls-height, 0px);
+  transition: inset-block-end var(--gw-motion-normal)
+    var(--gw-motion-easing-enter);
+}
+```
 
 ## References
 

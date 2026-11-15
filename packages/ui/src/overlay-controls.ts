@@ -246,6 +246,9 @@ const overlayOpen = (root: Element | ShadowRoot): boolean =>
  *
  * It marks the stage `data-overlay` while the bar is over it, and the bar
  * `data-over` and `data-hidden`, for the styles it adopts and an app's own.
+ * The stage gets `--gw-overlay-controls-height`, the bar's visible height
+ * while it's over the picture and showing and `0px` otherwise, so text over
+ * the picture can sit just above it.
  * A `gw-control-bar` gets `expandable` while it's over the picture, so it
  * shows its first row until its tab opens the rest. It uses `gw-button` for
  * the handle. Returns a function that stops it and puts the bar back.
@@ -317,12 +320,31 @@ export const overlayControls = (
   const keeps = () =>
     (isBar && bar.hasAttribute("expanded")) || overlayOpen(bar) || stays();
 
+  /**
+   * Gives the stage the bar's visible height, less what a finger has pulled
+   * down, so text over the picture can sit just above it.
+   */
+  const measure = () => {
+    const showing =
+      bar.hasAttribute("data-over") && !bar.hasAttribute("data-hidden");
+
+    const height = showing
+      ? Math.max(bar.offsetHeight - (drag?.following ? drag.distance : 0), 0)
+      : 0;
+
+    stage.style.setProperty("--gw-overlay-controls-height", `${height}px`);
+  };
+
+  const resized = new ResizeObserver(measure);
+
   const show = (hidden: boolean) => {
     bar.toggleAttribute("data-hidden", hidden);
     stage.toggleAttribute("data-controls-hidden", hidden);
     handle.hidden = !hidden;
 
     if (!hidden) bar.style.removeProperty("translate");
+
+    measure();
   };
 
   const sleep = () => {
@@ -537,6 +559,7 @@ export const overlayControls = (
         { at: event.timeStamp, y: event.clientY },
       ];
       bar.style.translate = `0 ${drag.distance}px`;
+      measure();
     },
     { signal },
   );
@@ -629,15 +652,18 @@ export const overlayControls = (
   adoptStyles(stage, overlayStyles);
   bar.toggleAttribute("data-overlay-controls", true);
   stage.append(handle);
+  resized.observe(bar);
   place();
 
   return () => {
     controller.abort();
     stopSwipes();
+    resized.disconnect();
     clearTimeout(timer);
     handle.remove();
     stage.removeAttribute("data-overlay");
     stage.removeAttribute("data-controls-hidden");
+    stage.style.removeProperty("--gw-overlay-controls-height");
 
     for (const name of [
       "data-overlay-controls",
