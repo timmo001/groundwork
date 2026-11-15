@@ -21,8 +21,8 @@ Keep a checklist of these steps on the repository's tracking issue, ticking each
 - Effect v4 for the code, following [Effect](/effect).
 - The shared Oxlint preset from `@timmo001/oxlint-rules`, with type-aware rules and type checking on, in each package.
 - Prettier for formatting. It skips `AGENTS.md`, synced skills, lockfiles and generated output.
-- hk hooks running the shared Markdown, YAML, Actions and shell lints before a push. A `.markdownlint-cli2.jsonc` sets the repository's Markdown rules, usually with `MD013` (line length) off, and `MD033` allowing the HTML its README uses, such as `img`.
-- mise tasks for `format`, `check`, `test` and `build`, with dev servers as `serve:*` tasks through Pitchfork, each at `https://<daemon>.<repo>.localhost`.
+- hk hooks running the shared Markdown, YAML, Actions and shell lints before a push. A `.markdownlint-cli2.jsonc` sets the repository's Markdown rules, usually with `MD013` (line length) off, and `MD033` allowing the HTML its README uses, such as `img`. A `.yamllint.yml` does the same for YAML, and `hk.pkl` excludes what isn't the repository's own: `.mise/`, lockfiles, vendored code and synced skills.
+- mise tasks for `format` and `check`, plus `test` and `build` once the repository has tests or a build, and any dev server as a `serve:*` task through Pitchfork, at `https://<daemon>.<repo>.localhost`.
 
 ### Package layout
 
