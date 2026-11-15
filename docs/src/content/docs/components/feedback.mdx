@@ -144,6 +144,36 @@ A slim bar across the top of the app, above its content rather than over it, for
   </gw-anatomy>
 </Demo>
 
+## Install banner
+
+<Demo id="install-banner" layout="stack">
+  <gw-stack>
+    <gw-install-banner storage-key="docs:install-banner-demo" data-sample></gw-install-banner>
+    <gw-row>
+      <gw-button variant="neutral" appearance="outlined" data-offers-install>Offer to install</gw-button>
+    </gw-row>
+  </gw-stack>
+</Demo>
+
+The offer to install the app, as a banner with Install and Not now. Give it `pwa`, the page's [`connectPwa`](/phones/pwa#page) result, and it opens while the browser has an install prompt to show, and closes once it's used or taken back. Only Chromium browsers offer one, so elsewhere it stays closed and people install from the browser's menu.
+
+Turning it down, with Not now or in the browser's own prompt, keeps it closed under `storage-key` in `localStorage`, so it doesn't ask again on the next visit. Keep an Install button on the app's Settings page too, shown while `pwa.canInstall()` is true, as the one place left to install from once the banner's turned down. A Devices page suits it as well, in an app that pairs.
+
+```ts
+const banner = document.querySelector("gw-install-banner");
+
+banner.pwa = connectPwa(config);
+```
+
+| Attribute | What it does |
+| --- | --- |
+| `storage-key` | The key the turn down is kept under. Defaults to `gw:install-dismissed`; give each app its own |
+| `held` | Keeps it closed while set, such as during a pairing |
+| `tone` | The banner's color, `info` by default |
+| `message`, `install-label`, `dismiss-label` | Its words, for an app in another language. The default slot replaces `message` |
+
+`install()` and `dismiss()` do what the buttons do, and `dismissed` says whether it's been turned down. It fires `install` with the prompt's `outcome`, and `dismiss` when it's turned down. Style it through the `banner`, `install` and `dismiss` parts.
+
 ## Notifications
 
 <Demo id="notifications" layout="stack">
@@ -212,4 +242,4 @@ Put one `gw-toaster` on the page and call `show(message, tone)`. Toasts stack in
 
 Every attribute, slot, part, CSS property and event, from each element's docs.
 
-<ElementApi tags={["gw-skeleton", "gw-skeleton-text", "gw-skeleton-lines", "gw-skeleton-icon", "gw-fade-in", "gw-spinner", "gw-empty-state", "gw-banner", "gw-notification", "gw-notification-center", "gw-toaster"]} />
+<ElementApi tags={["gw-skeleton", "gw-skeleton-text", "gw-skeleton-lines", "gw-skeleton-icon", "gw-fade-in", "gw-spinner", "gw-empty-state", "gw-banner", "gw-install-banner", "gw-notification", "gw-notification-center", "gw-toaster"]} />

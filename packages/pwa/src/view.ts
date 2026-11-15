@@ -143,7 +143,20 @@ export interface ConnectPwaOptions {
   readonly onShare?: (share: Share) => void;
   /** Called when the app can offer to install itself, and again when it can't. */
   readonly onInstallChange?: (canInstall: boolean) => void;
+  /**
+   * The page runs inside another app's frame at an address that can change,
+   * such as under Home Assistant's ingress, so there's nothing to install or
+   * keep offline. Turns off `install` and `offline`; shares still arrive.
+   */
+  readonly embedded?: boolean;
 }
+
+/**
+ * Whether the page is served under Home Assistant's ingress, from the
+ * page's base address, for `connectPwa`'s `embedded`.
+ */
+export const underIngress = (): boolean =>
+  new URL(document.baseURI).pathname.startsWith("/api/hassio_ingress/");
 
 /** The answer to an install offer. */
 export type InstallOutcome = "accepted" | "dismissed" | "unavailable";
@@ -188,7 +201,12 @@ export const connectPwa = (
   config: PwaConfig,
   options: ConnectPwaOptions = {},
 ): Pwa => {
-  const pwa = resolveConfig(config);
+  const pwa = resolveConfig(
+    options.embedded === true
+      ? { ...config, install: false, offline: false }
+      : config,
+  );
+
   let prompt: InstallPromptEvent | undefined;
 
   const installed = () =>

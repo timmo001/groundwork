@@ -9,7 +9,10 @@
     "./build": "./src/build.ts",
     "./pairing": "./src/pairing.ts",
     "./push": "./src/push.ts",
+    "./server": "./src/server.ts",
+    "./update": "./src/update.ts",
     "./view": "./src/view.ts",
+    "./vite": "./src/vite.ts",
     "./worker": "./src/worker.ts"
   },
   "files": [
@@ -40,6 +43,14 @@
     "effect": "4.1.4",
     "sharp": "0.35.5"
   },
+  "peerDependencies": {
+    "vite": "^8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "vite": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@oxlint/plugins": "1.93.0",
     "@timmo001/oxlint-rules": "0.6.5",
@@ -47,6 +58,7 @@
     "oxlint": "1.93.0",
     "oxlint-tsgolint": "7.0.2007",
     "prettier": "3.10.1",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vite": "8.3.6"
   }
 }

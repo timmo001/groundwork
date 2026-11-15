@@ -1,9 +1,11 @@
 /**
  * The build half of `@timmo001/groundwork-pwa`: the web app manifest with its
  * colors from the theme, the tags the page's `<head>` needs, and the
- * launcher icons rendered from the app's SVG logo.
+ * launcher icons rendered from the app's SVG logo. `buildPwa` does all of it,
+ * and bundles the service worker, after the page is built.
  */
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, readdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import sharp from "sharp";
@@ -11,6 +13,7 @@ import sharp from "sharp";
 import themesData from "@timmo001/groundwork-tokens/themes.json" with { type: "json" };
 
 import {
+  isHashed,
   resolveConfig,
   shareParams,
   type PwaConfig,
@@ -122,8 +125,12 @@ export const headTags = (
 ): string => {
   const pwa = resolveConfig(config);
 
+  const credentials = pwa.manifestCredentials
+    ? ' crossorigin="use-credentials"'
+    : "";
+
   const tags = [
-    `<link rel="manifest" href="${escapeAttribute(manifestHref)}" />`,
+    `<link rel="manifest" href="${escapeAttribute(manifestHref)}"${credentials} />`,
   ];
 
   if (pwa.colorScheme) {
@@ -141,6 +148,151 @@ export const headTags = (
   }
 
   return tags.join("\n    ");
+};
+
+/**
+ * Adds the head tags to a page: in place of a `<!-- pwa:head -->` comment,
+ * or else straight after `<head>`.
+ */
+export const addHeadTags = (
+  html: string,
+  config: PwaConfig,
+  manifestHref?: string,
+): string => {
+  const tags = headTags(config, manifestHref);
+
+  if (html.includes("<!-- pwa:head -->"))
+    return html.replace("<!-- pwa:head -->", tags);
+
+  const head = /<head(?:\s[^>]*)?>/.exec(html);
+
+  if (head === null)
+    throw new Error("The page has no <head> to add the PWA to");
+
+  return html.replace(head[0], `${head[0]}\n    ${tags}`);
+};
+
+/**
+ * The defines a worker build sets, for `serveShell` to read its cache
+ * version and the files to keep for offline starts. `buildPwa` and the Vite
+ * plugin set them; a build of its own passes them to its bundler.
+ */
+export const pwaDefine = (version: string, shell: readonly string[] = []) => ({
+  "process.env.GROUNDWORK_PWA_VERSION": JSON.stringify(version),
+  "process.env.GROUNDWORK_PWA_SHELL": JSON.stringify(JSON.stringify(shell)),
+});
+
+/**
+ * The built files in `outDir` with a content hash in their name, such as
+ * the page's script and styles, relative to it, for the worker to keep for
+ * offline starts. Source maps are left out.
+ */
+export const findShell = async (outDir: string): Promise<string[]> =>
+  (await readdir(outDir, { recursive: true }))
+    .map((name) => name.split(path.sep).join("/"))
+    .filter((name) => isHashed(name) && !name.endsWith(".map"))
+    .toSorted();
+
+/** A version from the built files themselves, so it changes when any does. */
+const contentVersion = async (outDir: string, skip: string) => {
+  const hash = createHash("sha256");
+
+  for (const name of (await readdir(outDir, { recursive: true })).toSorted()) {
+    const file = path.join(outDir, name);
+
+    if (name === skip || !(await stat(file)).isFile()) continue;
+
+    hash.update(name).update(await readFile(file));
+  }
+
+  return hash.digest("hex").slice(0, 12);
+};
+
+/** Options for {@link buildPwa}. */
+export interface BuildPwaOptions {
+  /** The built page's folder, which the PWA's files are written into. */
+  readonly outDir: string;
+  /** The app's service worker source, such as `src/sw.ts`, bundled to the config's `offline.worker`. */
+  readonly worker: string;
+  /** A square SVG logo to render the default icons from. */
+  readonly logo?: string;
+  /**
+   * The page in `outDir` to add the head tags to, or `false` to leave it.
+   * Defaults to `index.html`.
+   */
+  readonly page?: string | false;
+  /**
+   * The cache's version. Defaults to `GROUNDWORK_PWA_VERSION` from the
+   * environment, else a hash of the built files, so each build that changes
+   * them replaces the last one's cache.
+   */
+  readonly version?: string;
+  /** The files to keep for offline starts. Defaults to {@link findShell}'s. */
+  readonly shell?: readonly string[];
+  /** More defines for the worker's bundle, beside {@link pwaDefine}'s. */
+  readonly define?: Record<string, string>;
+  /** Minifies the worker. Defaults to `true`. */
+  readonly minify?: boolean;
+}
+
+/** What {@link buildPwa} built with. */
+export interface BuiltPwa {
+  readonly version: string;
+  readonly shell: readonly string[];
+}
+
+/**
+ * Adds the PWA to a page already built into `outDir`, under Bun: the
+ * manifest and icons, the service worker bundled with the build's version
+ * and the page's hashed files, and the head tags in the page.
+ */
+export const buildPwa = async (
+  config: PwaConfig,
+  {
+    outDir,
+    worker,
+    logo,
+    page = "index.html",
+    version,
+    shell,
+    define = {},
+    minify = true,
+  }: BuildPwaOptions,
+): Promise<BuiltPwa> => {
+  const pwa = resolveConfig(config);
+  const workerFile = pwa.offline === false ? undefined : pwa.offline.worker;
+
+  await writePwa(config, logo === undefined ? { outDir } : { outDir, logo });
+
+  if (page !== false) {
+    const file = path.join(outDir, page);
+
+    await writeFile(file, addHeadTags(await readFile(file, "utf8"), config));
+  }
+
+  const built: BuiltPwa = {
+    version:
+      version ??
+      process.env["GROUNDWORK_PWA_VERSION"] ??
+      (await contentVersion(outDir, workerFile ?? "")),
+    shell: shell ?? (await findShell(outDir)),
+  };
+
+  if (workerFile === undefined) return built;
+
+  const result = await Bun.build({
+    entrypoints: [worker],
+    outdir: outDir,
+    target: "browser",
+    minify,
+    naming: { entry: workerFile },
+    define: { ...pwaDefine(built.version, built.shell), ...define },
+  });
+
+  if (!result.success)
+    throw new AggregateError(result.logs, "The service worker didn't build");
+
+  return built;
 };
 
 /** Options for {@link writeIcons}. */

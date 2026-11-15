@@ -12,8 +12,13 @@
  *
  *   declare const self: ShellWorkerScope;
  *
- *   serveShell(self, config, { version: "1" });
+ *   serveShell(self, config);
+ *
+ * Built with `buildPwa` or the Vite plugin, it takes its cache version and
+ * the page's hashed files from the build.
  */
+import { Option, Schema } from "effect";
+
 import { resolveConfig, type PwaConfig } from "./config.ts";
 import { decodePushPayload, type PushPayload } from "./push.ts";
 
@@ -64,12 +69,48 @@ export type ShellRoute = (
 export interface ShellOptions {
   /**
    * The cache's version. A new one, such as the build's commit, replaces the
-   * old cache once the new worker takes over.
+   * old cache once the new worker takes over. Defaults to the build's, from
+   * `buildPwa` or the Vite plugin, or `dev` without one.
    */
-  readonly version: string;
+  readonly version?: string;
+  /**
+   * Files cached on install beside the config's `offline.shell`, such as the
+   * page's hashed script and styles. Defaults to the ones `buildPwa` or the
+   * Vite plugin found.
+   */
+  readonly extraShell?: readonly string[];
   /** The app's routes, tried in order before the shell's. */
   readonly routes?: readonly ShellRoute[];
 }
+
+/** Set by the build, which replaces each use below with its value. */
+declare const process: {
+  readonly env: {
+    readonly GROUNDWORK_PWA_VERSION?: string;
+    readonly GROUNDWORK_PWA_SHELL?: string;
+  };
+};
+
+// Without a build that sets them, `process` doesn't exist in a worker
+const fromBuild = (read: () => string | undefined) => {
+  try {
+    return read();
+  } catch {
+    return undefined;
+  }
+};
+
+/** The version the build set, or `dev` without one. */
+export const buildVersion =
+  fromBuild(() => process.env.GROUNDWORK_PWA_VERSION) ?? "dev";
+
+/** The hashed files the build found to keep for offline starts. */
+export const buildShell: readonly string[] = Option.getOrElse(
+  Schema.decodeUnknownOption(
+    Schema.fromJsonString(Schema.Array(Schema.String)),
+  )(fromBuild(() => process.env.GROUNDWORK_PWA_SHELL) ?? "[]"),
+  () => [],
+);
 
 const cachePrefix = "gw-shell-";
 
@@ -132,7 +173,11 @@ export const staleWhileRevalidate = async (
 export const serveShell = (
   scope: ShellWorkerScope,
   config: PwaConfig,
-  { version, routes = [] }: ShellOptions,
+  {
+    version = buildVersion,
+    extraShell = buildShell,
+    routes = [],
+  }: ShellOptions = {},
 ): void => {
   const pwa = resolveConfig(config);
   const startUrl = new URL(pwa.startUrl, scope.location.href).href;
@@ -145,7 +190,9 @@ export const serveShell = (
   const shell =
     pwa.offline === false
       ? []
-      : pwa.offline.shell.map((url) => new URL(url, scope.location.href).href);
+      : [...new Set([...pwa.offline.shell, ...extraShell])].map(
+          (url) => new URL(url, scope.location.href).href,
+        );
 
   scope.addEventListener("install", (event) => {
     event.waitUntil(

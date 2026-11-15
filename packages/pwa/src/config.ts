@@ -89,6 +89,12 @@ export interface PwaConfig {
    * as `orientation`, `categories` or `screenshots`.
    */
   readonly manifest?: { readonly [key: string]: JsonValue };
+  /**
+   * Fetches the manifest with the page's cookies, as
+   * `crossorigin="use-credentials"`, for an app behind a sign-in such as
+   * Cloudflare Access that would otherwise refuse it.
+   */
+  readonly manifestCredentials?: boolean;
 }
 
 /** Every option filled in. */
@@ -111,6 +117,7 @@ export interface ResolvedPwaConfig {
   readonly themeColor: string | undefined;
   readonly backgroundColor: string | undefined;
   readonly manifest: { readonly [key: string]: JsonValue };
+  readonly manifestCredentials: boolean;
 }
 
 /** A share from another app, from the share target or the Android shell. */
@@ -173,5 +180,40 @@ export const resolveConfig = (config: PwaConfig): ResolvedPwaConfig => {
     themeColor: config.themeColor,
     backgroundColor: config.backgroundColor,
     manifest: config.manifest ?? {},
+    manifestCredentials: config.manifestCredentials ?? false,
   };
+};
+
+/**
+ * A share as one block of text: its title, text and link, one to a line.
+ * Android apps often put the link in the text too, so a line another
+ * already holds isn't repeated.
+ */
+export const shareText = ({ title, text, url }: Share): string => {
+  const lines = [title, text, url].flatMap((line) =>
+    line === undefined || line.trim() === "" ? [] : [line.trim()],
+  );
+
+  return lines
+    .filter(
+      (line, at) =>
+        !lines.some(
+          (other, otherAt) =>
+            other.includes(line) && (other !== line || otherAt < at),
+        ),
+    )
+    .join("\n");
+};
+
+/**
+ * Whether a built file's name carries a content hash, as Bun and Vite name
+ * them, such as `index-r20khhep.js`. Such a file never changes, so it can be
+ * cached for good and kept for offline starts.
+ */
+export const isHashed = (name: string) => {
+  const hash = /-([\w-]{8})\.\w+$/.exec(name)?.[1];
+
+  // A word such as `settings` fits too, so a hash needs a digit, a capital,
+  // a dash or an underscore. One that misses only gets rechecked
+  return hash !== undefined && /[^a-z]/.test(hash);
 };
