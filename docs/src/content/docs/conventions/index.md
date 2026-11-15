@@ -77,4 +77,16 @@ Repositories that aren't public keep their files in `$XDG_CONFIG_HOME/groundwork
 
 ## Checking a repository against Setup
 
-`mise run setup:check -- <dir>...` lists what each repository checkout is missing from the [Setup](/setup) page, each with a link to its step: the kind file, `mise.lock`, Prettier, hk, `AGENTS.md`, the agent permissions, CI from the shared workflows, Renovate, a docs-kit site, the agent surface, and a theme picked. It reads only the checkout's files, so it runs offline, and it fails while anything is missing. `--json` prints the findings for a job, such as one that opens an issue per repository. A Library skips the agent surface and the theme, since it follows the apps that use it.
+`mise run setup:check -- <dir>...` lists what each repository checkout is missing from the [Setup](/setup) page, each with a link to its step: the kind file, `mise.lock`, Prettier, hk, `AGENTS.md`, the agent permissions, CI from the shared workflows, Renovate, a docs-kit site, the agent surface, and a theme picked. A checkout with no kind file, such as a fork of someone else's project, only lists that, since the rest builds on it. It reads only the checkout's files, so it runs offline, and it fails while anything is missing. `--json` prints the findings for a job, such as one that opens an issue per repository. A Library skips the agent surface and the theme, since it follows the apps that use it.
+
+A step that doesn't fit a repository goes under `skip` in its file, by the check's name, with the reason. The check leaves it out and lists it with the reason instead, so a Renovate preset isn't asked for a docs site:
+
+```yaml
+repo: timmo001/renovate-config
+kind: personal
+skip:
+  docs-site: A Renovate preset its README covers
+  agent-surface: No CLI
+```
+
+The checks are `kind`, `mise-lock`, `prettier`, `hk`, `agents-md`, `opencode-permissions`, `claude-permissions`, `ci`, `renovate`, `docs-site`, `agent-surface` and `theme`. A name that isn't one of them fails the file's check.

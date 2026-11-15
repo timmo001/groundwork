@@ -7,24 +7,36 @@
  */
 import { Effect, FileSystem, Path } from "effect";
 import type { Manifest } from "./resolve.ts";
+import type { SetupCheck } from "./schema.ts";
 
 const setupPage = "https://groundwork.timmo.dev/setup";
 
 /** One thing a repository is missing, and the Setup step that covers it. */
 export interface Finding {
-  readonly check: string;
+  readonly check: SetupCheck;
   readonly missing: string;
   readonly step: string;
 }
 
-/** A repository checkout and what it's missing. */
+/** A check the repository's conventions file skips, and why. */
+export interface Skipped {
+  readonly check: SetupCheck;
+  readonly reason: string;
+}
+
+/** A repository checkout, what it's missing and what it skips. */
 export interface SetupReport {
   readonly directory: string;
   readonly repo: string;
   readonly findings: readonly Finding[];
+  readonly skipped: readonly Skipped[];
 }
 
-const finding = (check: string, missing: string, anchor: string): Finding => ({
+const finding = (
+  check: SetupCheck,
+  missing: string,
+  anchor: string,
+): Finding => ({
   check,
   missing,
   step: `${setupPage}#${anchor}`,
@@ -88,16 +100,26 @@ export const checkSetup = Effect.fn("checkSetup")(function* (
     (item) => item.repo.toLowerCase() === repo.toLowerCase(),
   );
 
-  const findings: Finding[] = [];
+  // The rest of Setup builds on the kind file, and a checkout without one,
+  // such as a fork of someone else's project, isn't on Groundwork yet
+  if (entry === undefined) {
+    const report: SetupReport = {
+      directory,
+      repo,
+      findings: [
+        finding(
+          "kind",
+          "No kind file in conventions/repos",
+          "1-create-the-repository",
+        ),
+      ],
+      skipped: [],
+    };
 
-  if (entry === undefined)
-    findings.push(
-      finding(
-        "kind",
-        "No kind file in conventions/repos",
-        "1-create-the-repository",
-      ),
-    );
+    return report;
+  }
+
+  const findings: Finding[] = [];
 
   if (!(yield* exists("mise.lock")))
     findings.push(
@@ -164,7 +186,7 @@ export const checkSetup = Effect.fn("checkSetup")(function* (
 
   // A library follows the apps that use it, so it has no agent surface or
   // theme of its own
-  if (entry?.kind !== "library") {
+  if (entry.kind !== "library") {
     const skills = yield* fs
       .readDirectory(at("skills"))
       .pipe(Effect.orElseSucceed((): string[] => []));
@@ -190,7 +212,7 @@ export const checkSetup = Effect.fn("checkSetup")(function* (
         themeCss,
       );
 
-    if (hasDocsSite && onBase && entry?.theme === undefined)
+    if (hasDocsSite && onBase && entry.theme === undefined)
       findings.push(
         finding(
           "theme",
@@ -200,7 +222,18 @@ export const checkSetup = Effect.fn("checkSetup")(function* (
       );
   }
 
-  const report: SetupReport = { directory, repo, findings };
+  const skip = entry.skip ?? {};
+
+  const report: SetupReport = {
+    directory,
+    repo,
+    findings: findings.filter((item) => skip[item.check] === undefined),
+    skipped: findings.flatMap((item) => {
+      const reason = skip[item.check];
+
+      return reason === undefined ? [] : [{ check: item.check, reason }];
+    }),
+  };
 
   return report;
 });

@@ -44,7 +44,9 @@ const readYaml = <S extends Schema.Top>(file: string, schema: S) =>
         new ConventionsError({ message: `${file}: ${String(cause)}` }),
     });
 
-    return yield* Schema.decodeUnknownEffect(schema)(parsed).pipe(
+    return yield* Schema.decodeUnknownEffect(schema)(parsed, {
+      onExcessProperty: "error",
+    }).pipe(
       Effect.mapError(
         (error) =>
           new ConventionsError({ message: `${file}: ${String(error)}` }),
@@ -323,6 +325,10 @@ const setupCommand = Command.make(
 
         for (const item of report.findings) {
           yield* Console.log(`  ✗ ${item.missing}: ${item.step}`);
+        }
+
+        for (const item of report.skipped) {
+          yield* Console.log(`  - Skips ${item.check}: ${item.reason}`);
         }
       }
     }

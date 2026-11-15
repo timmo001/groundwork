@@ -51,6 +51,24 @@ export const KindsDocument = Schema.Struct({
   kinds: Schema.Array(Kind),
 });
 
+/** The checks `conventions setup` runs, each for a step on the Setup page. */
+export const SetupCheck = Schema.Literals([
+  "kind",
+  "mise-lock",
+  "prettier",
+  "hk",
+  "agents-md",
+  "opencode-permissions",
+  "claude-permissions",
+  "ci",
+  "renovate",
+  "docs-site",
+  "agent-surface",
+  "theme",
+]);
+
+export type SetupCheck = typeof SetupCheck.Type;
+
 /** One repository: its kind, the opt-in sets it takes and its own areas. */
 export const Repo = Schema.Struct({
   repo: Schema.String.check(Schema.isPattern(/^[\w.-]+\/[\w.-]+$/)),
@@ -71,6 +89,14 @@ export const Repo = Schema.Struct({
    * as a Setup step still to do.
    */
   theme: Schema.optionalKey(Schema.String),
+  /**
+   * Setup checks that don't fit the repository, each with the reason, such
+   * as `docs-site` for a Renovate preset its README covers. `conventions
+   * setup` leaves them out.
+   */
+  skip: Schema.optionalKey(
+    Schema.Record(SetupCheck, Schema.optionalKey(Schema.String)),
+  ),
 });
 
 export interface Repo extends Schema.Schema.Type<typeof Repo> {}
