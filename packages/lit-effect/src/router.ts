@@ -159,7 +159,6 @@ export const makeRouter = <const R extends AnyRoutes>(
 
       if (Option.isNone(params)) continue;
 
-      // oxlint-disable-next-line timmo/prefer-types-over-assertions -- the name and both codecs come from the same entry of `routes`
       return {
         name,
         params: params.value,

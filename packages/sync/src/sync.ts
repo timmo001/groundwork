@@ -12,6 +12,7 @@ import { AppFile, Apps, Item, Lock, LockedCopy, Registry } from "./schema.ts";
 
 export class SyncError extends Schema.TaggedError<SyncError>()("SyncError", {
   message: Schema.String,
+  cause: Schema.optionalKey(Schema.Defect()),
 }) {}
 
 export const appFileName = "sync.json";
@@ -36,7 +37,9 @@ const readJson = <S extends Schema.Top>(file: string, schema: S) =>
     const text = yield* fs
       .readFileString(file)
       .pipe(
-        Effect.mapError(() => new SyncError({ message: `Can't read ${file}` })),
+        Effect.mapError(
+          (cause) => new SyncError({ message: `Can't read ${file}`, cause }),
+        ),
       );
 
     return yield* Schema.decodeUnknownEffect(Schema.fromJsonString(schema))(
@@ -66,8 +69,11 @@ const git = Effect.fnUntraced(function* (
     .string(ChildProcess.make("git", ["-C", root, ...args]))
     .pipe(
       Effect.mapError(
-        () =>
-          new SyncError({ message: `git ${args.join(" ")} failed in ${root}` }),
+        (cause) =>
+          new SyncError({
+            message: `git ${args.join(" ")} failed in ${root}`,
+            cause,
+          }),
       ),
     );
 

@@ -17,6 +17,7 @@ import { Theme } from "./schema.ts";
 
 class BuildError extends Schema.TaggedError<BuildError>()("BuildError", {
   message: Schema.String,
+  cause: Schema.optionalKey(Schema.Defect()),
 }) {}
 
 const decodeTheme = Schema.decodeUnknownEffect(Schema.fromJsonString(Theme));
@@ -93,9 +94,10 @@ const buildCommand = Command.make(
 
     const wanted = yield* decodeTargets(options.targets.split(",")).pipe(
       Effect.mapError(
-        () =>
+        (cause) =>
           new BuildError({
             message: `--targets takes some of ${targets.join(", ")}`,
+            cause,
           }),
       ),
     );
