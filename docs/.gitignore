@@ -23,3 +23,5 @@ bun-debug.log*
 
 .DS_Store
 .wrangler/
+# Alchemy's local state and build output
+.alchemy/
