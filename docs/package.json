@@ -11,7 +11,7 @@
     "lint": "oxlint .",
     "validate": "blume validate --strict",
     "deploy": "alchemy deploy --stage prod --yes",
-    "deploy:github": "alchemy deploy --config stacks/github.ts --stage prod",
+    "deploy:github": "alchemy deploy --config stacks/github.ts --stage prod --yes",
     "plan": "alchemy plan --stage prod",
     "preview": "blume preview",
     "brand": "bun scripts/brand-images.ts",
