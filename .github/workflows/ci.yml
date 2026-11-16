@@ -38,17 +38,10 @@ jobs:
           done
 
   docs:
-    name: Build docs
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-
-      - name: Set up mise
-        uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566
-
-      - name: Build docs
-        run: mise run docs:build
+    uses: timmo001/workflows/.github/workflows/run-mise-task.yml@36ba6651f1296cce685ede8ac38b9574c9291028 # master
+    with:
+      name: Build docs
+      task: docs:build
 
   actionlint:
     uses: timmo001/workflows/.github/workflows/lint-actionlint.yml@fa479eabebf26cc5f655b165c20423fb8fcc0cf4 # 20261115.0
