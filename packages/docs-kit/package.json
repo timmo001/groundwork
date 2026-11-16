@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./blume": "./src/blume/index.ts",
+    "./blume/worker": "./src/blume/worker.ts",
     "./blume/header-search.astro": "./src/blume/header-search.astro",
     "./blume/home-banner.astro": "./src/blume/home-banner.astro",
     "./blume/theme-picker.astro": "./src/blume/theme-picker.astro",

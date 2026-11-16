@@ -4,7 +4,8 @@
   "version": "0.50.0",
   "exports": {
     ".": "./src/index.ts",
-    "./blume": "./src/blume/index.ts"
+    "./blume": "./src/blume/index.ts",
+    "./blume/worker": "./src/blume/worker.ts"
   },
   "publish": {
     "include": ["src", "package.json", "README.md", "LICENSE"]

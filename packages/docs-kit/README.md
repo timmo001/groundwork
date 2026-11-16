@@ -48,7 +48,7 @@ The defaults:
   opening in a new tab.
 - GitHub's high-contrast code themes, since the default ones miss WCAG AA on
   comments and keywords. Set `markdown.code.theme` to change them.
-- Cloudflare deployment to `https://<site>`.
+- A Cloudflare Worker build for `https://<site>` (see [Deploy](#deploy)).
 - `llms.txt`, the MCP endpoint at `/mcp`, WebMCP and agent readability on. Ask
   AI and page feedback off.
 - GitHub `branch` set to `main` and `dir` to `docs`, plus the header repository
@@ -224,6 +224,47 @@ the site's Blume `logo` config, at its own aspect ratio;
   --home-banner-description-color-dark: #d4d4d8;
 }
 ```
+
+## Deploy
+
+`docsConfig` builds a Cloudflare Worker into `dist/`: Blume wraps Astro's
+Worker in its Markdown negotiation and lists the paths that skip it in
+`dist/server/wrangler.json`. `blumeWorker` from `@timmo001/docs-kit/blume/worker`
+reads that file back as the settings a Worker resource takes, with absolute
+paths: the built entry with bundling off, its compatibility date and flags,
+and the assets folder with the routes that run the Worker first. Spread it into
+an [Alchemy](https://alchemy.run) Worker in `alchemy.run.ts` and add the name
+and domain:
+
+```ts
+import * as Cloudflare from "@alchemy.run/cloudflare";
+import { blumeWorker } from "@timmo001/docs-kit/blume/worker";
+import * as Alchemy from "alchemy";
+import * as Effect from "effect/Effect";
+
+export default Alchemy.Stack(
+  "triage-docs",
+  {
+    providers: Cloudflare.providers(),
+    state: Cloudflare.state(),
+  },
+  Effect.gen(function* () {
+    const docs = yield* Cloudflare.Worker("Docs", {
+      name: "triage-docs",
+      domain: "triage.timmo.dev",
+      ...(yield* Effect.promise(() =>
+        blumeWorker(new URL("dist/", import.meta.url)),
+      )),
+    });
+
+    return { url: docs.url };
+  }),
+);
+```
+
+Build the site first, then `alchemy deploy`. `blumeWorker` takes the build
+folder, `dist` in the working directory by default. It only reads files, so
+any other deploy tool can use what it returns.
 
 ## Brand images
 
