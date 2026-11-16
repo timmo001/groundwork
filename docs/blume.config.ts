@@ -14,6 +14,7 @@ export default defineConfig(
         "/",
         "/principles",
         "/setup",
+        "/deploying",
         "/agents",
         "/targets",
         "/behavior",

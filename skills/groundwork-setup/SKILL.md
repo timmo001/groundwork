@@ -22,8 +22,8 @@ Load the skill a step needs when you reach it, where it's available:
 | 1. Create the repository | `github-repository-setup`, then `groundwork-conventions` for its kind and labels |
 | 2. Tools and workspace | `install-timmo-oxlint-rules` for the Oxlint preset; `npm-jsr-first-publish` before a package's first release |
 | 2. Android app | the `android-app` template's README and the `android-cli` skill, where available; store the release key in 1Password as well as the Actions secrets |
-| 4. CI | `shared-workflows`, then `github-development-rulesets` once CI has run |
-| 5. Docs site | `docs-kit`, and the [Alchemy docs](https://alchemy.run/llms.txt) for the stack; ask before each deploy |
+| 4. CI | `shared-workflows`, then `github-development-rulesets` once CI has run; the Deploying page for anything on Cloudflare |
+| 5. Docs site | `docs-kit`, the Deploying page, and the [Alchemy docs](https://alchemy.run/llms.txt) for the stack; ask before each deploy from a machine |
 | 7. Agent surface | the `cli-tool` template's README |
 | 9. Theme | `groundwork-themes` |
 | 10. Devices that connect | the Behavior page's Pairing section and `gw-pairing` on the Display page; ask the owner whether a phone or another device will connect, and skip the step when nothing will |
