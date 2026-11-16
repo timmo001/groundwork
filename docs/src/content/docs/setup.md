@@ -128,7 +128,7 @@ Copilot CLI has no repository-level permissions: approvals live in `~/.copilot/`
 ## 5. Docs site
 
 - A [docs-kit](https://github.com/timmo001/groundwork/tree/main/packages/docs-kit) site in `docs/`, on Base until the app has its own [theme](#9-theme). Generate the logo PNGs and social preview with its brand script.
-- Deployed by Cloudflare Workers Builds as a `<repo>-docs` Worker at `<repo>.timmo.dev`. Pushes to `main` deploy, other branches upload a preview, and builds only run when `docs/`, the lockfile, `package.json` or `mise.toml` change.
+- Deployed as a `<repo>-docs` Worker at `<repo>.timmo.dev` from an [Alchemy](https://alchemy.run) stack in `docs/alchemy.run.ts`, built on docs-kit's `blumeWorker`. A Deploy docs workflow runs `mise run docs:deploy` on pushes to `main` that touch `docs/`, the lockfile, `package.json` or `mise.toml`, and `mise run docs:plan` shows what a deploy would change. CI's Cloudflare token is code too, in `docs/stacks/github.ts`, deployed once with `mise run docs:deploy:github`. An existing Worker moves over with one `alchemy deploy --adopt`, and its Workers Builds connection is removed so it isn't deployed twice.
 - Its `/mcp` added as a `docs-<repo>` MCP server, so agents can read it.
 - `blume check --strict --isolated` in `mise run check`, so it doesn't clash with a running dev server.
 

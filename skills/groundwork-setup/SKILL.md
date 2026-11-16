@@ -9,7 +9,7 @@ The [Setup](https://groundwork.timmo.dev/setup) page is the checklist. Read it f
 
 1. Find where the repository stands: start from `mise run setup:check -- <checkout>` in a Groundwork checkout, which lists the file-based steps still missing, then compare the rest of the page with the repository, its GitHub settings, CI and docs deployment. Note what's done, what's missing and what's waiting on a decision. A step that doesn't fit the repository, such as a docs site for a Renovate preset, goes under `skip` in its conventions file with the reason, once the owner agrees.
 2. Put the steps on the repository's tracking issue as a checklist, ticking what's already done.
-3. Work through the missing steps in order, doing every part a step lists rather than only its headline: a theme change, for one, also covers the docs fonts and the brand images. Do everything the available tools can do, including GitHub settings and the Cloudflare Worker, and leave only what needs a person, such as the social preview upload, as an action for the user.
+3. Work through the missing steps in order, doing every part a step lists rather than only its headline: a theme change, for one, also covers the docs fonts and the brand images. Do everything the available tools can do, including GitHub settings and the docs site's Alchemy stack, and leave only what needs a person, such as the social preview upload, as an action for the user.
 4. Don't build past a decision the repository hasn't made yet: a step that depends on one waits, and says which. Look and feel are always the owner's decisions, so ask before choosing the app's starting theme and which others it offers, whether users can upload their own, fonts, an icon set or the logo's colors, even when one seems obvious. A desktop app's webview, the system's or bundled Chromium, is the owner's call too: ask, with the trade-offs from the Desktop page's Choosing the webview section, rather than leaving the template's setting. When the app can't switch themes yet, offer to plan the theme step as an issue instead. Whether a phone or another device will connect is the owner's answer too, so ask it rather than assuming either way. Agent permissions are the owner's call too: show the rules from the page's Agent permissions section, filled in for this repository, and commit them only once confirmed.
 5. Run the repository's checks after each step, then commit and push it as the repository's own rollout rules say, and tick the step off with a link to its commit.
 
@@ -23,7 +23,7 @@ Load the skill a step needs when you reach it, where it's available:
 | 2. Tools and workspace | `install-timmo-oxlint-rules` for the Oxlint preset; `npm-jsr-first-publish` before a package's first release |
 | 2. Android app | the `android-app` template's README and the `android-cli` skill, where available; store the release key in 1Password as well as the Actions secrets |
 | 4. CI | `shared-workflows`, then `github-development-rulesets` once CI has run |
-| 5. Docs site | `docs-kit` |
+| 5. Docs site | `docs-kit`, and the [Alchemy docs](https://alchemy.run/llms.txt) for the stack; ask before each deploy |
 | 7. Agent surface | the `cli-tool` template's README |
 | 9. Theme | `groundwork-themes` |
 | 10. Devices that connect | the Behavior page's Pairing section and `gw-pairing` on the Display page; ask the owner whether a phone or another device will connect, and skip the step when nothing will |
