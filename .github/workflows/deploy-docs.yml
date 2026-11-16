@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   deploy:
-    uses: timmo001/workflows/.github/workflows/deploy-alchemy.yml@5a7d1a2e1efc0dde5a4107c5654a50e5f7ae0d74 # master
+    uses: timmo001/workflows/.github/workflows/deploy-alchemy.yml@5451f6867a5cb2b9b6318a82e00f7dd9f9fc279a # 20261116.0
     with:
       task: docs:deploy
       smoke-check: |
