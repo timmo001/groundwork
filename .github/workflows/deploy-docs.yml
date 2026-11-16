@@ -27,24 +27,12 @@ permissions:
 
 jobs:
   deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-          # Blume reads last-modified dates from git
-          fetch-depth: 0
-
-      - name: Set up mise
-        uses: jdx/mise-action@5ac50f778e26fac95da98d50503682459e86d566
-        with:
-          install_args: bun node
-
-      - name: Build and deploy
-        run: mise run docs:deploy
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    uses: timmo001/workflows/.github/workflows/deploy-alchemy.yml@5a7d1a2e1efc0dde5a4107c5654a50e5f7ae0d74 # master
+    with:
+      task: docs:deploy
+      smoke-check: |
+        https://groundwork.timmo.dev/ 200
+        https://groundwork.timmo.dev/deploying 200
+    secrets:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
