@@ -7,6 +7,7 @@
 import { defaultLabelsBelow } from "./adaptive.js";
 import { Below } from "./below.js";
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { followLink } from "./follow.js";
 import {
   base,
   controlSizes,
@@ -22,7 +23,8 @@ import {
  *
  * For a link the page's HTML has to carry, such as one with `rel="me"`, a
  * `target` or `aria-current="page"`, put a plain `<a>` inside instead of
- * `href`. The button styles it, a click anywhere on the pill follows it, and
+ * `href`. The button styles it, a click anywhere on the pill follows it,
+ * with Ctrl, Cmd, Shift or the middle button opening it as they would, and
  * `aria-current` on it gets a current style.
  *
  * `variant` picks the color and `appearance` how it's applied, from most to
@@ -505,11 +507,12 @@ export class GwButton extends GwElement {
         return;
       }
 
-      // A click on the pill around a slotted link follows the link
+      // A click on the pill around a slotted link follows the link, keeping
+      // the keys that open it in a new tab
       const link = this.#link();
 
       if (link !== null && !event.composedPath().includes(link)) {
-        link.click();
+        followLink(link, event);
       }
 
       // The native button is in the shadow root, so it has no form of its
@@ -530,6 +533,24 @@ export class GwButton extends GwElement {
       } else if (this.type === "reset") {
         form.reset();
       }
+    });
+
+    // The middle button on the pill opens the slotted link in a new tab, as
+    // it would on the link itself
+    this.addEventListener("auxclick", (event) => {
+      const link = this.#link();
+
+      if (
+        event.button !== 1 ||
+        this.loading ||
+        this.disabled ||
+        link === null ||
+        event.composedPath().includes(link)
+      ) {
+        return;
+      }
+
+      followLink(link, event);
     });
 
     const focus = () => {

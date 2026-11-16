@@ -5,6 +5,7 @@
  * @module
  */
 import { GwElement, css, h, setAttribute } from "./element.js";
+import { followLink } from "./follow.js";
 import type {} from "./gw-skeleton.js";
 import { animateHeight, fadeIn } from "./motion.js";
 import { base, createIcon, setIconPath } from "./styles.js";
@@ -17,7 +18,8 @@ import { base, createIcon, setIconPath } from "./styles.js";
  *
  * For a link the page's HTML has to carry, such as one with a `target` or
  * `rel`, put an `<a>` in the `heading` slot instead of `href`. A click
- * anywhere on the card that isn't on another control follows it, the card
+ * anywhere on the card that isn't on another control follows it, with Ctrl,
+ * Cmd, Shift or the middle button opening it as they would, the card
  * shows the link's hover and focus, and the link stays a real one in the
  * page, so the rest of the card's content stays plain text.
  *
@@ -291,11 +293,14 @@ export class GwCard extends GwElement {
     this.lines = 3;
 
     // A click on the card, but not on another control in it, follows the
-    // link in the heading slot
-    this.addEventListener("click", (event) => {
+    // link in the heading slot, keeping the keys and the middle button that
+    // open it in a new tab
+    const follow = (event: MouseEvent) => {
       const link = this.#link();
 
       if (link === null || this.loading || this.titleLink) return;
+
+      if (event.type === "auxclick" && event.button !== 1) return;
 
       const path = event.composedPath();
       const own = path.slice(0, path.indexOf(this));
@@ -315,8 +320,11 @@ export class GwCard extends GwElement {
       // Selecting text in the card shouldn't open the link
       if (getSelection()?.toString()) return;
 
-      link.click();
-    });
+      followLink(link, event);
+    };
+
+    this.addEventListener("click", follow);
+    this.addEventListener("auxclick", follow);
 
     const focus = () => {
       this.#card.classList.toggle(

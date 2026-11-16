@@ -27,6 +27,8 @@ export * from "./on.js";
 
 export * from "./keys.js";
 
+export * from "./follow.js";
+
 export * from "./fill.js";
 
 export * from "./placement.js";
