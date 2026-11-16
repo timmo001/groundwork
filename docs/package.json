@@ -43,7 +43,7 @@
     "@emnapi/runtime": "1.11.3",
     "@oxlint/plugins": "1.93.0",
     "@playwright/test": "1.65.1",
-    "@timmo001/oxlint-rules": "0.6.5",
+    "@timmo001/oxlint-rules": "0.7.1",
     "@types/bun": "1.4.4",
     "astro": "7.4.12",
     "axe-core": "4.14.0",

@@ -33,7 +33,7 @@
         "@emnapi/runtime": "1.11.3",
         "@oxlint/plugins": "1.93.0",
         "@playwright/test": "1.65.1",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "astro": "7.4.12",
         "axe-core": "4.14.0",
@@ -51,7 +51,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -68,7 +68,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -84,7 +84,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -102,7 +102,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -120,7 +120,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "blume": "2.2.7",
         "oxlint": "1.93.0",
@@ -142,7 +142,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -160,7 +160,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -178,7 +178,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -203,7 +203,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -222,7 +222,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -244,7 +244,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -264,7 +264,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -291,7 +291,7 @@
       "devDependencies": {
         "@custom-elements-manifest/analyzer": "0.11.0",
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -312,7 +312,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -332,7 +332,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -352,7 +352,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "electrobun": "2.0.6",
         "oxlint": "1.93.0",
@@ -374,7 +374,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "@types/web-push": "3.6.4",
         "oxlint": "1.93.0",
@@ -392,7 +392,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -414,7 +414,7 @@
       },
       "devDependencies": {
         "@oxlint/plugins": "1.93.0",
-        "@timmo001/oxlint-rules": "0.6.5",
+        "@timmo001/oxlint-rules": "0.7.1",
         "@types/bun": "1.4.4",
         "oxlint": "1.93.0",
         "oxlint-tsgolint": "7.0.2007",
@@ -1142,7 +1142,7 @@
 
     "@timmo001/groundwork-ui": ["@timmo001/groundwork-ui@workspace:packages/ui"],
 
-    "@timmo001/oxlint-rules": ["@timmo001/oxlint-rules@0.6.5", "", { "peerDependencies": { "@oxlint/plugins": "^1.91.0", "oxlint": "^1.91.0" }, "bin": { "oxlint-rules": "dist/cli.js" } }, "sha512-BFDZ+yFyzT0jQA3A5Cgb533e5BwJBS4wWG4Z7JNQ+yjyZJspzssMLRRdoFk1bx7g1mWWvSFgl920vmtTXJJGZQ=="],
+    "@timmo001/oxlint-rules": ["@timmo001/oxlint-rules@0.7.1", "", { "peerDependencies": { "@oxlint/plugins": "^1.91.0", "oxlint": "^1.91.0" }, "bin": { "oxlint-rules": "dist/cli.js" } }, "sha512-d4ZmZ03tWs4l0AKhrDWOaKayLC56HH0EtmhFb2GGMD1kOxN7Nkzo3p1wSNJFpJ06O9rj8TF7VJThYdpmTprxLg=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.4", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A=="],
 
