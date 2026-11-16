@@ -15,7 +15,61 @@ The deploy jobs come from the shared workflows in [timmo001/workflows](https://g
 - **A deploy workflow** that calls the shared one on pushes to the default branch that touch what the stack builds, queued rather than cancelled so a stack update never stops halfway.
 - **Alchemy's packages** pinned exactly in the package that holds the stack: `alchemy`, `@alchemy.run/cloudflare`, `@alchemy.run/github` and `@effect/platform-bun`. `.alchemy/` is ignored.
 
-Secrets a Worker needs, such as a webhook secret, are read with `effect/Config` in the stack, so Alchemy binds them onto the Worker. CI passes them to the deploy job from the repository's Actions secrets. Nothing is set by hand in the dashboard.
+Secrets a Worker needs, such as a webhook secret, are read with `effect/Config` in the stack, so Alchemy binds them onto the Worker. CI passes them to the deploy job from the repository's Actions secrets, as [The deploy workflow](#the-deploy-workflow) shows. Nothing is set by hand in the dashboard.
+
+## The deploy workflow
+
+A repository's deploy workflow keeps its own triggers, path filters and concurrency, and calls `deploy-alchemy.yml` for the job, pinned to a commit like every shared workflow:
+
+```yaml
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**
+      - bun.lock
+      - mise.toml
+      - package.json
+
+# Deploys queue rather than cancel, so a stack update never stops halfway
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    uses: timmo001/workflows/.github/workflows/deploy-alchemy.yml@<sha> # master
+    with:
+      task: docs:deploy
+      smoke-check: |
+        https://example.timmo.dev/ 200
+    secrets:
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+```
+
+It checks out the full history, installs the repository's mise tools and runs the task with `ALCHEMY_STAGE` set, then waits for each smoke-check URL to answer with its status. Its inputs:
+
+| Input | Default | What it does |
+| --- | --- | --- |
+| `task` | `deploy` | The mise task that builds and deploys |
+| `stage` | `prod` | The Alchemy stage |
+| `install-args` | `bun node` | Which mise tools to install |
+| `fetch-depth` | `0` | How much history to check out; Blume needs all of it |
+| `timeout-minutes` | `20` | The job's time limit |
+| `smoke-check` | none | One `<url> <status>` per line, checked after the deploy; redirects aren't followed, so a redirect Worker can expect `301` |
+| `smoke-check-seconds` | `120` | How long the smoke check waits |
+| `env` | none | Plain values the stack reads, one `NAME=value` per line |
+
+The `SECRET_ENV` secret carries a Worker's secrets the same way, one `NAME=value` per line, each masked in the log. Both reach only the deploy step.
+
+A repository with several stages, such as one docs site per branch, gives each its own concurrency group and passes its `stage`.
+
+Releases that publish files into R2 use the shared `r2-objects` action to sync, copy or remove them over R2's S3 API, and `cloudflare-purge-cache` to purge the URLs that changed. Both live in `timmo001/workflows/.github/actions/`, and the [workflows README](https://github.com/timmo001/workflows#cloudflare-actions) lists their inputs.
 
 ## Setups
 
@@ -54,7 +108,7 @@ A domain that only redirects, such as `www` to the apex, is a Worker with a few 
 
 ### Files in R2
 
-A package repository, such as an Arch repository or an F-Droid repository for Android apps, is an R2 bucket on a custom domain. The bucket and its domain are Alchemy resources in the stack. The files in it aren't: each release publishes into the bucket from its workflow, syncing the files over R2's S3 API and purging the domain's cache for what changed.
+A package repository, such as an Arch repository or an F-Droid repository for Android apps, is an R2 bucket on a custom domain. The bucket and its domain are Alchemy resources in the stack. The files in it aren't: each release publishes into the bucket from its workflow with the shared `r2-objects` action, then purges the domain's cache for what changed with `cloudflare-purge-cache`. Android apps publish their F-Droid repository through the shared `publish-android-release.yml`, which uses `r2-objects`.
 
 ## Moving an existing Worker over
 
