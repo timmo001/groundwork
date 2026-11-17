@@ -1,0 +1,25 @@
+---
+repo: timmo001/cardstock
+kind: personal
+renovate:
+  - GitHub Actions
+  - JavaScript
+areas:
+  - name: Card Renderer
+    description: Related to drawing the 3D card, its effects and the exports
+    color: "ea74b1"
+  - name: Designs
+    description: Related to card designs, effects and presets
+    color: "b78ad8"
+  - name: Web App
+    description: Related to the installed web app and the card viewer
+    color: "006b75"
+  - name: Server
+    description: Related to the Worker that serves the app and fetches pictures
+    color: "065f46"
+  - name: CLI
+    description: Related to the cardstock CLI, its MCP server and the agent skill
+    color: "4f46e5"
+  - name: Docs
+    description: Related to the docs site
+    color: "a7f3d0"
