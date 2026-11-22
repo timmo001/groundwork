@@ -1,5 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "enabled": false,
-  "extends": ["github>timmo001/renovate-config"]
+  "extends": ["github>timmo001/renovate-config"],
+  "packageRules": [
+    {
+      "description": "electrobun 2.0.7 fails to build view scripts that import CSS",
+      "matchPackageNames": ["electrobun"],
+      "allowedVersions": "<=2.0.6"
+    }
+  ]
 }
