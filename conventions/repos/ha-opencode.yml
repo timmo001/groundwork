@@ -1,0 +1,10 @@
+---
+repo: timmo001/ha-opencode
+kind: personal
+skip:
+  prettier: A Python integration, which Ruff formats
+  docs-site: HACS shows its README
+  agent-surface: A Home Assistant integration, with no CLI
+renovate:
+  - GitHub Actions
+  - Python

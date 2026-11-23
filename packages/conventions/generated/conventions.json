@@ -718,6 +718,18 @@
       "labels": 39
     },
     {
+      "repo": "timmo001/ha-opencode",
+      "kind": "personal",
+      "discussions": false,
+      "sets": [
+        "type",
+        "status",
+        "resolution"
+      ],
+      "areas": [],
+      "labels": 28
+    },
+    {
       "repo": "timmo001/herdr-mascot",
       "kind": "personal",
       "discussions": false,
