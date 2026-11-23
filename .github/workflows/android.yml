@@ -42,7 +42,7 @@ permissions:
 
 jobs:
   build:
-    uses: timmo001/workflows/.github/workflows/build-android.yml@db6f3692a31de24d2bee17e505dfd2bf3fd5a076 # 20261116.1
+    uses: timmo001/workflows/.github/workflows/build-android.yml@5ca45f8d789b67b2c3c14aea6062a379d6c37db1 # 20261123.0
     with:
       setup-command: |
         android --no-metrics sdk install platform-tools "platforms/$ANDROID_API" build-tools/37.0.0
@@ -60,7 +60,7 @@ jobs:
       (github.event_name == 'workflow_dispatch' && inputs.release-tag != '')
     permissions:
       contents: write
-    uses: timmo001/workflows/.github/workflows/publish-android-release.yml@db6f3692a31de24d2bee17e505dfd2bf3fd5a076 # 20261116.1
+    uses: timmo001/workflows/.github/workflows/publish-android-release.yml@5ca45f8d789b67b2c3c14aea6062a379d6c37db1 # 20261123.0
     with:
       release-tag: ${{ github.event.release.tag_name || inputs.release-tag }}
       setup-command: |
