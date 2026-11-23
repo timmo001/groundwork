@@ -36,6 +36,7 @@ const skeletonWidths = ["60%", "40%", "75%", "50%", "65%"];
  * @csspart value - Each value.
  *
  * @cssprop --gw-facts-label-width - The labels' least width, so the values line up. Defaults to `7rem`.
+ * @cssprop --gw-facts-label-max-width - The labels' greatest width, past which they wrap. Defaults to `50%`.
  */
 export class GwFacts extends GwElement {
   static override properties = {
@@ -51,10 +52,12 @@ export class GwFacts extends GwElement {
         display: block;
       }
 
+      /* The labels grow to fit, up to the cap, so a long label wraps rather
+         than squeezing its value down to a letter per line */
       dl {
         display: grid;
         grid-template-columns:
-          minmax(var(--gw-facts-label-width, 7rem), max-content)
+          fit-content(var(--gw-facts-label-max-width, 50%))
           1fr;
         gap: var(--gw-space-1) var(--gw-space-3);
         margin: 0;
@@ -63,7 +66,9 @@ export class GwFacts extends GwElement {
 
       dt,
       ::slotted(dt) {
+        min-width: var(--gw-facts-label-width, 7rem);
         color: var(--gw-color-text-secondary);
+        overflow-wrap: anywhere;
       }
 
       dd,

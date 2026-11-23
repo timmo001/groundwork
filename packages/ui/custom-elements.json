@@ -15791,6 +15791,10 @@
             {
               "description": "The labels' least width, so the values line up. Defaults to `7rem`.",
               "name": "--gw-facts-label-width"
+            },
+            {
+              "description": "The labels' greatest width, past which they wrap. Defaults to `50%`.",
+              "name": "--gw-facts-label-max-width"
             }
           ],
           "cssParts": [
@@ -15834,7 +15838,7 @@
                 "text": "readonly CSSStyleSheet[]"
               },
               "static": true,
-              "default": "[ base, css` :host { display: block; } dl { display: grid; grid-template-columns: minmax(var(--gw-facts-label-width, 7rem), max-content) 1fr; gap: var(--gw-space-1) var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); } dt, ::slotted(dt) { color: var(--gw-color-text-secondary); } dd, ::slotted(dd) { min-width: 0; margin: 0; font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); overflow-wrap: anywhere; } `, ]",
+              "default": "[ base, css` :host { display: block; } /* The labels grow to fit, up to the cap, so a long label wraps rather than squeezing its value down to a letter per line */ dl { display: grid; grid-template-columns: fit-content(var(--gw-facts-label-max-width, 50%)) 1fr; gap: var(--gw-space-1) var(--gw-space-3); margin: 0; font-size: var(--gw-font-size-s); } dt, ::slotted(dt) { min-width: var(--gw-facts-label-width, 7rem); color: var(--gw-color-text-secondary); overflow-wrap: anywhere; } dd, ::slotted(dd) { min-width: 0; margin: 0; font-variant-numeric: var(--gw-font-figures); color: var(--gw-color-text-strong); overflow-wrap: anywhere; } `, ]",
               "inheritedFrom": {
                 "name": "GwElement",
                 "module": "src/element.ts"
