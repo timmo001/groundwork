@@ -423,9 +423,9 @@ backend = "pipx:awscli"
 specifiers = ["1.46.3"]
 
 [[tools."pipx:fdroidserver"]]
-version = "2.4.5"
+version = "2.4.6"
 backend = "pipx:fdroidserver"
-specifiers = ["2.4.5"]
+specifiers = ["2.4.6"]
 
 [[tools."pipx:yamllint"]]
 version = "1.38.0"
