@@ -340,7 +340,7 @@ export class GwSortable extends GwElement {
       each.classList.remove("settling");
       each.style.translate = `0 ${shift}px`;
       // Read back, so the browser takes the shift before it slides away
-      void each.offsetTop;
+      each.getBoundingClientRect();
       each.classList.add("settling");
       each.style.translate = "";
     }

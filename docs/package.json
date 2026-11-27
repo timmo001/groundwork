@@ -53,7 +53,7 @@
     "astro": "7.4.13",
     "axe-core": "4.14.1",
     "oxlint": "1.95.0",
-    "oxlint-tsgolint": "7.0.2008",
+    "oxlint-tsgolint": "7.0.2009",
     "playwright": "1.65.1",
     "wrangler": "4.168.0"
   },
