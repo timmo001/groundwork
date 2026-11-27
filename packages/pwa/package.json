@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@timmo001/groundwork-tokens": "0.51.1",
-    "effect": "4.1.6",
+    "effect": "4.1.7",
     "sharp": "0.35.5"
   },
   "peerDependencies": {

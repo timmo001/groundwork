@@ -53,10 +53,10 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "@effect/platform-node": "4.1.6",
+    "@effect/platform-node": "4.1.7",
     "@types/culori": "4.0.1",
     "culori": "4.0.2",
-    "effect": "4.1.6"
+    "effect": "4.1.7"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.95.0",

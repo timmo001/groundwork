@@ -34,7 +34,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
-    "effect": "4.1.6"
+    "effect": "4.1.7"
   },
   "devDependencies": {
     "@oxlint/plugins": "1.95.0",
