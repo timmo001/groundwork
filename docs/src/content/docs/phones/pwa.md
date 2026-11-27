@@ -269,7 +269,7 @@ serveShell(self, config);
 servePush(self, config);
 ```
 
-A push shows its title and body, with its `tag` so like ones replace each other, quiet when it's `passive`. Ongoing work shows its status and progress and stays until it's `done`. A tap opens the payload's `link`, bringing an open window forward rather than opening another.
+A push shows its title and body, with its `tag` so like ones replace each other, quiet when it's `passive`. Ongoing work shows its status, its progress and, with `started`, the time it started, and stays until it's `done`. A tap opens the payload's `link`, bringing an open window forward rather than opening another.
 
 ![The demo's test push in the shade, on Base, dark](/screenshots/phones/push-base-dark.png)
 

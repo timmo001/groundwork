@@ -305,8 +305,8 @@ export interface PushOptions {
 /**
  * The default notification for a payload: its title and body, the tag that
  * makes like ones replace each other, quiet for a passive one, and the
- * payload kept on the notification for the tap. Ongoing work shows its status
- * and progress, and stays until it's done.
+ * payload kept on the notification for the tap. Ongoing work shows its status,
+ * progress and the time it started, and stays until it's done.
  */
 export const pushNotification = (payload: PushPayload) => {
   const progress =
@@ -314,10 +314,16 @@ export const pushNotification = (payload: PushPayload) => {
       ? ""
       : ` (${Math.round((payload.ongoing.progress.value / payload.ongoing.progress.max) * 100)}%)`;
 
+  // A browser notification can't tick, so it says when the work started
+  const started =
+    payload.ongoing?.started === undefined || payload.ongoing.done === true
+      ? ""
+      : ` · Started ${new Date(payload.ongoing.started).toLocaleTimeString(undefined, { timeStyle: "short" })}`;
+
   const body =
     payload.ongoing === undefined
       ? payload.body
-      : `${payload.ongoing.status}${progress}`;
+      : `${payload.ongoing.status}${progress}${started}`;
 
   const tag = payload.ongoing?.id ?? payload.tag;
 

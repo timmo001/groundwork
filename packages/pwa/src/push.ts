@@ -53,6 +53,8 @@ export const PushOngoing = Schema.Struct({
     Schema.Struct({ value: Schema.Number, max: Schema.Number }),
   ),
   done: Schema.optionalKey(Schema.Boolean),
+  /** When the work started, in Unix milliseconds, for a running timer. */
+  started: Schema.optionalKey(Schema.Number),
 });
 
 export interface PushOngoing extends Schema.Schema.Type<typeof PushOngoing> {}

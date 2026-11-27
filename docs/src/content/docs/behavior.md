@@ -88,7 +88,7 @@ One way for a service to reach phones when its app is closed, so the PWA and the
 - **Subscribing.** The PWA subscribes through its service worker's `pushManager` with the VAPID key. The shell registers with UnifiedPush, falling back to the embedded FCM distributor, and posts that endpoint the same way.
 - **Sending.** The service encrypts each `PushPayload` with a Web Push library and its VAPID keys, which reaches the browser's push service and a UnifiedPush endpoint alike. A `404` or `410` from the endpoint means the subscription is gone, so the service drops it.
 - **The payload.** `title`, then optional `body`, `tone`, `link` (a page in the app, relative to its scope), `tag` (like ones replace each other), `level` (`alert` or `passive`, as in [Notifications](#notifications)), `ongoing` and the app's own `data`.
-- **Ongoing work.** `ongoing` has an `id`, a `status`, an optional `progress` of `{ value, max }` and `done`. Each push with the same id updates one notification, shown as a Live Update on Android 16 and a plain ongoing one below it, until `done`.
+- **Ongoing work.** `ongoing` has an `id`, a `status`, an optional `progress` of `{ value, max }`, an optional `started` (Unix milliseconds) and `done`. Each push with the same id updates one notification, shown as a Live Update on Android 16 and a plain ongoing one below it, until `done`. With `started`, Android shows a timer counting up from then, which ticks by itself, and a browser says when it started.
 - Clients read a push with `decodePushPayload`, which turns anything else away rather than showing it.
 
 ## Pairing
